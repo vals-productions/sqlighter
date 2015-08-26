@@ -68,12 +68,18 @@
 
 - (IOSByteArray *)getBlobWithInt:(jint)index {
     NSData *d = [self getBlobAtIndex:index];
+    if(d == nil) {
+        return nil;
+    }
     IOSByteArray *ba = [IOSByteArray arrayWithBytes: [ d bytes] count:(int)[d length]];
     return ba;
 }
 
 -(NSData*) getBlobAtIndex: (int) index {
     int length = sqlite3_column_bytes(self.stmt, index);
+    if(length == 0) {
+        return nil;
+    }
     NSData *data = [NSData dataWithBytes:sqlite3_column_blob(self.stmt, index) length:length];
     return data;
 }
