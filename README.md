@@ -7,7 +7,6 @@ SQLIte implementation that works with j2objc on both - Android and iOS platforms
 This implementation is based on standard Android's SQlite implementation that is being used on Android devices, and matching implementation on iOS device.
 
 This library does not attempt to replicate Android's implementation completely. The goal is to provide ability to execute pretty much any SQL statements at either of the platforms with single and simple interface without dependencies on existing platform specific implementations.
-
 ```
    Android                            iOS
    
@@ -53,7 +52,7 @@ Include content of sqlighter/android in your Android project. Include com/vals/a
 
 Include /ios/impl/ *.h and *.m files into your iOS project.
 
-ios/j2objc/ content does not need to be included anywhere. The files are j2objc conversions of com/vals/a2ios/sqlighter/ interfaces and included as examples.
+ios/j2objc/ content does not necessarily need to be included in your iOS project. The files are j2objc conversions of com/vals/a2ios/sqlighter/ interfaces and included as examples.
 
 #### Instantiation example
 
@@ -103,7 +102,7 @@ And your iOS' app delegate initialization method may look like this. Note that B
     return YES;
 }
 ```
-One important feature od this implementation is - you get uniform and platform independent way to get access to your DB implementation in your shared between platforms code as this
+One important feature od this implementation is - you get uniform and platform independent way to get access to your DB implementation interface in your shared between platforms code as this
 ``` java
 SQLighterDb db = Bootstrap.getInstance().getDb();
 ```
@@ -119,15 +118,27 @@ Usage is very straightforward.
 
 Positional parameters are supported. No naming parameter support.
 
-a) Use addParam* methods to bind positional parameters to your statements.
-b) Execute the statement by calling executeSelect (for Select...) or executeChange (for INSERT/UPDATE/CREATE/DELETE/...)
-c) once your statement is executed, bound parameters are cleaned up, so you can use addParam* again to be bound to your next statement.
+a) Use addParam* methods to bind positional parameters to your statements. Parameter position is determined by the order in which it was added. Parameters are optional as some statements may be parameterless.
 
-ResultSet has getters to retrieve positional select clause parameters.
+b) Execute the statement by calling SQLighterDb.executeSelect(String sqlString) (for Select...) or SQLighterDb.executeChange(String sqlString) (for INSERT/UPDATE/CREATE/DELETE/...). executeSelect returns the SQLighterRs result set interface that lets you iterate through returned records and retrieve row columns by executing corresponding getters. The SQLighterRs should be closed once you are done with the result set. executeChange closes underlying statements implicitly.
+
+ResultSet has getters to retrieve positional select clause parameters like this:
+``` java
+SQLighterRs rs = db.executeSelect("select id, email, name, data, height from user");
+while (rs.hasNext()) {
+        Number pk = rs.getLong(0);
+        String e = rs.getString(1);
+        byte[] d1 = rs.getBlob(3);
+        ....
+}
+rs.close();
+```
+c) once your statement is executed, bound parameters are cleaned up, so you can use addParam* methods again to be bound/used with your next statement.
+
 
 Limitation: the library supports execution of one statement at a time. No nested statements, like select something and execute inserts in the loop where you process result set of your select statement. You'd need to separate this into two sequential steps.
 
-<< more to be added to this section>>, please see the next section that has some pretty straightforward examples.
+<< more to be added to this section>>, for now please see the next section that has some pretty straightforward examples.
 
 # Going by example
 
