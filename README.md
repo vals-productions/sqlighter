@@ -175,6 +175,10 @@ Limitation: the library supports execution of one statement at a time. No nested
 # Going by example
 
 ### Pre requisites
+
+Let's create some sqlite file using sqlite command line or one of the existing UI tools
+and create a table user in it.
+
 ``` sql
 CREATE TABLE "user" (
 	`name`	TEXT,
@@ -184,8 +188,7 @@ CREATE TABLE "user" (
 	`height`	REAL
 );
 ```
-
-With the following initial records:
+Let's insert the following initial records:
 ``` sql
 INSERT INTO user(name, email, data, height) values ('user 1', 'user1@email.com', null, 1.4);
 INSERT INTO user(name, email, data, height) values ('user 2', 'user2@email.com', null, null);
@@ -195,7 +198,8 @@ INSERT INTO user(name, email, data, height) values ('user 4', null, null, null);
 
 ### Android code
 
-First let's just output what is initially in the table:
+First let's just output what is initially in the table by executing SQL select statement
+with no parameters: 
 
 ``` java
 SQLighterDb db = Bootstrap.getInstance().getDb();
@@ -214,19 +218,36 @@ pk: 2, email: user2@email.com, name: user 2, blob data: , height: null
 pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
 pk: 4, email: null, name: user 4, blob data: , height: null
 ```
-Then, add another record with some blob:
+
+print function looks just like this and is used in all examples: 
+``` java
+private void print(SQLighterRs rs) {
+	Number pk = rs.getLong(0);
+    String e = rs.getString(1);
+    String n = rs.getString(2);
+    byte[] dataBytes = rs.getBlob(3);
+    String dataString = null;
+    if (dataBytes != null) {
+    	dataString = new String(dataBytes);
+    }
+    Number h = rs.getDouble(4);
+    System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + 
+    						", blob data: " + dataString + ", height: " + h );
+}
+```
+Then, add another record with some blob value:
 ``` java
 String dataStr = "This is blob string example";
 byte[] data = dataStr.getBytes();
-db.addParam("user name 5");
-db.addParam("qw@er.ty1");
-db.addParam(data);
-db.addParam(5.67);
+db.addParam("user name 5"); // bind too the first insert value (name)
+db.addParam("qw@er.ty1"); // bind to the second one (email)
+db.addParam(data); // bind to the data column
+db.addParam(5.67); // bind to the height column
 db.executeChange("insert into user( name, email, data, height) values (?, ?, ?, ?)");
 ```
 And let's also requery what we just inserted
 ``` java
-db.addParam("qw@er.ty1");
+db.addParam("qw@er.ty1"); // bind to the where email filter condition
 System.out.println("check if the record was inserted");
 rs = db.executeSelect("select id, email, name, data, height from user where email = ?");
 while (rs.hasNext()) {
@@ -234,15 +255,15 @@ while (rs.hasNext()) {
 }
 rs.close();
 ```
-Which this should result in:
+Which should result in:
 ```
 check if the record was inserted
 pk: 5, email: qw@er.ty1, name: user name 5, blob data: This is blob string example, height: 5.67
 ```
 Then, let's do some update
 ``` java
-db.addParam("user@email.com");
-db.addParam("qw@er.ty1");
+db.addParam("user@email.com"); // bind to the set email = ? 
+db.addParam("qw@er.ty1"); // bind to where email = ?
 db.executeChange("update user set email = ? where email is null or email = ?");
 ```
 ... and verify the output with above select all code
@@ -288,9 +309,27 @@ after address creation/population
 pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
  address: 123 main str, walnut creek, ca
 ```
+
+And, in case you'd like to bind some NULL parameter, it can be done this way:
+``` java
+db.addParamNull(); // bind first param to update as null
+db.addParam("qw@er.ty1"); // bind second param as where filter condition
+db.executeChange("update user set email = ? where email = ?");
+```
+will result in:
+``` sql
+update user set email = null where email = 'qw@er.ty1';
+```
+
 The above code gives identical output after being converted into iOS using j2objc. Therefore, you can implement your database related logics in java language amd just convert/reuse it in iOS.
 
-If for whatever reason you have to code some SQLITE in iOS without j2objc, it doesn't look bad either:
+### iOS code
+
+Normally you shouldn't need to do SQLite related coding in your iOS implementation, 'cause
+the whole goal of this library is to code in java and convert to Objective C.
+
+But if for whatever reason you have to code some SQLITE in iOS without j2objc, it doesn't
+look bad either:
 ``` objc
 id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
 [db addParamWithNSString: @"user@email.com"];
