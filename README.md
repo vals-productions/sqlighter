@@ -54,9 +54,36 @@ Include /ios/impl/ *.h and *.m files into your iOS project.
 
 ios/j2objc/ content does not necessarily need to be included in your iOS project. The files are j2objc conversions of com/vals/a2ios/sqlighter/ interfaces and included as examples.
 
+#### Database file
+
+In both cases - Android and iOS your initial SQLite database file should be part of your
+project. It can have some predefined DB schema or you can create tables on the fly - it's
+all in developer's control.
+
+On Android's project the location of the file is typically 'assets' directory.
+
+On iOS you have to right click on the project, pick "Add files to...", locate your file
+on the file system and add it to the project this way.
+
+SQLighterDb.setDbName(String name) specifies file name. 
+
+SQLighterDb.setDbPath(String path) specifies path to the file on the device. This is
+different between Android and iOS. For android it is "/data/data/<<YOUR PROJECT path>>/databases/",
+for iOS this method has empty implementation as the library knows the location relative
+to project's location.
+
+On application instantiation SQLighterDb.copyDbOnce() will copy the database file from the
+project into the device. According to method name it will only copy the file one time even
+if called more than once.
+
+Method SQLighterDb.setOverwriteDb(boolean) will let you overwrite target device database
+file if one exists. This is helpful for development but in general you shouldn't use it
+in production environment.
+
 #### Instantiation example
 
-Here I will show you how to inject platform specific implementations on application/activity initialization. 
+Here I will show you how to inject platform specific implementations on application/activity
+initialization and initialize the database file.
 
 One of the ways this might be done is by using singleton pattern. Code below is for Android, which could/should be converted to iOS with j2objc.
 ``` java
@@ -82,7 +109,12 @@ protected void onCreate(Bundle savedInstanceState) {
   // important at Android as database open method is called from the Context
   db.setContext(this);
   try {
-    db.copyDbOnce(); // will copy DB file from your project files into device's DB location if it's not there yet.
+    /* 
+     Will copy DB file from your project files into device's DB location
+     if it's not there yet. If the file is already on the device, will proceed
+     according to db.setOverwriteDb(boolean) method.
+     */
+    db.copyDbOnce(); 
     db.openIfClosed();
   } catch (Exception e) {
   ...
