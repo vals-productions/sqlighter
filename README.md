@@ -25,13 +25,13 @@ SQLighterDbImpl.java         SQLighterDbImpl.h
                              SQLighterRsImpl.h
                              SQLighterRsImpl.m
 ```
-Both implementations conform to SQLighterDb (core database methods) and SQLighterRs (ResultSet processing) interfaces. Android implementation for these is SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h and *Impl.m files (see the diagram above). They implement same interfaces but after SQLighterDb.java and SQLighterRs.java get j2objc'd into Objective C classes.
+Both implementations conform to SQLighterDb (core database methods) and SQLighterRs (ResultSet processing) interfaces. Android implementation for these is SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h and *Impl.m files (see the diagram above). They implement, in essence, same interfaces, that are result or SQLighterDb.java and SQLighterRs.java j2objc converion into corresponding Objective C classes (actually, protocols).
 
 # j2objc
 
 SQLighterDb.java and SQLighterRs.java normally are to be converted into iOS to become SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m. They are included in this repository in case you want to include them as is and, maybe, save some time in j2objc process.
 
-Conversion should be done with the use of --prefixes <file with prefix configs> switch to prevent adding java package prefix to class names. Sample file is below.
+Conversion should be done with the use of --prefixes <file with prefix configs> j2objc switch to prevent adding java package prefix to class names. Sample file is below.
 ```
 <file with prefix configs>
 ...
@@ -40,7 +40,7 @@ com.vals.a2ios.sqlighter=
 ```
 This makes code look cleaner in case you'd like to use sqlighter for some iOS functionality that is not matching your Android counterpart. 
 
-So, you should get the content of ios/j2objc/ (provided as an example) in your Objective C project, and add those files to your project after they are converted.
+So, you should include SQLighterDb.h, SQLighterDb.m, SQLighterRs.h and SQLighterRs.m in your Objective C project whether you generate or copy them from this repository.
 
 ### Project configuration
 
