@@ -24,6 +24,7 @@
 }
 
 - (void)setDbPathWithNSString:(NSString *)path {
+    // not used in iOS
 }
 
 - (void)setDbNameWithNSString:(NSString *)name {
@@ -69,7 +70,6 @@
                                                             sqlite3_errmsg(database)] userInfo: nil];
     }
 }
-
 
 -(void) bindParameters: (NSMutableArray*) parameters {
     if (parameters == nil) {
