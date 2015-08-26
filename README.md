@@ -13,9 +13,9 @@ This library does not attempt to replicate Android's implementation completely. 
    
               Interface Definition
               
-  /*provided*/      j2objc     /*generated*/
+  /*provided*/      j2objc     /*generated \ provided*/
 SQLighterDb.java ----------> SQLighterDb.h, SQLighterDb.m
-  /*provided*/      j2objc     /*generated*/
+  /*provided*/      j2objc     /*generated \ provided*/
 SQLighterRs.java ----------> SQLighterRs.h, SQLighterRs.m
 
                Implementation
