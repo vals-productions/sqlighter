@@ -6,7 +6,7 @@ SQLIte implementation that works with j2objc on both - Android and iOS platforms
 
 This implementation is based on standard Android's SQlite implementation that is being used on Android devices, and matching implementation on iOS device.
 
-Both implementations conform to SQLighterDb (core database methods) and SQLighterRs (ResultSet processing) interfaces. Android implementation for these is SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h and *Impl.m files. They implement same interfaces but after SQLighterDb.java and SQLighterRs.java get j2objc'd into Objective C classes with the use of --prefixes <file with prefix configs> option to prevent adding java package class to class names. Sample file is below.
+Both implementations conform to SQLighterDb (core database methods) and SQLighterRs (ResultSet processing) interfaces. Android implementation for these is SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h and *Impl.m files. They implement same interfaces but after SQLighterDb.java and SQLighterRs.java get j2objc'd into Objective C classes with the use of --prefixes <file with prefix configs> option to prevent adding java package prefix to class names. Sample file is below.
 ```
 <file with prefix configs>
 ...
