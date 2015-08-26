@@ -2,8 +2,6 @@
 
 SQLIte implementation that works with j2objc on both - Android and iOS platforms
 
-Note: I'm in the progress of initial repository creation / documenting.
-
 # Overview
 
 This implementation is based on standard Android's SQlite implementation that is being used on Android devices, and matching implementation on iOS device.
@@ -12,10 +10,70 @@ Both implementations conform to SQLighterDb (core database methods) and SQLighte
 
 This library does not attempt to replicate Android's implementation completely. The goal is to provide ability to execute pretty much any SQL statements at either of the platforms with single interface without dependencies on existing platform specific implementations.
 
+### Project configuration
+
+#### Android
+
+Include content of sqlighter-4-j2objc/android package in your Android project. Include com/vals/a2ios/sqlighter/*.java interfaces into j2objc conversion processses. I recommend to exclude package name prefix generation for the package so that class names look shorter and simpler.
+
+#### iOS
+
+Include /ios/impl/ *.h and *.m files into your iOS project.
+
+#### Instantiation example
+
+Here I will show you how to inject platform specific implementations on application/activity initialization. 
+
+One of the ways this might be done is by using singleton pattern. Code below is for Android, which should be converted to iOS with j2objc.
+``` java
+public class Bootstrap {
+    private static Bootstrap instance;
+    private SQLighterDb db;
+    public SQLighterDb getDb() { return db;}
+    public void setDb(SQLighterDb db) { this.db = db;}
+    private Bootstrap() {
+    }
+    public static Bootstrap getInstance() {
+...
+}
+```
+Then your activity's onCreate method might look like this:
+``` java
+protected void onCreate(Bundle savedInstanceState) {
+  SQLighterDbImpl db = new SQLighterDbImpl();
+  db.setDbPath("/data/data/<<YOUR PROJECT path>>/databases/");
+  db.setDbName("sqlite.sqlite");
+  db.setOverwriteDb(false); // will not replace device's DB file already exists
+  Bootstrap.getInstance().setDb(db);
+  // important at Android as database open method is called from the Context
+  db.setContext(this);
+  try {
+    db.copyDbOnce(); // will copy DB file from your project files into device's DB location if it's not there yet.
+    db.openIfClosed();
+  } catch (Exception e) {
+  ...
+  }
+...
+```
+And your iOS' app delegate initialization method may look like this. Note that Bootstrap is just a j2objc clone of Android's Bootstrap class.
+``` objc
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    Bootstrap *b = [Bootstrap getInstance];
+    SQLighterDbImpl *db = [[SQLighterDbImpl alloc] init];
+    [db setDbNameWithNSString: @"sqlite.sqlite"];
+    [db setReplaceDatabase:FALSE];
+    [db copyDbOnce];
+    [db openIfClosed];
+    [b setDbWithSQLighterDb:db];
+    return YES;
+}
+```
+Once that is done you can use SQLite in the followig manner.
+
 # Going by example
 
 ### Pre requisites
-```
+``` sql
 CREATE TABLE "user" (
 	`name`	TEXT,
 	`email`	TEXT,
@@ -26,7 +84,7 @@ CREATE TABLE "user" (
 ```
 
 With the following initial records:
-```
+``` sql
 INSERT INTO user(name, email, data, height) values ('user 1', 'user1@email.com', null, 1.4);
 INSERT INTO user(name, email, data, height) values ('user 2', 'user2@email.com', null, null);
 INSERT INTO user(name, email, data, height) values ('user 3', 'user3@email.com', null, 4.89);
@@ -128,5 +186,16 @@ after address creation/population
 pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
  address: 123 main str, walnut creek, ca
 ```
-The above code gives identical output after being converted into iOS using j2objc.
+The above code gives identical output after being converted into iOS using j2objc. Therefore, you can implement your database related logics in java language amd just convert/reuse it in iOS.
 
+If for whatever reason you have to code some SQLITE in iOS without j2objc, it doesn't look bad either:
+``` objc
+id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
+[db addParamWithNSString: @"user@email.com"];
+id<SQLighterRs> rs = [db executeWithNSString: @"select name, email from user where email = ?"];
+while([rs hasNext]) {
+	NSLog(@"email:  %@, name: %@", [rs getStringWithInt:1], [rs getStringWithInt:0]);
+}
+[rs close];
+
+```
