@@ -13,31 +13,31 @@ public interface SQLighterRs {
     /**
      * Returns corresponding column value
      * @param index - 0 based index
-     * @return
+     * @return Number object or null
      */
     public Number getDouble(int index);
     /**
      * Returns corresponding column value
      * @param index - 0 based index
-     * @return
+     * @return Number object or null
      */
     public Number getLong(int index);
     /**
      * Returns corresponding column value
      * @param index - 0 based index
-     * @return
+     * @return String object or null
      */
     public String getString(int index);
     /**
      * Returns corresponding column value
      * @param index - 0 based index
-     * @return
+     * @return byte array or null
      */
     public byte[] getBlob(int index);
     /**
      * Returns corresponding column value
      * @param index - 0 based index
-     * @return
+     * @return Number object or null
      */
     public Number getInt(int index);
 
