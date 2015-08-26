@@ -207,6 +207,9 @@
     NSData *d = [NSData dataWithBytes:[blob buffer] length:[blob length]];
     [self addParamWithBlob: d];
 }
+- (void)addParamNull {
+    [self addParamWithNull];
+}
 -(void) bindString: (NSString*) str  atIndex: (int) paramIdx {
         sqlite3_bind_text(stmt, paramIdx, [str UTF8String], -1, SQLITE_TRANSIENT);
 }

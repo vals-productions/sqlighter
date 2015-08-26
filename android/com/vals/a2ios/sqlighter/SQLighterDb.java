@@ -68,11 +68,11 @@ public interface SQLighterDb {
      * @param l
      */
     public void addParam(long l);
-//    /**
-//     * Bind the param for the statement that will be executed next
-//     * @param s
-//     */
-//    public void addParam(int s);
+    /**
+     * Bind NULL param for the statement that will be executed next
+     *
+     */
+    public void addParamNull();
     /**
      * Bind the param for the statement that will be executed next
      * @param blob

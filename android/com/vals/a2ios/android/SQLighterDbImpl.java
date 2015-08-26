@@ -158,14 +158,14 @@ public class SQLighterDbImpl implements SQLighterDb {
     public void addParam(long l) {
         pl.add(new Long(l).toString());
     }
-//    public void addParam(int i) {
-//        pl.add(new Integer(i).toString());
-//    }
     public void addParam(String s) {
         pl.add(s);
     }
     public void addParam(byte[] blob) {
         pl.add(blob);
+    }
+    public void addParamNull() {
+        pl.add(null);
     }
     @Override
     public SQLighterRs executeSelect(String selectQuery) {

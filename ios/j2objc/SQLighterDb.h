@@ -31,6 +31,8 @@
 
 - (void)addParamWithLong:(jlong)l;
 
+- (void)addParamNull;
+
 - (void)addParamWithByteArray:(IOSByteArray *)blob;
 
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery;
