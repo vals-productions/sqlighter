@@ -6,7 +6,15 @@ SQLIte implementation that works with j2objc on both - Android and iOS platforms
 
 This implementation is based on standard Android's SQlite implementation that is being used on Android devices, and matching implementation on iOS device.
 
-Both implementations conform to SQLighterDb (core database methods) and SQLighterRs (ResultSet processing) interfaces. 
+Both implementations conform to SQLighterDb (core database methods) and SQLighterRs (ResultSet processing) interfaces. Android implementation for these is SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h and *Impl.m files. They implement same interfaces but after SQLighterDb.java and SQLighterRs.java get j2objc'd into Objective C classes with the use of --prefixes <file with prefix configs> option to prevent adding java package class to class names. Sample file is below.
+```
+<file with prefix configs>
+...
+com.vals.a2ios.sqlighter=
+...
+```
+
+So, you should get the content of ios/j2objc/ (provided as an example) in your Objective C project, and add those files to your project.
 
 This library does not attempt to replicate Android's implementation completely. The goal is to provide ability to execute pretty much any SQL statements at either of the platforms with single interface without dependencies on existing platform specific implementations.
 
@@ -14,11 +22,13 @@ This library does not attempt to replicate Android's implementation completely. 
 
 #### Android
 
-Include content of sqlighter-4-j2objc/android package in your Android project. Include com/vals/a2ios/sqlighter/*.java interfaces into j2objc conversion processses. I recommend to exclude package name prefix generation for the package so that class names look shorter and simpler.
+Include content of sqlighter/android in your Android project. Include com/vals/a2ios/sqlighter/*.java interfaces into j2objc conversion processes. I recommend to exclude package name prefix generation for the package so that class names look shorter and simpler.
 
 #### iOS
 
 Include /ios/impl/ *.h and *.m files into your iOS project.
+
+ios/j2objc/ content does not need to be included anywhere. The files are j2objc conversions of com/vals/a2ios/sqlighter/ interfaces and included as examples.
 
 #### Instantiation example
 
