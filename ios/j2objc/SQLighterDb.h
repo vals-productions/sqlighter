@@ -27,9 +27,9 @@
 
 - (void)addParamWithNSString:(NSString *)s;
 
-- (void)addParamWithDouble:(jdouble)s;
+- (void)addParamWithDouble:(jdouble)d;
 
-- (void)addParamWithLong:(jlong)s;
+- (void)addParamWithLong:(jlong)l;
 
 - (void)addParamWithByteArray:(IOSByteArray *)blob;
 
