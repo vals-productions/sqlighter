@@ -6,38 +6,42 @@ SQLIte implementation that works with j2objc on both - Android and iOS platforms
 
 This implementation is based on standard Android's SQlite implementation that is being used on Android devices, and matching implementation on iOS device.
 
+This library does not attempt to replicate Android's implementation completely. The goal is to provide ability to execute pretty much any SQL statements at either of the platforms with single and simple interface without dependencies on existing platform specific implementations.
+
 ```
    Android                            iOS
    
               Interface Definition
               
-                   j2objc
+  /*provided*/      j2objc     /*generated*/
 SQLighterDb.java ----------> SQLighterDb.h, SQLighterDb.m
-                   j2objc
+  /*provided*/      j2objc     /*generated*/
 SQLighterRs.java ----------> SQLighterRs.h, SQLighterRs.m
 
                Implementation
-   
+  /*provided*/                 /*provided*/ 
 SQLighterDbImpl.java         SQLighterDbImpl.h
                              SQLighterDbImpl.m
-
+                               /*provided*/ 
                              SQLighterRsImpl.h
                              SQLighterRsImpl.m
-
-
 ```
+Both implementations conform to SQLighterDb (core database methods) and SQLighterRs (ResultSet processing) interfaces. Android implementation for these is SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h and *Impl.m files (see the diagram above). They implement same interfaces but after SQLighterDb.java and SQLighterRs.java get j2objc'd into Objective C classes.
 
-Both implementations conform to SQLighterDb (core database methods) and SQLighterRs (ResultSet processing) interfaces. Android implementation for these is SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h and *Impl.m files. They implement same interfaces but after SQLighterDb.java and SQLighterRs.java get j2objc'd into Objective C classes with the use of --prefixes <file with prefix configs> option to prevent adding java package prefix to class names. Sample file is below.
+# j2objc
+
+SQLighterDb.java and SQLighterRs.java normally are to be converted into iOS to become SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m. They are included in this repository in case you want to include them as is and, maybe, save some time in j2objc process.
+
+Conversion should be done with the use of --prefixes <file with prefix configs> switch to prevent adding java package prefix to class names. Sample file is below.
 ```
 <file with prefix configs>
 ...
 com.vals.a2ios.sqlighter=
 ...
 ```
+This makes code look cleaner in case you'd like to use sqlighter for some iOS functionality that is not matching your Android counterpart. 
 
-So, you should get the content of ios/j2objc/ (provided as an example) in your Objective C project, and add those files to your project.
-
-This library does not attempt to replicate Android's implementation completely. The goal is to provide ability to execute pretty much any SQL statements at either of the platforms with single interface without dependencies on existing platform specific implementations.
+So, you should get the content of ios/j2objc/ (provided as an example) in your Objective C project, and add those files to your project after they are converted.
 
 ### Project configuration
 
@@ -99,7 +103,31 @@ And your iOS' app delegate initialization method may look like this. Note that B
     return YES;
 }
 ```
+One important feature od this implementation is - you get uniform and platform independent way to get access to your DB implementation in your shared between platforms code as this
+``` java
+SQLighterDb db = Bootstrap.getInstance().getDb();
+```
+gets translated into this
+``` objc
+id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
+```
 Once that is done you can use SQLite in the followig manner.
+
+# Usage
+
+Usage is very straightforward.
+
+Positional parameters are supported. No naming parameter support.
+
+a) Use addParam* methods to bind positional parameters to your statements.
+b) Execute the statement by calling executeSelect (for Select...) or executeChange (for INSERT/UPDATE/CREATE/DELETE/...)
+c) once your statement is executed, bound parameters are cleaned up, so you can use addParam* again to be bound to your next statement.
+
+ResultSet has getters to retrieve positional select clause parameters.
+
+Limitation: the library supports execution of one statement at a time. No nested statements, like select something and execute inserts in the loop where you process result set of your select statement. You'd need to separate this into two sequential steps.
+
+<< more to be added to this section>>, please see the next section that has some pretty straightforward examples.
 
 # Going by example
 
