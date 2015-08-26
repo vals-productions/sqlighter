@@ -55,7 +55,7 @@ ios/j2objc/ content does not need to be included anywhere. The files are j2objc 
 
 Here I will show you how to inject platform specific implementations on application/activity initialization. 
 
-One of the ways this might be done is by using singleton pattern. Code below is for Android, which should be converted to iOS with j2objc.
+One of the ways this might be done is by using singleton pattern. Code below is for Android, which could/should be converted to iOS with j2objc.
 ``` java
 public class Bootstrap {
     private static Bootstrap instance;
