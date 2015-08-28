@@ -1,12 +1,12 @@
-package com.vals.a2ios.android;
+package com.vals.a2ios.sqlighter.impl;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
-import com.vals.a2ios.sqlighter.SQLighterDb;
-import com.vals.a2ios.sqlighter.SQLighterRs;
+import com.vals.a2ios.sqlighter.intf.SQLighterDb;
+import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
 import java.io.File;
 import java.io.FileOutputStream;

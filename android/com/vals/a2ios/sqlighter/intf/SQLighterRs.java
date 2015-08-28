@@ -1,4 +1,4 @@
-package com.vals.a2ios.sqlighter;
+package com.vals.a2ios.sqlighter.intf;
 
 /**
  * General interface for managing SQL select statement's result set

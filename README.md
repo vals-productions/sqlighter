@@ -4,9 +4,13 @@ SQLIte implementation that works with j2objc on both - Android and iOS platforms
 
 # Overview
 
-This implementation is based on standard Android's SQlite implementation that is being used on Android devices, and matching implementation on iOS device.
+This implementation is based on standard Android's SQlite implementation that is being
+used on Android devices, and matching implementation on iOS device.
 
-This library does not attempt to replicate Android's implementation completely. The goal is to provide ability to execute pretty much any SQL statements at either of the platforms with single and simple interface without dependencies on existing platform specific implementations.
+This library does not attempt to replicate Android's implementation completely. The 
+goal is to provide ability to execute pretty much any SQL statements at either of 
+the platforms with single and simple interface without dependencies on existing
+platform specific implementations.
 ```
    Android                            iOS
    
@@ -25,34 +29,50 @@ SQLighterDbImpl.java         SQLighterDbImpl.h
                              SQLighterRsImpl.h
                              SQLighterRsImpl.m
 ```
-Both implementations conform to SQLighterDb (core database methods) and SQLighterRs (ResultSet processing) interfaces. Android implementation for these is SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h and *Impl.m files (see the diagram above). They implement, in essence, same interfaces, that are result or SQLighterDb.java and SQLighterRs.java j2objc converion into corresponding Objective C classes (actually, protocols).
+Both implementations conform to SQLighterDb (core database methods) and
+SQLighterRs (ResultSet processing) interfaces. Android implementation for these is
+SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h 
+and *Impl.m files (see the diagram above). They implement, in essence, same interfaces, 
+that are result or SQLighterDb.java and SQLighterRs.java j2objc converion into 
+corresponding Objective C classes (actually, protocols).
 
 # j2objc
 
-SQLighterDb.java and SQLighterRs.java normally are to be converted into iOS to become SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m. They are included in this repository in case you want to include them as is and, maybe, save some time in j2objc process.
+SQLighterDb.java and SQLighterRs.java normally are to be converted into iOS to become 
+SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m. They are included in 
+this repository in case you want to include them as is and, maybe, save some time 
+in j2objc process.
 
-Conversion should be done with the use of --prefixes <file with prefix configs> j2objc switch to prevent adding java package prefix to class names. Sample file is below.
+Conversion should be done with the use of --prefixes <file with prefix configs> j2objc 
+switch to prevent adding java package prefix to class names. Sample file is below.
 ```
 <file with prefix configs>
 ...
 com.vals.a2ios.sqlighter=
 ...
 ```
-This makes code look cleaner in case you'd like to use sqlighter for some iOS functionality that is not matching your Android counterpart. 
+This makes code look cleaner in case you'd like to use sqlighter for some iOS 
+functionality that is not matching your Android counterpart. 
 
-So, you should include SQLighterDb.h, SQLighterDb.m, SQLighterRs.h and SQLighterRs.m in your Objective C project whether you generate or copy them from this repository.
+So, you should include SQLighterDb.h, SQLighterDb.m, SQLighterRs.h and SQLighterRs.m in 
+your Objective C project whether you generate or copy them from this repository.
 
 ### Project configuration
 
 #### Android
 
-Include content of sqlighter/android in your Android project. Include com/vals/a2ios/sqlighter/*.java interfaces into j2objc conversion processes. I recommend to exclude package name prefix generation for the package so that class names look shorter and simpler.
+Include content of sqlighter/android in your Android project. Include 
+com/vals/a2ios/sqlighter/intf/*.java interfaces into j2objc conversion processes. I recommend 
+to exclude package name prefix generation for the package so that class names look 
+shorter and simpler.
 
 #### iOS
 
 Include /ios/impl/ *.h and *.m files into your iOS project.
 
-ios/j2objc/ content does not necessarily need to be included in your iOS project. The files are j2objc conversions of com/vals/a2ios/sqlighter/ interfaces and included as examples.
+ios/j2objc/ content does not necessarily need to be included in your iOS project. 
+The files are j2objc conversions of com/vals/a2ios/sqlighter/intf interfaces and 
+included as examples.
 
 #### Database file
 
@@ -85,7 +105,8 @@ in production environment.
 Here I will show you how to inject platform specific implementations on application/activity
 initialization and initialize the database file.
 
-One of the ways this might be done is by using singleton pattern. Code below is for Android, which could/should be converted to iOS with j2objc.
+One of the ways this might be done is by using singleton pattern. Code below is for 
+Android, which could/should be converted to iOS with j2objc.
 ``` java
 public class Bootstrap {
     private static Bootstrap instance;
@@ -121,7 +142,8 @@ protected void onCreate(Bundle savedInstanceState) {
   }
 ...
 ```
-And your iOS' app delegate initialization method may look like this. Note that Bootstrap is just a j2objc clone of Android's Bootstrap class.
+And your iOS' app delegate initialization method may look like this. Note that 
+Bootstrap is just a j2objc clone of Android's Bootstrap class.
 ``` objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     Bootstrap *b = [Bootstrap getInstance];
@@ -134,7 +156,9 @@ And your iOS' app delegate initialization method may look like this. Note that B
     return YES;
 }
 ```
-One important feature od this implementation is - you get uniform and platform independent way to get access to your DB implementation interface in your shared between platforms code as this
+One important feature od this implementation is - you get uniform and platform 
+independent way to get access to your DB implementation interface in your shared 
+between platforms code as this
 ``` java
 SQLighterDb db = Bootstrap.getInstance().getDb();
 ```
@@ -150,9 +174,16 @@ Usage is very straightforward.
 
 Positional parameters are supported. No naming parameter support.
 
-a) Use addParam* methods to bind positional parameters to your statements. Parameter position is determined by the order in which it was added. Parameters are optional as some statements may be parameterless.
+a) Use addParam* methods to bind positional parameters to your statements. Parameter 
+position is determined by the order in which it was added. Parameters are optional 
+as some statements may be parameterless.
 
-b) Execute the statement by calling SQLighterDb.executeSelect(String sqlString) (for Select...) or SQLighterDb.executeChange(String sqlString) (for INSERT/UPDATE/CREATE/DELETE/...). executeSelect returns the SQLighterRs result set interface that lets you iterate through returned records and retrieve row columns by executing corresponding getters. The SQLighterRs should be closed once you are done with the result set. executeChange closes underlying statements implicitly.
+b) Execute the statement by calling SQLighterDb.executeSelect(String sqlString) 
+(for Select...) or SQLighterDb.executeChange(String sqlString) 
+(for INSERT/UPDATE/CREATE/DELETE/...). executeSelect returns the SQLighterRs result 
+set interface that lets you iterate through returned records and retrieve row columns by 
+executing corresponding getters. The SQLighterRs should be closed once you are done with 
+the result set. executeChange closes underlying statements implicitly.
 
 ResultSet has getters to retrieve positional select clause parameters like this:
 ``` java
@@ -165,12 +196,16 @@ while (rs.hasNext()) {
 }
 rs.close();
 ```
-c) once your statement is executed, bound parameters are cleaned up, so you can use addParam* methods again to be bound/used with your next statement.
+c) once your statement is executed, bound parameters are cleaned up, so you can use
+ addParam* methods again to be bound/used with your next statement.
 
 
-Limitation: the library supports execution of one statement at a time. No nested statements, like select something and execute inserts in the loop where you process result set of your select statement. You'd need to separate this into two sequential steps.
+Limitation: the library supports execution of one statement at a time. No nested
+ statements, like select something and execute inserts in the loop where you process
+  result set of your select statement. You'd need to separate this into two sequential steps.
 
-<< more to be added to this section>>, for now please see the next section that has some pretty straightforward examples.
+<< more to be added to this section>>, for now please see the next section that has
+ some pretty straightforward examples.
 
 # Going by example
 
