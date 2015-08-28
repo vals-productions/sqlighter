@@ -20,15 +20,17 @@
 @property (nonatomic, retain) NSMutableArray *parameterArray;
 @property BOOL replaceDatabase;
 @property sqlite3 *database;
-@property sqlite3_stmt *stmt;
+@property sqlite3_stmt *lastPreparedStmt;
 
 - (void) copyDbOnce;
-- (void)setContextWithId:(id)context;
-- (void)addParamWithNSString:(NSString *)s;
-- (void)addParamWithDouble:(double)s;
-- (void)addParamWithLong:(long)s;
-- (void)addParamWithInt:(int)s;
+- (void) setContextWithId:(id)context;
+- (void) addParamWithNSString:(NSString *)s;
+- (void) addParamWithDouble:(double)s;
+- (void) addParamWithLong:(long)s;
+- (void) addParamWithInt:(int)s;
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery;
-- (void)executeChangeWithNSString:(NSString *) makeCmangeQuery;
+- (void) executeChangeWithNSString:(NSString *) makeCmangeQuery;
+
+- (void) closeStmt: (sqlite3_stmt *) statement;
 
 @end

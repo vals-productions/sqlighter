@@ -12,7 +12,7 @@
 
 @implementation SQLighterDbImpl
 
-@synthesize dbName, replaceDatabase, database, stmt, parameterArray;
+@synthesize dbName, replaceDatabase, database, /*stmt,*/ parameterArray;
 
 -(id) init {
     if( self = [super init]) {
@@ -35,35 +35,38 @@
     self.replaceDatabase = isOverwrite;
 }
 
--(void) prepareStatementWithSql: (NSString *) sqlString {
-    if (sqlite3_prepare_v2(database, [sqlString  UTF8String], -1, &stmt, NULL) != SQLITE_OK) {
+-(sqlite3_stmt *) prepareStatementWithSql: (NSString *) sqlString  {
+    sqlite3_stmt *statement;
+    if (sqlite3_prepare_v2(database, [sqlString  UTF8String], -1, &statement, NULL) != SQLITE_OK) {
         @throw [NSException exceptionWithName: @"Database prepare statement error"
                             reason: [NSString stringWithFormat:
                                                             @"Service: Database SQL Error: '%s'.",
                                                             sqlite3_errmsg(database)]
                 userInfo: nil];
     }
+    self.lastPreparedStmt = statement;
+    return statement;
 }
 
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery {
-    [self prepareStatementWithSql:selectQuery];
+    sqlite3_stmt *statement = [self prepareStatementWithSql: selectQuery];
     [self bindParameters: parameterArray];
     SQLighterRsImpl *rs = [[SQLighterRsImpl alloc] init];
-    rs.database  = database;
-    rs.stmt = stmt;
+    rs.stmt = statement;
+    rs.db = self;
     [parameterArray removeAllObjects];
     return rs;
 }
 
 - (void)executeChangeWithNSString:(NSString *) makeCmangeQuery {
-    [self prepareStatementWithSql:makeCmangeQuery];
+    sqlite3_stmt *statement = [self prepareStatementWithSql: makeCmangeQuery];
     [self bindParameters: parameterArray];
-    code = sqlite3_step(stmt);
-    [self closeStmt];
+    code = sqlite3_step(statement);
+    [self closeStmt: statement];
 }
 
--(void) closeStmt {
-    if (sqlite3_finalize(stmt) == SQLITE_ERROR) {
+-(void) closeStmt: (sqlite3_stmt *) statement {
+    if (sqlite3_finalize(statement) == SQLITE_ERROR) {
         @throw [NSException exceptionWithName: @"Database finalize statement error"
                                                    reason: [NSString stringWithFormat:
                                                             @"Service: Database Error: '%s'.",
@@ -169,9 +172,7 @@
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *path = [documentsDirectory stringByAppendingPathComponent: dbName];
     // Open the database. The database was prepared outside the application.
-    if (sqlite3_open([path UTF8String], &database) == SQLITE_OK) {
-        // ...
-    } else {
+    if (sqlite3_open([path UTF8String], &database) != SQLITE_OK) {
         // Even though the open failed, call close to properly clean up resources.
         //[paths release];
         sqlite3_close(database);
@@ -211,28 +212,28 @@
     [self addParamWithNull];
 }
 -(void) bindString: (NSString*) str  atIndex: (int) paramIdx {
-        sqlite3_bind_text(stmt, paramIdx, [str UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(self.lastPreparedStmt, paramIdx, [str UTF8String], -1, SQLITE_TRANSIENT);
 }
 -(void) bindDouble: (double) d atIndex: (int) paramIdx{
-        sqlite3_bind_double(stmt, paramIdx, d );
+        sqlite3_bind_double(self.lastPreparedStmt, paramIdx, d );
 }
 -(void) bindNullAtIndex: (int) paramIdx {
-        sqlite3_bind_null(stmt, paramIdx);
+        sqlite3_bind_null(self.lastPreparedStmt, paramIdx);
 }
 -(void) bindInt: (int) par atIndex: (int) paramIdx  {
-        sqlite3_bind_int(stmt, paramIdx, par);
+        sqlite3_bind_int(self.lastPreparedStmt, paramIdx, par);
 }
 -(void) bindLong: (long) par  atIndex: (int) paramIdx{
-        sqlite3_bind_int(stmt, paramIdx, (int)par);
+        sqlite3_bind_int(self.lastPreparedStmt, paramIdx, (int)par);
 }
 -(void) bindDate: (NSDate*) date atIndex: (int) idx {
         [self bindDouble: [date timeIntervalSince1970] atIndex: idx];
 }
 -(void) bindBlob: (NSData*) data  atIndex: (int) paramIdx {
-        sqlite3_bind_blob(stmt, paramIdx, [data bytes], (int)[data length], SQLITE_TRANSIENT);
+        sqlite3_bind_blob(self.lastPreparedStmt, paramIdx, [data bytes], (int)[data length], SQLITE_TRANSIENT);
 }
 -(BOOL) isNullAtIndex: (int) idx {
-    const char *buffer = (char*)sqlite3_column_text(stmt, idx);
+    const char *buffer = (char*)sqlite3_column_text(self.lastPreparedStmt, idx);
     int retVal = buffer == nil;
     return retVal;
 }

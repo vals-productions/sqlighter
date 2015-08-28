@@ -10,25 +10,30 @@
 #import <sqlite3.h>
 
 #import "SQLighterRs.h"
+#import "SQLighterDbImpl.h"
 
 @interface SQLighterRsImpl : NSObject<SQLighterRs> {
 //    sqlite3_stmt *stmt;
-//    sqlite3 *database;
 }
-@property sqlite3 *database;
+
 @property sqlite3_stmt *stmt;
+@property (nonatomic, retain) SQLighterDbImpl *db;
+
+-(void) setStatement: (sqlite3_stmt *) statement;
 
 - (BOOL)hasNext;
 
-- (NSNumber*)getDoubleWithInt:(jint)index;
+- (NSNumber*)getDoubleWithInt:(int)index;
 
-- (NSNumber*)getLongWithInt:(jint)index;
+- (NSNumber*)getLongWithInt:(int)index;
 
-- (NSString*)getStringWithInt:(jint)index;
+- (NSString*)getStringWithInt:(int)index;
 
-- (IOSByteArray*)getBlobWithInt:(jint)index;
+- (IOSByteArray*)getBlobWithInt:(int)index;
 
-- (NSNumber*)getIntWithInt:(jint)index;
+- (NSData*) getBlobAtIndex: (int) index;
+
+- (NSNumber*)getIntWithInt:(int)index;
 
 - (void)close;
 

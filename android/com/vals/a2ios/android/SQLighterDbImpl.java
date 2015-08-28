@@ -84,9 +84,9 @@ public class SQLighterDbImpl implements SQLighterDb {
     private boolean isOpen = false;
     private boolean isDbCopied = false;
 
-    public void setContext(Context context) {
-        this.context = context;
-    }
+//    public void setContext(Context context) {
+//        this.context = context;
+//    }
 
     @Override
     public void setOverwriteDb(boolean isOverwrite) {
@@ -106,6 +106,9 @@ public class SQLighterDbImpl implements SQLighterDb {
     @Override
     public void openIfClosed() {
         if(!isOpen) {
+            if (context == null) {
+                throw new RuntimeException("Context object is null");
+            }
             db = context.openOrCreateDatabase(dbName, Context.MODE_PRIVATE, null);
             isOpen = true;
         }

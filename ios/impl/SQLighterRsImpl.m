@@ -11,13 +11,15 @@
 
 @implementation SQLighterRsImpl
 
+@synthesize db, stmt;
+
 -(BOOL) hasNext {
-    bool hasIt = sqlite3_step(self.stmt) == SQLITE_ROW;
+    bool hasIt = sqlite3_step(stmt) == SQLITE_ROW;
     return hasIt;
 }
 
 -(BOOL) isNullWithInt: (int) idx {
-    const char *buffer = (char*)sqlite3_column_text(self.stmt, idx);
+    const char *buffer = (char*)sqlite3_column_text(stmt, idx);
     int retVal = buffer == nil;
     return retVal;
 }
@@ -26,7 +28,7 @@
     if ([self isNullWithInt:idx]) {
         return nil;
     }
-    const char *buffer = (char*)sqlite3_column_text(self.stmt, idx);
+    const char *buffer = (char*)sqlite3_column_text(stmt, idx);
     NSString *str = [NSString stringWithUTF8String: buffer];
     return str;
 }
@@ -42,7 +44,7 @@
     if ([self isNullWithInt:idx]) {
         return nil;
     }
-    int v = sqlite3_column_int(self.stmt, idx);
+    int v = sqlite3_column_int(stmt, idx);
     return  [NSNumber numberWithInt: v];
 }
 
@@ -54,7 +56,7 @@
     if ([self isNullWithInt:idx]) {
         return nil;
     }
-    double d = sqlite3_column_double(self.stmt, idx++);
+    double d = sqlite3_column_double(stmt, idx++);
     return [NSNumber numberWithDouble:d];
 }
 
@@ -76,22 +78,16 @@
 }
 
 -(NSData*) getBlobAtIndex: (int) index {
-    int length = sqlite3_column_bytes(self.stmt, index);
+    int length = sqlite3_column_bytes(stmt, index);
     if(length == 0) {
         return nil;
     }
-    NSData *data = [NSData dataWithBytes:sqlite3_column_blob(self.stmt, index) length:length];
+    NSData *data = [NSData dataWithBytes:sqlite3_column_blob(stmt, index) length:length];
     return data;
 }
 
 - (void)close {
-    if (sqlite3_finalize(self.stmt) == SQLITE_ERROR) {
-        @throw [NSException
-            exceptionWithName: @"Database finalize statement error"
-            reason: [NSString stringWithFormat: @"Service: Database Error: '%s'.",
-            sqlite3_errmsg(self.database)]
-            userInfo: nil];
-    }
+    [db closeStmt: stmt];
 }
 
 @end
