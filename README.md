@@ -199,11 +199,6 @@ rs.close();
 c) once your statement is executed, bound parameters are cleaned up, so you can use
  addParam* methods again to be bound/used with your next statement.
 
-
-Limitation: the library supports execution of one statement at a time. No nested
- statements, like select something and execute inserts in the loop where you process
-  result set of your select statement. You'd need to separate this into two sequential steps.
-
 << more to be added to this section>>, for now please see the next section that has
  some pretty straightforward examples.
 
