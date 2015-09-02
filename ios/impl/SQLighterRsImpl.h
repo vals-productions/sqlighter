@@ -13,13 +13,10 @@
 #import "SQLighterDbImpl.h"
 
 @interface SQLighterRsImpl : NSObject<SQLighterRs> {
-//    sqlite3_stmt *stmt;
 }
 
 @property sqlite3_stmt *stmt;
 @property (nonatomic, retain) SQLighterDbImpl *db;
-
--(void) setStatement: (sqlite3_stmt *) statement;
 
 - (BOOL)hasNext;
 

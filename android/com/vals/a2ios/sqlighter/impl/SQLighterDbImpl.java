@@ -16,7 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Android implementation of SQLighter interfaces
+ * Android implementation of SQLighter interfaces.
+ *
+ * See interface's java doc for more details
  */
 public class SQLighterDbImpl implements SQLighterDb {
 
