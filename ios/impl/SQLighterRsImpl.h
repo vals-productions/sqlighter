@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
 
-#import "SQLighterRs.h"
+#import "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 #import "SQLighterDbImpl.h"
 
 @interface SQLighterRsImpl : NSObject<SQLighterRs> {
