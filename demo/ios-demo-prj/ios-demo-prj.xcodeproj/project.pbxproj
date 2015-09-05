@@ -1,0 +1,589 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F32A9E5F1B9028CE0092C868 /* convert.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5C1B9028CE0092C868 /* convert.sh */; };
+		F32A9E601B9028CE0092C868 /* pckgs.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5D1B9028CE0092C868 /* pckgs.sh */; };
+		F32A9E611B9028CE0092C868 /* j2objc.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5E1B9028CE0092C868 /* j2objc.sh */; };
+		F32A9E661B9213B50092C868 /* SQLighterDbImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = F32A9E621B9213B50092C868 /* SQLighterDbImpl.m */; };
+		F32A9E671B9213B50092C868 /* SQLighterRsImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = F32A9E651B9213B50092C868 /* SQLighterRsImpl.m */; };
+		F32A9EA41B9ACFF20092C868 /* sqlite.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = F32A9EA31B9ACFF20092C868 /* sqlite.sqlite */; };
+		F32A9EA71B9AD6BF0092C868 /* Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = F32A9EA61B9AD6BF0092C868 /* Demo.m */; };
+		F32A9EA91B9AD7DB0092C868 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F32A9EA81B9AD7DB0092C868 /* libsqlite3.dylib */; };
+		F32A9EAB1B9AD7FA0092C868 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F32A9EAA1B9AD7FA0092C868 /* libicucore.dylib */; };
+		F32A9EAD1B9AD80A0092C868 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F32A9EAC1B9AD80A0092C868 /* libz.dylib */; };
+		F32A9EC71B9ADCC00092C868 /* Bootstrap.m in Sources */ = {isa = PBXBuildFile; fileRef = F32A9EC61B9ADCC00092C868 /* Bootstrap.m */; };
+		F37D0D671B90180300E73A01 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F37D0D661B90180300E73A01 /* main.m */; };
+		F37D0D6A1B90180300E73A01 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F37D0D691B90180300E73A01 /* AppDelegate.m */; };
+		F37D0D6D1B90180300E73A01 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F37D0D6C1B90180300E73A01 /* ViewController.m */; };
+		F37D0D701B90180300E73A01 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F37D0D6E1B90180300E73A01 /* Main.storyboard */; };
+		F37D0D721B90180300E73A01 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F37D0D711B90180300E73A01 /* Images.xcassets */; };
+		F37D0D751B90180300E73A01 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F37D0D731B90180300E73A01 /* LaunchScreen.xib */; };
+		F37D0D811B90180400E73A01 /* ios_demo_prjTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F37D0D801B90180400E73A01 /* ios_demo_prjTests.m */; };
+		F3D46B8C1B9BA32600E60142 /* libguava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B841B9BA32600E60142 /* libguava.a */; };
+		F3D46B8D1B9BA32600E60142 /* libmockito.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B851B9BA32600E60142 /* libmockito.a */; };
+		F3D46B8E1B9BA32600E60142 /* libjunit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B861B9BA32600E60142 /* libjunit.a */; };
+		F3D46B8F1B9BA32600E60142 /* libjsr305.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B871B9BA32600E60142 /* libjsr305.a */; };
+		F3D46B901B9BA32600E60142 /* libprotobuf_runtime.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B881B9BA32600E60142 /* libprotobuf_runtime.a */; };
+		F3D46B911B9BA32600E60142 /* libjavax_inject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B891B9BA32600E60142 /* libjavax_inject.a */; };
+		F3D46B921B9BA32600E60142 /* libjre_emul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B8A1B9BA32600E60142 /* libjre_emul.a */; };
+		F3D46B931B9BA32600E60142 /* libj2objc_main.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B8B1B9BA32600E60142 /* libj2objc_main.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F37D0D7B1B90180400E73A01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F37D0D591B90180300E73A01 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F37D0D601B90180300E73A01;
+			remoteInfo = "ios-demo-prj";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F32A9E5C1B9028CE0092C868 /* convert.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = convert.sh; path = "ios-demo-prj/script/convert.sh"; sourceTree = "<group>"; };
+		F32A9E5D1B9028CE0092C868 /* pckgs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = pckgs.sh; path = "ios-demo-prj/script/pckgs.sh"; sourceTree = "<group>"; };
+		F32A9E5E1B9028CE0092C868 /* j2objc.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = j2objc.sh; path = "ios-demo-prj/script/j2objc.sh"; sourceTree = "<group>"; };
+		F32A9E621B9213B50092C868 /* SQLighterDbImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterDbImpl.m; path = ../../../ios/impl/SQLighterDbImpl.m; sourceTree = "<group>"; };
+		F32A9E631B9213B50092C868 /* SQLighterDbImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SQLighterDbImpl.h; path = ../../../ios/impl/SQLighterDbImpl.h; sourceTree = "<group>"; };
+		F32A9E641B9213B50092C868 /* SQLighterRsImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SQLighterRsImpl.h; path = ../../../ios/impl/SQLighterRsImpl.h; sourceTree = "<group>"; };
+		F32A9E651B9213B50092C868 /* SQLighterRsImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterRsImpl.m; path = ../../../ios/impl/SQLighterRsImpl.m; sourceTree = "<group>"; };
+		F32A9EA31B9ACFF20092C868 /* sqlite.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = sqlite.sqlite; path = "../../andr-demo-prj/app/src/main/assets/sqlite.sqlite"; sourceTree = "<group>"; };
+		F32A9EA51B9AD6BF0092C868 /* Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Demo.h; path = com/prod/vals/andr_demo_prj/Demo.h; sourceTree = "<group>"; };
+		F32A9EA61B9AD6BF0092C868 /* Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Demo.m; path = com/prod/vals/andr_demo_prj/Demo.m; sourceTree = "<group>"; };
+		F32A9EA81B9AD7DB0092C868 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		F32A9EAA1B9AD7FA0092C868 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		F32A9EAC1B9AD80A0092C868 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		F32A9EAE1B9AD8480092C868 /* libguava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libguava.a; path = "../../../m/j2objc-0.9.7/lib/libguava.a"; sourceTree = "<group>"; };
+		F32A9EAF1B9AD8480092C868 /* libmockito.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmockito.a; path = "../../../m/j2objc-0.9.7/lib/libmockito.a"; sourceTree = "<group>"; };
+		F32A9EB01B9AD8480092C868 /* libjunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjunit.a; path = "../../../m/j2objc-0.9.7/lib/libjunit.a"; sourceTree = "<group>"; };
+		F32A9EB11B9AD8480092C868 /* libjsr305.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjsr305.a; path = "../../../m/j2objc-0.9.7/lib/libjsr305.a"; sourceTree = "<group>"; };
+		F32A9EB21B9AD8480092C868 /* libprotobuf_runtime.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf_runtime.a; path = "../../../m/j2objc-0.9.7/lib/libprotobuf_runtime.a"; sourceTree = "<group>"; };
+		F32A9EB31B9AD8480092C868 /* libjavax_inject.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjavax_inject.a; path = "../../../m/j2objc-0.9.7/lib/libjavax_inject.a"; sourceTree = "<group>"; };
+		F32A9EB41B9AD8480092C868 /* libjre_emul.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_emul.a; path = "../../../m/j2objc-0.9.7/lib/libjre_emul.a"; sourceTree = "<group>"; };
+		F32A9EB51B9AD8480092C868 /* libj2objc_main.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libj2objc_main.a; path = "../../../m/j2objc-0.9.7/lib/libj2objc_main.a"; sourceTree = "<group>"; };
+		F32A9EC51B9ADCC00092C868 /* Bootstrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bootstrap.h; path = com/prod/vals/andr_demo_prj/Bootstrap.h; sourceTree = "<group>"; };
+		F32A9EC61B9ADCC00092C868 /* Bootstrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Bootstrap.m; path = com/prod/vals/andr_demo_prj/Bootstrap.m; sourceTree = "<group>"; };
+		F32A9EC81B9B5CC20092C868 /* libguava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libguava.a; path = "../j2objc-0.9.7/lib/libguava.a"; sourceTree = "<group>"; };
+		F32A9EC91B9B5CC20092C868 /* libmockito.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmockito.a; path = "../j2objc-0.9.7/lib/libmockito.a"; sourceTree = "<group>"; };
+		F32A9ECA1B9B5CC20092C868 /* libjunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjunit.a; path = "../j2objc-0.9.7/lib/libjunit.a"; sourceTree = "<group>"; };
+		F32A9ECB1B9B5CC20092C868 /* libjsr305.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjsr305.a; path = "../j2objc-0.9.7/lib/libjsr305.a"; sourceTree = "<group>"; };
+		F32A9ECC1B9B5CC20092C868 /* libprotobuf_runtime.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf_runtime.a; path = "../j2objc-0.9.7/lib/libprotobuf_runtime.a"; sourceTree = "<group>"; };
+		F32A9ECD1B9B5CC20092C868 /* libjavax_inject.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjavax_inject.a; path = "../j2objc-0.9.7/lib/libjavax_inject.a"; sourceTree = "<group>"; };
+		F32A9ECE1B9B5CC20092C868 /* libjre_emul.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_emul.a; path = "../j2objc-0.9.7/lib/libjre_emul.a"; sourceTree = "<group>"; };
+		F32A9ECF1B9B5CC20092C868 /* libj2objc_main.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libj2objc_main.a; path = "../j2objc-0.9.7/lib/libj2objc_main.a"; sourceTree = "<group>"; };
+		F37D0D611B90180300E73A01 /* ios-demo-prj.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-demo-prj.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F37D0D651B90180300E73A01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F37D0D661B90180300E73A01 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F37D0D681B90180300E73A01 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		F37D0D691B90180300E73A01 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F37D0D6B1B90180300E73A01 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		F37D0D6C1B90180300E73A01 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		F37D0D6F1B90180300E73A01 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F37D0D711B90180300E73A01 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		F37D0D741B90180300E73A01 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		F37D0D7A1B90180400E73A01 /* ios-demo-prjTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-demo-prjTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F37D0D7F1B90180400E73A01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F37D0D801B90180400E73A01 /* ios_demo_prjTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_demo_prjTests.m; sourceTree = "<group>"; };
+		F3D46B841B9BA32600E60142 /* libguava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libguava.a; path = ../j2objc/lib/libguava.a; sourceTree = "<group>"; };
+		F3D46B851B9BA32600E60142 /* libmockito.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmockito.a; path = ../j2objc/lib/libmockito.a; sourceTree = "<group>"; };
+		F3D46B861B9BA32600E60142 /* libjunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjunit.a; path = ../j2objc/lib/libjunit.a; sourceTree = "<group>"; };
+		F3D46B871B9BA32600E60142 /* libjsr305.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjsr305.a; path = ../j2objc/lib/libjsr305.a; sourceTree = "<group>"; };
+		F3D46B881B9BA32600E60142 /* libprotobuf_runtime.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf_runtime.a; path = ../j2objc/lib/libprotobuf_runtime.a; sourceTree = "<group>"; };
+		F3D46B891B9BA32600E60142 /* libjavax_inject.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjavax_inject.a; path = ../j2objc/lib/libjavax_inject.a; sourceTree = "<group>"; };
+		F3D46B8A1B9BA32600E60142 /* libjre_emul.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_emul.a; path = ../j2objc/lib/libjre_emul.a; sourceTree = "<group>"; };
+		F3D46B8B1B9BA32600E60142 /* libj2objc_main.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libj2objc_main.a; path = ../j2objc/lib/libj2objc_main.a; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F37D0D5E1B90180300E73A01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3D46B8C1B9BA32600E60142 /* libguava.a in Frameworks */,
+				F3D46B8D1B9BA32600E60142 /* libmockito.a in Frameworks */,
+				F3D46B8E1B9BA32600E60142 /* libjunit.a in Frameworks */,
+				F3D46B8F1B9BA32600E60142 /* libjsr305.a in Frameworks */,
+				F3D46B901B9BA32600E60142 /* libprotobuf_runtime.a in Frameworks */,
+				F3D46B911B9BA32600E60142 /* libjavax_inject.a in Frameworks */,
+				F3D46B921B9BA32600E60142 /* libjre_emul.a in Frameworks */,
+				F3D46B931B9BA32600E60142 /* libj2objc_main.a in Frameworks */,
+				F32A9EAD1B9AD80A0092C868 /* libz.dylib in Frameworks */,
+				F32A9EAB1B9AD7FA0092C868 /* libicucore.dylib in Frameworks */,
+				F32A9EA91B9AD7DB0092C868 /* libsqlite3.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F37D0D771B90180400E73A01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F32A9E5B1B9028AB0092C868 /* script */ = {
+			isa = PBXGroup;
+			children = (
+				F32A9E5C1B9028CE0092C868 /* convert.sh */,
+				F32A9E5D1B9028CE0092C868 /* pckgs.sh */,
+				F32A9E5E1B9028CE0092C868 /* j2objc.sh */,
+			);
+			name = script;
+			sourceTree = "<group>";
+		};
+		F32A9EBE1B9ADA7B0092C868 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				F32A9EC81B9B5CC20092C868 /* libguava.a */,
+				F32A9EC91B9B5CC20092C868 /* libmockito.a */,
+				F32A9ECA1B9B5CC20092C868 /* libjunit.a */,
+				F32A9ECB1B9B5CC20092C868 /* libjsr305.a */,
+				F32A9ECC1B9B5CC20092C868 /* libprotobuf_runtime.a */,
+				F32A9ECD1B9B5CC20092C868 /* libjavax_inject.a */,
+				F32A9ECE1B9B5CC20092C868 /* libjre_emul.a */,
+				F32A9ECF1B9B5CC20092C868 /* libj2objc_main.a */,
+				F32A9EAE1B9AD8480092C868 /* libguava.a */,
+				F32A9EAF1B9AD8480092C868 /* libmockito.a */,
+				F32A9EB01B9AD8480092C868 /* libjunit.a */,
+				F32A9EB11B9AD8480092C868 /* libjsr305.a */,
+				F32A9EB21B9AD8480092C868 /* libprotobuf_runtime.a */,
+				F32A9EB31B9AD8480092C868 /* libjavax_inject.a */,
+				F32A9EB41B9AD8480092C868 /* libjre_emul.a */,
+				F32A9EB51B9AD8480092C868 /* libj2objc_main.a */,
+				F32A9EAC1B9AD80A0092C868 /* libz.dylib */,
+				F32A9EAA1B9AD7FA0092C868 /* libicucore.dylib */,
+				F32A9EA81B9AD7DB0092C868 /* libsqlite3.dylib */,
+			);
+			name = libs;
+			sourceTree = "<group>";
+		};
+		F37D0D581B90180300E73A01 = {
+			isa = PBXGroup;
+			children = (
+				F3D46B841B9BA32600E60142 /* libguava.a */,
+				F3D46B851B9BA32600E60142 /* libmockito.a */,
+				F3D46B861B9BA32600E60142 /* libjunit.a */,
+				F3D46B871B9BA32600E60142 /* libjsr305.a */,
+				F3D46B881B9BA32600E60142 /* libprotobuf_runtime.a */,
+				F3D46B891B9BA32600E60142 /* libjavax_inject.a */,
+				F3D46B8A1B9BA32600E60142 /* libjre_emul.a */,
+				F3D46B8B1B9BA32600E60142 /* libj2objc_main.a */,
+				F32A9EBE1B9ADA7B0092C868 /* libs */,
+				F32A9E5B1B9028AB0092C868 /* script */,
+				F37D0D631B90180300E73A01 /* ios-demo-prj */,
+				F37D0D7D1B90180400E73A01 /* ios-demo-prjTests */,
+				F37D0D621B90180300E73A01 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F37D0D621B90180300E73A01 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F37D0D611B90180300E73A01 /* ios-demo-prj.app */,
+				F37D0D7A1B90180400E73A01 /* ios-demo-prjTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F37D0D631B90180300E73A01 /* ios-demo-prj */ = {
+			isa = PBXGroup;
+			children = (
+				F32A9EC51B9ADCC00092C868 /* Bootstrap.h */,
+				F32A9EC61B9ADCC00092C868 /* Bootstrap.m */,
+				F32A9EA51B9AD6BF0092C868 /* Demo.h */,
+				F32A9EA61B9AD6BF0092C868 /* Demo.m */,
+				F32A9EA31B9ACFF20092C868 /* sqlite.sqlite */,
+				F32A9E621B9213B50092C868 /* SQLighterDbImpl.m */,
+				F32A9E631B9213B50092C868 /* SQLighterDbImpl.h */,
+				F32A9E641B9213B50092C868 /* SQLighterRsImpl.h */,
+				F32A9E651B9213B50092C868 /* SQLighterRsImpl.m */,
+				F37D0D681B90180300E73A01 /* AppDelegate.h */,
+				F37D0D691B90180300E73A01 /* AppDelegate.m */,
+				F37D0D6B1B90180300E73A01 /* ViewController.h */,
+				F37D0D6C1B90180300E73A01 /* ViewController.m */,
+				F37D0D6E1B90180300E73A01 /* Main.storyboard */,
+				F37D0D711B90180300E73A01 /* Images.xcassets */,
+				F37D0D731B90180300E73A01 /* LaunchScreen.xib */,
+				F37D0D641B90180300E73A01 /* Supporting Files */,
+			);
+			path = "ios-demo-prj";
+			sourceTree = "<group>";
+		};
+		F37D0D641B90180300E73A01 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F37D0D651B90180300E73A01 /* Info.plist */,
+				F37D0D661B90180300E73A01 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F37D0D7D1B90180400E73A01 /* ios-demo-prjTests */ = {
+			isa = PBXGroup;
+			children = (
+				F37D0D801B90180400E73A01 /* ios_demo_prjTests.m */,
+				F37D0D7E1B90180400E73A01 /* Supporting Files */,
+			);
+			path = "ios-demo-prjTests";
+			sourceTree = "<group>";
+		};
+		F37D0D7E1B90180400E73A01 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F37D0D7F1B90180400E73A01 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F37D0D601B90180300E73A01 /* ios-demo-prj */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F37D0D841B90180400E73A01 /* Build configuration list for PBXNativeTarget "ios-demo-prj" */;
+			buildPhases = (
+				F37D0D5D1B90180300E73A01 /* Sources */,
+				F37D0D5E1B90180300E73A01 /* Frameworks */,
+				F37D0D5F1B90180300E73A01 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ios-demo-prj";
+			productName = "ios-demo-prj";
+			productReference = F37D0D611B90180300E73A01 /* ios-demo-prj.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F37D0D791B90180400E73A01 /* ios-demo-prjTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F37D0D871B90180400E73A01 /* Build configuration list for PBXNativeTarget "ios-demo-prjTests" */;
+			buildPhases = (
+				F37D0D761B90180300E73A01 /* Sources */,
+				F37D0D771B90180400E73A01 /* Frameworks */,
+				F37D0D781B90180400E73A01 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F37D0D7C1B90180400E73A01 /* PBXTargetDependency */,
+			);
+			name = "ios-demo-prjTests";
+			productName = "ios-demo-prjTests";
+			productReference = F37D0D7A1B90180400E73A01 /* ios-demo-prjTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F37D0D591B90180300E73A01 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = "Vlad Sayenko";
+				TargetAttributes = {
+					F37D0D601B90180300E73A01 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					F37D0D791B90180400E73A01 = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = F37D0D601B90180300E73A01;
+					};
+				};
+			};
+			buildConfigurationList = F37D0D5C1B90180300E73A01 /* Build configuration list for PBXProject "ios-demo-prj" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F37D0D581B90180300E73A01;
+			productRefGroup = F37D0D621B90180300E73A01 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F37D0D601B90180300E73A01 /* ios-demo-prj */,
+				F37D0D791B90180400E73A01 /* ios-demo-prjTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F37D0D5F1B90180300E73A01 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F32A9E5F1B9028CE0092C868 /* convert.sh in Resources */,
+				F37D0D701B90180300E73A01 /* Main.storyboard in Resources */,
+				F32A9EA41B9ACFF20092C868 /* sqlite.sqlite in Resources */,
+				F32A9E611B9028CE0092C868 /* j2objc.sh in Resources */,
+				F37D0D751B90180300E73A01 /* LaunchScreen.xib in Resources */,
+				F37D0D721B90180300E73A01 /* Images.xcassets in Resources */,
+				F32A9E601B9028CE0092C868 /* pckgs.sh in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F37D0D781B90180400E73A01 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F37D0D5D1B90180300E73A01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F37D0D6D1B90180300E73A01 /* ViewController.m in Sources */,
+				F32A9E671B9213B50092C868 /* SQLighterRsImpl.m in Sources */,
+				F37D0D6A1B90180300E73A01 /* AppDelegate.m in Sources */,
+				F32A9EC71B9ADCC00092C868 /* Bootstrap.m in Sources */,
+				F37D0D671B90180300E73A01 /* main.m in Sources */,
+				F32A9EA71B9AD6BF0092C868 /* Demo.m in Sources */,
+				F32A9E661B9213B50092C868 /* SQLighterDbImpl.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F37D0D761B90180300E73A01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F37D0D811B90180400E73A01 /* ios_demo_prjTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F37D0D7C1B90180400E73A01 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F37D0D601B90180300E73A01 /* ios-demo-prj */;
+			targetProxy = F37D0D7B1B90180400E73A01 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F37D0D6E1B90180300E73A01 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F37D0D6F1B90180300E73A01 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F37D0D731B90180300E73A01 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F37D0D741B90180300E73A01 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F37D0D821B90180400E73A01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F37D0D831B90180400E73A01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F37D0D851B90180400E73A01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"../j2objc/include/**",
+					../../ios/j2objc,
+					"ios-demo-prj",
+				);
+				INFOPLIST_FILE = "ios-demo-prj/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					../j2objc/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F37D0D861B90180400E73A01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"../j2objc/include/**",
+					../../ios/j2objc,
+					"ios-demo-prj",
+				);
+				INFOPLIST_FILE = "ios-demo-prj/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					../j2objc/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		F37D0D881B90180400E73A01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "ios-demo-prjTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ios-demo-prj.app/ios-demo-prj";
+			};
+			name = Debug;
+		};
+		F37D0D891B90180400E73A01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "ios-demo-prjTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ios-demo-prj.app/ios-demo-prj";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F37D0D5C1B90180300E73A01 /* Build configuration list for PBXProject "ios-demo-prj" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F37D0D821B90180400E73A01 /* Debug */,
+				F37D0D831B90180400E73A01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F37D0D841B90180400E73A01 /* Build configuration list for PBXNativeTarget "ios-demo-prj" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F37D0D851B90180400E73A01 /* Debug */,
+				F37D0D861B90180400E73A01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F37D0D871B90180400E73A01 /* Build configuration list for PBXNativeTarget "ios-demo-prjTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F37D0D881B90180400E73A01 /* Debug */,
+				F37D0D891B90180400E73A01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F37D0D591B90180300E73A01 /* Project object */;
+}

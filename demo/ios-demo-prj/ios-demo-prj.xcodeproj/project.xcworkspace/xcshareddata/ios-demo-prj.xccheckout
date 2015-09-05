@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>CFFB0993-8F8A-4936-9B95-B2D1BDB3095D</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ios-demo-prj</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>4FA3C8CF542634C49287A8693FBE667B3BF40402</key>
+		<string>https://github.com/vals-productions/sqlighter.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>demo/ios-demo-prj/ios-demo-prj.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>4FA3C8CF542634C49287A8693FBE667B3BF40402</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/vals-productions/sqlighter.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>4FA3C8CF542634C49287A8693FBE667B3BF40402</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>4FA3C8CF542634C49287A8693FBE667B3BF40402</string>
+			<key>IDESourceControlWCCName</key>
+			<string>sqlighter</string>
+		</dict>
+	</array>
+</dict>
+</plist>
