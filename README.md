@@ -38,10 +38,13 @@ corresponding Objective C classes (actually, protocols).
 
 # j2objc
 
-SQLighterDb.java and SQLighterRs.java normally are to be converted into iOS to become 
-SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m. They are included in 
-this repository in case you want to include them as is and, maybe, save some time 
-in j2objc process.
+You do not need to use j2objc tools to use this library as part of your j2objc project,
+because it includes classes\modules that are already j2objc'd. 
+
+So you can save your time on conversion setup and skip to the Project configuration.
+
+But just in case... SQLighterDb.java and SQLighterRs.java normally are to be converted
+into iOS to become  SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m.
 
 Conversion should be done with the use of --prefixes <file with prefix configs> j2objc 
 switch to prevent adding java package prefix to class names. Sample file is below.
@@ -59,20 +62,48 @@ your Objective C project whether you generate or copy them from this repository.
 
 ### Project configuration
 
-#### Android
+First, you should configure your project for j2objc according to information at
+j2objc.org. Add path to j2objc include directory, add j2objc libraries. Make sure
+your code compiles and j2objc conversion works. In xcode add libsqlite3.dylib to 
+your project libraries.
 
-Include content of sqlighter/android in your Android project. Include 
-com/vals/a2ios/sqlighter/intf/*.java interfaces into j2objc conversion processes. I recommend 
-to exclude package name prefix generation for the package so that class names look 
-shorter and simpler.
+#### Sqlighter at Android
 
-#### iOS
+Include content of sqlighter/android in your Android project. I.e. 
+you should have these packages/files in your sources:
+```
+com.vals.a2ios.sqlighter.impl.SQLighterDbImpl.java
+com.vals.a2ios.sqlighter.intf.SQLighterDb.java
+com.vals.a2ios.sqlighter.intf.SQLighterRs.java
+```
+You can manually copy them into your project, or, edit gradle.build and point to the
+location of files, 
+```
+android {
+....
+    sourceSets {
+        main.java.srcDirs += 'src/main/../../../../../android/'
+    }
+}
+```
+or whatever other method of including sources in the project
+you know.
 
-Include /ios/impl/ *.h and *.m files into your iOS project.
+#### Sqlighter at iOS
 
-ios/j2objc/ content does not necessarily need to be included in your iOS project. 
-The files are j2objc conversions of com/vals/a2ios/sqlighter/intf interfaces and 
-included as examples.
+Include contents of /ios/impl/ directory SQLighterDbImpl and SQLighterRsImpl .h and *.m files
+into your iOS project. Right click at the project's source files folder, pick "Add files to "prj name", locate
+the place where you cloned sqlighter repository, and add those files.
+
+Add path to the content of ios/j2objc to your project's include's search path. I.e. you should be
+able to use the following in your code, because these files are under ios/j2objc and xcode has ios/j2objc
+in include search path
+```
+#import "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
+#import "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
+```
+
+Make sure your project compiles.
 
 #### Database file
 
