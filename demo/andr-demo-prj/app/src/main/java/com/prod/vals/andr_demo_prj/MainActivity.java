@@ -1,9 +1,10 @@
 package com.prod.vals.andr_demo_prj;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.vals.a2ios.sqlighter.impl.SQLighterDbImpl;
 
@@ -32,7 +33,10 @@ public class MainActivity extends ActionBarActivity {
         /**
          * Demo db operations with SQlighter
          */
-        Demo.dbOperations();
+        String greetingStr = Demo.dbOperations();
+
+        TextView mGreetView = (TextView)findViewById(R.id.greet);
+        mGreetView.setText(greetingStr);
     }
 
     @Override

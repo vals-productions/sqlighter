@@ -28,8 +28,8 @@ __attribute__((unused)) static void Demo_printWithSQLighterRs_(id<SQLighterRs> r
   Demo_printWithSQLighterRs_(rs);
 }
 
-+ (void)dbOperations {
-  Demo_dbOperations();
++ (NSString *)dbOperations {
+  return Demo_dbOperations();
 }
 
 - (instancetype)init {
@@ -53,8 +53,9 @@ void Demo_printWithSQLighterRs_(id<SQLighterRs> rs) {
   [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
 }
 
-void Demo_dbOperations() {
+NSString *Demo_dbOperations() {
   Demo_initialize();
+  NSString *greetingStr = nil;
   @try {
     id<SQLighterDb> db = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
     id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(db)) executeSelectWithNSString:@"select id, email, name, data, height from user"];
@@ -63,7 +64,7 @@ void Demo_dbOperations() {
       Demo_printWithSQLighterRs_(rs);
     }
     [rs close];
-    NSString *dataStr = @"This is blob string example";
+    NSString *dataStr = @"Hello, sqlighter!";
     IOSByteArray *data = [dataStr getBytes];
     [db addParamWithNSString:@"user name 5"];
     [db addParamWithNSString:@"qw@er.ty1"];
@@ -102,8 +103,8 @@ void Demo_dbOperations() {
       }
     }
     [rs close];
-    [db addParamWithNSString:@"user@email.com"];
-    [db executeChangeWithNSString:@"delete from user where email = ?"];
+    [db addParamWithLong:2];
+    [db executeChangeWithNSString:@"delete from user where id = ?"];
     [JavaLangSystem_get_out_() printlnWithNSString:@"after delete state"];
     rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user"];
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
@@ -121,10 +122,18 @@ void Demo_dbOperations() {
       [JavaLangSystem_get_out_() printlnWithNSString:JreStrcat("$$", @" address: ", [rs getStringWithInt:5])];
     }
     [rs close];
+    [db addParamWithDouble:5.67];
+    rs = [db executeSelectWithNSString:@"select data from user where height = ?"];
+    if ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+      IOSByteArray *greet = [rs getBlobWithInt:0];
+      greetingStr = [NSString stringWithBytes:greet];
+    }
+    [rs close];
   }
   @catch (JavaLangException *e) {
     [((JavaLangException *) nil_chk(e)) printStackTrace];
   }
+  return greetingStr;
 }
 
 void Demo_init(Demo *self) {

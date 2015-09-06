@@ -14,13 +14,13 @@
 
 - (instancetype)init;
 
-+ (void)dbOperations;
++ (NSString *)dbOperations;
 
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(Demo)
 
-FOUNDATION_EXPORT void Demo_dbOperations();
+FOUNDATION_EXPORT NSString *Demo_dbOperations();
 
 FOUNDATION_EXPORT void Demo_init(Demo *self);
 

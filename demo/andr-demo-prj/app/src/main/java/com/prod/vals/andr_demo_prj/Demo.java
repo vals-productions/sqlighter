@@ -35,7 +35,8 @@ public class Demo {
      *
      * This metho
      */
-    public static void dbOperations() {
+    public static String dbOperations() {
+        String greetingStr = null;
         try {
             SQLighterDb db = Bootstrap.getInstance().getSqLighterDb();
             SQLighterRs rs = db.executeSelect("select id, email, name, data, height from user");
@@ -45,7 +46,7 @@ public class Demo {
             }
             rs.close();
 
-            String dataStr = "This is blob string example";
+            String dataStr = "Hello, sqlighter!";
             byte[] data = dataStr.getBytes();
             db.addParam("user name 5");
             db.addParam("qw@er.ty1");
@@ -90,8 +91,8 @@ public class Demo {
             }
             rs.close();
 
-            db.addParam("user@email.com");
-            db.executeChange("delete from user where email = ?");
+            db.addParam(2);
+            db.executeChange("delete from user where id = ?");
 
             System.out.println("after delete state");
             rs = db.executeSelect("select id, email, name, data, height from user");
@@ -114,9 +115,20 @@ public class Demo {
             }
             rs.close();
 
+            /**
+             * Retrieving greeting string
+             */
+            db.addParam(5.67);
+            rs = db.executeSelect("select data from user where height = ?");
+            if (rs.hasNext()) {
+                byte[] greet = rs.getBlob(0);
+                greetingStr =  new String(greet);
+            }
+            rs.close();
         } catch(Exception e) {
             e.printStackTrace();
         }
+        return greetingStr;
     }
 
 }
