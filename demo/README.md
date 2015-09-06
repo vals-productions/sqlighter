@@ -23,3 +23,7 @@ sqlighter
 Android demo is under construction. You can look at proj. structure and code samples
 but I do not guarantee it will compile and run out of the box on your computer
 due to path configurations.
+
+Make sure Android IDE at your computer has Android SDK 5.0 (21) and corresponding build tools 
+installed. It is not a requirement, it's just the way the project is configured, unless you
+want to reconfigure the project to the SDK you have.
