@@ -21,6 +21,9 @@ the changes to iOS.
 
 Then both, Android and iOS projects display the greeting at the screen.
 
+Please look into the next two sections in case you need to make any adjustments
+before running projects.
+
 ## iOS
 
 First, look into to crt-j2objc-link.sh for an example on how to create a link
