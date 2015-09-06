@@ -59,24 +59,8 @@
 		F32A9EA81B9AD7DB0092C868 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		F32A9EAA1B9AD7FA0092C868 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		F32A9EAC1B9AD80A0092C868 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		F32A9EAE1B9AD8480092C868 /* libguava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libguava.a; path = "../../../m/j2objc-0.9.7/lib/libguava.a"; sourceTree = "<group>"; };
-		F32A9EAF1B9AD8480092C868 /* libmockito.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmockito.a; path = "../../../m/j2objc-0.9.7/lib/libmockito.a"; sourceTree = "<group>"; };
-		F32A9EB01B9AD8480092C868 /* libjunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjunit.a; path = "../../../m/j2objc-0.9.7/lib/libjunit.a"; sourceTree = "<group>"; };
-		F32A9EB11B9AD8480092C868 /* libjsr305.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjsr305.a; path = "../../../m/j2objc-0.9.7/lib/libjsr305.a"; sourceTree = "<group>"; };
-		F32A9EB21B9AD8480092C868 /* libprotobuf_runtime.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf_runtime.a; path = "../../../m/j2objc-0.9.7/lib/libprotobuf_runtime.a"; sourceTree = "<group>"; };
-		F32A9EB31B9AD8480092C868 /* libjavax_inject.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjavax_inject.a; path = "../../../m/j2objc-0.9.7/lib/libjavax_inject.a"; sourceTree = "<group>"; };
-		F32A9EB41B9AD8480092C868 /* libjre_emul.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_emul.a; path = "../../../m/j2objc-0.9.7/lib/libjre_emul.a"; sourceTree = "<group>"; };
-		F32A9EB51B9AD8480092C868 /* libj2objc_main.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libj2objc_main.a; path = "../../../m/j2objc-0.9.7/lib/libj2objc_main.a"; sourceTree = "<group>"; };
 		F32A9EC51B9ADCC00092C868 /* Bootstrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bootstrap.h; path = com/prod/vals/andr_demo_prj/Bootstrap.h; sourceTree = "<group>"; };
 		F32A9EC61B9ADCC00092C868 /* Bootstrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Bootstrap.m; path = com/prod/vals/andr_demo_prj/Bootstrap.m; sourceTree = "<group>"; };
-		F32A9EC81B9B5CC20092C868 /* libguava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libguava.a; path = "../j2objc-0.9.7/lib/libguava.a"; sourceTree = "<group>"; };
-		F32A9EC91B9B5CC20092C868 /* libmockito.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmockito.a; path = "../j2objc-0.9.7/lib/libmockito.a"; sourceTree = "<group>"; };
-		F32A9ECA1B9B5CC20092C868 /* libjunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjunit.a; path = "../j2objc-0.9.7/lib/libjunit.a"; sourceTree = "<group>"; };
-		F32A9ECB1B9B5CC20092C868 /* libjsr305.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjsr305.a; path = "../j2objc-0.9.7/lib/libjsr305.a"; sourceTree = "<group>"; };
-		F32A9ECC1B9B5CC20092C868 /* libprotobuf_runtime.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf_runtime.a; path = "../j2objc-0.9.7/lib/libprotobuf_runtime.a"; sourceTree = "<group>"; };
-		F32A9ECD1B9B5CC20092C868 /* libjavax_inject.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjavax_inject.a; path = "../j2objc-0.9.7/lib/libjavax_inject.a"; sourceTree = "<group>"; };
-		F32A9ECE1B9B5CC20092C868 /* libjre_emul.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_emul.a; path = "../j2objc-0.9.7/lib/libjre_emul.a"; sourceTree = "<group>"; };
-		F32A9ECF1B9B5CC20092C868 /* libj2objc_main.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libj2objc_main.a; path = "../j2objc-0.9.7/lib/libj2objc_main.a"; sourceTree = "<group>"; };
 		F37D0D611B90180300E73A01 /* ios-demo-prj.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-demo-prj.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F37D0D651B90180300E73A01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F37D0D661B90180300E73A01 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -142,22 +126,14 @@
 		F32A9EBE1B9ADA7B0092C868 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				F32A9EC81B9B5CC20092C868 /* libguava.a */,
-				F32A9EC91B9B5CC20092C868 /* libmockito.a */,
-				F32A9ECA1B9B5CC20092C868 /* libjunit.a */,
-				F32A9ECB1B9B5CC20092C868 /* libjsr305.a */,
-				F32A9ECC1B9B5CC20092C868 /* libprotobuf_runtime.a */,
-				F32A9ECD1B9B5CC20092C868 /* libjavax_inject.a */,
-				F32A9ECE1B9B5CC20092C868 /* libjre_emul.a */,
-				F32A9ECF1B9B5CC20092C868 /* libj2objc_main.a */,
-				F32A9EAE1B9AD8480092C868 /* libguava.a */,
-				F32A9EAF1B9AD8480092C868 /* libmockito.a */,
-				F32A9EB01B9AD8480092C868 /* libjunit.a */,
-				F32A9EB11B9AD8480092C868 /* libjsr305.a */,
-				F32A9EB21B9AD8480092C868 /* libprotobuf_runtime.a */,
-				F32A9EB31B9AD8480092C868 /* libjavax_inject.a */,
-				F32A9EB41B9AD8480092C868 /* libjre_emul.a */,
-				F32A9EB51B9AD8480092C868 /* libj2objc_main.a */,
+				F3D46B841B9BA32600E60142 /* libguava.a */,
+				F3D46B851B9BA32600E60142 /* libmockito.a */,
+				F3D46B861B9BA32600E60142 /* libjunit.a */,
+				F3D46B871B9BA32600E60142 /* libjsr305.a */,
+				F3D46B881B9BA32600E60142 /* libprotobuf_runtime.a */,
+				F3D46B891B9BA32600E60142 /* libjavax_inject.a */,
+				F3D46B8A1B9BA32600E60142 /* libjre_emul.a */,
+				F3D46B8B1B9BA32600E60142 /* libj2objc_main.a */,
 				F32A9EAC1B9AD80A0092C868 /* libz.dylib */,
 				F32A9EAA1B9AD7FA0092C868 /* libicucore.dylib */,
 				F32A9EA81B9AD7DB0092C868 /* libsqlite3.dylib */,
@@ -168,14 +144,6 @@
 		F37D0D581B90180300E73A01 = {
 			isa = PBXGroup;
 			children = (
-				F3D46B841B9BA32600E60142 /* libguava.a */,
-				F3D46B851B9BA32600E60142 /* libmockito.a */,
-				F3D46B861B9BA32600E60142 /* libjunit.a */,
-				F3D46B871B9BA32600E60142 /* libjsr305.a */,
-				F3D46B881B9BA32600E60142 /* libprotobuf_runtime.a */,
-				F3D46B891B9BA32600E60142 /* libjavax_inject.a */,
-				F3D46B8A1B9BA32600E60142 /* libjre_emul.a */,
-				F3D46B8B1B9BA32600E60142 /* libj2objc_main.a */,
 				F32A9EBE1B9ADA7B0092C868 /* libs */,
 				F32A9E5B1B9028AB0092C868 /* script */,
 				F37D0D631B90180300E73A01 /* ios-demo-prj */,
