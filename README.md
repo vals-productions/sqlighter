@@ -11,6 +11,15 @@ This library does not attempt to replicate Android's implementation completely. 
 goal is to provide ability to execute pretty much any SQL statements at either of 
 the platforms with single and simple interface without dependencies on existing
 platform specific implementations.
+
+It is up to you how to setup j2objc conversions for business logics conversions of your
+project. You do it in whichever way works for you. There is no dependency here. Most
+likely you already have something by setup now. You just have to include provided classes
+and interfaces into your Android project on one side, and iOS / Objective C modules/protocols 
+at the other side. Then see guidelines and usage examples provided in the documentation.
+
+You can also check Android and iOS demo projects that are part of this repository.
+
 ```
    Android                            iOS
    
@@ -43,8 +52,8 @@ because it includes classes\modules that are already j2objc'd.
 
 So you can save your time on conversion setup and skip to the Project configuration.
 
-But just in case... SQLighterDb.java and SQLighterRs.java normally are to be converted
-into iOS to become  SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m.
+But just in case you decide to dios so... SQLighterDb.java and SQLighterRs.java are to be converted
+into iOS to become SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m.
 
 Conversion should be done with the use of --prefixes <file with prefix configs> j2objc 
 switch to prevent adding java package prefix to class names. Sample file is below.
