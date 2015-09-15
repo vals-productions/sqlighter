@@ -50,7 +50,7 @@ So.
 </pre>
 2. create a link while in the directory above:
 <pre>
-...sqlighter/demo> ln -s <path to j2objc installation> j2objc
+...sqlighter/demo> ln -s [path to j2objc installation] j2objc
 </pre>
 3. Verify the link actually worked:
 <pre>
