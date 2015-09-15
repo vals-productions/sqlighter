@@ -54,7 +54,7 @@ So.
 </pre>
 3. Verify the link actually worked:
 <pre>
-... sqlighter/demo> ls
+... sqlighter/demo> ls -l
 ... README.md
 ... andr-demo-prj
 ... crt-j2objc-link.sh
