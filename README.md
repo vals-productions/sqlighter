@@ -162,7 +162,7 @@ public class Bootstrap {
 Then your activity's onCreate method might look like this:
 ``` java
 protected void onCreate(Bundle savedInstanceState) {
-  SQLighterDbImpl db = new SQLighterDbImpl();
+  SQLighterDb db = new SQLighterDbImpl();
   db.setDbPath("/data/data/<<YOUR PROJECT path>>/databases/");
   db.setDbName("sqlite.sqlite");
   db.setOverwriteDb(false); // will not replace device's DB file already exists
