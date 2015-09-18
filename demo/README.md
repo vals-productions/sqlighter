@@ -41,6 +41,40 @@ sqlighter
       lib
       ....
 ```
+So.
+
+1. You have to be in this directory: ...sqlighter/demo
+<pre>
+> pwd
+...sqlighter/demo
+</pre>
+2. create a link while in the directory above:
+<pre>
+...sqlighter/demo> ln -s [path to j2objc installation] j2objc
+</pre>
+3. Verify the link actually worked:
+<pre>
+... sqlighter/demo> ls -l
+... README.md
+... andr-demo-prj
+... crt-j2objc-link.sh
+... ios-demo-prj
+... j2objc -> ../../m/j2objc-0.9.7 /* your unique path to be displayed to the left */
+</pre>
+Make sure the link is setup correctly:
+<pre>
+> cd j2objc
+> ls
+cycle_finder		j2objc			j2objc_protoc_plugin	lib
+include			j2objc_protoc		j2objcc			man
+</pre>
+
+You should see include nad lib directories here, and they should actually contain include and lib files.
+
+If suggestion above does not work
+1) just go into Build Settings\Search Paths and update Header and Library Search path to your locations, then 
+2) go to Build Phases\Link Binary With Libraries and replace entries there with entires in your locations.
+
 
 ## Android
 
