@@ -239,6 +239,26 @@ rs.close();
 c) once your statement is executed, bound parameters are cleaned up, so you can use
  addParam* methods again to be bound/used with your next statement.
 
+Example
+
+```
+String stm = "insert into user( name, email, data, height) values (?, ?, ?, ?)";
+
+// first insert
+db.addParam("user name 5");
+db.addParam("qw@er.ty1");
+db.addParam(data);
+db.addParam(5.67);
+db.executeChange(stm);
+
+// second insert
+db.addParam("user name 6");
+db.addParam("qw@er.ty2");
+db.addParam(data3);
+db.addParam(4.45);
+db.executeChange(stm);
+```
+
 << more to be added to this section>>, for now please see the next section that has
  some pretty straightforward examples.
 
