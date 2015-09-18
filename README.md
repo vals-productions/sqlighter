@@ -196,7 +196,7 @@ Bootstrap is just a j2objc clone of Android's Bootstrap class.
     return YES;
 }
 ```
-One important feature od this implementation is - you get uniform and platform 
+One important feature of this implementation is - you get uniform and platform 
 independent way to get access to your DB implementation interface in your shared 
 between platforms code as this
 ``` java
