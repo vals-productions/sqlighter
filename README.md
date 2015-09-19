@@ -14,7 +14,7 @@ platform specific implementations.
 
 It is up to you how to setup j2objc conversions for business logics conversions of your
 project. You do it in whichever way works for you. There is no dependency here. Most
-likely you already have something by setup now. You just have to include provided classes
+likely you already have something setup by now. You just have to include provided classes
 and interfaces into your Android project on one side, and iOS / Objective C modules/protocols 
 at the other side. Then see guidelines and usage examples provided in the documentation.
 
