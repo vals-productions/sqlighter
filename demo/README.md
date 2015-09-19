@@ -3,7 +3,7 @@
 These examples demonstrate how sqlighter could be of use to code SQLite related code in
 java, and run it on iOS. 
 
-Demo.java class' dbOperations() static method performs some database activity, retrieves
+[Demo.java] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) class' dbOperations() static method performs some database activity, retrieves
 and returns "Hello sqlighter!" blob value (as String) from database's user table.
 
 Demo class is converted into its Objective-C counterpart, as well as Bootstrap that
