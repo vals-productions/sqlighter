@@ -69,7 +69,7 @@ cycle_finder		j2objc			j2objc_protoc_plugin	lib
 include			j2objc_protoc		j2objcc			man
 </pre>
 
-You should see include nad lib directories here, and they should actually contain include and lib files.
+You should see include and lib directories here, and they should actually contain include and lib files.
 
 If suggestion above does not work
 1) just go into Build Settings\Search Paths and update Header and Library Search path to your locations, then 
