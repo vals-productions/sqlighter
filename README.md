@@ -100,7 +100,7 @@ you know.
 
 #### Sqlighter at iOS
 
-Include contents of /ios/impl/ directory SQLighterDbImpl and SQLighterRsImpl .h and *.m files
+Include contents of /ios/impl/ directory - SQLighterDbImpl and SQLighterRsImpl *.h and *.m files
 into your iOS project. Right click at the project's source files folder, pick "Add files to "prj name", locate
 the place where you cloned sqlighter repository, and add those files.
 
