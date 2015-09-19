@@ -9,20 +9,25 @@
 #include "J2ObjC_header.h"
 
 @class IOSByteArray;
+@class JavaLangDouble;
+@class JavaLangInteger;
+@class JavaLangLong;
 
 @protocol SQLighterRs < NSObject, JavaObject >
 
 - (jboolean)hasNext;
 
-- (NSNumber *)getDoubleWithInt:(jint)index;
+- (JavaLangDouble *)getDoubleWithInt:(jint)index;
 
-- (NSNumber *)getLongWithInt:(jint)index;
+- (JavaLangLong *)getLongWithInt:(jint)index;
+
+- (NSNumber *)getNumberWithInt:(jint)index;
 
 - (NSString *)getStringWithInt:(jint)index;
 
 - (IOSByteArray *)getBlobWithInt:(jint)index;
 
-- (NSNumber *)getIntWithInt:(jint)index;
+- (JavaLangInteger *)getIntWithInt:(jint)index;
 
 - (void)close;
 

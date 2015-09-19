@@ -18,7 +18,7 @@ public class Demo {
      * @param rs
      */
     private static void print(SQLighterRs rs) {
-        Number pk = rs.getLong(0);
+        Long pk = rs.getLong(0);
         String e = rs.getString(1);
         String n = rs.getString(2);
         byte[] dataBytes = rs.getBlob(3);
@@ -32,8 +32,6 @@ public class Demo {
 
     /**
      * Demo Db operations with SQLighter
-     *
-     * This metho
      */
     public static String dbOperations() {
         String greetingStr = null;

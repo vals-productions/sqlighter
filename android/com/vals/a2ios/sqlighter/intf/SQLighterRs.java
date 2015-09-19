@@ -15,13 +15,19 @@ public interface SQLighterRs {
      * @param index - 0 based index
      * @return Number object or null
      */
-    public Number getDouble(int index);
+    public Double getDouble(int index);
     /**
      * Returns corresponding column value
      * @param index - 0 based index
      * @return Number object or null
      */
-    public Number getLong(int index);
+    public Long getLong(int index);
+    /**
+     * Returns corresponding column value
+     * @param index - 0 based index
+     * @return Number object or null
+     */
+    public Number getNumber(int index);
     /**
      * Returns corresponding column value
      * @param index - 0 based index
@@ -39,7 +45,7 @@ public interface SQLighterRs {
      * @param index - 0 based index
      * @return Number object or null
      */
-    public Number getInt(int index);
+    public Integer getInt(int index);
 
     /**
      * Close result set

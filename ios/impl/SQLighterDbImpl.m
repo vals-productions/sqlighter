@@ -23,9 +23,9 @@
     return self;
 }
 
-- (void)setDbPathWithNSString:(NSString *)path {
-    // not used in iOS
-}
+//- (void)setDbPathWithNSString:(NSString *)path {
+//    // not used in iOS
+//}
 
 - (void)setDbNameWithNSString:(NSString *)name {
     self.dbName = name;

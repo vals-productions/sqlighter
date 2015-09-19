@@ -35,7 +35,7 @@ public class SQLighterDbImpl implements SQLighterDb {
         }
 
         @Override
-        public Number getDouble(int index) {
+        public Double getDouble(int index) {
             if(cursor.isNull(index)) {
                 return null;
             }
@@ -43,7 +43,7 @@ public class SQLighterDbImpl implements SQLighterDb {
         }
 
         @Override
-        public Number getLong(int index) {
+        public Long getLong(int index) {
             if(cursor.isNull(index)) {
                 return null;
             }
@@ -51,11 +51,19 @@ public class SQLighterDbImpl implements SQLighterDb {
         }
 
         @Override
-        public Number getInt(int index) {
+        public Integer getInt(int index) {
             if(cursor.isNull(index)) {
                 return null;
             }
             return cursor.getInt(index);
+        }
+
+        @Override
+        public Number getNumber(int index) {
+            if(cursor.isNull(index)) {
+                return null;
+            }
+            return cursor.getDouble(index);
         }
 
         @Override
@@ -100,7 +108,6 @@ public class SQLighterDbImpl implements SQLighterDb {
         this.dbName = name;
     }
 
-    @Override
     public void setDbPath(String path) {
         this.dbPath = path;
     }

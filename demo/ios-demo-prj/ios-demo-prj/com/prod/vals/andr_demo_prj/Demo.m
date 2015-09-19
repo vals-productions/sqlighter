@@ -11,7 +11,9 @@
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 #include "java/io/PrintStream.h"
+#include "java/lang/Double.h"
 #include "java/lang/Exception.h"
+#include "java/lang/Long.h"
 #include "java/lang/System.h"
 
 @interface Demo ()
@@ -41,7 +43,7 @@ __attribute__((unused)) static void Demo_printWithSQLighterRs_(id<SQLighterRs> r
 
 void Demo_printWithSQLighterRs_(id<SQLighterRs> rs) {
   Demo_initialize();
-  NSNumber *pk = [((id<SQLighterRs>) nil_chk(rs)) getLongWithInt:0];
+  JavaLangLong *pk = [((id<SQLighterRs>) nil_chk(rs)) getLongWithInt:0];
   NSString *e = [rs getStringWithInt:1];
   NSString *n = [rs getStringWithInt:2];
   IOSByteArray *dataBytes = [rs getBlobWithInt:3];

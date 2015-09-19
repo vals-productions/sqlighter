@@ -20,7 +20,7 @@ public interface SQLighterDb {
      *  iOS - not used
      * </pre>
      */
-    public void setDbPath(String path);
+    // public void setDbPath(String path);
 
     /**
      * Android only. Important as openIfClosed will call

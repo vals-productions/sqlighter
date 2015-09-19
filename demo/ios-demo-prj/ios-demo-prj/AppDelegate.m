@@ -25,7 +25,7 @@
     Bootstrap *b = [Bootstrap getInstance];
     SQLighterDbImpl *db = [[SQLighterDbImpl alloc] init];
     [db setDbNameWithNSString: @"sqlite.sqlite"];
-    [db setReplaceDatabase:TRUE];
+    [db setOverwriteDbWithBoolean:true];
     [db copyDbOnce];
     [db openIfClosed];
     [b setSqLighterDbWithSQLighterDb:db];

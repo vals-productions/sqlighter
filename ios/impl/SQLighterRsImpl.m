@@ -8,6 +8,9 @@
 
 #import "SQLighterRsImpl.h"
 #import "IOSPrimitiveArray.h"
+#import "Double.h"
+#import "Long.h"
+#import "Integer.h"
 
 @implementation SQLighterRsImpl
 
@@ -40,19 +43,27 @@
     return c;
 }
 
--(NSNumber*) getIntWithInt: (int) idx {
+-(JavaLangInteger*) getIntWithInt: (int) idx {
     if ([self isNullWithInt:idx]) {
         return nil;
     }
     int v = sqlite3_column_int(stmt, idx);
-    return  [NSNumber numberWithInt: v];
+    return  [JavaLangInteger valueOfWithInt: v];
 }
 
--(NSNumber*) getLongWithInt: (int) idx {
-    return [self getIntWithInt:idx];
+-(JavaLangLong*) getLongWithInt: (int) idx {
+    return [JavaLangLong valueOfWithLong: [[self getIntWithInt:idx] longValue]];
 }
 
--(NSNumber*) getDoubleWithInt: (int) idx {
+-(JavaLangDouble*) getDoubleWithInt: (int) idx {
+    if ([self isNullWithInt:idx]) {
+        return nil;
+    }
+    double d = sqlite3_column_double(stmt, idx++);
+    return [JavaLangDouble valueOfWithDouble:d];
+}
+
+-(NSNumber*) getNumberWithInt: (int) idx {
     if ([self isNullWithInt:idx]) {
         return nil;
     }
