@@ -52,8 +52,8 @@ because it includes classes\modules that are already j2objc'd.
 
 So you can save your time on conversion setup and skip to the Project configuration.
 
-But just in case you decide to dios so... SQLighterDb.java and SQLighterRs.java are to be converted
-into iOS to become SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m.
+But just in case you decide to do so... SQLighterDb.java and SQLighterRs.java are to be converted
+into Objective C to become SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m.
 
 Conversion should be done with the use of --prefixes <file with prefix configs> j2objc 
 switch to prevent adding java package prefix to class names. Sample file is below.
@@ -71,10 +71,8 @@ your Objective C project whether you generate or copy them from this repository.
 
 ### Project configuration
 
-First, you should configure your project for j2objc according to information at
-j2objc.org. Add path to j2objc include directory, add j2objc libraries. Make sure
-your code compiles and j2objc conversion works. In xcode add libsqlite3.dylib to 
-your project libraries.
+It is pretty simple - include java files to Android, include *.h and *.m file to your xCode, make sure everything compiles.
+If something does not work, check doc for more detailed explainations.
 
 #### Sqlighter at Android
 
@@ -100,6 +98,8 @@ you know.
 
 #### Sqlighter at iOS
 
+In xcode add libsqlite3.dylib to your project libraries.
+
 Include contents of /ios/impl/ directory - SQLighterDbImpl and SQLighterRsImpl *.h and *.m files
 into your iOS project. Right click at the project's source files folder, pick "Add files to "prj name", locate
 the place where you cloned sqlighter repository, and add those files.
@@ -111,8 +111,11 @@ in include search path
 #import "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #import "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 ```
+j2objc also has to be part of the project since some specific classes from the toolkit are referenced from sqlighter.
 
-Make sure your project compiles.
+Make sure your project compiles. 
+
+
 
 #### Database file
 
