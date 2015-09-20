@@ -14,8 +14,6 @@
 
 #pragma mark Public
 
-- (instancetype)init;
-
 + (Bootstrap *)getInstance;
 
 - (id<SQLighterDb>)getSqLighterDb;
@@ -27,10 +25,6 @@
 J2OBJC_EMPTY_STATIC_INIT(Bootstrap)
 
 FOUNDATION_EXPORT Bootstrap *Bootstrap_getInstance();
-
-FOUNDATION_EXPORT void Bootstrap_init(Bootstrap *self);
-
-FOUNDATION_EXPORT Bootstrap *new_Bootstrap_init() NS_RETURNS_RETAINED;
 
 J2OBJC_TYPE_LITERAL_HEADER(Bootstrap)
 

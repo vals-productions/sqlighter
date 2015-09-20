@@ -13,6 +13,8 @@
   id<SQLighterDb> sqLighterDb_;
 }
 
+- (instancetype)init;
+
 @end
 
 J2OBJC_FIELD_SETTER(Bootstrap, sqLighterDb_, id<SQLighterDb>)
@@ -21,7 +23,16 @@ static Bootstrap *Bootstrap_bootstrap_;
 J2OBJC_STATIC_FIELD_GETTER(Bootstrap, bootstrap_, Bootstrap *)
 J2OBJC_STATIC_FIELD_SETTER(Bootstrap, bootstrap_, Bootstrap *)
 
+__attribute__((unused)) static void Bootstrap_init(Bootstrap *self);
+
+__attribute__((unused)) static Bootstrap *new_Bootstrap_init() NS_RETURNS_RETAINED;
+
 @implementation Bootstrap
+
+- (instancetype)init {
+  Bootstrap_init(self);
+  return self;
+}
 
 + (Bootstrap *)getInstance {
   return Bootstrap_getInstance();
@@ -35,22 +46,7 @@ J2OBJC_STATIC_FIELD_SETTER(Bootstrap, bootstrap_, Bootstrap *)
   self->sqLighterDb_ = sqLighterDb;
 }
 
-- (instancetype)init {
-  Bootstrap_init(self);
-  return self;
-}
-
 @end
-
-Bootstrap *Bootstrap_getInstance() {
-  Bootstrap_initialize();
-  @synchronized(Bootstrap_class_()) {
-    if (Bootstrap_bootstrap_ == nil) {
-      Bootstrap_bootstrap_ = new_Bootstrap_init();
-    }
-    return Bootstrap_bootstrap_;
-  }
-}
 
 void Bootstrap_init(Bootstrap *self) {
   (void) NSObject_init(self);
@@ -60,6 +56,16 @@ Bootstrap *new_Bootstrap_init() {
   Bootstrap *self = [Bootstrap alloc];
   Bootstrap_init(self);
   return self;
+}
+
+Bootstrap *Bootstrap_getInstance() {
+  Bootstrap_initialize();
+  @synchronized(Bootstrap_class_()) {
+    if (Bootstrap_bootstrap_ == nil) {
+      Bootstrap_bootstrap_ = new_Bootstrap_init();
+    }
+    return Bootstrap_bootstrap_;
+  }
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Bootstrap)
