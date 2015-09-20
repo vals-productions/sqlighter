@@ -24,10 +24,10 @@ public class MainActivity extends ActionBarActivity {
         db.setOverwriteDb(true);
         try {
             db.copyDbOnce();
+            db.openIfClosed();
         } catch (Throwable t) {
             t.printStackTrace();
         }
-        db.openIfClosed();
         Bootstrap.getInstance().setSqLighterDb(db);
 
         /**

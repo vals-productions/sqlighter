@@ -21,6 +21,13 @@ import java.util.List;
  * See interface's java doc for more details
  */
 public class SQLighterDbImpl implements SQLighterDb {
+    private String dbName, dbPath;
+    private boolean isOverwrite = false;
+    private Context context;
+    private SQLiteDatabase db;
+    private boolean isOpen = false;
+    private boolean isDbCopied = false;
+    private List<Object> parameterList = new LinkedList<>();
 
     public class ResultSetImpl implements SQLighterRs {
         private Cursor cursor;
@@ -82,21 +89,11 @@ public class SQLighterDbImpl implements SQLighterDb {
             return cursor.getBlob(index);
         }
 
+        @Override
         public void close() {
             cursor.close();
        }
     }
-
-    private String dbName, dbPath;
-    private boolean isOverwrite = false;
-    private Context context;
-    private SQLiteDatabase db;
-    private boolean isOpen = false;
-    private boolean isDbCopied = false;
-
-//    public void setContext(Context context) {
-//        this.context = context;
-//    }
 
     @Override
     public void setOverwriteDb(boolean isOverwrite) {
@@ -108,53 +105,74 @@ public class SQLighterDbImpl implements SQLighterDb {
         this.dbName = name;
     }
 
+    /**
+     * Android specific method
+     * @param path - location of db file
+     */
     public void setDbPath(String path) {
         this.dbPath = path;
     }
 
     @Override
-    public void openIfClosed() {
+    public void openIfClosed() throws Exception {
         if(!isOpen) {
             if (context == null) {
-                throw new RuntimeException("Context object is null");
+                throw new Exception("Context object is null");
             }
             db = context.openOrCreateDatabase(dbName, Context.MODE_PRIVATE, null);
             isOpen = true;
         }
     }
 
+    private void ensureInitialState(String deviceDbFileName) throws Exception {
+        if (context == null) {
+            throw new Exception("Context object is null");
+        }
+        File devicePath = new File(dbPath);
+        if (!devicePath.exists()) {
+            /**
+             app is being started the very first time, no db path exists,
+             the following commands will create an empty db file and path
+             to the file
+             */
+            db = context.openOrCreateDatabase(deviceDbFileName, Context.MODE_PRIVATE, null);
+            db.close();
+            // the path has been created, but we will have to overwrite the db file with
+            // our file from the assets (to be consistent with iOS), so let's delete it
+            // first
+            isOverwrite = true;
+        }
+    }
+
     @Override
-    public void copyDbOnce()  throws Exception {
+    public void copyDbOnce() throws Exception {
         if (!isDbCopied) {
             isDbCopied = true;
-        } else {
-            return;
-        }
-        //Open your local db as the input stream
-        InputStream myInput = context.getAssets().open(dbName);
-        String targetFileName = dbPath + dbName;
-
-        File f = new File(targetFileName);
-        boolean isFileExists = f.exists();
-
-        if(!isFileExists || isOverwrite) {
-            if (isFileExists) {
-                // we are here to overwrite the target file,
-                // so, let's delete it
-                f.delete();
+            String deviceDbFileName = dbPath + dbName;
+            ensureInitialState(deviceDbFileName);
+            File f = new File(deviceDbFileName);
+            boolean isDeviceDbFileExists = f.exists();
+            if(!isDeviceDbFileExists || isOverwrite) {
+                if (isDeviceDbFileExists) {
+                    // we are here to overwrite the target file,
+                    // so, let's delete it
+                    f.delete();
+                }
+                // Open assets (initial) db as the input stream
+                InputStream assetsDbFileIs = context.getAssets().open(dbName);
+                // open empty target file as the output stream
+                OutputStream myOutput = new FileOutputStream(deviceDbFileName);
+                // copy
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = assetsDbFileIs.read(buffer)) > 0) {
+                    myOutput.write(buffer, 0, length);
+                }
+                // close streams
+                myOutput.flush();
+                myOutput.close();
+                assetsDbFileIs.close();
             }
-            // open empty target file as the output stream
-            OutputStream myOutput = new FileOutputStream(targetFileName);
-            // copy
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = myInput.read(buffer)) > 0) {
-                myOutput.write(buffer, 0, length);
-            }
-            // close streams
-            myOutput.flush();
-            myOutput.close();
-            myInput.close();
         }
     }
 
@@ -163,29 +181,40 @@ public class SQLighterDbImpl implements SQLighterDb {
         this.context = (Context)context;
     }
 
-    private List<Object> pl = new LinkedList<>();
+    @Override
     public void addParam(double d) {
-        pl.add(new Double(d).toString());
+        parameterList.add(new Double(d).toString());
     }
+
+    @Override
     public void addParam(long l) {
-        pl.add(new Long(l).toString());
+        parameterList.add(new Long(l).toString());
     }
+
+    @Override
     public void addParam(String s) {
-        pl.add(s);
+        parameterList.add(s);
     }
+
+    @Override
     public void addParam(byte[] blob) {
-        pl.add(blob);
+        parameterList.add(blob);
     }
+
+    @Override
     public void addParamNull() {
-        pl.add(null);
+        parameterList.add(null);
     }
+
     @Override
     public SQLighterRs executeSelect(String selectQuery) {
-        String[] sp = pl.toArray(new String[pl.size()]);
-        pl.clear();
+        String[] sp = parameterList.toArray(new String[parameterList.size()]);
+        parameterList.clear();
         Cursor cursor = db.rawQuery(selectQuery, sp);
         return new ResultSetImpl(cursor);
     }
+
+    @Override
     public void executeChange(String update) {
         SQLiteStatement stmt = db.compileStatement(update);
         bindParams(stmt);
@@ -194,7 +223,7 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
     private void bindParams(SQLiteStatement stmt) {
         int i = 1;
-        for (Object o: pl) {
+        for (Object o: parameterList) {
             if(o == null) {
                 stmt.bindNull(i);
             } else if (o instanceof Double) {
@@ -214,6 +243,6 @@ public class SQLighterDbImpl implements SQLighterDb {
             }
             i++;
         }
-        pl.clear();
+        parameterList.clear();
     }
 }
