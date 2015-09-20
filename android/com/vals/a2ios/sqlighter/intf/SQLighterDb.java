@@ -5,6 +5,12 @@ package com.vals.a2ios.sqlighter.intf;
  *
  */
 public interface SQLighterDb {
+
+    /**
+     * Checks if Db file is already in place
+     */
+    public boolean isDbFileDeployed();
+
     /**
      * Specifies database file name
      *
@@ -87,7 +93,7 @@ public interface SQLighterDb {
     public SQLighterRs executeSelect(String selectQuery);
 
     /**
-     * Execute UPDATE/INSERT/DELETE with previously (optionally) specified parameters
+     * Execute UPDATE/INSERT/DELETE/ALTER/CREATE with previously (optionally) specified parameters
      * @param insert
      */
     public void executeChange(String insert);

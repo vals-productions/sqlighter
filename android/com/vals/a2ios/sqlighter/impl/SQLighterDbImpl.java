@@ -96,6 +96,12 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
 
     @Override
+    public boolean isDbFileDeployed() {
+        File devicePath = new File(dbPath + dbName);
+        return devicePath.exists();
+    }
+
+    @Override
     public void setOverwriteDb(boolean isOverwrite) {
         this.isOverwrite = isOverwrite;
     }

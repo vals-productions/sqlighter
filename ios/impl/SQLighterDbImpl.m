@@ -23,9 +23,13 @@
     return self;
 }
 
-//- (void)setDbPathWithNSString:(NSString *)path {
-//    // not used in iOS
-//}
+- (BOOL)isDbFileDeployed {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentDirectory = [paths objectAtIndex:0];
+    NSString *writableDbPath = [documentDirectory stringByAppendingPathComponent: dbName];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    return [fileManager fileExistsAtPath:writableDbPath];
+}
 
 - (void)setDbNameWithNSString:(NSString *)name {
     self.dbName = name;

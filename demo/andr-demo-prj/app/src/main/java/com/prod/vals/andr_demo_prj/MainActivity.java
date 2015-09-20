@@ -20,6 +20,12 @@ public class MainActivity extends ActionBarActivity {
         SQLighterDbImpl db = new SQLighterDbImpl();
         db.setDbPath("/data/data/com.prod.vals.andr_demo_prj/databases/");
         db.setDbName("sqlite.sqlite");
+        boolean isDbFileDeployed = db.isDbFileDeployed();
+        if(!isDbFileDeployed) {
+            System.out.println("DB file is not deployed");
+        } else {
+            System.out.println("DB file is deployed");
+        }
         db.setContext(this);
         db.setOverwriteDb(true);
         try {

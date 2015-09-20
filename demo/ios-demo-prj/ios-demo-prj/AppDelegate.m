@@ -25,6 +25,14 @@
     Bootstrap *b = [Bootstrap getInstance];
     SQLighterDbImpl *db = [[SQLighterDbImpl alloc] init];
     [db setDbNameWithNSString: @"sqlite.sqlite"];
+    
+    BOOL isDbFileDeployed = [db isDbFileDeployed];
+    if (!isDbFileDeployed) {
+        NSLog(@"DB file is not deployed");
+    } else {
+        NSLog(@"DB file is deployed");
+    }
+    
     [db setOverwriteDbWithBoolean:true];
     [db copyDbOnce];
     [db openIfClosed];

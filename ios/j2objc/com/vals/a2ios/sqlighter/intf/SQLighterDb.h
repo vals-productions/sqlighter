@@ -13,6 +13,8 @@
 
 @protocol SQLighterDb < NSObject, JavaObject >
 
+- (jboolean)isDbFileDeployed;
+
 - (void)setDbNameWithNSString:(NSString *)name;
 
 - (void)setContextWithId:(id)context;
