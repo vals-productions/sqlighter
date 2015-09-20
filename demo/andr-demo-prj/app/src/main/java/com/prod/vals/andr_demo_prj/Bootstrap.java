@@ -12,6 +12,9 @@ import com.vals.a2ios.sqlighter.intf.SQLighterDb;
  */
 public class Bootstrap {
     private static Bootstrap bootstrap;
+    
+    private Bootstrap() {}
+    
     public static synchronized Bootstrap getInstance() {
         if(bootstrap == null) {
             bootstrap = new Bootstrap();
