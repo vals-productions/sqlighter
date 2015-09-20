@@ -8,9 +8,9 @@
 
 #import "SQLighterRsImpl.h"
 #import "IOSPrimitiveArray.h"
-#import "Double.h"
-#import "Long.h"
-#import "Integer.h"
+#import "java/lang/Double.h"
+#import "java/lang/Long.h"
+#import "java/lang/Integer.h"
 
 @implementation SQLighterRsImpl
 
