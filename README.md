@@ -1,6 +1,12 @@
 # sqlighter
 
-SQLIte implementation that works with j2objc on both - Android and iOS platforms
+SQLIte implementation that works with J2ObjC on both - Android and iOS platforms
+
+Note: I've just added library distribution to the project, and, as part of that 
+change I had to relocate the content of sqlighter/ios/impl/ into
+sqlighter/ios/j2objc/com/vals/a2ios/sqlighter/impl/ , so if you referenced these
+files directly, please update your references. Or, better yet, switch to libraries
+instead of sources.
 
 # Overview
 
@@ -12,11 +18,13 @@ goal is to provide ability to execute pretty much any SQL statements at either o
 the platforms with single and simple interface without dependencies on existing
 platform specific implementations.
 
-It is up to you how to setup j2objc conversions for business logics conversions of your
+It is up to you how to setup J2ObjC conversions for business logics conversions of your
 project. You do it in whichever way works for you. There is no dependency here. Most
 likely you already have something setup by now. You just have to include provided classes
 and interfaces into your Android project on one side, and iOS / Objective C modules/protocols 
-at the other side. Then see guidelines and usage examples provided in the documentation.
+at the other side, or, (better) use provided jar file for Android and lib for iOS.
+
+Then see guidelines and usage examples provided in the documentation.
 
 You can also check Android and iOS demo projects that are part of this repository.
 
@@ -42,18 +50,19 @@ Both implementations conform to SQLighterDb (core database methods) and
 SQLighterRs (ResultSet processing) interfaces. Android implementation for these is
 SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h 
 and *Impl.m files (see the diagram above). They implement, in essence, same interfaces, 
-that are result or SQLighterDb.java and SQLighterRs.java j2objc converion into 
+that are result or SQLighterDb.java and SQLighterRs.java J2ObjC conversion into 
 corresponding Objective C classes (actually, protocols).
 
-# j2objc
+# J2ObjC
 
-You do not need to use j2objc tools to use this library as part of your j2objc project,
-because it includes classes\modules that are already j2objc'd. 
+You do not need to use J2ObjC tools to use this library as part of your project,
+because it includes classes\modules that are already j2objc'd.
 
 So you can save your time on conversion setup and skip to the Project configuration.
 
-But just in case you decide to do so... SQLighterDb.java and SQLighterRs.java are to be converted
-into Objective C to become SQLighterDb.h, SQLighterDb.m and SQLighterRs.h, SQLighterRs.m.
+But just in case you decide to do so... SQLighterDb.java and SQLighterRs.java are 
+to be converted into Objective C to become SQLighterDb.h, SQLighterDb.m 
+and SQLighterRs.h, SQLighterRs.m.
 
 Conversion should be done with the use of --prefixes <file with prefix configs> j2objc 
 switch to prevent adding java package prefix to class names. Sample file is below.
@@ -66,13 +75,26 @@ com.vals.a2ios.sqlighter=
 This makes code look cleaner in case you'd like to use sqlighter for some iOS 
 functionality that is not matching your Android counterpart. 
 
-So, you should include SQLighterDb.h, SQLighterDb.m, SQLighterRs.h and SQLighterRs.m in 
-your Objective C project whether you generate or copy them from this repository.
+## Project configuration
 
-### Project configuration
+### Using provided libraries
 
-It is pretty simple - include java files to Android, include *.h and *.m file to your xCode, make sure everything compiles.
-If something does not work, check doc for more detailed explainations.
+Check out the contend of sqlighter/distr directory. It contains versioned libraries. 
+
+For your Android project just include the sqlighter.jar file into your project. Consult
+with Android Studio how to do it.
+
+For your xCode project, add sqlighter/distr/<VERSION>/ios/libsqlighter-all-lib.a into 
+your project. Consult xCode docs on how to do it. Add path to 
+sqlighter/distr/<VERSION>/ios directory to your project's Header Search path.
+
+This should make it.
+
+### Using source files
+
+It is actually pretty simple (but using libs is easier) - include java files to Android, 
+include *.h and *.m file to your xCode, make sure everything compiles. If something does
+not work, check doc for more detailed explainations.
 
 #### Sqlighter at Android
 
@@ -100,28 +122,30 @@ you know.
 
 In xcode add libsqlite3.dylib to your project libraries.
 
-Include contents of /ios/impl/ directory - SQLighterDbImpl and SQLighterRsImpl *.h and *.m files
-into your iOS project. Right click at the project's source files folder, pick "Add files to "prj name", locate
+Include contents of sqlighter/ios/j2objc/com/vals/a2ios/sqlighter/impl/ directory - 
+SQLighterDbImpl.m and SQLighterRsImpl.m files into your iOS project. Right click at the
+project's source files folder, pick "Add files to "prj name"", locate
 the place where you cloned sqlighter repository, and add those files.
 
-Add path to the content of ios/j2objc to your project's include's search path. I.e. you should be
-able to use the following in your code, because these files are under ios/j2objc and xcode has ios/j2objc
-in include search path
+Add path to the sqlighter/ios/j2objc to your project's include's search path. I.e. you
+should be able to use the following in your code, because these files are under 
+sqlighter/ios/j2objc and xCode has sqlighter/ios/j2objc in include search path:
 ```
 #import "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #import "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 ```
-j2objc also has to be part of the project since some specific classes from the toolkit are referenced from sqlighter.
+J2ObjC toolkit also has to be part of the project since some specific classes from the
+toolkit are referenced from sqlighter. You include this according to J2ObjC guidelines. If
+you need sqlighter project, I assume, you've already familiarized yourself with this
+routine.
 
-Make sure your project compiles. 
-
-
+Make sure your project compiles.
 
 #### Database file
 
-In both cases - Android and iOS your initial SQLite database file should be part of your
-project. It can have some predefined DB schema or you can create tables on the fly - it's
-all in developer's control.
+In either way, both Android and iOS projects should contain your initial SQLite database
+file. It should be part of your project. It can have some predefined DB schema or you
+can create tables on the fly - it's all in developer's control.
 
 On Android's project the location of the file is typically 'assets' directory.
 
@@ -132,16 +156,45 @@ SQLighterDb.setDbName(String name) specifies file name.
 
 SQLighterDb.setDbPath(String path) specifies path to the file on the device. This is
 different between Android and iOS. For android it is "/data/data/<<YOUR PROJECT path>>/databases/",
-for iOS this method has empty implementation as the library knows the location relative
+for iOS this method is missing as the library knows the location relative
 to project's location.
 
-On application instantiation SQLighterDb.copyDbOnce() will copy the database file from the
-project into the device. According to method name it will only copy the file one time even
-if called more than once.
+##### SQLighterDb.copyDbOnce()
 
-Method SQLighterDb.setOverwriteDb(boolean) will let you overwrite target device database
-file if one exists. This is helpful for development but in general you shouldn't use it
-in production environment.
+Your initial sqlite database file is stored somewhere within your project structure.
+This file could contain no tables/information whatsoever, or, contain some
+initial database structure/data of your project. This is all in developer's hands.
+Let's call this file initial database file.
+
+The location of the initial database file in the project and on the device (emulator or
+real device) should be different. Among other things this will prevent database from being
+overwritten during sequential application upgrades by the content of the initial
+database file.
+
+So, there's a task of copying the file from the project into designated device's
+location. This task should be done once since otherwise you'll keep overwriting
+user data in the real application.
+
+Whenever the user starts your application the very first time, the database file
+should be copied from its project location into designated device's location.
+
+This, also, should be done before you start using the database. Basically #copyDbOnce
+takes the complexity of various checks out of your hands.
+
+copyDbOnce works only once per SQLighterDb instance per application startup. This is 
+just to prevent erroneous database overrides during application runs.
+
+Once invoked, first, copyDbOnce checks the destination location of the database file.
+If it's already there, it will skip copying the database file.
+
+If the file is not there, the copyDbOnce will copy the file.
+
+There's also SQLighterDb.setOverwriteDb method, that lets you override default behavior
+SQLighterDb.copyDbOnce. If called with true, it will let copyDbOnce override the 
+destination database file even if the file is there. Normally, this is necessary for your
+development process where you would like to roll database back and start fresh until you
+develop and test some particular. Normally, you do not want to call #setOverwriteDb with
+"true" in your production environment unless you want the user to start fresh every time.
 
 #### Instantiation example
 
@@ -166,6 +219,7 @@ Then your activity's onCreate method might look like this:
 ``` java
 protected void onCreate(Bundle savedInstanceState) {
   SQLighterDbImpl db = new SQLighterDbImpl();
+  // platform specific initialization
   db.setDbPath("/data/data/<<YOUR PROJECT path>>/databases/");
   db.setDbName("sqlite.sqlite");
   db.setOverwriteDb(false); // will not replace device's DB file already exists
@@ -191,8 +245,9 @@ Bootstrap is just a j2objc clone of Android's Bootstrap class.
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     Bootstrap *b = [Bootstrap getInstance];
     SQLighterDbImpl *db = [[SQLighterDbImpl alloc] init];
+    // platform specific initialization
     [db setDbNameWithNSString: @"sqlite.sqlite"];
-    [db setReplaceDatabase:FALSE];
+    [db setOverwriteDbWithBoolean: false];
     [db copyDbOnce];
     [db openIfClosed];
     [b setDbWithSQLighterDb:db];
@@ -232,7 +287,7 @@ ResultSet has getters to retrieve positional select clause parameters like this:
 ``` java
 SQLighterRs rs = db.executeSelect("select id, email, name, data, height from user");
 while (rs.hasNext()) {
-        Number pk = rs.getLong(0);
+        Long pk = rs.getLong(0);
         String e = rs.getString(1);
         byte[] d1 = rs.getBlob(3);
         ....
@@ -242,8 +297,7 @@ rs.close();
 c) once your statement is executed, bound parameters are cleaned up, so you can use
  addParam* methods again to be bound/used with your next statement.
 
-<< more to be added to this section>>, for now please see the next section that has
- some pretty straightforward examples.
+Please see the next section that has some pretty straightforward examples.
 
 # Going by example
 
@@ -394,7 +448,9 @@ will result in:
 update user set email = null where email = 'qw@er.ty1';
 ```
 
-The above code gives identical output after being converted into iOS using j2objc. Therefore, you can implement your database related logics in java language amd just convert/reuse it in iOS.
+The above code gives identical output after being converted into iOS using j2objc.
+Therefore, you can implement your database related logics in java language amd just
+convert/reuse it in iOS.
 
 ### iOS code
 

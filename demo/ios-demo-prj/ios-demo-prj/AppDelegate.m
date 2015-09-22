@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import "Bootstrap.h"
-#import "SQLighterDbImpl.h"
+#import "com/vals/a2ios/sqlighter/impl/SQLighterDbImpl.h"
 #import "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 
 @interface AppDelegate ()
@@ -16,7 +16,6 @@
 @end
 
 @implementation AppDelegate
-
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     /**

@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B028CA71BB1B20800AFD558 /* SQLighterDbImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */; };
+		8B028CA81BB1B20800AFD558 /* SQLighterRsImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */; };
 		F32A9E5F1B9028CE0092C868 /* convert.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5C1B9028CE0092C868 /* convert.sh */; };
 		F32A9E601B9028CE0092C868 /* pckgs.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5D1B9028CE0092C868 /* pckgs.sh */; };
 		F32A9E611B9028CE0092C868 /* j2objc.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5E1B9028CE0092C868 /* j2objc.sh */; };
-		F32A9E661B9213B50092C868 /* SQLighterDbImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = F32A9E621B9213B50092C868 /* SQLighterDbImpl.m */; };
-		F32A9E671B9213B50092C868 /* SQLighterRsImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = F32A9E651B9213B50092C868 /* SQLighterRsImpl.m */; };
 		F32A9EA41B9ACFF20092C868 /* sqlite.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = F32A9EA31B9ACFF20092C868 /* sqlite.sqlite */; };
 		F32A9EA71B9AD6BF0092C868 /* Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = F32A9EA61B9AD6BF0092C868 /* Demo.m */; };
 		F32A9EA91B9AD7DB0092C868 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F32A9EA81B9AD7DB0092C868 /* libsqlite3.dylib */; };
@@ -46,13 +46,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8B028C9D1BB1AAB500AFD558 /* libsqlighter-all-lib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsqlighter-all-lib.a"; path = "../../distr/ios/libsqlighter-all-lib.a"; sourceTree = "<group>"; };
+		8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterDbImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterDbImpl.m; sourceTree = "<group>"; };
+		8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterRsImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterRsImpl.m; sourceTree = "<group>"; };
 		F32A9E5C1B9028CE0092C868 /* convert.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = convert.sh; path = "ios-demo-prj/script/convert.sh"; sourceTree = "<group>"; };
 		F32A9E5D1B9028CE0092C868 /* pckgs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = pckgs.sh; path = "ios-demo-prj/script/pckgs.sh"; sourceTree = "<group>"; };
 		F32A9E5E1B9028CE0092C868 /* j2objc.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = j2objc.sh; path = "ios-demo-prj/script/j2objc.sh"; sourceTree = "<group>"; };
-		F32A9E621B9213B50092C868 /* SQLighterDbImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterDbImpl.m; path = ../../../ios/impl/SQLighterDbImpl.m; sourceTree = "<group>"; };
-		F32A9E631B9213B50092C868 /* SQLighterDbImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SQLighterDbImpl.h; path = ../../../ios/impl/SQLighterDbImpl.h; sourceTree = "<group>"; };
-		F32A9E641B9213B50092C868 /* SQLighterRsImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SQLighterRsImpl.h; path = ../../../ios/impl/SQLighterRsImpl.h; sourceTree = "<group>"; };
-		F32A9E651B9213B50092C868 /* SQLighterRsImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterRsImpl.m; path = ../../../ios/impl/SQLighterRsImpl.m; sourceTree = "<group>"; };
 		F32A9EA31B9ACFF20092C868 /* sqlite.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = sqlite.sqlite; path = "../../andr-demo-prj/app/src/main/assets/sqlite.sqlite"; sourceTree = "<group>"; };
 		F32A9EA51B9AD6BF0092C868 /* Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Demo.h; path = com/prod/vals/andr_demo_prj/Demo.h; sourceTree = "<group>"; };
 		F32A9EA61B9AD6BF0092C868 /* Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Demo.m; path = com/prod/vals/andr_demo_prj/Demo.m; sourceTree = "<group>"; };
@@ -126,6 +125,7 @@
 		F32A9EBE1B9ADA7B0092C868 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				8B028C9D1BB1AAB500AFD558 /* libsqlighter-all-lib.a */,
 				F3D46B841B9BA32600E60142 /* libguava.a */,
 				F3D46B851B9BA32600E60142 /* libmockito.a */,
 				F3D46B861B9BA32600E60142 /* libjunit.a */,
@@ -164,15 +164,13 @@
 		F37D0D631B90180300E73A01 /* ios-demo-prj */ = {
 			isa = PBXGroup;
 			children = (
+				8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */,
+				8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */,
 				F32A9EC51B9ADCC00092C868 /* Bootstrap.h */,
 				F32A9EC61B9ADCC00092C868 /* Bootstrap.m */,
 				F32A9EA51B9AD6BF0092C868 /* Demo.h */,
 				F32A9EA61B9AD6BF0092C868 /* Demo.m */,
 				F32A9EA31B9ACFF20092C868 /* sqlite.sqlite */,
-				F32A9E621B9213B50092C868 /* SQLighterDbImpl.m */,
-				F32A9E631B9213B50092C868 /* SQLighterDbImpl.h */,
-				F32A9E641B9213B50092C868 /* SQLighterRsImpl.h */,
-				F32A9E651B9213B50092C868 /* SQLighterRsImpl.m */,
 				F37D0D681B90180300E73A01 /* AppDelegate.h */,
 				F37D0D691B90180300E73A01 /* AppDelegate.m */,
 				F37D0D6B1B90180300E73A01 /* ViewController.h */,
@@ -316,12 +314,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				F37D0D6D1B90180300E73A01 /* ViewController.m in Sources */,
-				F32A9E671B9213B50092C868 /* SQLighterRsImpl.m in Sources */,
 				F37D0D6A1B90180300E73A01 /* AppDelegate.m in Sources */,
 				F32A9EC71B9ADCC00092C868 /* Bootstrap.m in Sources */,
+				8B028CA71BB1B20800AFD558 /* SQLighterDbImpl.m in Sources */,
 				F37D0D671B90180300E73A01 /* main.m in Sources */,
 				F32A9EA71B9AD6BF0092C868 /* Demo.m in Sources */,
-				F32A9E661B9213B50092C868 /* SQLighterDbImpl.m in Sources */,
+				8B028CA81BB1B20800AFD558 /* SQLighterRsImpl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
