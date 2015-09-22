@@ -48,6 +48,13 @@ public interface SQLighterRs {
     public Integer getInt(int index);
 
     /**
+     * Checks if colume value is SQL NULL
+     * @param index
+     * @return
+     */
+    public boolean isNull(int index);
+
+    /**
      * Close result set
      */
     public void close();

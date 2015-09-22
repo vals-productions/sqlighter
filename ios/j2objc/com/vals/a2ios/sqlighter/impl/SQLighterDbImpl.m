@@ -23,7 +23,7 @@
     return self;
 }
 
-- (BOOL)isDbFileDeployed {
+- (jboolean)isDbFileDeployed {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentDirectory = [paths objectAtIndex:0];
     NSString *writableDbPath = [documentDirectory stringByAppendingPathComponent: dbName];
@@ -236,7 +236,7 @@
 -(void) bindBlob: (NSData*) data  atIndex: (int) paramIdx {
         sqlite3_bind_blob(self.lastPreparedStmt, paramIdx, [data bytes], (int)[data length], SQLITE_TRANSIENT);
 }
--(BOOL) isNullAtIndex: (int) idx {
+-(jboolean) isNullAtIndex: (int) idx {
     const char *buffer = (char*)sqlite3_column_text(self.lastPreparedStmt, idx);
     int retVal = buffer == nil;
     return retVal;

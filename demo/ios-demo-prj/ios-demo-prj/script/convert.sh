@@ -27,12 +27,12 @@ ROOT_DIR=../../../..
 
 # since Android proj. is including sqlighter files through gradle
 # we need to tmp bring these files directly into j2objc conversion
-#cp -r $ROOT_DIR/android/com/vals $ROOT_DIR/demo/andr-demo-prj/app/src/main/java/com
+cp -r $ROOT_DIR/android/com/vals $ROOT_DIR/demo/andr-demo-prj/app/src/main/java/com
 
 ./j2objc.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Demo.java
 ./j2objc.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Bootstrap.java
 
 # and then remove temporarily brought sqlighter files
-#rm -r $ROOT_DIR/demo/andr-demo-prj/app/src/main/java/com/vals
+rm -r $ROOT_DIR/demo/andr-demo-prj/app/src/main/java/com/vals
 
 # end

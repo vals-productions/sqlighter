@@ -46,7 +46,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8B028C9D1BB1AAB500AFD558 /* libsqlighter-all-lib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsqlighter-all-lib.a"; path = "../../distr/ios/libsqlighter-all-lib.a"; sourceTree = "<group>"; };
 		8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterDbImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterDbImpl.m; sourceTree = "<group>"; };
 		8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterRsImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterRsImpl.m; sourceTree = "<group>"; };
 		F32A9E5C1B9028CE0092C868 /* convert.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = convert.sh; path = "ios-demo-prj/script/convert.sh"; sourceTree = "<group>"; };
@@ -125,7 +124,6 @@
 		F32A9EBE1B9ADA7B0092C868 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				8B028C9D1BB1AAB500AFD558 /* libsqlighter-all-lib.a */,
 				F3D46B841B9BA32600E60142 /* libguava.a */,
 				F3D46B851B9BA32600E60142 /* libmockito.a */,
 				F3D46B861B9BA32600E60142 /* libjunit.a */,

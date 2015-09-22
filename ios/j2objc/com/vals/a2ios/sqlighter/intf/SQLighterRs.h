@@ -29,6 +29,8 @@
 
 - (JavaLangInteger *)getIntWithInt:(jint)index;
 
+- (jboolean)isNullWithInt:(jint)index;
+
 - (void)close;
 
 @end

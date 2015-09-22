@@ -53,40 +53,9 @@ public interface SQLighterDb {
     public void openIfClosed() throws Exception;
 
     /**
-     * Your initial sqlite database file is stored somewhere within your project structure.
-     * This file could contain no tables/information whatsoever, or, contain some
-     * initial database structure/data of your project. This is all in developer's hands.
-     * Let's call this file initial database file.
-     *
-     * The location of the initial database file in the project and on the device (emulator or
-     * real device) should be different. Among other things will prevent database from being
-     * overwritten during sequential application upgrades by the content of the initial
-     * database file.
-     *
-     * So, there's a task of copying the file from the project into designated device's
-     * location. This task should be done once since otherwise you'll keep overwriting
-     * user data in the real application.
-     *
-     * Whenever the user starts your application the very first time, the database file
-     * should be copied from its project location into designated device's location.
-     *
-     * This, also, should be done before you start using the database. Basically #copyDbOnce
-     * takes the complexity of various checks out of your hands.
-     *
-     * #copyDbOnce works only once for SQLighterDb instance. This is just to prevent
-     * erroneous database overrides during application runs.
-     *
-     * Once invoked, first, #copyDbOnce checks the destination location of the database file.
-     * If it's already there, it will skip copying the database file.
-     *
-     * If the file is not there, the #copyDbOnce will copy the file.
-     *
-     * There's also #setOverwriteDb method, that lets you override default behavior of #copyDbOnce.
-     * If called with true, it will override the destination database file even if the file is
-     * there. Normally, this is necessary for your development process where you would like to
-     * roll database back and start fresh until you develop and test some particular. Normally,
-     * you do not want to call #setOverwriteDb with "true" in your production environment unless
-     * you want the user to start fresh every time.
+     * Check this doc for detailed info:
+     * 
+     * https://github.com/vals-productions/sqlighter#sqlighterdbcopydbonce
      *
      * @throws Exception in case of input\output exceptions
      */

@@ -37,6 +37,11 @@ public class SQLighterDbImpl implements SQLighterDb {
         }
 
         @Override
+        public boolean isNull(int index) {
+            return cursor.isNull(index);
+        }
+
+        @Override
         public boolean hasNext() {
             return cursor.moveToNext();
         }
