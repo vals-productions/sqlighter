@@ -90,6 +90,11 @@ sqlighter/distr/<VERSION>/ios directory to your project's Header Search path.
 
 This should make it.
 
+Note: library distribution version is specified by <VERSION> directory name. Source code
+reflecting the version is tagged with corresponding tag. Libarary version may not reflect
+the very latest cahges in the code as typically multiple changes would be grouped into
+the library build. If you need the very latest, use source code integration.
+
 ### Using source files
 
 It is actually pretty simple (but using libs is easier) - include java files to Android, 
