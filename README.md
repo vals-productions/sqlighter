@@ -169,14 +169,14 @@ Let's call this file initial database file.
 The location of the initial database file in the project and on the device (emulator or
 real device) should be different. Among other things this will prevent database from being
 overwritten during sequential application upgrades by the content of the initial
-database file.
+database file. Let's call database location at the device as target location.
 
-So, there's a task of copying the file from the project into designated device's
-location. This task should be done once since otherwise you'll keep overwriting
-user data in the real application.
+So, there's the task of copying the initial database file from the project into designated
+device's target location. This task should be done once since otherwise you'll keep
+overwriting user data in the real application.
 
 Whenever the user starts your application the very first time, the database file
-should be copied from its project location into designated device's location.
+should be copied from its project location into designated device's target location.
 
 This, also, should be done before you start using the database. Basically #copyDbOnce
 takes the complexity of various checks out of your hands.
@@ -184,10 +184,14 @@ takes the complexity of various checks out of your hands.
 copyDbOnce works only once per SQLighterDb instance per application startup. This is 
 just to prevent erroneous database overrides during application runs.
 
-Once invoked, first, copyDbOnce checks the destination location of the database file.
-If it's already there, it will skip copying the database file.
+Once invoked:
 
-If the file is not there, the copyDbOnce will copy the file.
+a) copyDbOnce checks the target location for the database file. If database file is
+already there (probably, because it is not the first start and target location has been 
+previously initialized), it will NOT copy the database file.
+
+b) If the database file is not found at the target location, the copyDbOnce will
+copy the initial database file from the project into device's target location.
 
 There's also SQLighterDb.setOverwriteDb method, that lets you override default behavior
 SQLighterDb.copyDbOnce. If called with true, it will let copyDbOnce override the 
@@ -300,6 +304,9 @@ c) once your statement is executed, bound parameters are cleaned up, so you can 
 Please see the next section that has some pretty straightforward examples.
 
 # Going by example
+
+Note: for more up to date examples please check some demo code [Demo.java] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
+which is part of the actual demo project code.
 
 ### Pre requisites
 
@@ -457,8 +464,9 @@ convert/reuse it in iOS.
 Normally you shouldn't need to do SQLite related coding in your iOS implementation, 'cause
 the whole goal of this library is to code in java and convert to Objective C.
 
-But if for whatever reason you have to code some SQLITE in iOS without j2objc, it doesn't
-look bad either:
+But if for whatever reason you have to code some sqlighter in iOS without J2ObjC, it's
+also possible:
+
 ``` objc
 id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
 [db addParamWithNSString: @"user@email.com"];

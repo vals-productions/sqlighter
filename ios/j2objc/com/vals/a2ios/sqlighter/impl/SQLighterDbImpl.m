@@ -241,4 +241,17 @@
     int retVal = buffer == nil;
     return retVal;
 }
+
+- (void)beginTransaction {
+    [self executeChangeWithNSString:@"begin transaction"];
+}
+
+- (void)commitTransaction {
+    [self executeChangeWithNSString:@"commit"];
+}
+
+- (void)rollbackTransaction {
+    [self executeChangeWithNSString:@"rollback"];
+}
+
 @end

@@ -256,4 +256,19 @@ public class SQLighterDbImpl implements SQLighterDb {
         }
         parameterList.clear();
     }
+
+    @Override
+    public void beginTransaction() {
+        this.executeChange("begin transaction");
+    }
+
+    @Override
+    public void commitTransaction() {
+        this.executeChange("commit");
+    }
+
+    @Override
+    public void rollbackTransaction() {
+        this.executeChange("rollback");
+    }
 }

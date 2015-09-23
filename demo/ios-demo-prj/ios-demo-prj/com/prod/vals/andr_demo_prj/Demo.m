@@ -20,14 +20,24 @@
 
 + (void)printWithSQLighterRs:(id<SQLighterRs>)rs;
 
++ (void)printUserTableWithNSString:(NSString *)title
+                   withSQLighterDb:(id<SQLighterDb>)db;
+
 @end
 
 __attribute__((unused)) static void Demo_printWithSQLighterRs_(id<SQLighterRs> rs);
+
+__attribute__((unused)) static void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLighterDb> db);
 
 @implementation Demo
 
 + (void)printWithSQLighterRs:(id<SQLighterRs>)rs {
   Demo_printWithSQLighterRs_(rs);
+}
+
++ (void)printUserTableWithNSString:(NSString *)title
+                   withSQLighterDb:(id<SQLighterDb>)db {
+  Demo_printUserTableWithNSString_withSQLighterDb_(title, db);
 }
 
 + (NSString *)dbOperations {
@@ -55,26 +65,32 @@ void Demo_printWithSQLighterRs_(id<SQLighterRs> rs) {
   [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
 }
 
+void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLighterDb> db) {
+  Demo_initialize();
+  [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:title];
+  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(db)) executeSelectWithNSString:@"select id, email, name, data, height from user"];
+  while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+    Demo_printWithSQLighterRs_(rs);
+  }
+  [rs close];
+}
+
 NSString *Demo_dbOperations() {
   Demo_initialize();
   NSString *greetingStr = nil;
   @try {
+    id<SQLighterRs> rs = nil;
     id<SQLighterDb> db = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
-    id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(db)) executeSelectWithNSString:@"select id, email, name, data, height from user"];
-    [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:@"initial state "];
-    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
-      Demo_printWithSQLighterRs_(rs);
-    }
-    [rs close];
+    Demo_printUserTableWithNSString_withSQLighterDb_(@"initial state ", db);
     NSString *dataStr = @"Hello, sqlighter!";
     IOSByteArray *data = [dataStr getBytes];
-    [db addParamWithNSString:@"user name 5"];
+    [((id<SQLighterDb>) nil_chk(db)) addParamWithNSString:@"user name 5"];
     [db addParamWithNSString:@"qw@er.ty1"];
     [db addParamWithByteArray:data];
     [db addParamWithDouble:5.67];
     [db executeChangeWithNSString:@"insert into user( name, email, data, height) values (?, ?, ?, ?)"];
     [db addParamWithNSString:@"qw@er.ty1"];
-    [JavaLangSystem_get_out_() printlnWithNSString:@"check if the record was inserted"];
+    [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:@"check if the record was inserted"];
     rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user where email = ?"];
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
       Demo_printWithSQLighterRs_(rs);
@@ -83,12 +99,7 @@ NSString *Demo_dbOperations() {
     [db addParamNull];
     [db addParamWithNSString:@"qw@er.ty1"];
     [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
-    [JavaLangSystem_get_out_() printlnWithNSString:@"after update state 1"];
-    rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user"];
-    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
-      Demo_printWithSQLighterRs_(rs);
-    }
-    [rs close];
+    Demo_printUserTableWithNSString_withSQLighterDb_(@"after update state 1 ", db);
     [db addParamWithNSString:@"user@email.com"];
     [db addParamWithNSString:@"qw@er.ty1"];
     [db executeChangeWithNSString:@"update user set email = ? where email is null or email = ?"];
@@ -107,12 +118,7 @@ NSString *Demo_dbOperations() {
     [rs close];
     [db addParamWithLong:2];
     [db executeChangeWithNSString:@"delete from user where id = ?"];
-    [JavaLangSystem_get_out_() printlnWithNSString:@"after delete state"];
-    rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user"];
-    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
-      Demo_printWithSQLighterRs_(rs);
-    }
-    [rs close];
+    Demo_printUserTableWithNSString_withSQLighterDb_(@"after delete state", db);
     [db executeChangeWithNSString:@"create table address(id integer primary key autoincrement unique, name text, user_id integer)"];
     [db addParamWithNSString:@"123 main str, walnut creek, ca"];
     [db addParamWithLong:1];
@@ -124,6 +130,13 @@ NSString *Demo_dbOperations() {
       [JavaLangSystem_get_out_() printlnWithNSString:JreStrcat("$$", @" address: ", [rs getStringWithInt:5])];
     }
     [rs close];
+    [db beginTransaction];
+    [db addParamWithNSString:@"trans@email.com"];
+    [db addParamWithNSString:@"inloop@email.com"];
+    [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
+    Demo_printUserTableWithNSString_withSQLighterDb_(@"inside transaction", db);
+    [db rollbackTransaction];
+    Demo_printUserTableWithNSString_withSQLighterDb_(@"after transaction commit or rollback", db);
     [db addParamWithDouble:5.67];
     rs = [db executeSelectWithNSString:@"select data from user where height = ?"];
     if ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {

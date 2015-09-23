@@ -39,6 +39,12 @@
 
 - (void)executeChangeWithNSString:(NSString *)insert;
 
+- (void)beginTransaction;
+
+- (void)commitTransaction;
+
+- (void)rollbackTransaction;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(SQLighterDb)

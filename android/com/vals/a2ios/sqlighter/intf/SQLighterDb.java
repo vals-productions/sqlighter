@@ -54,7 +54,7 @@ public interface SQLighterDb {
 
     /**
      * Check this doc for detailed info:
-     * 
+     *
      * https://github.com/vals-productions/sqlighter#sqlighterdbcopydbonce
      *
      * @throws Exception in case of input\output exceptions
@@ -99,4 +99,19 @@ public interface SQLighterDb {
      * @param insert
      */
     public void executeChange(String insert);
+
+    /**
+     * start transaction
+     */
+    public void beginTransaction();
+
+    /**
+     * commit transaction
+     */
+    public void commitTransaction();
+
+    /**
+     * rollback transaction
+     */
+    public void rollbackTransaction();
 }
