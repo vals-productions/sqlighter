@@ -135,7 +135,7 @@ NSString *Demo_dbOperations() {
     [db addParamWithNSString:@"inloop@email.com"];
     [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
     Demo_printUserTableWithNSString_withSQLighterDb_(@"inside transaction", db);
-    [db rollbackTransaction];
+    [db commitTransaction];
     Demo_printUserTableWithNSString_withSQLighterDb_(@"after transaction commit or rollback", db);
     [db addParamWithDouble:5.67];
     rs = [db executeSelectWithNSString:@"select data from user where height = ?"];

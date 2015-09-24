@@ -62,8 +62,8 @@
     return rs;
 }
 
-- (void)executeChangeWithNSString:(NSString *) makeCmangeQuery {
-    sqlite3_stmt *statement = [self prepareStatementWithSql: makeCmangeQuery];
+- (void)executeChangeWithNSString:(NSString *) makeChangeQuery {
+    sqlite3_stmt *statement = [self prepareStatementWithSql: makeChangeQuery];
     [self bindParameters: parameterArray];
     code = sqlite3_step(statement);
     [self closeStmt: statement];
@@ -186,6 +186,9 @@
                                                  sqlite3_errmsg(database)]
                                      userInfo: nil];
     }
+}
+- (void)addParamObjWithId:(id)o {
+    [parameterArray addObject: o];
 }
 -(void) addParamWithNSString: (NSString*) str {
     [parameterArray addObject: str];

@@ -88,6 +88,13 @@ public interface SQLighterDb {
     public void addParam(byte[] blob);
 
     /**
+     * Bind object param
+     *
+     * @param o
+     */
+    public void addParamObj(Object o);
+
+    /**
      * Execute SELECT statement  with previously (optionally) specified parameters and return result set
      * @param selectQuery
      * @return

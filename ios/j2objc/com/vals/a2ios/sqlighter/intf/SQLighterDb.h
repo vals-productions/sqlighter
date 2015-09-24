@@ -35,6 +35,8 @@
 
 - (void)addParamWithByteArray:(IOSByteArray *)blob;
 
+- (void)addParamObjWithId:(id)o;
+
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery;
 
 - (void)executeChangeWithNSString:(NSString *)insert;

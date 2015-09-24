@@ -27,7 +27,7 @@ public class SQLighterDbImpl implements SQLighterDb {
     private SQLiteDatabase db;
     private boolean isOpen = false;
     private boolean isDbCopied = false;
-    private List<Object> parameterList = new LinkedList<>();
+    private List<Object> parameterList = new LinkedList<Object>();
 
     public class ResultSetImpl implements SQLighterRs {
         private Cursor cursor;
@@ -218,6 +218,11 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
 
     @Override
+    public void addParamObj(Object o) {
+        parameterList.add(o);
+    }
+
+    @Override
     public SQLighterRs executeSelect(String selectQuery) {
         String[] sp = parameterList.toArray(new String[parameterList.size()]);
         parameterList.clear();
@@ -232,6 +237,7 @@ public class SQLighterDbImpl implements SQLighterDb {
         stmt.executeUpdateDelete();
         stmt.close();
     }
+
     private void bindParams(SQLiteStatement stmt) {
         int i = 1;
         for (Object o: parameterList) {
