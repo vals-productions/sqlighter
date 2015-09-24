@@ -48,12 +48,6 @@ public class Demo {
             SQLighterRs rs = null;
             SQLighterDb db = Bootstrap.getInstance().getSqLighterDb();
             printUserTable("initial state ", db);
-//            SQLighterRs rs = db.executeSelect("select id, email, name, data, height from user");
-//            System.out.println("initial state ");
-//            while (rs.hasNext()) {
-//                print(rs);
-//            }
-//            rs.close();
 
             String dataStr = "Hello, sqlighter!";
             byte[] data = dataStr.getBytes();
@@ -76,12 +70,6 @@ public class Demo {
             db.executeChange("update user set email = ? where email = ?");
 
             printUserTable("after update state 1 ", db);
-//            System.out.println("after update state 1");
-//            rs = db.executeSelect("select id, email, name, data, height from user");
-//            while (rs.hasNext()) {
-//                print(rs);
-//            }
-//            rs.close();
 
             db.addParam("user@email.com");
             db.addParam("qw@er.ty1");
@@ -105,12 +93,6 @@ public class Demo {
             db.executeChange("delete from user where id = ?");
 
             printUserTable("after delete state", db);
-//            System.out.println("after delete state");
-//            rs = db.executeSelect("select id, email, name, data, height from user");
-//            while (rs.hasNext()) {
-//                print(rs);
-//            }
-//            rs.close();
 
             db.executeChange("create table address(id integer primary key autoincrement unique, name text, user_id integer)");
             db.addParam("123 main str, walnut creek, ca");
@@ -125,7 +107,7 @@ public class Demo {
                 System.out.println(" address: " + rs.getString(5));
             }
             rs.close();
-            
+
             /**
              * Transaction handling demo
              */
@@ -136,8 +118,8 @@ public class Demo {
             db.executeChange("update user set email = ? where email = ?");
             printUserTable("inside transaction", db);
 
-            // db.rollbackTransaction(); // or...
-            db.commitTransaction();
+            db.rollbackTransaction(); // or...
+            // db.commitTransaction();
 
             printUserTable("after transaction commit or rollback", db);
 
