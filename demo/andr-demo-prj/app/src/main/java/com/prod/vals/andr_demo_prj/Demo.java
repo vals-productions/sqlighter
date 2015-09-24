@@ -125,7 +125,10 @@ public class Demo {
                 System.out.println(" address: " + rs.getString(5));
             }
             rs.close();
-
+            
+            /**
+             * Transaction handling demo
+             */
             db.beginTransaction();
 
             db.addParam("trans@email.com");
