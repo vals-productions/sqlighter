@@ -33,6 +33,10 @@ __attribute__((unused)) static void Demo_printUserTableWithNSString_withSQLighte
 
 @implementation Demo
 
++ (NSString *)dbOperations {
+  return Demo_dbOperations();
+}
+
 + (void)printWithSQLighterRs:(id<SQLighterRs>)rs {
   Demo_printWithSQLighterRs_(rs);
 }
@@ -42,40 +46,12 @@ __attribute__((unused)) static void Demo_printUserTableWithNSString_withSQLighte
   Demo_printUserTableWithNSString_withSQLighterDb_(title, db);
 }
 
-+ (NSString *)dbOperations {
-  return Demo_dbOperations();
-}
-
 - (instancetype)init {
   Demo_init(self);
   return self;
 }
 
 @end
-
-void Demo_printWithSQLighterRs_(id<SQLighterRs> rs) {
-  Demo_initialize();
-  JavaLangLong *pk = [((id<SQLighterRs>) nil_chk(rs)) getLongWithInt:0];
-  NSString *e = [rs getStringWithInt:1];
-  NSString *n = [rs getStringWithInt:2];
-  IOSByteArray *dataBytes = [rs getBlobWithInt:3];
-  NSString *dataString = nil;
-  if (dataBytes != nil) {
-    dataString = [NSString stringWithBytes:dataBytes];
-  }
-  NSNumber *h = [rs getDoubleWithInt:4];
-  [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
-}
-
-void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLighterDb> db) {
-  Demo_initialize();
-  [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:title];
-  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(db)) executeSelectWithNSString:@"select id, email, name, data, height from user"];
-  while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
-    Demo_printWithSQLighterRs_(rs);
-  }
-  [rs close];
-}
 
 NSString *Demo_dbOperations() {
   Demo_initialize();
@@ -84,10 +60,10 @@ NSString *Demo_dbOperations() {
     id<SQLighterRs> rs = nil;
     id<SQLighterDb> db = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
     Demo_printUserTableWithNSString_withSQLighterDb_(@"initial state ", db);
-    NSString *dataStr = @"Hello, sqlighter!";
-    IOSByteArray *data = [dataStr getBytes];
     [((id<SQLighterDb>) nil_chk(db)) addParamWithNSString:@"user name 5"];
     [db addParamWithNSString:@"qw@er.ty1"];
+    NSString *dataStr = @"Hello, sqlighter!";
+    IOSByteArray *data = [dataStr getBytes];
     [db addParamWithByteArray:data];
     [db addParamWithDouble:5.67];
     [db executeChangeWithNSString:@"insert into user( name, email, data, height) values (?, ?, ?, ?)"];
@@ -161,6 +137,30 @@ NSString *Demo_dbOperations() {
     return [e getMessage];
   }
   return greetingStr;
+}
+
+void Demo_printWithSQLighterRs_(id<SQLighterRs> rs) {
+  Demo_initialize();
+  JavaLangLong *pk = [((id<SQLighterRs>) nil_chk(rs)) getLongWithInt:0];
+  NSString *e = [rs getStringWithInt:1];
+  NSString *n = [rs getStringWithInt:2];
+  IOSByteArray *dataBytes = [rs getBlobWithInt:3];
+  NSString *dataString = nil;
+  if (dataBytes != nil) {
+    dataString = [NSString stringWithBytes:dataBytes];
+  }
+  NSNumber *h = [rs getDoubleWithInt:4];
+  [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
+}
+
+void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLighterDb> db) {
+  Demo_initialize();
+  [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:title];
+  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(db)) executeSelectWithNSString:@"select id, email, name, data, height from user"];
+  while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+    Demo_printWithSQLighterRs_(rs);
+  }
+  [rs close];
 }
 
 void Demo_init(Demo *self) {
