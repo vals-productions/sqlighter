@@ -99,26 +99,26 @@ public interface SQLighterDb {
      * @param selectQuery
      * @return
      */
-    public SQLighterRs executeSelect(String selectQuery);
+    public SQLighterRs executeSelect(String selectQuery) throws Exception;
 
     /**
      * Execute UPDATE/INSERT/DELETE/ALTER/CREATE with previously (optionally) specified parameters
      * @param insert
      */
-    public void executeChange(String insert);
+    public void executeChange(String insert) throws Exception;
 
     /**
      * start transaction
      */
-    public void beginTransaction();
+    public void beginTransaction() throws Exception;
 
     /**
      * commit transaction
      */
-    public void commitTransaction();
+    public void commitTransaction() throws Exception;
 
     /**
      * rollback transaction
      */
-    public void rollbackTransaction();
+    public void rollbackTransaction() throws Exception;
 }

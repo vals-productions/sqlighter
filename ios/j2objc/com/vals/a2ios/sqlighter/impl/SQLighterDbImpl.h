@@ -33,4 +33,6 @@
 
 - (void) closeStmt: (sqlite3_stmt *) statement;
 
+-(void) analyzeReturnCodeForErrors: (int) code;
+
 @end

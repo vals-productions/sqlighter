@@ -4,6 +4,7 @@
 //
 
 
+#include "IOSClass.h"
 #include "IOSPrimitiveArray.h"
 #include "J2ObjC_source.h"
 #include "com/prod/vals/andr_demo_prj/Bootstrap.h"
@@ -15,6 +16,7 @@
 #include "java/lang/Exception.h"
 #include "java/lang/Long.h"
 #include "java/lang/System.h"
+#include "java/lang/Throwable.h"
 
 @interface Demo ()
 
@@ -130,12 +132,21 @@ NSString *Demo_dbOperations() {
       [JavaLangSystem_get_out_() printlnWithNSString:JreStrcat("$$", @" address: ", [rs getStringWithInt:5])];
     }
     [rs close];
-    [db beginTransaction];
-    [db addParamWithNSString:@"trans@email.com"];
-    [db addParamWithNSString:@"inloop@email.com"];
-    [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
-    Demo_printUserTableWithNSString_withSQLighterDb_(@"inside transaction", db);
-    [db commitTransaction];
+    @try {
+      [db beginTransaction];
+      [db addParamWithNSString:@"trans@email.com"];
+      [db addParamWithNSString:@"inloop@email.com"];
+      [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
+      Demo_printUserTableWithNSString_withSQLighterDb_(@"inside transaction", db);
+      [db addParamWithNSString:@"inloop2@email.com"];
+      [db addParamWithNSString:@"trans@email.com"];
+      [db executeChangeWithNSString:@"updte user set email = ? where email = ?"];
+      [db commitTransaction];
+    }
+    @catch (JavaLangThrowable *e) {
+      [JavaLangSystem_get_out_() printlnWithNSString:[((JavaLangThrowable *) nil_chk(e)) getMessage]];
+      [db rollbackTransaction];
+    }
     Demo_printUserTableWithNSString_withSQLighterDb_(@"after transaction commit or rollback", db);
     [db addParamWithDouble:5.67];
     rs = [db executeSelectWithNSString:@"select data from user where height = ?"];
@@ -146,7 +157,8 @@ NSString *Demo_dbOperations() {
     [rs close];
   }
   @catch (JavaLangException *e) {
-    [((JavaLangException *) nil_chk(e)) printStackTrace];
+    [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:[((JavaLangException *) nil_chk(e)) getMessage]];
+    return [e getMessage];
   }
   return greetingStr;
 }

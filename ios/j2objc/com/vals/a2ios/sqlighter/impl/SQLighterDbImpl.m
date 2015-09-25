@@ -1,6 +1,5 @@
 //
 //  SQLighterDb.m
-//  mi
 //
 //  Created by Vlad Sayenko on 8/21/15.
 //  Copyright (c) 2015 Vlad Sayenko. All rights reserved.
@@ -9,6 +8,7 @@
 #import "SQLighterDbImpl.h"
 #import "SQLighterRsImpl.h"
 #import "IOSPrimitiveArray.h"
+#import "java/lang/Exception.h"
 
 @implementation SQLighterDbImpl
 
@@ -21,6 +21,22 @@
         isCopied = NO;
     }
     return self;
+}
+
+-(void) analyzeReturnCodeForErrors: (int) returnCode {
+    if (returnCode == SQLITE_OK ||
+        returnCode == SQLITE_DONE ||
+        returnCode == SQLITE_ROW ||
+        returnCode == SQLITE_WARNING) {
+        /**
+         * These codes are, basically, positive execution diagnistics
+         * SQLITE_WARNING - tbd...
+         */
+        return;
+    }
+    @throw [[JavaLangException alloc] initWithNSString:[NSString
+                                                stringWithFormat:
+                                                @"Database returned Error code: '%d'.", returnCode]];
 }
 
 - (jboolean)isDbFileDeployed {
@@ -42,11 +58,10 @@
 -(sqlite3_stmt *) prepareStatementWithSql: (NSString *) sqlString  {
     sqlite3_stmt *statement;
     if (sqlite3_prepare_v2(database, [sqlString  UTF8String], -1, &statement, NULL) != SQLITE_OK) {
-        @throw [NSException exceptionWithName: @"Database prepare statement error"
-                            reason: [NSString stringWithFormat:
-                                                            @"Service: Database SQL Error: '%s'.",
-                                                            sqlite3_errmsg(database)]
-                userInfo: nil];
+        [parameterArray removeAllObjects];
+        @throw [[JavaLangException alloc] initWithNSString:[NSString
+                                                            stringWithFormat:
+                                                            @"Database SQL Error: '%s'.", sqlite3_errmsg(database)]];
     }
     self.lastPreparedStmt = statement;
     return statement;
@@ -71,10 +86,8 @@
 
 -(void) closeStmt: (sqlite3_stmt *) statement {
     if (sqlite3_finalize(statement) == SQLITE_ERROR) {
-        @throw [NSException exceptionWithName: @"Database finalize statement error"
-                                                   reason: [NSString stringWithFormat:
-                                                            @"Service: Database Error: '%s'.",
-                                                            sqlite3_errmsg(database)] userInfo: nil];
+        @throw [[JavaLangException alloc] initWithNSString:
+                [NSString stringWithFormat: @"Database SQL Error: '%s'.", sqlite3_errmsg(database)]];
     }
 }
 
@@ -159,9 +172,8 @@
         success = [fileManager copyItemAtPath:defaultDbPath toPath:writableDbPath error:&error];
         if (!success) {
             NSLog(@"Could not copy database");
-            @throw [NSException exceptionWithName: @"Could not copy database"
-                                reason: [NSString stringWithFormat: @"Failed to create database with message: '%@'", [error localizedDescription]]
-                                userInfo: nil];
+            @throw [[JavaLangException alloc] initWithNSString:
+                    [NSString stringWithFormat: @"Failed to create database with message: '%@'", [error localizedDescription]]];
         }
     }
 }
@@ -180,65 +192,79 @@
         // Even though the open failed, call close to properly clean up resources.
         //[paths release];
         sqlite3_close(database);
-        @throw [NSException exceptionWithName: @"Could not open database"
-                                       reason:  [NSString stringWithFormat:
-                                                 @"Service: Database Error: '%s'.",
-                                                 sqlite3_errmsg(database)]
-                                     userInfo: nil];
+        @throw [[JavaLangException alloc] initWithNSString:
+                [NSString stringWithFormat: @"Database Error: '%s'.", sqlite3_errmsg(database)]];
     }
 }
+
 - (void)addParamObjWithId:(id)o {
     [parameterArray addObject: o];
 }
+
 -(void) addParamWithNSString: (NSString*) str {
     [parameterArray addObject: str];
 }
+
 -(void) addParamWithDouble: (double) par {
     [parameterArray addObject: [NSNumber numberWithDouble: par]];
 }
+
 -(void) addParamWithNull {
     [parameterArray addObject: [NSNull null]];
 }
+
 -(void) addParamWithInt: (int) par {
     [parameterArray addObject: [NSNumber numberWithInt:par]];
 }
+
 -(void) addParamWithLong: (long) par {
     [parameterArray addObject: [NSNumber numberWithLong: par ]];
 }
+
 -(void) addParamWithDate: (NSDate*) date atIndex: (int) idx {
     [self addParamWithDouble: [date timeIntervalSince1970]];
 }
+
 -(void) addParamWithBlob: (NSData*) data {
     [parameterArray addObject: data];
 }
+
 - (void)addParamWithByteArray:(IOSByteArray *)blob {
     NSData *d = [NSData dataWithBytes:[blob buffer] length:[blob length]];
     [self addParamWithBlob: d];
 }
+
 - (void)addParamNull {
     [self addParamWithNull];
 }
+
 -(void) bindString: (NSString*) str  atIndex: (int) paramIdx {
         sqlite3_bind_text(self.lastPreparedStmt, paramIdx, [str UTF8String], -1, SQLITE_TRANSIENT);
 }
+
 -(void) bindDouble: (double) d atIndex: (int) paramIdx{
         sqlite3_bind_double(self.lastPreparedStmt, paramIdx, d );
 }
 -(void) bindNullAtIndex: (int) paramIdx {
         sqlite3_bind_null(self.lastPreparedStmt, paramIdx);
 }
+
 -(void) bindInt: (int) par atIndex: (int) paramIdx  {
         sqlite3_bind_int(self.lastPreparedStmt, paramIdx, par);
 }
+
 -(void) bindLong: (long) par  atIndex: (int) paramIdx{
         sqlite3_bind_int(self.lastPreparedStmt, paramIdx, (int)par);
 }
+
 -(void) bindDate: (NSDate*) date atIndex: (int) idx {
         [self bindDouble: [date timeIntervalSince1970] atIndex: idx];
 }
+
 -(void) bindBlob: (NSData*) data  atIndex: (int) paramIdx {
         sqlite3_bind_blob(self.lastPreparedStmt, paramIdx, [data bytes], (int)[data length], SQLITE_TRANSIENT);
 }
+
 -(jboolean) isNullAtIndex: (int) idx {
     const char *buffer = (char*)sqlite3_column_text(self.lastPreparedStmt, idx);
     int retVal = buffer == nil;

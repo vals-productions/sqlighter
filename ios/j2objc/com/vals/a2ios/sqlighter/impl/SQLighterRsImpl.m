@@ -11,13 +11,16 @@
 #import "java/lang/Double.h"
 #import "java/lang/Long.h"
 #import "java/lang/Integer.h"
+#import "java/lang/Exception.h"
 
 @implementation SQLighterRsImpl
 
 @synthesize db, stmt;
 
 -(BOOL) hasNext {
-    bool hasIt = sqlite3_step(stmt) == SQLITE_ROW;
+    int code = sqlite3_step(stmt);
+    [db analyzeReturnCodeForErrors: code];
+    bool hasIt = (code == SQLITE_ROW);
     return hasIt;
 }
 

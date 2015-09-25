@@ -308,9 +308,31 @@ c) once your statement is executed, bound parameters are cleaned up, so you can 
 
 Please see the next section that has some pretty straightforward examples.
 
+## Exception and error handling
+
+Java and Objective C exception handling behavior varies. Therefore, exception 
+handling in your database related code should be as simple as possible.
+
+Methods that may potentially throw exceptions have "throws Exception" in their
+declaration which will force you to use try catch blocks. The exception thrown
+is - java.lang.Exception. Using try catch is very desirable because of the significant
+difference of how uncaught exceptions are handled in iOS and Java/Android.
+
+Sample code
+```java
+	try {
+		db.addParam("trans@email.com");
+		db.addParam("inloop@email.com");
+		db.executeChange("update user set email = ? where email = ?");
+	} catch (Exception e) {
+		// do something like...
+		System.out.println(e.getMessage());
+	}
+```
 # Going by example
 
-Note: for more up to date examples please check some demo code [Demo.java] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
+Note: for more up to date examples please check some demo code [Demo.java] 
+(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
 which is part of the actual demo project code.
 
 ### Pre requisites
@@ -357,11 +379,10 @@ pk: 2, email: user2@email.com, name: user 2, blob data: , height: null
 pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
 pk: 4, email: null, name: user 4, blob data: , height: null
 ```
-
 print function looks just like this and is used in all examples: 
 ``` java
 private void print(SQLighterRs rs) {
-	Number pk = rs.getLong(0);
+	Long pk = rs.getLong(0);
     String e = rs.getString(1);
     String n = rs.getString(2);
     byte[] dataBytes = rs.getBlob(3);

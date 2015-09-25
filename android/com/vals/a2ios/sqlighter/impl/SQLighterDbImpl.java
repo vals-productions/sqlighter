@@ -223,19 +223,29 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
 
     @Override
-    public SQLighterRs executeSelect(String selectQuery) {
-        String[] sp = parameterList.toArray(new String[parameterList.size()]);
-        parameterList.clear();
-        Cursor cursor = db.rawQuery(selectQuery, sp);
-        return new ResultSetImpl(cursor);
+    public SQLighterRs executeSelect(String selectQuery) throws Exception {
+        try {
+            String[] sp = parameterList.toArray(new String[parameterList.size()]);
+            parameterList.clear();
+            Cursor cursor = db.rawQuery(selectQuery, sp);
+            return new ResultSetImpl(cursor);
+        } catch (Throwable t) {
+            parameterList.clear();
+            throw new Exception(t.getMessage(), t);
+        }
     }
 
     @Override
-    public void executeChange(String update) {
-        SQLiteStatement stmt = db.compileStatement(update);
-        bindParams(stmt);
-        stmt.executeUpdateDelete();
-        stmt.close();
+    public void executeChange(String update) throws Exception  {
+        try {
+            SQLiteStatement stmt = db.compileStatement(update);
+            bindParams(stmt);
+            stmt.executeUpdateDelete();
+            stmt.close();
+        } catch (Throwable t) {
+            parameterList.clear();
+            throw new Exception(t.getMessage(), t);
+        }
     }
 
     private void bindParams(SQLiteStatement stmt) {
@@ -264,17 +274,17 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
 
     @Override
-    public void beginTransaction() {
+    public void beginTransaction() throws Exception {
         this.executeChange("begin transaction");
     }
 
     @Override
-    public void commitTransaction() {
+    public void commitTransaction() throws Exception {
         this.executeChange("commit");
     }
 
     @Override
-    public void rollbackTransaction() {
+    public void rollbackTransaction() throws Exception {
         this.executeChange("rollback");
     }
 }
