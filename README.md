@@ -29,8 +29,10 @@ Then see guidelines and usage examples provided in the documentation.
 You can also check Android and iOS demo projects that are part of this repository.
 
 ```
-   Android                            iOS
-   
+   			  Implementation diagram
+   			  
+	Android          	         iOS
+   			  
               Interface Definition
               
   /*provided*/      j2objc     /*generated \ provided*/
@@ -38,13 +40,15 @@ SQLighterDb.java ----------> SQLighterDb.h, SQLighterDb.m
   /*provided*/      j2objc     /*generated \ provided*/
 SQLighterRs.java ----------> SQLighterRs.h, SQLighterRs.m
 
-               Implementation
+               Implementation with sources
+               
   /*provided*/                 /*provided*/ 
 SQLighterDbImpl.java         SQLighterDbImpl.h
                              SQLighterDbImpl.m
                                /*provided*/ 
                              SQLighterRsImpl.h
                              SQLighterRsImpl.m
+
 ```
 Both implementations conform to SQLighterDb (core database methods) and
 SQLighterRs (ResultSet processing) interfaces. Android implementation for these is
@@ -148,21 +152,35 @@ Make sure your project compiles.
 
 #### Database file
 
-In either way, both Android and iOS projects should contain your initial SQLite database
-file. It should be part of your project. It can have some predefined DB schema or you
-can create tables on the fly - it's all in developer's control.
+Database file may be initially provided by the developer, or created by the library.
 
-On Android's project the location of the file is typically ``assets`` directory.
+##### The file is provided 
+
+Both Android and iOS projects should contain your initial SQLite database
+file. It should be part of your project. It can have some predefined DB schema with data, 
+or you can create tables on the fly - it's all in developer's control.
+
+On Android's project the location of the file is typically the ``assets`` directory.
 
 On iOS you have to right click on the project, pick "Add files to...", locate your file
 on the file system and add it to the project this way.
 
-``SQLighterDb.setDbName(String name)`` specifies file name. 
+``SQLighterDb.setDbName(String name)`` specifies file name.
 
 ``SQLighterDb.setDbPath(String path)`` specifies path to the file on the device. This is
 different between Android and iOS. For android it is "/data/data/<<YOUR PROJECT path>>/databases/",
 for iOS this method is missing as the library knows the location relative
-to project's location.
+to project's location. All examples below assume you have some initial database file.
+
+Otherwise...
+
+###### The database file is not provided
+
+If the file is not provided, then you should not use`` SQLighterDb.copyDbOnce();`` 
+method (see more on this method in the next provision). Since the initial file is not
+provided, it would be created. In this case you do not have an option of the database
+preloaded with data, but you can compensate for that by running your initial database 
+initialization script.
 
 ##### SQLighterDb.copyDbOnce()
 
