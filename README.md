@@ -170,7 +170,7 @@ to project's location. All examples below assume you have some initial database 
 
 Otherwise...
 
-###### The database file is not provided
+##### The database file is not provided
 
 If the file is not provided, then you should not use`` SQLighterDb.copyDbOnce();`` 
 method (see more on this method in the next provision). Since the initial file is not
