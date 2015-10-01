@@ -2,11 +2,7 @@
 
 SQLite implementation that works with J2ObjC on both - Android and iOS platforms.
 
-Note: I've just added library distribution to the project, and, as part of that 
-change I had to relocate the content of sqlighter/ios/impl/ into
-sqlighter/ios/j2objc/com/vals/a2ios/sqlighter/impl/ , so if you referenced these
-files directly, please update your references. Or, better yet, switch to libraries
-instead of sources.
+You should be able to code SQLite database related logics in java on your Android device and reuse it on your iOS application.
 
 # Overview
 
