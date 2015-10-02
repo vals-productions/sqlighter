@@ -100,6 +100,26 @@
     return data;
 }
 
+- (id)getObjectWithInt:(jint)index {
+    int type = [self getColumnTypeWithInt: index];
+    if (type == SQLITE_NULL) {
+        return nil;
+    } else if(type == SQLITE_INTEGER) {
+        return [self getIntWithInt: index];
+    } else if (type == SQLITE_FLOAT) {
+        return [self getDoubleWithInt: index];
+    } else if (type == SQLITE_BLOB) {
+        return [self getBlobAtIndex: index];
+    } else if (type == SQLITE_TEXT) {
+        return [self getStringWithInt: index];
+    }
+    return nil;
+}
+
+- (jint)getColumnTypeWithInt:(jint)index {
+    return sqlite3_column_type(stmt, index);
+}
+
 - (void)close {
     [db closeStmt: stmt];
 }

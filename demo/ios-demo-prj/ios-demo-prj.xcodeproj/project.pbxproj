@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8B028CA71BB1B20800AFD558 /* SQLighterDbImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */; };
 		8B028CA81BB1B20800AFD558 /* SQLighterRsImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */; };
+		8B0987001BBD8C4C003534E2 /* j2objc-w-refl.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */; };
 		F32A9E5F1B9028CE0092C868 /* convert.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5C1B9028CE0092C868 /* convert.sh */; };
 		F32A9E601B9028CE0092C868 /* pckgs.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5D1B9028CE0092C868 /* pckgs.sh */; };
 		F32A9E611B9028CE0092C868 /* j2objc.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5E1B9028CE0092C868 /* j2objc.sh */; };
@@ -48,6 +49,7 @@
 /* Begin PBXFileReference section */
 		8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterDbImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterDbImpl.m; sourceTree = "<group>"; };
 		8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterRsImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterRsImpl.m; sourceTree = "<group>"; };
+		8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "j2objc-w-refl.sh"; path = "ios-demo-prj/script/j2objc-w-refl.sh"; sourceTree = "<group>"; };
 		F32A9E5C1B9028CE0092C868 /* convert.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = convert.sh; path = "ios-demo-prj/script/convert.sh"; sourceTree = "<group>"; };
 		F32A9E5D1B9028CE0092C868 /* pckgs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = pckgs.sh; path = "ios-demo-prj/script/pckgs.sh"; sourceTree = "<group>"; };
 		F32A9E5E1B9028CE0092C868 /* j2objc.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = j2objc.sh; path = "ios-demo-prj/script/j2objc.sh"; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 		F32A9E5B1B9028AB0092C868 /* script */ = {
 			isa = PBXGroup;
 			children = (
+				8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */,
 				F32A9E5C1B9028CE0092C868 /* convert.sh */,
 				F32A9E5D1B9028CE0092C868 /* pckgs.sh */,
 				F32A9E5E1B9028CE0092C868 /* j2objc.sh */,
@@ -292,6 +295,7 @@
 				F32A9EA41B9ACFF20092C868 /* sqlite.sqlite in Resources */,
 				F32A9E611B9028CE0092C868 /* j2objc.sh in Resources */,
 				F37D0D751B90180300E73A01 /* LaunchScreen.xib in Resources */,
+				8B0987001BBD8C4C003534E2 /* j2objc-w-refl.sh in Resources */,
 				F37D0D721B90180300E73A01 /* Images.xcassets in Resources */,
 				F32A9E601B9028CE0092C868 /* pckgs.sh in Resources */,
 			);

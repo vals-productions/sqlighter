@@ -48,11 +48,28 @@ public interface SQLighterRs {
     public Integer getInt(int index);
 
     /**
+     * Identifies the actual type of result set's
+     * column and returns it as an Object
+     * @param index - o based column index
+     * @return
+     */
+    public Object getObject(int index);
+
+    /**
      * Checks if colume value is SQL NULL
      * @param index
      * @return
      */
     public boolean isNull(int index);
+
+    /**
+     * Returned column types are compliant to
+     * Cursor get column type.
+     *
+     * @param index
+     * @return
+     */
+    public int getColumnType(int index);
 
     /**
      * Close result set

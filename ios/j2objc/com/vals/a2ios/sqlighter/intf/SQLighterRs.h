@@ -29,7 +29,11 @@
 
 - (JavaLangInteger *)getIntWithInt:(jint)index;
 
+- (id)getObjectWithInt:(jint)index;
+
 - (jboolean)isNullWithInt:(jint)index;
+
+- (jint)getColumnTypeWithInt:(jint)index;
 
 - (void)close;
 

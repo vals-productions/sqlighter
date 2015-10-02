@@ -97,7 +97,30 @@ public class SQLighterDbImpl implements SQLighterDb {
         @Override
         public void close() {
             cursor.close();
-       }
+        }
+
+        @Override
+        public int getColumnType(int index) {
+            return cursor.getType(index);
+        }
+
+        @Override
+        public Object getObject(int index) {
+            int columnType = getColumnType(index);
+            if (columnType == Cursor.FIELD_TYPE_NULL) {
+                return null;
+            } else if (columnType == Cursor.FIELD_TYPE_INTEGER) {
+                return getInt(index);
+            } else if (columnType == Cursor.FIELD_TYPE_FLOAT) {
+                return getDouble(index);
+            } else if (columnType == Cursor.FIELD_TYPE_BLOB) {
+                return getBlob(index);
+            } else if (columnType == Cursor.FIELD_TYPE_STRING) {
+                return getString(index);
+            }
+            return null;
+        }
+
     }
 
     @Override
