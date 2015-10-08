@@ -4,6 +4,10 @@ SQLite implementation that works with J2ObjC on both - Android and iOS platforms
 
 You should be able to code SQLite database related logics in java on your Android device and reuse it on your iOS application.
 
+# Table of content
+
+TBD
+
 # Overview
 
 This implementation is based on standard Android's SQLite implementation that is being
