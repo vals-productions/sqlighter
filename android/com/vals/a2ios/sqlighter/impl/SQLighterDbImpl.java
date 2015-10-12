@@ -310,4 +310,9 @@ public class SQLighterDbImpl implements SQLighterDb {
     public void rollbackTransaction() throws Exception {
         this.executeChange("rollback");
     }
+
+    @Override
+    public void close() {
+        db.close();
+    }
 }

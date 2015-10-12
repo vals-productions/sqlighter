@@ -131,6 +131,7 @@ NSString *Demo_dbOperations() {
       greetingStr = [NSString stringWithBytes:greet];
     }
     [rs close];
+    [db close];
   }
   @catch (JavaLangException *e) {
     [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:[((JavaLangException *) nil_chk(e)) getMessage]];

@@ -184,6 +184,8 @@ public class Demo {
                 greetingStr =  new String(greet);
             }
             rs.close();
+
+            db.close();
         } catch(Exception e) {
             System.out.println(e.getMessage());
             /**

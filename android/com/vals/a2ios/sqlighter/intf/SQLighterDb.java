@@ -121,4 +121,10 @@ public interface SQLighterDb {
      * rollback transaction
      */
     public void rollbackTransaction() throws Exception;
+
+    /**
+     * Close dtabase
+     */
+    public void close();
+
 }

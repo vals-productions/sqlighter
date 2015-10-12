@@ -47,6 +47,8 @@
 
 - (void)rollbackTransaction;
 
+- (void)close;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(SQLighterDb)

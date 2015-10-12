@@ -283,4 +283,9 @@
     [self executeChangeWithNSString:@"rollback"];
 }
 
+- (void)close {
+    int rc = sqlite3_close(database);
+    [self analyzeReturnCodeForErrors:rc];
+}
+
 @end
