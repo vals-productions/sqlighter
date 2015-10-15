@@ -440,11 +440,13 @@ Then your activity's ``onCreate`` method might look like this:
 protected void onCreate(Bundle savedInstanceState) {
   SQLighterDbImpl db = new SQLighterDbImpl();
   // platform specific initialization
-  db.setDbPath("/data/data/<<YOUR PROJECT path>>/databases/");
+  String dbPath = this.getApplication().getApplicationContext().getFilesDir()
+                        .getParentFile().getPath() + "/databases/";
+  db.setDbPath(dbPath);
   db.setDbName("sqlite.sqlite");
-  db.setOverwriteDb(false); // will not replace device's DB file already exists
+  db.setOverwriteDb(false); // will not replace device's DB file if already exists
   Bootstrap.getInstance().setDb(db);
-  // important at Android as database open method is called from the Context
+  // important for Android as database open method is called from the Context
   db.setContext(this);
   try {
     /* 
@@ -484,7 +486,6 @@ gets translated into this
 ``` objc
 id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
 ```
-Once that is done you can use SQLite in the followig manner.
 
 # Usage
 
