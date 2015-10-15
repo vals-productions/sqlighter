@@ -144,6 +144,9 @@ public class SQLighterDbImpl implements SQLighterDb {
      * @param path - location of db file
      */
     public void setDbPath(String path) {
+        if (!path.endsWith("/")) {
+            path += "/";
+        }
         this.dbPath = path;
     }
 

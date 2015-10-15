@@ -18,7 +18,10 @@ public class MainActivity extends ActionBarActivity {
          * SQLite initialization
          */
         SQLighterDbImpl db = new SQLighterDbImpl();
-        db.setDbPath("/data/data/com.prod.vals.andr_demo_prj/databases/");
+        String dbPath =
+                this.getApplication().getApplicationContext().getFilesDir()
+                        .getParentFile().getPath() + "/databases/";
+        db.setDbPath(dbPath);
         db.setDbName("sqlite.sqlite");
         boolean isDbFileDeployed = db.isDbFileDeployed();
         if(!isDbFileDeployed) {
