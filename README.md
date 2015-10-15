@@ -7,6 +7,10 @@ You should be able to code SQLite database related logics in java on your Androi
 # Table of content
 Note: toc is not complete
 * [Overview] (https://github.com/vals-productions/sqlighter#overview)
+* [Going by example] (https://github.com/vals-productions/sqlighter#going-by-example)
+ * [Pre requisites] (https://github.com/vals-productions/sqlighter#pre-requisites)
+ * [Android code] (https://github.com/vals-productions/sqlighter#android-code)
+ * [iOS code] (https://github.com/vals-productions/sqlighter#ios-code)
 * [J2ObjC] (https://github.com/vals-productions/sqlighter#j2objc)
 * [Project configuration] (https://github.com/vals-productions/sqlighter#project-configuration)
  * [Using provided libraries] (https://github.com/vals-productions/sqlighter#using-provided-libraries)
@@ -26,16 +30,203 @@ goal is to provide ability to execute pretty much any SQL statements at either o
 the platforms with single and simple interface without dependencies on existing
 platform specific implementations.
 
+# Going by example
+
+Note: for more up to date examples please check some demo code [Demo.java] 
+(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
+which is part of the actual demo project code.
+
+### Pre requisites
+
+Let's create some sqlite file using sqlite command line or one of the existing UI tools
+and create a table user in it.
+
+``` sql
+CREATE TABLE "user" (
+	`name`	TEXT,
+	`email`	TEXT,
+	`id`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
+	`data`	BLOB,
+	`height`	REAL
+);
+```
+Let's insert the following initial records:
+``` sql
+INSERT INTO user(name, email, data, height) values ('user 1', 'user1@email.com', null, 1.4);
+INSERT INTO user(name, email, data, height) values ('user 2', 'user2@email.com', null, null);
+INSERT INTO user(name, email, data, height) values ('user 3', 'user3@email.com', null, 4.89);
+INSERT INTO user(name, email, data, height) values ('user 4', null, null, null);
+```
+
+### Android code
+
+First let's just output what is initially in the table by executing SQL select statement
+with no parameters: 
+
+``` java
+SQLighterDb db = Bootstrap.getInstance().getDb();
+SQLighterRs rs = db.executeSelect("select id, email, name, data, height from user");
+System.out.println("initial state ");
+while (rs.hasNext()) {
+  print(rs);
+}
+rs.close();
+```
+And this should result in:
+```
+initial state 
+pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
+pk: 2, email: user2@email.com, name: user 2, blob data: , height: null
+pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
+pk: 4, email: null, name: user 4, blob data: , height: null
+```
+print function looks just like this and is used in all examples: 
+``` java
+private void print(SQLighterRs rs) {
+	Long pk = rs.getLong(0);
+    String e = rs.getString(1);
+    String n = rs.getString(2);
+    byte[] dataBytes = rs.getBlob(3);
+    String dataString = null;
+    if (dataBytes != null) {
+    	dataString = new String(dataBytes);
+    }
+    Number h = rs.getDouble(4);
+    System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + 
+    						", blob data: " + dataString + ", height: " + h );
+}
+```
+Then, add another record with some blob value:
+``` java
+String dataStr = "This is blob string example";
+byte[] data = dataStr.getBytes();
+db.addParam("user name 5"); // bind too the first insert value (name)
+db.addParam("qw@er.ty1"); // bind to the second one (email)
+db.addParam(data); // bind to the data column
+db.addParam(5.67); // bind to the height column
+db.executeChange("insert into user( name, email, data, height) values (?, ?, ?, ?)");
+```
+And let's also requery what we just inserted
+``` java
+db.addParam("qw@er.ty1"); // bind to the where email filter condition
+System.out.println("check if the record was inserted");
+rs = db.executeSelect("select id, email, name, data, height from user where email = ?");
+while (rs.hasNext()) {
+  print(rs);
+}
+rs.close();
+```
+Which should result in:
+```
+check if the record was inserted
+pk: 5, email: qw@er.ty1, name: user name 5, blob data: This is blob string example, height: 5.67
+```
+Then, let's do some update
+``` java
+db.addParam("user@email.com"); // bind to the set email = ? 
+db.addParam("qw@er.ty1"); // bind to where email = ?
+db.executeChange("update user set email = ? where email is null or email = ?");
+```
+... and verify the output with above select all code
+```
+after update state
+pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
+pk: 2, email: user2@email.com, name: user 2, blob data: , height: null
+pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
+pk: 4, email: user@email.com, name: user 4, blob data: , height: null
+pk: 5, email: user@email.com, name: user name 5, blob data: This is blob string example, height: 5.67
+```
+Let's delete something
+``` java
+db.addParam("user@email.com");
+db.executeChange("delete from user where email = ?");
+```
+and see what we get:
+```
+after delete state
+pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
+pk: 2, email: user2@email.com, name: user 2, blob data: , height: null
+pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
+```
+And finally, let's create another table, populate with data and run the query with join
+``` java
+db.executeChange("create table address(id integer primary key autoincrement unique, name text, user_id integer)");
+db.addParam("123 main str, walnut creek, ca");
+db.addParam(1);
+db.executeChange("insert into address(name, user_id) values(?, ?)");
+
+System.out.println("after address creation/population");
+rs = db.executeSelect("select a.user_id, u.email, u.name, u.data, u.height, a.name from user u, address a "
+                      + "where a.user_id = u.id");
+while (rs.hasNext()) {
+  print(rs);
+  System.out.println(" address: " + rs.getString(5));
+}
+rs.close();
+```
+the output:
+```
+after address creation/population
+pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
+ address: 123 main str, walnut creek, ca
+```
+
+And, in case you'd like to bind some NULL parameter, it can be done this way:
+``` java
+db.addParamNull(); // bind first param to update as null
+db.addParam("qw@er.ty1"); // bind second param as where filter condition
+db.executeChange("update user set email = ? where email = ?");
+```
+will result in:
+``` sql
+update user set email = null where email = 'qw@er.ty1';
+```
+
+The above code gives identical output after being converted into iOS using j2objc.
+Therefore, you can implement your database related logics in java language amd just
+convert/reuse it in iOS.
+
+### iOS code
+
+Normally you shouldn't need to do SQLite related coding in your iOS implementation, 'cause
+the whole goal of this library is to code in java and convert to Objective-C.
+
+But if for whatever reason you have to code some sqlighter in iOS without J2ObjC, it's
+also possible:
+
+``` objc
+id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
+[db addParamWithNSString: @"user@email.com"];
+id<SQLighterRs> rs = [db executeWithNSString: @"select name, email from user where email = ?"];
+while([rs hasNext]) {
+	NSLog(@"email:  %@, name: %@", [rs getStringWithInt:1], [rs getStringWithInt:0]);
+}
+[rs close];
+
+```
+
+# J2ObjC
+
+You do not need to use J2ObjC tools to use this library as part of your project,
+because it includes classes\modules that are already j2objc'd.
+
 It is up to you how to setup J2ObjC conversions for business logics conversions of your
 project. You do it in whichever way works for you. There is no dependency here. Most
 likely you already have something setup by now. You just have to include provided classes
 and interfaces into your Android project on one side, and iOS / Objective-C modules/protocols 
-at the other side, or, (better) use provided jar file for Android and lib for iOS.
+at the other side, or, (easier) use provided jar file for Android and lib for iOS.
 
 Then see guidelines and usage examples provided in the documentation.
 
 You can also check Android and iOS demo projects that are part of this repository.
 
+So you can save your time on conversion setup and skip to the Project configuration.
+
+But just in case you decide to do so... SQLighterDb.java and SQLighterRs.java are 
+to be converted into Objective-C to become SQLighterDb.h, SQLighterDb.m 
+and SQLighterRs.h, SQLighterRs.m.
+
+Here's the diagram:
 ```
    			  Implementation diagram
    			  
@@ -64,17 +255,6 @@ SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *
 and *Impl.m files (see the diagram above). They implement, in essence, same interfaces, 
 that are result or SQLighterDb.java and SQLighterRs.java J2ObjC conversion into 
 corresponding Objective-C classes (actually, protocols).
-
-# J2ObjC
-
-You do not need to use J2ObjC tools to use this library as part of your project,
-because it includes classes\modules that are already j2objc'd.
-
-So you can save your time on conversion setup and skip to the Project configuration.
-
-But just in case you decide to do so... SQLighterDb.java and SQLighterRs.java are 
-to be converted into Objective-C to become SQLighterDb.h, SQLighterDb.m 
-and SQLighterRs.h, SQLighterRs.m.
 
 Conversion should be done with the use of ``--prefixes <file with prefix configs>`` j2objc 
 switch to prevent adding java package prefix to class names. Sample file is below.
@@ -360,178 +540,4 @@ Sample code
 		// do something like...
 		System.out.println(e.getMessage());
 	}
-```
-# Going by example
-
-Note: for more up to date examples please check some demo code [Demo.java] 
-(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
-which is part of the actual demo project code.
-
-### Pre requisites
-
-Let's create some sqlite file using sqlite command line or one of the existing UI tools
-and create a table user in it.
-
-``` sql
-CREATE TABLE "user" (
-	`name`	TEXT,
-	`email`	TEXT,
-	`id`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
-	`data`	BLOB,
-	`height`	REAL
-);
-```
-Let's insert the following initial records:
-``` sql
-INSERT INTO user(name, email, data, height) values ('user 1', 'user1@email.com', null, 1.4);
-INSERT INTO user(name, email, data, height) values ('user 2', 'user2@email.com', null, null);
-INSERT INTO user(name, email, data, height) values ('user 3', 'user3@email.com', null, 4.89);
-INSERT INTO user(name, email, data, height) values ('user 4', null, null, null);
-```
-
-### Android code
-
-First let's just output what is initially in the table by executing SQL select statement
-with no parameters: 
-
-``` java
-SQLighterDb db = Bootstrap.getInstance().getDb();
-SQLighterRs rs = db.executeSelect("select id, email, name, data, height from user");
-System.out.println("initial state ");
-while (rs.hasNext()) {
-  print(rs);
-}
-rs.close();
-```
-And this should result in:
-```
-initial state 
-pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
-pk: 2, email: user2@email.com, name: user 2, blob data: , height: null
-pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
-pk: 4, email: null, name: user 4, blob data: , height: null
-```
-print function looks just like this and is used in all examples: 
-``` java
-private void print(SQLighterRs rs) {
-	Long pk = rs.getLong(0);
-    String e = rs.getString(1);
-    String n = rs.getString(2);
-    byte[] dataBytes = rs.getBlob(3);
-    String dataString = null;
-    if (dataBytes != null) {
-    	dataString = new String(dataBytes);
-    }
-    Number h = rs.getDouble(4);
-    System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + 
-    						", blob data: " + dataString + ", height: " + h );
-}
-```
-Then, add another record with some blob value:
-``` java
-String dataStr = "This is blob string example";
-byte[] data = dataStr.getBytes();
-db.addParam("user name 5"); // bind too the first insert value (name)
-db.addParam("qw@er.ty1"); // bind to the second one (email)
-db.addParam(data); // bind to the data column
-db.addParam(5.67); // bind to the height column
-db.executeChange("insert into user( name, email, data, height) values (?, ?, ?, ?)");
-```
-And let's also requery what we just inserted
-``` java
-db.addParam("qw@er.ty1"); // bind to the where email filter condition
-System.out.println("check if the record was inserted");
-rs = db.executeSelect("select id, email, name, data, height from user where email = ?");
-while (rs.hasNext()) {
-  print(rs);
-}
-rs.close();
-```
-Which should result in:
-```
-check if the record was inserted
-pk: 5, email: qw@er.ty1, name: user name 5, blob data: This is blob string example, height: 5.67
-```
-Then, let's do some update
-``` java
-db.addParam("user@email.com"); // bind to the set email = ? 
-db.addParam("qw@er.ty1"); // bind to where email = ?
-db.executeChange("update user set email = ? where email is null or email = ?");
-```
-... and verify the output with above select all code
-```
-after update state
-pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
-pk: 2, email: user2@email.com, name: user 2, blob data: , height: null
-pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
-pk: 4, email: user@email.com, name: user 4, blob data: , height: null
-pk: 5, email: user@email.com, name: user name 5, blob data: This is blob string example, height: 5.67
-```
-Let's delete something
-``` java
-db.addParam("user@email.com");
-db.executeChange("delete from user where email = ?");
-```
-and see what we get:
-```
-after delete state
-pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
-pk: 2, email: user2@email.com, name: user 2, blob data: , height: null
-pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
-```
-And finally, let's create another table, populate with data and run the query with join
-``` java
-db.executeChange("create table address(id integer primary key autoincrement unique, name text, user_id integer)");
-db.addParam("123 main str, walnut creek, ca");
-db.addParam(1);
-db.executeChange("insert into address(name, user_id) values(?, ?)");
-
-System.out.println("after address creation/population");
-rs = db.executeSelect("select a.user_id, u.email, u.name, u.data, u.height, a.name from user u, address a "
-                      + "where a.user_id = u.id");
-while (rs.hasNext()) {
-  print(rs);
-  System.out.println(" address: " + rs.getString(5));
-}
-rs.close();
-```
-the output:
-```
-after address creation/population
-pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
- address: 123 main str, walnut creek, ca
-```
-
-And, in case you'd like to bind some NULL parameter, it can be done this way:
-``` java
-db.addParamNull(); // bind first param to update as null
-db.addParam("qw@er.ty1"); // bind second param as where filter condition
-db.executeChange("update user set email = ? where email = ?");
-```
-will result in:
-``` sql
-update user set email = null where email = 'qw@er.ty1';
-```
-
-The above code gives identical output after being converted into iOS using j2objc.
-Therefore, you can implement your database related logics in java language amd just
-convert/reuse it in iOS.
-
-### iOS code
-
-Normally you shouldn't need to do SQLite related coding in your iOS implementation, 'cause
-the whole goal of this library is to code in java and convert to Objective-C.
-
-But if for whatever reason you have to code some sqlighter in iOS without J2ObjC, it's
-also possible:
-
-``` objc
-id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
-[db addParamWithNSString: @"user@email.com"];
-id<SQLighterRs> rs = [db executeWithNSString: @"select name, email from user where email = ?"];
-while([rs hasNext]) {
-	NSLog(@"email:  %@, name: %@", [rs getStringWithInt:1], [rs getStringWithInt:0]);
-}
-[rs close];
-
 ```
