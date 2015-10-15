@@ -18,7 +18,10 @@ Note: toc is not complete
   * [Sqlighter at Android] (https://github.com/vals-productions/sqlighter#sqlighter-at-android)  
   * [Sqlighter at iOS] (https://github.com/vals-productions/sqlighter#sqlighter-at-ios)
  * [Database file] (https://github.com/vals-productions/sqlighter#database-file) 
+  * [SQLighterDb.copyDbOnce()] (https://github.com/vals-productions/sqlighter#sqlighterdbcopydbonce)
+ * [Instantiation example] (https://github.com/vals-productions/sqlighter#instantiation-example) 
 * [Usage] (https://github.com/vals-productions/sqlighter#usage) 
+ * [Exception and error handling] (https://github.com/vals-productions/sqlighter#exception-and-error-handling)  
 
 # Overview
 
@@ -541,3 +544,4 @@ Sample code
 		System.out.println(e.getMessage());
 	}
 ```
+# That's it so far. Happy SQLighting :)
