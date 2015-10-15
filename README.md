@@ -5,8 +5,16 @@ SQLite implementation that works with J2ObjC on both - Android and iOS platforms
 You should be able to code SQLite database related logics in java on your Android device and reuse it on your iOS application.
 
 # Table of content
-
-TBD
+Note: toc is not complete
+* [Overview] (https://github.com/vals-productions/sqlighter#overview)
+* [J2ObjC] (https://github.com/vals-productions/sqlighter#j2objc)
+* [Project configuration] (https://github.com/vals-productions/sqlighter#project-configuration)
+ * [Using provided libraries] (https://github.com/vals-productions/sqlighter#using-provided-libraries)
+ * [Using source files] (https://github.com/vals-productions/sqlighter#using-source-files)
+  * [Sqlighter at Android] (https://github.com/vals-productions/sqlighter#sqlighter-at-android)  
+  * [Sqlighter at iOS] (https://github.com/vals-productions/sqlighter#sqlighter-at-ios)
+ * [Database file] (https://github.com/vals-productions/sqlighter#database-file) 
+* [Usage] (https://github.com/vals-productions/sqlighter#usage) 
 
 # Overview
 
@@ -150,11 +158,11 @@ routine.
 
 Make sure your project compiles.
 
-#### Database file
+### Database file
 
 Database file may be initially provided by the developer, or created by the library.
 
-##### The file is provided 
+#### The file is provided 
 
 Both Android and iOS projects should contain your initial SQLite database
 file. It should be part of your project. It can have some predefined DB schema with data, 
@@ -168,13 +176,19 @@ on the file system and add it to the project this way.
 ``SQLighterDb.setDbName(String name)`` specifies file name.
 
 ``SQLighterDb.setDbPath(String path)`` specifies path to the file on the device. This is
-different between Android and iOS. For android it is "/data/data/<<YOUR PROJECT path>>/databases/",
+different between Android and iOS. For android this path might be either "/data/data/<<YOUR PROJECT path>>/databases/", or,
+"/data/user/0/<<YOUR PROJECT path>>/databases/", so, as of now, it's best to call the following code to determine/specify the path:
+``` java
+// from the Activity class:
+String dbPath = this.getApplication().getApplicationContext().getFilesDir()
+                        .getParentFile().getPath() + "/databases/";
+```
 for iOS this method is missing as the library knows the location relative
 to project's location. All examples below assume you have some initial database file.
 
 Otherwise...
 
-##### The database file is not provided
+#### The database file is not provided
 
 If the file is not provided, then you should not use`` SQLighterDb.copyDbOnce();`` 
 method (see more on this method in the next provision). Since the initial file is not
@@ -182,7 +196,7 @@ provided, it would be created. In this case you do not have an option of the dat
 preloaded with data, but you can compensate for that by running your initial database 
 initialization script.
 
-##### SQLighterDb.copyDbOnce()
+#### SQLighterDb.copyDbOnce()
 
 Your initial sqlite database file is stored somewhere within your project structure.
 This file could contain no tables/information whatsoever, or, contain some
@@ -223,7 +237,7 @@ development process where you would like to roll database back and start fresh u
 develop and test some particular. Normally, you do not want to call #setOverwriteDb with
 "true" in your production environment unless you want the user to start fresh every time.
 
-#### Instantiation example
+### Instantiation example
 
 Here I will show you how to inject platform specific implementations on application/activity
 initialization and initialize the database file.
