@@ -34,14 +34,15 @@ platform specific implementations.
 
 # Going by example
 
+The following sample Java code gives identical output after being converted into Objective-C using J2ObjC. Therefore, you can implement your database related logics in java language amd just convert/reuse it in iOS.
+
 Note: for more up to date examples please check some demo code [Demo.java] 
-(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
-which is part of the actual demo project code.
+(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) which is part of the actual demo project code.
 
 ### Pre requisites
 
 Let's create some sqlite file using sqlite command line or one of the existing UI tools
-and create a table user in it.
+and create a table "user" in it.
 
 ``` sql
 CREATE TABLE "user" (
@@ -184,14 +185,10 @@ will result in:
 update user set email = null where email = 'qw@er.ty1';
 ```
 
-The above code gives identical output after being converted into iOS using j2objc.
-Therefore, you can implement your database related logics in java language amd just
-convert/reuse it in iOS.
-
 ### iOS code
 
 Normally you shouldn't need to do SQLite related coding in your iOS implementation, 'cause
-the whole goal of this library is to code in java and convert to Objective-C.
+the whole goal of this library is to code in Java and convert to Objective-C.
 
 But if for whatever reason you have to code some sqlighter in iOS without J2ObjC, it's
 also possible:
