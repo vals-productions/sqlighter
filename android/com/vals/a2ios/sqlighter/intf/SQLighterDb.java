@@ -123,7 +123,7 @@ public interface SQLighterDb {
     public void rollbackTransaction() throws Exception;
 
     /**
-     * Close dtabase
+     * Close database
      */
     public void close();
 
