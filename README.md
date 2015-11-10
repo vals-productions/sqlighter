@@ -41,7 +41,7 @@ Note: for more up to date examples please check some demo code [Demo.java]
 
 ### Pre requisites
 
-Let's create some sqlite file using sqlite command line or one of the existing UI tools
+Let's create some sqlite database file using sqlite command line or one of the existing UI tools
 and create a table "user" in it.
 
 ``` sql
@@ -50,7 +50,7 @@ CREATE TABLE "user" (
 	`email`	TEXT,
 	`id`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
 	`data`	BLOB,
-	`height`	REAL
+	`height` REAL
 );
 ```
 Let's insert the following initial records:
