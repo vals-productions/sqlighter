@@ -3,8 +3,8 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java
 //
 
-#ifndef _Demo_H_
-#define _Demo_H_
+#ifndef _ComProdValsAndr_demo_prjDemo_H_
+#define _ComProdValsAndr_demo_prjDemo_H_
 
 #include "J2ObjC_header.h"
 
@@ -28,6 +28,6 @@ FOUNDATION_EXPORT Demo *new_Demo_init() NS_RETURNS_RETAINED;
 
 J2OBJC_TYPE_LITERAL_HEADER(Demo)
 
-typedef Demo ComProdValsAndr_demo_prjDemo;
+@compatibility_alias ComProdValsAndr_demo_prjDemo Demo;
 
-#endif // _Demo_H_
+#endif // _ComProdValsAndr_demo_prjDemo_H_

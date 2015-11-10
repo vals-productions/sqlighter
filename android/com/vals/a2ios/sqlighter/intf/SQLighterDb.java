@@ -1,5 +1,7 @@
 package com.vals.a2ios.sqlighter.intf;
 
+import java.util.Date;
+
 /**
  * General interface for managing SQLite database
  *
@@ -88,6 +90,11 @@ public interface SQLighterDb {
     public void addParam(byte[] blob);
 
     /**
+     * Bind date paramß
+     * @param date
+     */
+    public void addParam(Date date);
+    /**
      * Bind object param
      *
      * @param o
@@ -126,5 +133,12 @@ public interface SQLighterDb {
      * Close database
      */
     public void close();
+
+    /**
+     * @param isDateNamedColumn - if true, then Any string type column having "date"
+     * in its name will be attempted to be parsed as a Date when processing a result set.
+     * Otherwise, will be treated as a string.
+     */
+    public void setIsDateNamedColumn(boolean isDateNamedColumn);
 
 }

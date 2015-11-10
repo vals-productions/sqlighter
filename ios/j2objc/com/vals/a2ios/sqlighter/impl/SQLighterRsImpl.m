@@ -12,6 +12,7 @@
 #import "java/lang/Long.h"
 #import "java/lang/Integer.h"
 #import "java/lang/Exception.h"
+#import "java/util/Date.h"
 
 @implementation SQLighterRsImpl
 
@@ -74,13 +75,13 @@
     return [NSNumber numberWithDouble:d];
 }
 
--(NSDate*) getDateAtIndex: (int) idx {
-    NSNumber *d = [self getDoubleWithInt: idx];
-    if(d == nil) {
-        return nil;
-    }
-    return [NSDate dateWithTimeIntervalSince1970: [d doubleValue]];
-}
+//-(NSDate*) getDateAtIndex: (int) idx {
+//    NSNumber *d = [self getDoubleWithInt: idx];
+//    if(d == nil) {
+//        return nil;
+//    }
+//    return [NSDate dateWithTimeIntervalSince1970: [d doubleValue]];
+//}
 
 - (IOSByteArray *)getBlobWithInt:(jint)index {
     NSData *d = [self getBlobAtIndex:index];
@@ -111,13 +112,38 @@
     } else if (type == SQLITE_BLOB) {
         return [self getBlobAtIndex: index];
     } else if (type == SQLITE_TEXT) {
+        NSString *colName = [self getColumnNameWithInt:index];
+        if (db.isDateNamedColumn == YES &&
+            colName != nil &&
+            [[colName lowercaseString] containsString:@"_date"]) {
+            return [self getDateWithInt:index];
+        }
         return [self getStringWithInt: index];
     }
     return nil;
 }
 
+- (JavaUtilDate *)getDateWithInt:(jint)index {
+    NSDate *date = [self getNSDateWithInt:index];
+    JavaUtilDate *jud = [[JavaUtilDate alloc] initWithLong: [date timeIntervalSince1970]];
+    return jud;
+}
+
+- (NSDate*)getNSDateWithInt:(jint)index {
+    NSString *dateStr = [self getStringWithInt:index];
+    NSDate *date = [db.dateFormatter dateFromString:dateStr];
+    return date;
+}
+
 - (jint)getColumnTypeWithInt:(jint)index {
     return sqlite3_column_type(stmt, index);
+}
+
+- (NSString *)getColumnNameWithInt:(jint)index {
+    const char *buffer = // (char*)sqlite3_column_database_name(stmt, index);
+        (char*)sqlite3_column_name(stmt, index);
+    NSString *str = [NSString stringWithUTF8String: buffer];
+    return str;
 }
 
 - (void)close {

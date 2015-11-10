@@ -3,8 +3,8 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Bootstrap.java
 //
 
-#ifndef _Bootstrap_H_
-#define _Bootstrap_H_
+#ifndef _ComProdValsAndr_demo_prjBootstrap_H_
+#define _ComProdValsAndr_demo_prjBootstrap_H_
 
 #include "J2ObjC_header.h"
 
@@ -28,6 +28,6 @@ FOUNDATION_EXPORT Bootstrap *Bootstrap_getInstance();
 
 J2OBJC_TYPE_LITERAL_HEADER(Bootstrap)
 
-typedef Bootstrap ComProdValsAndr_demo_prjBootstrap;
+@compatibility_alias ComProdValsAndr_demo_prjBootstrap Bootstrap;
 
-#endif // _Bootstrap_H_
+#endif // _ComProdValsAndr_demo_prjBootstrap_H_

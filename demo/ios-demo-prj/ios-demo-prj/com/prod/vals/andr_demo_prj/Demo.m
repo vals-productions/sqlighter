@@ -3,8 +3,6 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java
 //
 
-
-#include "IOSClass.h"
 #include "IOSPrimitiveArray.h"
 #include "J2ObjC_source.h"
 #include "com/prod/vals/andr_demo_prj/Bootstrap.h"
@@ -17,15 +15,7 @@
 #include "java/lang/Long.h"
 #include "java/lang/System.h"
 #include "java/lang/Throwable.h"
-
-@interface Demo ()
-
-+ (void)printWithSQLighterRs:(id<SQLighterRs>)rs;
-
-+ (void)printUserTableWithNSString:(NSString *)title
-                   withSQLighterDb:(id<SQLighterDb>)db;
-
-@end
+#include "java/util/Date.h"
 
 __attribute__((unused)) static void Demo_printWithSQLighterRs_(id<SQLighterRs> rs);
 
@@ -37,19 +27,12 @@ __attribute__((unused)) static void Demo_printUserTableWithNSString_withSQLighte
   return Demo_dbOperations();
 }
 
-+ (void)printWithSQLighterRs:(id<SQLighterRs>)rs {
-  Demo_printWithSQLighterRs_(rs);
-}
-
-+ (void)printUserTableWithNSString:(NSString *)title
-                   withSQLighterDb:(id<SQLighterDb>)db {
-  Demo_printUserTableWithNSString_withSQLighterDb_(title, db);
-}
-
+J2OBJC_IGNORE_DESIGNATED_BEGIN
 - (instancetype)init {
   Demo_init(self);
   return self;
 }
+J2OBJC_IGNORE_DESIGNATED_END
 
 @end
 
@@ -68,7 +51,7 @@ NSString *Demo_dbOperations() {
     [db addParamWithDouble:5.67];
     [db executeChangeWithNSString:@"insert into user( name, email, data, height) values (?, ?, ?, ?)"];
     [db addParamWithNSString:@"qw@er.ty1"];
-    [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:@"check if the record was inserted"];
+    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:@"check if the record was inserted"];
     rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user where email = ?"];
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
       Demo_printWithSQLighterRs_(rs);
@@ -81,7 +64,7 @@ NSString *Demo_dbOperations() {
     [db addParamWithNSString:@"user@email.com"];
     [db addParamWithNSString:@"qw@er.ty1"];
     [db executeChangeWithNSString:@"update user set email = ? where email is null or email = ?"];
-    [JavaLangSystem_get_out_() printlnWithNSString:@"after update state 2"];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after update state 2"];
     rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user"];
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
       Demo_printWithSQLighterRs_(rs);
@@ -97,15 +80,17 @@ NSString *Demo_dbOperations() {
     [db addParamWithLong:2];
     [db executeChangeWithNSString:@"delete from user where id = ?"];
     Demo_printUserTableWithNSString_withSQLighterDb_(@"after delete state", db);
-    [db executeChangeWithNSString:@"create table address(id integer primary key autoincrement unique, name text, user_id integer)"];
+    [db executeChangeWithNSString:@"create table address(id integer primary key autoincrement unique, name text, user_id integer, update_date text)"];
     [db addParamWithNSString:@"123 main str, walnut creek, ca"];
     [db addParamWithLong:1];
-    [db executeChangeWithNSString:@"insert into address(name, user_id) values(?, ?)"];
-    [JavaLangSystem_get_out_() printlnWithNSString:@"after address creation/population"];
-    rs = [db executeSelectWithNSString:@"select a.user_id, u.email, u.name, u.data, u.height, a.name from user u, address a where a.user_id = u.id"];
+    [db addParamWithJavaUtilDate:new_JavaUtilDate_init()];
+    [db executeChangeWithNSString:@"insert into address(name, user_id, update_date) values(?, ?, ?)"];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after address creation/population"];
+    rs = [db executeSelectWithNSString:@"select a.user_id, u.email, u.name, u.data, u.height, a.name, a.update_date from user u, address a where a.user_id = u.id"];
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
       Demo_printWithSQLighterRs_(rs);
-      [JavaLangSystem_get_out_() printlnWithNSString:JreStrcat("$$", @" address: ", [rs getStringWithInt:5])];
+      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$$", @" address: ", [rs getStringWithInt:5])];
+      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @" update_date: ", [rs getDateWithInt:6])];
     }
     [rs close];
     @try {
@@ -120,7 +105,7 @@ NSString *Demo_dbOperations() {
       [db commitTransaction];
     }
     @catch (JavaLangThrowable *e) {
-      [JavaLangSystem_get_out_() printlnWithNSString:[((JavaLangThrowable *) nil_chk(e)) getMessage]];
+      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:[((JavaLangThrowable *) nil_chk(e)) getMessage]];
       [db rollbackTransaction];
     }
     Demo_printUserTableWithNSString_withSQLighterDb_(@"after transaction commit or rollback", db);
@@ -134,7 +119,7 @@ NSString *Demo_dbOperations() {
     [db close];
   }
   @catch (JavaLangException *e) {
-    [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:[((JavaLangException *) nil_chk(e)) getMessage]];
+    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:[((JavaLangException *) nil_chk(e)) getMessage]];
     return [e getMessage];
   }
   return greetingStr;
@@ -151,12 +136,12 @@ void Demo_printWithSQLighterRs_(id<SQLighterRs> rs) {
     dataString = [NSString stringWithBytes:dataBytes];
   }
   NSNumber *h = [rs getDoubleWithInt:4];
-  [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
 }
 
 void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLighterDb> db) {
   Demo_initialize();
-  [((JavaIoPrintStream *) nil_chk(JavaLangSystem_get_out_())) printlnWithNSString:title];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:title];
   id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(db)) executeSelectWithNSString:@"select id, email, name, data, height from user"];
   while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
     Demo_printWithSQLighterRs_(rs);

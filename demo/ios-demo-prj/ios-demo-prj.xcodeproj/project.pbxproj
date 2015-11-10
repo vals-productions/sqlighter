@@ -10,14 +10,22 @@
 		8B028CA71BB1B20800AFD558 /* SQLighterDbImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */; };
 		8B028CA81BB1B20800AFD558 /* SQLighterRsImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */; };
 		8B0987001BBD8C4C003534E2 /* j2objc-w-refl.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */; };
+		8BF799C41BF1A95C00CA99B7 /* libguava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BC1BF1A95C00CA99B7 /* libguava.a */; };
+		8BF799C51BF1A95C00CA99B7 /* libjavax_inject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BD1BF1A95C00CA99B7 /* libjavax_inject.a */; };
+		8BF799C61BF1A95C00CA99B7 /* libjre_emul_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BE1BF1A95C00CA99B7 /* libjre_emul_core.a */; };
+		8BF799C71BF1A95C00CA99B7 /* libjre_emul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BF1BF1A95C00CA99B7 /* libjre_emul.a */; };
+		8BF799C81BF1A95C00CA99B7 /* libjsr305.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799C01BF1A95C00CA99B7 /* libjsr305.a */; };
+		8BF799C91BF1A95C00CA99B7 /* libjunit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799C11BF1A95C00CA99B7 /* libjunit.a */; };
+		8BF799CA1BF1A95C00CA99B7 /* libmockito.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799C21BF1A95C00CA99B7 /* libmockito.a */; };
+		8BF799CB1BF1A95C00CA99B7 /* libprotobuf_runtime.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799C31BF1A95C00CA99B7 /* libprotobuf_runtime.a */; };
+		8BF799CD1BF1A9DC00CA99B7 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799CC1BF1A9DC00CA99B7 /* libsqlite3.dylib */; };
+		8BF799CF1BF1AA5100CA99B7 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799CE1BF1AA5100CA99B7 /* libz.1.dylib */; };
+		8BF799D11BF1AAA600CA99B7 /* libicucore.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799D01BF1AAA600CA99B7 /* libicucore.A.dylib */; };
 		F32A9E5F1B9028CE0092C868 /* convert.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5C1B9028CE0092C868 /* convert.sh */; };
 		F32A9E601B9028CE0092C868 /* pckgs.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5D1B9028CE0092C868 /* pckgs.sh */; };
 		F32A9E611B9028CE0092C868 /* j2objc.sh in Resources */ = {isa = PBXBuildFile; fileRef = F32A9E5E1B9028CE0092C868 /* j2objc.sh */; };
 		F32A9EA41B9ACFF20092C868 /* sqlite.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = F32A9EA31B9ACFF20092C868 /* sqlite.sqlite */; };
 		F32A9EA71B9AD6BF0092C868 /* Demo.m in Sources */ = {isa = PBXBuildFile; fileRef = F32A9EA61B9AD6BF0092C868 /* Demo.m */; };
-		F32A9EA91B9AD7DB0092C868 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F32A9EA81B9AD7DB0092C868 /* libsqlite3.dylib */; };
-		F32A9EAB1B9AD7FA0092C868 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F32A9EAA1B9AD7FA0092C868 /* libicucore.dylib */; };
-		F32A9EAD1B9AD80A0092C868 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F32A9EAC1B9AD80A0092C868 /* libz.dylib */; };
 		F32A9EC71B9ADCC00092C868 /* Bootstrap.m in Sources */ = {isa = PBXBuildFile; fileRef = F32A9EC61B9ADCC00092C868 /* Bootstrap.m */; };
 		F37D0D671B90180300E73A01 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F37D0D661B90180300E73A01 /* main.m */; };
 		F37D0D6A1B90180300E73A01 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F37D0D691B90180300E73A01 /* AppDelegate.m */; };
@@ -25,40 +33,29 @@
 		F37D0D701B90180300E73A01 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F37D0D6E1B90180300E73A01 /* Main.storyboard */; };
 		F37D0D721B90180300E73A01 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F37D0D711B90180300E73A01 /* Images.xcassets */; };
 		F37D0D751B90180300E73A01 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F37D0D731B90180300E73A01 /* LaunchScreen.xib */; };
-		F37D0D811B90180400E73A01 /* ios_demo_prjTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F37D0D801B90180400E73A01 /* ios_demo_prjTests.m */; };
-		F3D46B8C1B9BA32600E60142 /* libguava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B841B9BA32600E60142 /* libguava.a */; };
-		F3D46B8D1B9BA32600E60142 /* libmockito.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B851B9BA32600E60142 /* libmockito.a */; };
-		F3D46B8E1B9BA32600E60142 /* libjunit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B861B9BA32600E60142 /* libjunit.a */; };
-		F3D46B8F1B9BA32600E60142 /* libjsr305.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B871B9BA32600E60142 /* libjsr305.a */; };
-		F3D46B901B9BA32600E60142 /* libprotobuf_runtime.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B881B9BA32600E60142 /* libprotobuf_runtime.a */; };
-		F3D46B911B9BA32600E60142 /* libjavax_inject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B891B9BA32600E60142 /* libjavax_inject.a */; };
-		F3D46B921B9BA32600E60142 /* libjre_emul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B8A1B9BA32600E60142 /* libjre_emul.a */; };
-		F3D46B931B9BA32600E60142 /* libj2objc_main.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D46B8B1B9BA32600E60142 /* libj2objc_main.a */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		F37D0D7B1B90180400E73A01 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F37D0D591B90180300E73A01 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F37D0D601B90180300E73A01;
-			remoteInfo = "ios-demo-prj";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterDbImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterDbImpl.m; sourceTree = "<group>"; };
 		8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterRsImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterRsImpl.m; sourceTree = "<group>"; };
 		8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "j2objc-w-refl.sh"; path = "ios-demo-prj/script/j2objc-w-refl.sh"; sourceTree = "<group>"; };
+		8BF799BC1BF1A95C00CA99B7 /* libguava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libguava.a; path = "../../../j2objc-0.9.8.2.1/lib/libguava.a"; sourceTree = "<group>"; };
+		8BF799BD1BF1A95C00CA99B7 /* libjavax_inject.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjavax_inject.a; path = "../../../j2objc-0.9.8.2.1/lib/libjavax_inject.a"; sourceTree = "<group>"; };
+		8BF799BE1BF1A95C00CA99B7 /* libjre_emul_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_emul_core.a; path = "../../../j2objc-0.9.8.2.1/lib/libjre_emul_core.a"; sourceTree = "<group>"; };
+		8BF799BF1BF1A95C00CA99B7 /* libjre_emul.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_emul.a; path = "../../../j2objc-0.9.8.2.1/lib/libjre_emul.a"; sourceTree = "<group>"; };
+		8BF799C01BF1A95C00CA99B7 /* libjsr305.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjsr305.a; path = "../../../j2objc-0.9.8.2.1/lib/libjsr305.a"; sourceTree = "<group>"; };
+		8BF799C11BF1A95C00CA99B7 /* libjunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjunit.a; path = "../../../j2objc-0.9.8.2.1/lib/libjunit.a"; sourceTree = "<group>"; };
+		8BF799C21BF1A95C00CA99B7 /* libmockito.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmockito.a; path = "../../../j2objc-0.9.8.2.1/lib/libmockito.a"; sourceTree = "<group>"; };
+		8BF799C31BF1A95C00CA99B7 /* libprotobuf_runtime.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf_runtime.a; path = "../../../j2objc-0.9.8.2.1/lib/libprotobuf_runtime.a"; sourceTree = "<group>"; };
+		8BF799CC1BF1A9DC00CA99B7 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
+		8BF799CE1BF1AA5100CA99B7 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = /usr/lib/libz.1.dylib; sourceTree = "<absolute>"; };
+		8BF799D01BF1AAA600CA99B7 /* libicucore.A.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.A.dylib; path = /usr/lib/libicucore.A.dylib; sourceTree = "<absolute>"; };
 		F32A9E5C1B9028CE0092C868 /* convert.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = convert.sh; path = "ios-demo-prj/script/convert.sh"; sourceTree = "<group>"; };
 		F32A9E5D1B9028CE0092C868 /* pckgs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = pckgs.sh; path = "ios-demo-prj/script/pckgs.sh"; sourceTree = "<group>"; };
 		F32A9E5E1B9028CE0092C868 /* j2objc.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = j2objc.sh; path = "ios-demo-prj/script/j2objc.sh"; sourceTree = "<group>"; };
 		F32A9EA31B9ACFF20092C868 /* sqlite.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = sqlite.sqlite; path = "../../andr-demo-prj/app/src/main/assets/sqlite.sqlite"; sourceTree = "<group>"; };
 		F32A9EA51B9AD6BF0092C868 /* Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Demo.h; path = com/prod/vals/andr_demo_prj/Demo.h; sourceTree = "<group>"; };
 		F32A9EA61B9AD6BF0092C868 /* Demo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Demo.m; path = com/prod/vals/andr_demo_prj/Demo.m; sourceTree = "<group>"; };
-		F32A9EA81B9AD7DB0092C868 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		F32A9EAA1B9AD7FA0092C868 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		F32A9EAC1B9AD80A0092C868 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		F32A9EC51B9ADCC00092C868 /* Bootstrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bootstrap.h; path = com/prod/vals/andr_demo_prj/Bootstrap.h; sourceTree = "<group>"; };
 		F32A9EC61B9ADCC00092C868 /* Bootstrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Bootstrap.m; path = com/prod/vals/andr_demo_prj/Bootstrap.m; sourceTree = "<group>"; };
 		F37D0D611B90180300E73A01 /* ios-demo-prj.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-demo-prj.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,17 +68,8 @@
 		F37D0D6F1B90180300E73A01 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F37D0D711B90180300E73A01 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F37D0D741B90180300E73A01 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		F37D0D7A1B90180400E73A01 /* ios-demo-prjTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-demo-prjTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F37D0D7F1B90180400E73A01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F37D0D801B90180400E73A01 /* ios_demo_prjTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_demo_prjTests.m; sourceTree = "<group>"; };
-		F3D46B841B9BA32600E60142 /* libguava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libguava.a; path = ../j2objc/lib/libguava.a; sourceTree = "<group>"; };
-		F3D46B851B9BA32600E60142 /* libmockito.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmockito.a; path = ../j2objc/lib/libmockito.a; sourceTree = "<group>"; };
-		F3D46B861B9BA32600E60142 /* libjunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjunit.a; path = ../j2objc/lib/libjunit.a; sourceTree = "<group>"; };
-		F3D46B871B9BA32600E60142 /* libjsr305.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjsr305.a; path = ../j2objc/lib/libjsr305.a; sourceTree = "<group>"; };
-		F3D46B881B9BA32600E60142 /* libprotobuf_runtime.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf_runtime.a; path = ../j2objc/lib/libprotobuf_runtime.a; sourceTree = "<group>"; };
-		F3D46B891B9BA32600E60142 /* libjavax_inject.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjavax_inject.a; path = ../j2objc/lib/libjavax_inject.a; sourceTree = "<group>"; };
-		F3D46B8A1B9BA32600E60142 /* libjre_emul.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_emul.a; path = ../j2objc/lib/libjre_emul.a; sourceTree = "<group>"; };
-		F3D46B8B1B9BA32600E60142 /* libj2objc_main.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libj2objc_main.a; path = ../j2objc/lib/libj2objc_main.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,24 +77,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3D46B8C1B9BA32600E60142 /* libguava.a in Frameworks */,
-				F3D46B8D1B9BA32600E60142 /* libmockito.a in Frameworks */,
-				F3D46B8E1B9BA32600E60142 /* libjunit.a in Frameworks */,
-				F3D46B8F1B9BA32600E60142 /* libjsr305.a in Frameworks */,
-				F3D46B901B9BA32600E60142 /* libprotobuf_runtime.a in Frameworks */,
-				F3D46B911B9BA32600E60142 /* libjavax_inject.a in Frameworks */,
-				F3D46B921B9BA32600E60142 /* libjre_emul.a in Frameworks */,
-				F3D46B931B9BA32600E60142 /* libj2objc_main.a in Frameworks */,
-				F32A9EAD1B9AD80A0092C868 /* libz.dylib in Frameworks */,
-				F32A9EAB1B9AD7FA0092C868 /* libicucore.dylib in Frameworks */,
-				F32A9EA91B9AD7DB0092C868 /* libsqlite3.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F37D0D771B90180400E73A01 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				8BF799D11BF1AAA600CA99B7 /* libicucore.A.dylib in Frameworks */,
+				8BF799CF1BF1AA5100CA99B7 /* libz.1.dylib in Frameworks */,
+				8BF799CD1BF1A9DC00CA99B7 /* libsqlite3.dylib in Frameworks */,
+				8BF799C41BF1A95C00CA99B7 /* libguava.a in Frameworks */,
+				8BF799C51BF1A95C00CA99B7 /* libjavax_inject.a in Frameworks */,
+				8BF799C61BF1A95C00CA99B7 /* libjre_emul_core.a in Frameworks */,
+				8BF799C71BF1A95C00CA99B7 /* libjre_emul.a in Frameworks */,
+				8BF799C81BF1A95C00CA99B7 /* libjsr305.a in Frameworks */,
+				8BF799C91BF1A95C00CA99B7 /* libjunit.a in Frameworks */,
+				8BF799CA1BF1A95C00CA99B7 /* libmockito.a in Frameworks */,
+				8BF799CB1BF1A95C00CA99B7 /* libprotobuf_runtime.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,17 +108,17 @@
 		F32A9EBE1B9ADA7B0092C868 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				F3D46B841B9BA32600E60142 /* libguava.a */,
-				F3D46B851B9BA32600E60142 /* libmockito.a */,
-				F3D46B861B9BA32600E60142 /* libjunit.a */,
-				F3D46B871B9BA32600E60142 /* libjsr305.a */,
-				F3D46B881B9BA32600E60142 /* libprotobuf_runtime.a */,
-				F3D46B891B9BA32600E60142 /* libjavax_inject.a */,
-				F3D46B8A1B9BA32600E60142 /* libjre_emul.a */,
-				F3D46B8B1B9BA32600E60142 /* libj2objc_main.a */,
-				F32A9EAC1B9AD80A0092C868 /* libz.dylib */,
-				F32A9EAA1B9AD7FA0092C868 /* libicucore.dylib */,
-				F32A9EA81B9AD7DB0092C868 /* libsqlite3.dylib */,
+				8BF799D01BF1AAA600CA99B7 /* libicucore.A.dylib */,
+				8BF799CE1BF1AA5100CA99B7 /* libz.1.dylib */,
+				8BF799CC1BF1A9DC00CA99B7 /* libsqlite3.dylib */,
+				8BF799BC1BF1A95C00CA99B7 /* libguava.a */,
+				8BF799BD1BF1A95C00CA99B7 /* libjavax_inject.a */,
+				8BF799BE1BF1A95C00CA99B7 /* libjre_emul_core.a */,
+				8BF799BF1BF1A95C00CA99B7 /* libjre_emul.a */,
+				8BF799C01BF1A95C00CA99B7 /* libjsr305.a */,
+				8BF799C11BF1A95C00CA99B7 /* libjunit.a */,
+				8BF799C21BF1A95C00CA99B7 /* libmockito.a */,
+				8BF799C31BF1A95C00CA99B7 /* libprotobuf_runtime.a */,
 			);
 			name = libs;
 			sourceTree = "<group>";
@@ -157,7 +138,6 @@
 			isa = PBXGroup;
 			children = (
 				F37D0D611B90180300E73A01 /* ios-demo-prj.app */,
-				F37D0D7A1B90180400E73A01 /* ios-demo-prjTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -230,39 +210,17 @@
 			productReference = F37D0D611B90180300E73A01 /* ios-demo-prj.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F37D0D791B90180400E73A01 /* ios-demo-prjTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F37D0D871B90180400E73A01 /* Build configuration list for PBXNativeTarget "ios-demo-prjTests" */;
-			buildPhases = (
-				F37D0D761B90180300E73A01 /* Sources */,
-				F37D0D771B90180400E73A01 /* Frameworks */,
-				F37D0D781B90180400E73A01 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F37D0D7C1B90180400E73A01 /* PBXTargetDependency */,
-			);
-			name = "ios-demo-prjTests";
-			productName = "ios-demo-prjTests";
-			productReference = F37D0D7A1B90180400E73A01 /* ios-demo-prjTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		F37D0D591B90180300E73A01 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Vlad Sayenko";
 				TargetAttributes = {
 					F37D0D601B90180300E73A01 = {
 						CreatedOnToolsVersion = 6.4;
-					};
-					F37D0D791B90180400E73A01 = {
-						CreatedOnToolsVersion = 6.4;
-						TestTargetID = F37D0D601B90180300E73A01;
 					};
 				};
 			};
@@ -280,7 +238,6 @@
 			projectRoot = "";
 			targets = (
 				F37D0D601B90180300E73A01 /* ios-demo-prj */,
-				F37D0D791B90180400E73A01 /* ios-demo-prjTests */,
 			);
 		};
 /* End PBXProject section */
@@ -301,13 +258,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F37D0D781B90180400E73A01 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -325,23 +275,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F37D0D761B90180300E73A01 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F37D0D811B90180400E73A01 /* ios_demo_prjTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		F37D0D7C1B90180400E73A01 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F37D0D601B90180300E73A01 /* ios-demo-prj */;
-			targetProxy = F37D0D7B1B90180400E73A01 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F37D0D6E1B90180300E73A01 /* Main.storyboard */ = {
@@ -384,6 +318,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -462,6 +397,7 @@
 					"$(inherited)",
 					../j2objc/lib,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -483,41 +419,8 @@
 					"$(inherited)",
 					../j2objc/lib,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		F37D0D881B90180400E73A01 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "ios-demo-prjTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ios-demo-prj.app/ios-demo-prj";
-			};
-			name = Debug;
-		};
-		F37D0D891B90180400E73A01 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "ios-demo-prjTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ios-demo-prj.app/ios-demo-prj";
 			};
 			name = Release;
 		};
@@ -538,15 +441,6 @@
 			buildConfigurations = (
 				F37D0D851B90180400E73A01 /* Debug */,
 				F37D0D861B90180400E73A01 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F37D0D871B90180400E73A01 /* Build configuration list for PBXNativeTarget "ios-demo-prjTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F37D0D881B90180400E73A01 /* Debug */,
-				F37D0D891B90180400E73A01 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

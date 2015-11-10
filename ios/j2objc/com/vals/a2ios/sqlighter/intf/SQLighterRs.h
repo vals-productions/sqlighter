@@ -3,8 +3,8 @@
 //  source: ../../../../android//com/vals/a2ios/sqlighter/intf/SQLighterRs.java
 //
 
-#ifndef _SQLighterRs_H_
-#define _SQLighterRs_H_
+#ifndef _ComValsA2iosSqlighterIntfSQLighterRs_H_
+#define _ComValsA2iosSqlighterIntfSQLighterRs_H_
 
 #include "J2ObjC_header.h"
 
@@ -12,6 +12,7 @@
 @class JavaLangDouble;
 @class JavaLangInteger;
 @class JavaLangLong;
+@class JavaUtilDate;
 
 @protocol SQLighterRs < NSObject, JavaObject >
 
@@ -29,11 +30,15 @@
 
 - (JavaLangInteger *)getIntWithInt:(jint)index;
 
+- (JavaUtilDate *)getDateWithInt:(jint)index;
+
 - (id)getObjectWithInt:(jint)index;
 
 - (jboolean)isNullWithInt:(jint)index;
 
 - (jint)getColumnTypeWithInt:(jint)index;
+
+- (NSString *)getColumnNameWithInt:(jint)index;
 
 - (void)close;
 
@@ -45,4 +50,4 @@ J2OBJC_TYPE_LITERAL_HEADER(SQLighterRs)
 
 #define ComValsA2iosSqlighterIntfSQLighterRs SQLighterRs
 
-#endif // _SQLighterRs_H_
+#endif // _ComValsA2iosSqlighterIntfSQLighterRs_H_

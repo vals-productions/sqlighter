@@ -19,8 +19,10 @@
 @property (nonatomic, retain) NSString *dbName;
 @property (nonatomic, retain) NSMutableArray *parameterArray;
 @property BOOL replaceDatabase;
+@property BOOL isDateNamedColumn;
 @property sqlite3 *database;
 @property sqlite3_stmt *lastPreparedStmt;
+@property NSDateFormatter *dateFormatter;
 
 - (void) copyDbOnce;
 - (void) setContextWithId:(id)context;

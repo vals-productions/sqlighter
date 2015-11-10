@@ -3,7 +3,6 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Bootstrap.java
 //
 
-
 #include "J2ObjC_source.h"
 #include "com/prod/vals/andr_demo_prj/Bootstrap.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
@@ -29,10 +28,12 @@ __attribute__((unused)) static Bootstrap *new_Bootstrap_init() NS_RETURNS_RETAIN
 
 @implementation Bootstrap
 
+J2OBJC_IGNORE_DESIGNATED_BEGIN
 - (instancetype)init {
   Bootstrap_init(self);
   return self;
 }
+J2OBJC_IGNORE_DESIGNATED_END
 
 + (Bootstrap *)getInstance {
   return Bootstrap_getInstance();

@@ -3,6 +3,8 @@ package com.prod.vals.andr_demo_prj;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
+import java.util.Date;
+
 /**
  * This class is being converted into iOS module. It represents some business
  * logic that utilizes SQLite db access. Produces the same output in iOS.
@@ -105,23 +107,35 @@ public class Demo {
             /**
              * Create table example
              */
-            db.executeChange("create table address(id integer primary key autoincrement unique, name text, user_id integer)");
+            db.executeChange("create table address(" +
+                    "id integer primary key autoincrement unique, " +
+                    "name text, " +
+                    "user_id integer, " +
+                    "update_date text)");
             /**
              * Add some table data
              */
             db.addParam("123 main str, walnut creek, ca");
             db.addParam(1);
-            db.executeChange("insert into address(name, user_id) values(?, ?)");
+            db.addParam(new Date());
+            db.executeChange("insert into address(name, user_id, update_date) values(?, ?, ?)");
 
             /**
              * Run some multi table SELECT
              */
             System.out.println("after address creation/population");
-            rs = db.executeSelect("select a.user_id, u.email, u.name, u.data, u.height, a.name from user u, address a "
-                    + "where a.user_id = u.id");
+            rs = db.executeSelect("select a.user_id, u.email, u.name, " +
+                    "u.data, u.height, a.name, a.update_date from user u, address a " +
+                    "where a.user_id = u.id");
             while (rs.hasNext()) {
                 print(rs);
                 System.out.println(" address: " + rs.getString(5));
+                System.out.println(" update_date: " + rs.getDate(6));
+                /*
+                This will treat the column as date because it contains '_date' in
+                its name and
+                 */
+                System.out.println(" update_date: " + rs.getObject(6));
             }
             rs.close();
 

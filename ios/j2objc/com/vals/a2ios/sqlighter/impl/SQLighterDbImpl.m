@@ -9,16 +9,20 @@
 #import "SQLighterRsImpl.h"
 #import "IOSPrimitiveArray.h"
 #import "java/lang/Exception.h"
+#import "java/util/Date.h"
 
 @implementation SQLighterDbImpl
 
-@synthesize dbName, replaceDatabase, database, /*stmt,*/ parameterArray;
+@synthesize dbName, replaceDatabase, database, parameterArray, isDateNamedColumn;
 
 -(id) init {
     if( self = [super init]) {
         parameterArray = [NSMutableArray arrayWithCapacity:0];
         isOpen = NO;
         isCopied = NO;
+        self.isDateNamedColumn = YES;
+        self.dateFormatter = [[NSDateFormatter alloc] init];
+        [self.dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     }
     return self;
 }
@@ -117,8 +121,10 @@
                        strcmp([num objCType], @encode(double)) == 0) {
                 [self bindDouble: [num doubleValue] atIndex: par];
             }
-        } else if ([o isKindOfClass: [NSDate class]]) {
-            [self bindDate:o atIndex: par];
+        } else if ([o isKindOfClass: [JavaUtilDate class]]) {
+            [self bindJavaUtilDate:o atIndex: par];
+//        } else if ([o isKindOfClass: [NSDate class]]) {
+//            [self bindDate:o atIndex: par];
         } else if ([o isKindOfClass: [NSData class]]) {
             [self bindBlob: o atIndex: par];
         } else {
@@ -126,6 +132,10 @@
         }
     }
     [parameters removeAllObjects];
+}
+
+- (void)setIsDateNamedColumnWithBoolean:(jboolean)isDateNamedColumn {
+    
 }
 
 - (void)setContextWithId:(id)context {
@@ -197,6 +207,17 @@
     }
 }
 
+- (void)addParamWithJavaUtilDate:(JavaUtilDate *)date {
+    [parameterArray addObject: date];
+}
+
+-(void) bindJavaUtilDate: (JavaUtilDate *) date atIndex: (int) paramIdx {
+    long t = [date getTime];
+    NSDate *dt = [NSDate dateWithTimeIntervalSince1970:t];
+    NSString *dateStr = [self.dateFormatter stringFromDate:dt];
+    [self bindString:dateStr atIndex: paramIdx];
+}
+
 - (void)addParamObjWithId:(id)o {
     [parameterArray addObject: o];
 }
@@ -221,9 +242,13 @@
     [parameterArray addObject: [NSNumber numberWithLong: par ]];
 }
 
--(void) addParamWithDate: (NSDate*) date atIndex: (int) idx {
-    [self addParamWithDouble: [date timeIntervalSince1970]];
-}
+//-(void) addParamWithDate: (NSDate*) date atIndex: (int) idx {
+//    [self addParamWithDouble: [date timeIntervalSince1970]];
+//}
+
+//-(void) bindDate: (NSDate*) date atIndex: (int) idx {
+//        [self bindDouble: [date timeIntervalSince1970] atIndex: idx];
+//}
 
 -(void) addParamWithBlob: (NSData*) data {
     [parameterArray addObject: data];
@@ -255,10 +280,6 @@
 
 -(void) bindLong: (long) par  atIndex: (int) paramIdx{
         sqlite3_bind_int(self.lastPreparedStmt, paramIdx, (int)par);
-}
-
--(void) bindDate: (NSDate*) date atIndex: (int) idx {
-        [self bindDouble: [date timeIntervalSince1970] atIndex: idx];
 }
 
 -(void) bindBlob: (NSData*) data  atIndex: (int) paramIdx {

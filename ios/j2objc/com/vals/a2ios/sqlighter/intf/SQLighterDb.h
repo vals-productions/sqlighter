@@ -3,12 +3,13 @@
 //  source: ../../../../android//com/vals/a2ios/sqlighter/intf/SQLighterDb.java
 //
 
-#ifndef _SQLighterDb_H_
-#define _SQLighterDb_H_
+#ifndef _ComValsA2iosSqlighterIntfSQLighterDb_H_
+#define _ComValsA2iosSqlighterIntfSQLighterDb_H_
 
 #include "J2ObjC_header.h"
 
 @class IOSByteArray;
+@class JavaUtilDate;
 @protocol SQLighterRs;
 
 @protocol SQLighterDb < NSObject, JavaObject >
@@ -35,6 +36,8 @@
 
 - (void)addParamWithByteArray:(IOSByteArray *)blob;
 
+- (void)addParamWithJavaUtilDate:(JavaUtilDate *)date;
+
 - (void)addParamObjWithId:(id)o;
 
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery;
@@ -49,6 +52,8 @@
 
 - (void)close;
 
+- (void)setIsDateNamedColumnWithBoolean:(jboolean)isDateNamedColumn;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(SQLighterDb)
@@ -57,4 +62,4 @@ J2OBJC_TYPE_LITERAL_HEADER(SQLighterDb)
 
 #define ComValsA2iosSqlighterIntfSQLighterDb SQLighterDb
 
-#endif // _SQLighterDb_H_
+#endif // _ComValsA2iosSqlighterIntfSQLighterDb_H_

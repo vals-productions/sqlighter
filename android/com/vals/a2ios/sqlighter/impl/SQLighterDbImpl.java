@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +31,13 @@ public class SQLighterDbImpl implements SQLighterDb {
     private boolean isOpen = false;
     private boolean isDbCopied = false;
     private List<Object> parameterList = new LinkedList<Object>();
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private boolean isDateNamedColumn = true;
+
+    @Override
+    public void setIsDateNamedColumn(boolean isDateNamedColumn) {
+        this.isDateNamedColumn = isDateNamedColumn;
+    }
 
     public class ResultSetImpl implements SQLighterRs {
         private Cursor cursor;
@@ -44,6 +54,20 @@ public class SQLighterDbImpl implements SQLighterDb {
         @Override
         public boolean hasNext() {
             return cursor.moveToNext();
+        }
+
+        @Override
+        public Date getDate(int index) {
+            if(cursor.isNull(index)) {
+                return null;
+            }
+            StringBuffer sb = new StringBuffer(cursor.getString(index));
+            try {
+                Date date = dateFormat.parse(sb.toString());
+                return date;
+            } catch (ParseException e) {
+                return null;
+            }
         }
 
         @Override
@@ -105,6 +129,11 @@ public class SQLighterDbImpl implements SQLighterDb {
         }
 
         @Override
+        public String getColumnName(int index) {
+            return cursor.getColumnName(index);
+        }
+
+        @Override
         public Object getObject(int index) {
             int columnType = getColumnType(index);
             if (columnType == Cursor.FIELD_TYPE_NULL) {
@@ -116,10 +145,16 @@ public class SQLighterDbImpl implements SQLighterDb {
             } else if (columnType == Cursor.FIELD_TYPE_BLOB) {
                 return getBlob(index);
             } else if (columnType == Cursor.FIELD_TYPE_STRING) {
+                if (isDateNamedColumn && getColumnName(index) != null &&
+                        getColumnName(index).toLowerCase().indexOf("_date") != -1) {
+                    return getDate(index);
+                }
                 return getString(index);
             }
             return null;
         }
+
+
 
     }
 
@@ -248,6 +283,10 @@ public class SQLighterDbImpl implements SQLighterDb {
         parameterList.add(o);
     }
 
+    public void addParam(Date date) {
+        parameterList.add(date);
+    }
+
     @Override
     public SQLighterRs executeSelect(String selectQuery) throws Exception {
         try {
@@ -293,6 +332,10 @@ public class SQLighterDbImpl implements SQLighterDb {
                 stmt.bindLong(i, ((Short)o).longValue());
             } else if  (o instanceof byte[]) {
                 stmt.bindBlob(i, (byte[])o);
+            } else if (o instanceof Date) {
+                Date d = (Date)o;
+                StringBuilder sb = new StringBuilder(dateFormat.format(d));
+                stmt.bindString(i, sb.toString());
             }
             i++;
         }
