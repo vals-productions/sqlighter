@@ -49,7 +49,7 @@ NSString *Demo_dbOperations() {
     IOSByteArray *data = [dataStr getBytes];
     [db addParamWithByteArray:data];
     [db addParamWithDouble:5.67];
-    [db executeChangeWithNSString:@"insert into user( name, email, data, height) values (?, ?, ?, ?)"];
+    (void) [db executeChangeWithNSString:@"insert into user( name, email, data, height) values (?, ?, ?, ?)"];
     [db addParamWithNSString:@"qw@er.ty1"];
     [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:@"check if the record was inserted"];
     rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user where email = ?"];
@@ -59,11 +59,11 @@ NSString *Demo_dbOperations() {
     [rs close];
     [db addParamNull];
     [db addParamWithNSString:@"qw@er.ty1"];
-    [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
+    (void) [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
     Demo_printUserTableWithNSString_withSQLighterDb_(@"after update state 1 ", db);
     [db addParamWithNSString:@"user@email.com"];
     [db addParamWithNSString:@"qw@er.ty1"];
-    [db executeChangeWithNSString:@"update user set email = ? where email is null or email = ?"];
+    (void) [db executeChangeWithNSString:@"update user set email = ? where email is null or email = ?"];
     [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after update state 2"];
     rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user"];
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
@@ -73,35 +73,36 @@ NSString *Demo_dbOperations() {
         NSNumber *id_ = [rs getLongWithInt:0];
         [db addParamWithNSString:@"inloop@email.com"];
         [db addParamWithLong:[((NSNumber *) nil_chk(id_)) longLongValue]];
-        [db executeChangeWithNSString:@"update user set email = ? where id = ?"];
+        (void) [db executeChangeWithNSString:@"update user set email = ? where id = ?"];
       }
     }
     [rs close];
     [db addParamWithLong:2];
-    [db executeChangeWithNSString:@"delete from user where id = ?"];
+    (void) [db executeChangeWithNSString:@"delete from user where id = ?"];
     Demo_printUserTableWithNSString_withSQLighterDb_(@"after delete state", db);
-    [db executeChangeWithNSString:@"create table address(id integer primary key autoincrement unique, name text, user_id integer, update_date text)"];
+    (void) [db executeChangeWithNSString:@"create table address(id integer primary key autoincrement unique, name text, user_id integer, update_date text)"];
     [db addParamWithNSString:@"123 main str, walnut creek, ca"];
     [db addParamWithLong:1];
     [db addParamWithJavaUtilDate:new_JavaUtilDate_init()];
-    [db executeChangeWithNSString:@"insert into address(name, user_id, update_date) values(?, ?, ?)"];
+    (void) [db executeChangeWithNSString:@"insert into address(name, user_id, update_date) values(?, ?, ?)"];
     [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after address creation/population"];
     rs = [db executeSelectWithNSString:@"select a.user_id, u.email, u.name, u.data, u.height, a.name, a.update_date from user u, address a where a.user_id = u.id"];
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
       Demo_printWithSQLighterRs_(rs);
       [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$$", @" address: ", [rs getStringWithInt:5])];
       [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @" update_date: ", [rs getDateWithInt:6])];
+      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @" update_date: ", [rs getObjectWithInt:6])];
     }
     [rs close];
     @try {
       [db beginTransaction];
       [db addParamWithNSString:@"trans@email.com"];
       [db addParamWithNSString:@"inloop@email.com"];
-      [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
+      (void) [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
       Demo_printUserTableWithNSString_withSQLighterDb_(@"inside transaction", db);
       [db addParamWithNSString:@"inloop2@email.com"];
       [db addParamWithNSString:@"trans@email.com"];
-      [db executeChangeWithNSString:@"updte user set email = ? where email = ?"];
+      (void) [db executeChangeWithNSString:@"updte user set email = ? where email = ?"];
       [db commitTransaction];
     }
     @catch (JavaLangThrowable *e) {

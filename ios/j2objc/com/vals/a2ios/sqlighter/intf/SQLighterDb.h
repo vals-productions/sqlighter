@@ -9,6 +9,7 @@
 #include "J2ObjC_header.h"
 
 @class IOSByteArray;
+@class JavaLangLong;
 @class JavaUtilDate;
 @protocol SQLighterRs;
 
@@ -42,7 +43,7 @@
 
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery;
 
-- (void)executeChangeWithNSString:(NSString *)insert;
+- (JavaLangLong *)executeChangeWithNSString:(NSString *)insert;
 
 - (void)beginTransaction;
 

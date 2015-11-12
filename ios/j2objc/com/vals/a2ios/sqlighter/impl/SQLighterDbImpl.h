@@ -31,7 +31,7 @@
 - (void) addParamWithLong:(long)s;
 - (void) addParamWithInt:(int)s;
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery;
-- (void) executeChangeWithNSString:(NSString *) makeCmangeQuery;
+//- (void) executeChangeWithNSString:(NSString *) makeCmangeQuery;
 
 - (void) closeStmt: (sqlite3_stmt *) statement;
 

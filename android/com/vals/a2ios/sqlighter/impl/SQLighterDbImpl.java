@@ -301,16 +301,22 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
 
     @Override
-    public void executeChange(String update) throws Exception  {
+    public Long executeChange(String update) throws Exception  {
+        Long lastInsertedRowId = null;
         try {
             SQLiteStatement stmt = db.compileStatement(update);
             bindParams(stmt);
-            stmt.executeUpdateDelete();
+            if (update.trim().toLowerCase().startsWith("insert")) {
+                lastInsertedRowId = stmt.executeInsert();
+            } else {
+                stmt.executeUpdateDelete();
+            }
             stmt.close();
         } catch (Throwable t) {
             parameterList.clear();
             throw new Exception(t.getMessage(), t);
         }
+        return lastInsertedRowId;
     }
 
     private void bindParams(SQLiteStatement stmt) {

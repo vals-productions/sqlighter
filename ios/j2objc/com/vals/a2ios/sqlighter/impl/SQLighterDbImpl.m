@@ -10,6 +10,7 @@
 #import "IOSPrimitiveArray.h"
 #import "java/lang/Exception.h"
 #import "java/util/Date.h"
+#import "java/lang/Long.h"
 
 @implementation SQLighterDbImpl
 
@@ -81,11 +82,17 @@
     return rs;
 }
 
-- (void)executeChangeWithNSString:(NSString *) makeChangeQuery {
+- (JavaLangLong *)executeChangeWithNSString:(NSString *) makeChangeQuery {
+    JavaLangLong *rowId = nil;
     sqlite3_stmt *statement = [self prepareStatementWithSql: makeChangeQuery];
     [self bindParameters: parameterArray];
     code = sqlite3_step(statement);
+    if ([[makeChangeQuery lowercaseString] hasPrefix:@"insert"]) {
+        sqlite_int64 rowid = sqlite3_last_insert_rowid(database);
+        rowId = [[JavaLangLong alloc]initWithLong: rowid];
+    }
     [self closeStmt: statement];
+    return rowId;
 }
 
 -(void) closeStmt: (sqlite3_stmt *) statement {
