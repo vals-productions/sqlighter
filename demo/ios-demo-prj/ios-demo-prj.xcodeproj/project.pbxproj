@@ -10,6 +10,8 @@
 		8B028CA71BB1B20800AFD558 /* SQLighterDbImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */; };
 		8B028CA81BB1B20800AFD558 /* SQLighterRsImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */; };
 		8B0987001BBD8C4C003534E2 /* j2objc-w-refl.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */; };
+		8B9E83DD1C043F4500F8CE66 /* SQLighterDb.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E83DA1C043F4500F8CE66 /* SQLighterDb.m */; };
+		8B9E83DE1C043F4500F8CE66 /* SQLighterRs.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E83DB1C043F4500F8CE66 /* SQLighterRs.m */; };
 		8BF799C41BF1A95C00CA99B7 /* libguava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BC1BF1A95C00CA99B7 /* libguava.a */; };
 		8BF799C51BF1A95C00CA99B7 /* libjavax_inject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BD1BF1A95C00CA99B7 /* libjavax_inject.a */; };
 		8BF799C61BF1A95C00CA99B7 /* libjre_emul_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BE1BF1A95C00CA99B7 /* libjre_emul_core.a */; };
@@ -39,6 +41,8 @@
 		8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterDbImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterDbImpl.m; sourceTree = "<group>"; };
 		8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterRsImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterRsImpl.m; sourceTree = "<group>"; };
 		8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "j2objc-w-refl.sh"; path = "ios-demo-prj/script/j2objc-w-refl.sh"; sourceTree = "<group>"; };
+		8B9E83DA1C043F4500F8CE66 /* SQLighterDb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterDb.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/intf/SQLighterDb.m; sourceTree = "<group>"; };
+		8B9E83DB1C043F4500F8CE66 /* SQLighterRs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterRs.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/intf/SQLighterRs.m; sourceTree = "<group>"; };
 		8BF799BC1BF1A95C00CA99B7 /* libguava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libguava.a; path = "../../../j2objc-0.9.8.2.1/lib/libguava.a"; sourceTree = "<group>"; };
 		8BF799BD1BF1A95C00CA99B7 /* libjavax_inject.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjavax_inject.a; path = "../../../j2objc-0.9.8.2.1/lib/libjavax_inject.a"; sourceTree = "<group>"; };
 		8BF799BE1BF1A95C00CA99B7 /* libjre_emul_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_emul_core.a; path = "../../../j2objc-0.9.8.2.1/lib/libjre_emul_core.a"; sourceTree = "<group>"; };
@@ -145,6 +149,8 @@
 		F37D0D631B90180300E73A01 /* ios-demo-prj */ = {
 			isa = PBXGroup;
 			children = (
+				8B9E83DA1C043F4500F8CE66 /* SQLighterDb.m */,
+				8B9E83DB1C043F4500F8CE66 /* SQLighterRs.m */,
 				8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */,
 				8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */,
 				F32A9EC51B9ADCC00092C868 /* Bootstrap.h */,
@@ -266,7 +272,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F37D0D6D1B90180300E73A01 /* ViewController.m in Sources */,
+				8B9E83DD1C043F4500F8CE66 /* SQLighterDb.m in Sources */,
 				F37D0D6A1B90180300E73A01 /* AppDelegate.m in Sources */,
+				8B9E83DE1C043F4500F8CE66 /* SQLighterRs.m in Sources */,
 				F32A9EC71B9ADCC00092C868 /* Bootstrap.m in Sources */,
 				8B028CA71BB1B20800AFD558 /* SQLighterDbImpl.m in Sources */,
 				F37D0D671B90180300E73A01 /* main.m in Sources */,

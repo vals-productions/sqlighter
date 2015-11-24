@@ -23,7 +23,7 @@
         isCopied = NO;
         self.isDateNamedColumn = YES;
         self.dateFormatter = [[NSDateFormatter alloc] init];
-        [self.dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        [self.dateFormatter setDateFormat:SQLighterDb_DATE_FORMAT_];
     }
     return self;
 }
@@ -39,9 +39,9 @@
          */
         return;
     }
-    @throw [[JavaLangException alloc] initWithNSString:[NSString
-                                                stringWithFormat:
-                                                @"Database returned Error code: '%d'.", returnCode]];
+    @throw [[JavaLangException alloc]
+            initWithNSString:[NSString
+            stringWithFormat: @"Database returned Error code: '%d'.", returnCode]];
 }
 
 - (jboolean)isDbFileDeployed {
@@ -64,9 +64,9 @@
     sqlite3_stmt *statement;
     if (sqlite3_prepare_v2(database, [sqlString  UTF8String], -1, &statement, NULL) != SQLITE_OK) {
         [parameterArray removeAllObjects];
-        @throw [[JavaLangException alloc] initWithNSString:[NSString
-                                                            stringWithFormat:
-                                                            @"Database SQL Error: '%s'.", sqlite3_errmsg(database)]];
+        @throw [[JavaLangException alloc]
+                initWithNSString:[NSString stringWithFormat:
+                   @"Database SQL Error: '%s'.", sqlite3_errmsg(database)]];
     }
     self.lastPreparedStmt = statement;
     return statement;

@@ -7,6 +7,8 @@ import java.util.Date;
  *
  */
 public interface SQLighterDb {
+    public static final String DATE_HINT = "_date";
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * Checks if Db file is already in place

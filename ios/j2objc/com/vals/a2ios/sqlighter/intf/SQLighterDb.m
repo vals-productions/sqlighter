@@ -12,4 +12,7 @@
 #include "java/lang/Long.h"
 #include "java/util/Date.h"
 
+NSString *SQLighterDb_DATE_HINT_ = @"_date";
+NSString *SQLighterDb_DATE_FORMAT_ = @"yyyy-MM-dd HH:mm:ss";
+
 J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(SQLighterDb)

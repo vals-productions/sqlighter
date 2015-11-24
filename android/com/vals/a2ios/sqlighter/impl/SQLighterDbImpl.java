@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class SQLighterDbImpl implements SQLighterDb {
     private boolean isOpen = false;
     private boolean isDbCopied = false;
     private List<Object> parameterList = new LinkedList<Object>();
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(SQLighterDb.DATE_FORMAT);
     private boolean isDateNamedColumn = true;
 
     @Override
@@ -146,16 +147,13 @@ public class SQLighterDbImpl implements SQLighterDb {
                 return getBlob(index);
             } else if (columnType == Cursor.FIELD_TYPE_STRING) {
                 if (isDateNamedColumn && getColumnName(index) != null &&
-                        getColumnName(index).toLowerCase().indexOf("_date") != -1) {
+                        getColumnName(index).toLowerCase().indexOf(SQLighterDb.DATE_HINT) != -1) {
                     return getDate(index);
                 }
                 return getString(index);
             }
             return null;
         }
-
-
-
     }
 
     @Override
@@ -283,6 +281,30 @@ public class SQLighterDbImpl implements SQLighterDb {
         parameterList.add(o);
     }
 
+    private String dateToString(Date date) {
+        if (date != null) {
+            return dateFormat.format(date);
+        }
+        return null;
+    }
+
+    private String[] collectionToArray(Collection<Object> collection) {
+        int i = 0;
+        String[] array = new String[collection.size()];
+        for (Object object: collection) {
+            if (object == null) {
+                array[i] = null;
+            } else if (object instanceof String) {
+                array[i] = (String)object;
+            } else {
+                array[i] = object.toString();
+            }
+            i++;
+        }
+        return array;
+    }
+
+    @Override
     public void addParam(Date date) {
         parameterList.add(date);
     }
@@ -290,7 +312,7 @@ public class SQLighterDbImpl implements SQLighterDb {
     @Override
     public SQLighterRs executeSelect(String selectQuery) throws Exception {
         try {
-            String[] sp = parameterList.toArray(new String[parameterList.size()]);
+            String[] sp = collectionToArray(parameterList);
             parameterList.clear();
             Cursor cursor = db.rawQuery(selectQuery, sp);
             return new ResultSetImpl(cursor);
