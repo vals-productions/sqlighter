@@ -75,14 +75,6 @@
     return [NSNumber numberWithDouble:d];
 }
 
-//-(NSDate*) getDateAtIndex: (int) idx {
-//    NSNumber *d = [self getDoubleWithInt: idx];
-//    if(d == nil) {
-//        return nil;
-//    }
-//    return [NSDate dateWithTimeIntervalSince1970: [d doubleValue]];
-//}
-
 - (IOSByteArray *)getBlobWithInt:(jint)index {
     NSData *d = [self getBlobAtIndex:index];
     if(d == nil) {
@@ -125,7 +117,7 @@
 
 - (JavaUtilDate *)getDateWithInt:(jint)index {
     NSDate *date = [self getNSDateWithInt:index];
-    JavaUtilDate *jud = [[JavaUtilDate alloc] initWithLong: [date timeIntervalSince1970]];
+    JavaUtilDate *jud = [[JavaUtilDate alloc] initWithLong: [date timeIntervalSince1970] * 1000];
     return jud;
 }
 

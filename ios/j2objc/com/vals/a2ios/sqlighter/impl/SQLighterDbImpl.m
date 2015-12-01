@@ -220,7 +220,7 @@
 
 -(void) bindJavaUtilDate: (JavaUtilDate *) date atIndex: (int) paramIdx {
     long t = [date getTime];
-    NSDate *dt = [NSDate dateWithTimeIntervalSince1970:t];
+    NSDate *dt = [NSDate dateWithTimeIntervalSince1970:t/1000];
     NSString *dateStr = [self.dateFormatter stringFromDate:dt];
     [self bindString:dateStr atIndex: paramIdx];
 }

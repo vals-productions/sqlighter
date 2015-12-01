@@ -117,6 +117,8 @@ public class Demo {
              */
             db.addParam("123 main str, walnut creek, ca");
             db.addParam(1);
+            Date dateNow = new Date();
+            System.out.println("Date now: " + dateNow.toString());
             db.addParam(new Date());
             db.executeChange("insert into address(name, user_id, update_date) values(?, ?, ?)");
 
@@ -133,7 +135,7 @@ public class Demo {
                 System.out.println(" update_date: " + rs.getDate(6));
                 /*
                 This will treat the column as date because it contains '_date' in
-                its name and
+                its name.
                  */
                 System.out.println(" update_date: " + rs.getObject(6));
             }

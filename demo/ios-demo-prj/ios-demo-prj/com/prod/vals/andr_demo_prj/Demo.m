@@ -83,6 +83,8 @@ NSString *Demo_dbOperations() {
     (void) [db executeChangeWithNSString:@"create table address(id integer primary key autoincrement unique, name text, user_id integer, update_date text)"];
     [db addParamWithNSString:@"123 main str, walnut creek, ca"];
     [db addParamWithLong:1];
+    JavaUtilDate *dateNow = new_JavaUtilDate_init();
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$$", @"Date now: ", [dateNow description])];
     [db addParamWithJavaUtilDate:new_JavaUtilDate_init()];
     (void) [db executeChangeWithNSString:@"insert into address(name, user_id, update_date) values(?, ?, ?)"];
     [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after address creation/population"];
