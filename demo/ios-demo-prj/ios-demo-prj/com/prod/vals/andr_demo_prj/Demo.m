@@ -49,9 +49,10 @@ NSString *Demo_dbOperations() {
     IOSByteArray *data = [dataStr getBytes];
     [db addParamWithByteArray:data];
     [db addParamWithDouble:5.67];
-    (void) [db executeChangeWithNSString:@"insert into user( name, email, data, height) values (?, ?, ?, ?)"];
+    JavaLangLong *rowId = [db executeChangeWithNSString:@"insert into user( name, email, data, height) values (?, ?, ?, ?)"];
+    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@", @"Inserted id: ", rowId)];
     [db addParamWithNSString:@"qw@er.ty1"];
-    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:@"check if the record was inserted"];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"check if the record was inserted"];
     rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user where email = ?"];
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
       Demo_printWithSQLighterRs_(rs);
@@ -59,7 +60,8 @@ NSString *Demo_dbOperations() {
     [rs close];
     [db addParamNull];
     [db addParamWithNSString:@"qw@er.ty1"];
-    (void) [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
+    JavaLangLong *alteredRows = [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @"Updated rows: ", alteredRows)];
     Demo_printUserTableWithNSString_withSQLighterDb_(@"after update state 1 ", db);
     [db addParamWithNSString:@"user@email.com"];
     [db addParamWithNSString:@"qw@er.ty1"];
@@ -78,7 +80,8 @@ NSString *Demo_dbOperations() {
     }
     [rs close];
     [db addParamWithLong:2];
-    (void) [db executeChangeWithNSString:@"delete from user where id = ?"];
+    alteredRows = [db executeChangeWithNSString:@"delete from user where id = ?"];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @"Deleted rows: ", alteredRows)];
     Demo_printUserTableWithNSString_withSQLighterDb_(@"after delete state", db);
     (void) [db executeChangeWithNSString:@"create table address(id integer primary key autoincrement unique, name text, user_id integer, update_date text)"];
     [db addParamWithNSString:@"123 main str, walnut creek, ca"];

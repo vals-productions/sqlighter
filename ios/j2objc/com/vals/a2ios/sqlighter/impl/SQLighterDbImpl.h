@@ -17,13 +17,15 @@
 }
 
 @property (nonatomic, retain) NSString *dbName;
-@property (nonatomic, retain) NSMutableArray *parameterArray;
+// @property (nonatomic, retain) NSMutableArray *parameterArray;
+@property (nonatomic, retain) NSMutableDictionary *parameterDictionary;
 @property BOOL replaceDatabase;
 @property BOOL isDateNamedColumn;
 @property sqlite3 *database;
 @property sqlite3_stmt *lastPreparedStmt;
 @property NSDateFormatter *dateFormatter;
 
+/*
 - (void) copyDbOnce;
 - (void) setContextWithId:(id)context;
 - (void) addParamWithNSString:(NSString *)s;
@@ -31,10 +33,15 @@
 - (void) addParamWithLong:(long)s;
 - (void) addParamWithInt:(int)s;
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery;
+ */
+
 //- (void) executeChangeWithNSString:(NSString *) makeCmangeQuery;
 
-- (void) closeStmt: (sqlite3_stmt *) statement;
+/*
+
+*/
 
 -(void) analyzeReturnCodeForErrors: (int) code;
+-(void) closeStmt: (sqlite3_stmt *) statement;
 
 @end

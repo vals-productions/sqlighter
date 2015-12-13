@@ -14,11 +14,11 @@
 
 @implementation SQLighterDbImpl
 
-@synthesize dbName, replaceDatabase, database, parameterArray, isDateNamedColumn;
+@synthesize dbName, replaceDatabase, database, parameterDictionary, isDateNamedColumn;
 
 -(id) init {
     if( self = [super init]) {
-        parameterArray = [NSMutableArray arrayWithCapacity:0];
+        self.parameterDictionary = [NSMutableDictionary dictionary];
         isOpen = NO;
         isCopied = NO;
         self.isDateNamedColumn = YES;
@@ -61,88 +61,105 @@
 }
 
 -(sqlite3_stmt *) prepareStatementWithSql: (NSString *) sqlString  {
-    sqlite3_stmt *statement;
-    if (sqlite3_prepare_v2(database, [sqlString  UTF8String], -1, &statement, NULL) != SQLITE_OK) {
-        [parameterArray removeAllObjects];
-        @throw [[JavaLangException alloc]
-                initWithNSString:[NSString stringWithFormat:
-                   @"Database SQL Error: '%s'.", sqlite3_errmsg(database)]];
+    @synchronized(self) {
+        sqlite3_stmt *statement;
+        if (sqlite3_prepare_v2(database, [sqlString  UTF8String], -1, &statement, NULL) != SQLITE_OK) {
+            // [[self parameterArray] removeAllObjects];
+            [self clearParameterArray];
+            @throw [[JavaLangException alloc]
+                    initWithNSString:[NSString stringWithFormat:
+                       @"Database SQL Error: '%s'.", sqlite3_errmsg(database)]];
+        }
+        self.lastPreparedStmt = statement;
+        return statement;
     }
-    self.lastPreparedStmt = statement;
-    return statement;
 }
 
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery {
-    sqlite3_stmt *statement = [self prepareStatementWithSql: selectQuery];
-    [self bindParameters: parameterArray];
-    SQLighterRsImpl *rs = [[SQLighterRsImpl alloc] init];
-    rs.stmt = statement;
-    rs.db = self;
-    [parameterArray removeAllObjects];
-    return rs;
+    @synchronized(self) {
+        sqlite3_stmt *statement = [self prepareStatementWithSql: selectQuery];
+        [self bindParameters: [self parameterArray]];
+        SQLighterRsImpl *rs = [[SQLighterRsImpl alloc] init];
+        rs.stmt = statement;
+        rs.db = self;
+        // [[self parameterArray] removeAllObjects];
+        [self clearParameterArray];
+        return rs;
+    }
 }
 
 - (JavaLangLong *)executeChangeWithNSString:(NSString *) makeChangeQuery {
-    JavaLangLong *rowId = nil;
-    sqlite3_stmt *statement = [self prepareStatementWithSql: makeChangeQuery];
-    [self bindParameters: parameterArray];
-    code = sqlite3_step(statement);
-    if ([[makeChangeQuery lowercaseString] hasPrefix:@"insert"]) {
-        sqlite_int64 rowid = sqlite3_last_insert_rowid(database);
-        rowId = [[JavaLangLong alloc]initWithLong: rowid];
+    @synchronized(self) {
+        JavaLangLong *resultInfo = nil;
+        sqlite3_stmt *statement = [self prepareStatementWithSql: makeChangeQuery];
+        [self bindParameters: [self parameterArray]];
+        code = sqlite3_step(statement);
+        NSString *alteredQuery = [self substringWithoutLeadingWhitespace: [makeChangeQuery lowercaseString]];
+        if ([alteredQuery hasPrefix:@"insert"]) {
+            sqlite_int64 rows = sqlite3_last_insert_rowid(database);
+            resultInfo = [[JavaLangLong alloc]initWithLong: rows];
+        } else if ([alteredQuery hasPrefix:@"update"] || [alteredQuery hasPrefix:@"delete"]) {
+            int rows = sqlite3_changes(database);
+            resultInfo = [[JavaLangLong alloc]initWithLong: (long)rows];
+        }
+        [self closeStmt: statement];
+        return resultInfo;
     }
-    [self closeStmt: statement];
-    return rowId;
 }
 
 -(void) closeStmt: (sqlite3_stmt *) statement {
-    if (sqlite3_finalize(statement) == SQLITE_ERROR) {
-        @throw [[JavaLangException alloc] initWithNSString:
-                [NSString stringWithFormat: @"Database SQL Error: '%s'.", sqlite3_errmsg(database)]];
+    @synchronized(self) {
+        if (sqlite3_finalize(statement) == SQLITE_ERROR) {
+            @throw [[JavaLangException alloc] initWithNSString:
+                    [NSString stringWithFormat: @"Database SQL Error: '%s'.", sqlite3_errmsg(database)]];
+        }
     }
 }
 
 -(void) bindParameters: (NSMutableArray*) parameters {
-    if (parameters == nil) {
-        return;
-    }
-    for (int par = 1; par <= [parameters count]; par++) {
-        id o = [parameters objectAtIndex: par - 1];
-        if (o == nil || [o isKindOfClass: [NSNull class]]) {
-            [self bindNullAtIndex: par];
-        } else if([o isKindOfClass: [NSString class]]) {
-            [self bindString: o atIndex: par];
-        } else if ([o isKindOfClass: [NSNumber class]]) {
-            NSNumber *num = [parameters objectAtIndex: par - 1];
-            if (strcmp([num objCType], @encode(int)) == 0 ||
-                strcmp([num objCType], @encode(long)) == 0 ||
-                strcmp([num objCType], @encode(unsigned int)) == 0 ||
-                strcmp([num objCType], @encode(unsigned long)) == 0 ||
-                strcmp([num objCType], @encode(unsigned long long)) == 0 ||
-                strcmp([num objCType], @encode(unsigned short)) == 0 ||
-                strcmp([num objCType], @encode(short)) == 0 ||
-                strcmp([num objCType], @encode(long long)) == 0
-                ) {
-                [self bindInt:[num intValue] atIndex: par];
-            } else if (strcmp([num objCType], @encode(float)) == 0 ||
-                       strcmp([num objCType], @encode(double)) == 0) {
-                [self bindDouble: [num doubleValue] atIndex: par];
-            }
-        } else if ([o isKindOfClass: [JavaUtilDate class]]) {
-            [self bindJavaUtilDate:o atIndex: par];
-//        } else if ([o isKindOfClass: [NSDate class]]) {
-//            [self bindDate:o atIndex: par];
-        } else if ([o isKindOfClass: [NSData class]]) {
-            [self bindBlob: o atIndex: par];
-        } else {
-            [self bindNullAtIndex: par];
+    @synchronized(self) {
+        if (parameters == nil) {
+            return;
         }
+        for (int par = 1; par <= [parameters count]; par++) {
+            id o = [parameters objectAtIndex: par - 1];
+            if (o == nil || [o isKindOfClass: [NSNull class]]) {
+                [self bindNullAtIndex: par];
+            } else if([o isKindOfClass: [NSString class]]) {
+                [self bindString: o atIndex: par];
+            } else if ([o isKindOfClass: [NSNumber class]]) {
+                NSNumber *num = [parameters objectAtIndex: par - 1];
+                if (strcmp([num objCType], @encode(int)) == 0 ||
+                    strcmp([num objCType], @encode(long)) == 0 ||
+                    strcmp([num objCType], @encode(unsigned int)) == 0 ||
+                    strcmp([num objCType], @encode(unsigned long)) == 0 ||
+                    strcmp([num objCType], @encode(unsigned long long)) == 0 ||
+                    strcmp([num objCType], @encode(unsigned short)) == 0 ||
+                    strcmp([num objCType], @encode(short)) == 0 ||
+                    strcmp([num objCType], @encode(long long)) == 0
+                    ) {
+                    [self bindInt:[num intValue] atIndex: par];
+                } else if (strcmp([num objCType], @encode(float)) == 0 ||
+                           strcmp([num objCType], @encode(double)) == 0) {
+                    [self bindDouble: [num doubleValue] atIndex: par];
+                }
+            } else if ([o isKindOfClass: [JavaUtilDate class]]) {
+                [self bindJavaUtilDate:o atIndex: par];
+    //        } else if ([o isKindOfClass: [NSDate class]]) {
+    //            [self bindDate:o atIndex: par];
+            } else if ([o isKindOfClass: [NSData class]]) {
+                [self bindBlob: o atIndex: par];
+            } else {
+                [self bindNullAtIndex: par];
+            }
+        }
+        // [parameters removeAllObjects];
+        [self clearParameterArray];
     }
-    [parameters removeAllObjects];
 }
 
-- (void)setIsDateNamedColumnWithBoolean:(jboolean)isDateNamedColumn {
-    
+- (void)setIsDateNamedColumnWithBoolean:(jboolean)isDateNamedCol {
+    self.isDateNamedColumn = isDateNamedCol;
 }
 
 - (void)setContextWithId:(id)context {
@@ -150,72 +167,76 @@
 }
 
 -(void) copyDbOnce {
-    if (!isCopied) {
-        isCopied = YES;
-    } else {
-        return;
-    }
-    BOOL success;
-    NSError *error;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    /**
-     * Documents directory under application's directory
-     */
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentDirectory = [paths objectAtIndex:0];
-    /**
-     * Full path\file to DB file
-     */
-    NSString *writableDbPath = [documentDirectory stringByAppendingPathComponent: dbName];
-    if (replaceDatabase == YES) {
-        NSLog(@"Service: Attempt to replace existing DB.");
-        if (![fileManager removeItemAtPath:writableDbPath error:&error]) {
-            NSLog(@"Service: Error deleting file: %@", [error localizedDescription]);
+    @synchronized(self) {
+        if (!isCopied) {
+            isCopied = YES;
+        } else {
+            return;
         }
-    }
-    success = [fileManager fileExistsAtPath:writableDbPath];
-    if (!success) {
+        BOOL success;
+        NSError *error;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
         /**
-         * file not found - was deleted, or didn't exist before.
+         * Documents directory under application's directory
          */
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentDirectory = [paths objectAtIndex:0];
         /**
-         * Path to project's resources
+         * Full path\file to DB file
          */
-        NSString *defaultDbPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: dbName];
-        NSLog(@"\nSource db path: \n%@\nDest db path: \n%@", defaultDbPath, writableDbPath);
-        /**
-         * Copy DB file from project's resource path to application document's directory.
-         */
-        success = [fileManager copyItemAtPath:defaultDbPath toPath:writableDbPath error:&error];
+        NSString *writableDbPath = [documentDirectory stringByAppendingPathComponent: dbName];
+        if (replaceDatabase == YES) {
+            NSLog(@"Service: Attempt to replace existing DB.");
+            if (![fileManager removeItemAtPath:writableDbPath error:&error]) {
+                NSLog(@"Service: Error deleting file: %@", [error localizedDescription]);
+            }
+        }
+        success = [fileManager fileExistsAtPath:writableDbPath];
         if (!success) {
-            NSLog(@"Could not copy database");
-            @throw [[JavaLangException alloc] initWithNSString:
-                    [NSString stringWithFormat: @"Failed to create database with message: '%@'", [error localizedDescription]]];
+            /**
+             * file not found - was deleted, or didn't exist before.
+             */
+            /**
+             * Path to project's resources
+             */
+            NSString *defaultDbPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: dbName];
+            NSLog(@"\nSource db path: \n%@\nDest db path: \n%@", defaultDbPath, writableDbPath);
+            /**
+             * Copy DB file from project's resource path to application document's directory.
+             */
+            success = [fileManager copyItemAtPath:defaultDbPath toPath:writableDbPath error:&error];
+            if (!success) {
+                NSLog(@"Could not copy database");
+                @throw [[JavaLangException alloc] initWithNSString:
+                        [NSString stringWithFormat: @"Failed to create database with message: '%@'", [error localizedDescription]]];
+            }
         }
     }
 }
 
 - (void)openIfClosed {
-    if(!isOpen) {
-        isOpen = YES;
-    } else {
-        return;
-    }
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent: dbName];
-    // Open the database. The database was prepared outside the application.
-    if (sqlite3_open([path UTF8String], &database) != SQLITE_OK) {
-        // Even though the open failed, call close to properly clean up resources.
-        //[paths release];
-        sqlite3_close(database);
-        @throw [[JavaLangException alloc] initWithNSString:
-                [NSString stringWithFormat: @"Database Error: '%s'.", sqlite3_errmsg(database)]];
+    @synchronized(self) {
+        if(!isOpen) {
+            isOpen = YES;
+        } else {
+            return;
+        }
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSString *path = [documentsDirectory stringByAppendingPathComponent: dbName];
+        // Open the database. The database was prepared outside the application.
+        if (sqlite3_open([path UTF8String], &database) != SQLITE_OK) {
+            // Even though the open failed, call close to properly clean up resources.
+            //[paths release];
+            sqlite3_close(database);
+            @throw [[JavaLangException alloc] initWithNSString:
+                    [NSString stringWithFormat: @"Database Error: '%s'.", sqlite3_errmsg(database)]];
+        }
     }
 }
 
 - (void)addParamWithJavaUtilDate:(JavaUtilDate *)date {
-    [parameterArray addObject: date];
+    [[self parameterArray] addObject: date];
 }
 
 -(void) bindJavaUtilDate: (JavaUtilDate *) date atIndex: (int) paramIdx {
@@ -226,27 +247,27 @@
 }
 
 - (void)addParamObjWithId:(id)o {
-    [parameterArray addObject: o];
+    [[self parameterArray] addObject: o];
 }
 
 -(void) addParamWithNSString: (NSString*) str {
-    [parameterArray addObject: str];
+    [[self parameterArray] addObject: str];
 }
 
 -(void) addParamWithDouble: (double) par {
-    [parameterArray addObject: [NSNumber numberWithDouble: par]];
+    [[self parameterArray] addObject: [NSNumber numberWithDouble: par]];
 }
 
 -(void) addParamWithNull {
-    [parameterArray addObject: [NSNull null]];
+    [[self parameterArray] addObject: [NSNull null]];
 }
 
 -(void) addParamWithInt: (int) par {
-    [parameterArray addObject: [NSNumber numberWithInt:par]];
+    [[self parameterArray] addObject: [NSNumber numberWithInt:par]];
 }
 
--(void) addParamWithLong: (long) par {
-    [parameterArray addObject: [NSNumber numberWithLong: par ]];
+-(void) addParamWithLong: (jlong) par {
+    [[self parameterArray] addObject: [NSNumber numberWithLong: par ]];
 }
 
 //-(void) addParamWithDate: (NSDate*) date atIndex: (int) idx {
@@ -258,7 +279,7 @@
 //}
 
 -(void) addParamWithBlob: (NSData*) data {
-    [parameterArray addObject: data];
+    [[self parameterArray] addObject: data];
 }
 
 - (void)addParamWithByteArray:(IOSByteArray *)blob {
@@ -312,8 +333,44 @@
 }
 
 - (void)close {
-    int rc = sqlite3_close(database);
-    [self analyzeReturnCodeForErrors:rc];
+    @synchronized(self) {
+        if(isOpen == YES) {
+            int rc = sqlite3_close(database);
+            [self analyzeReturnCodeForErrors:rc];
+            isOpen = NO;
+        }
+    }
+}
+
+-(NSString *) substringWithoutLeadingWhitespace: (NSString *) string {
+    const char *cStringValue = [string UTF8String];
+    int i = 0;
+    for (; cStringValue[i] != '\0' && isspace(cStringValue[i]); i++);
+    return [string substringFromIndex:i];
+}
+
+-(NSString *) threadId {
+    NSString *strId = [NSString stringWithFormat:@"%@", [NSThread currentThread]];
+    return strId;
+}
+
+-(NSMutableArray*) parameterArray {
+    NSString *threadId = [self threadId];
+    NSMutableArray *arr = [self.parameterDictionary objectForKey: threadId];
+    if(arr == nil) {
+        arr = [NSMutableArray arrayWithCapacity:3];
+        [self.parameterDictionary setObject:arr forKey:threadId];
+    }
+    return arr;
+}
+
+- (void) clearParameterArray {
+    NSString *threadId = [self threadId];
+    NSMutableArray* pd = [parameterDictionary objectForKey: threadId];
+    if(pd != nil) {
+        // [pd removeAllObjects];
+        [self.parameterDictionary removeObjectForKey: threadId];
+    }
 }
 
 @end

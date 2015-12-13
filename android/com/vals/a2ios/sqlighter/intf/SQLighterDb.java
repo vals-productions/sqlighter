@@ -112,11 +112,13 @@ public interface SQLighterDb {
 
     /**
      * Execute UPDATE/INSERT/DELETE/ALTER/CREATE with previously (optionally) specified parameters
-     * @param insert
-     * @return last inserted row id in case of "insert" statement. Check SQLite
-     * docs on row id information.
+     * @param statementString
+     * @return last inserted row id in case of "insert" statement, affected row count in
+     * case of update/delete statements
+     *
+     * Check SQLite docs on row id information.
      */
-    public Long executeChange(String insert) throws Exception;
+    public Long executeChange(String statementString) throws Exception;
 
     /**
      * start transaction

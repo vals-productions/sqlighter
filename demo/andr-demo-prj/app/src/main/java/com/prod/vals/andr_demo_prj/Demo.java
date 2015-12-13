@@ -50,7 +50,8 @@ public class Demo {
                 byte[] data = dataStr.getBytes();
             db.addParam(data); // data
             db.addParam(5.67); // height
-            db.executeChange("insert into user( name, email, data, height) values (?, ?, ?, ?)");
+            Long rowId = db.executeChange("insert into user( name, email, data, height) values (?, ?, ?, ?)");
+            System.out.println("Inserted id: " + rowId);
 
             /**
              * Let's query what we just inserted
@@ -68,7 +69,8 @@ public class Demo {
              */
             db.addParamNull(); // set email as null
             db.addParam("qw@er.ty1"); // where email == "qw@er.ty1"
-            db.executeChange("update user set email = ? where email = ?");
+            Long alteredRows = db.executeChange("update user set email = ? where email = ?");
+            System.out.println("Updated rows: " + alteredRows);
 
             printUserTable("after update state 1 ", db);
 
@@ -100,7 +102,8 @@ public class Demo {
              * Delete example
              */
             db.addParam(2); // delete records where id == 2
-            db.executeChange("delete from user where id = ?");
+            alteredRows = db.executeChange("delete from user where id = ?");
+            System.out.println("Deleted rows: " + alteredRows);
 
             printUserTable("after delete state", db);
 

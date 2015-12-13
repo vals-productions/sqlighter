@@ -16,8 +16,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Android implementation of SQLighter interfaces.
@@ -31,14 +34,10 @@ public class SQLighterDbImpl implements SQLighterDb {
     private SQLiteDatabase db;
     private boolean isOpen = false;
     private boolean isDbCopied = false;
-    private List<Object> parameterList = new LinkedList<Object>();
+    // private List<Object> parameterList = new LinkedList<Object>();
+    private Map<Long, List<Object>> parameterMap = new HashMap<>();
     private SimpleDateFormat dateFormat = new SimpleDateFormat(SQLighterDb.DATE_FORMAT);
     private boolean isDateNamedColumn = true;
-
-    @Override
-    public void setIsDateNamedColumn(boolean isDateNamedColumn) {
-        this.isDateNamedColumn = isDateNamedColumn;
-    }
 
     public class ResultSetImpl implements SQLighterRs {
         private Cursor cursor;
@@ -157,6 +156,11 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
 
     @Override
+    public void setIsDateNamedColumn(boolean isDateNamedColumn) {
+        this.isDateNamedColumn = isDateNamedColumn;
+    }
+
+    @Override
     public boolean isDbFileDeployed() {
         File devicePath = new File(dbPath + dbName);
         return devicePath.exists();
@@ -184,7 +188,7 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
 
     @Override
-    public void openIfClosed() throws Exception {
+    public synchronized void openIfClosed() throws Exception {
         if(!isOpen) {
             if (context == null) {
                 throw new Exception("Context object is null");
@@ -215,7 +219,7 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
 
     @Override
-    public void copyDbOnce() throws Exception {
+    public synchronized void copyDbOnce() throws Exception {
         if (!isDbCopied) {
             isDbCopied = true;
             String deviceDbFileName = dbPath + dbName;
@@ -246,6 +250,23 @@ public class SQLighterDbImpl implements SQLighterDb {
         }
     }
 
+    private List<Object> getParameterList() {
+        Long threadId = Thread.currentThread().getId();
+        List<Object> parameterList = parameterMap.get(threadId);
+        if(parameterList == null) {
+            parameterList = new LinkedList<Object>();
+            parameterMap.put(threadId, parameterList);
+        }
+        return parameterList;
+    }
+
+    private void clearParameterList () {
+        Long threadId = Thread.currentThread().getId();
+        if(parameterMap.containsKey(threadId)) {
+            parameterMap.remove(threadId);
+        }
+    }
+
     @Override
     public void setContext(Object context) {
         this.context = (Context)context;
@@ -253,32 +274,32 @@ public class SQLighterDbImpl implements SQLighterDb {
 
     @Override
     public void addParam(double d) {
-        parameterList.add(new Double(d).toString());
+        getParameterList().add(new Double(d).toString());
     }
 
     @Override
     public void addParam(long l) {
-        parameterList.add(new Long(l).toString());
+        getParameterList().add(new Long(l).toString());
     }
 
     @Override
     public void addParam(String s) {
-        parameterList.add(s);
+        getParameterList().add(s);
     }
 
     @Override
     public void addParam(byte[] blob) {
-        parameterList.add(blob);
+        getParameterList().add(blob);
     }
 
     @Override
     public void addParamNull() {
-        parameterList.add(null);
+        getParameterList().add(null);
     }
 
     @Override
     public void addParamObj(Object o) {
-        parameterList.add(o);
+        getParameterList().add(o);
     }
 
     private String dateToString(Date date) {
@@ -306,44 +327,48 @@ public class SQLighterDbImpl implements SQLighterDb {
 
     @Override
     public void addParam(Date date) {
-        parameterList.add(date);
+        getParameterList().add(date);
     }
 
     @Override
-    public SQLighterRs executeSelect(String selectQuery) throws Exception {
+    public synchronized SQLighterRs executeSelect(String selectQuery) throws Exception {
         try {
-            String[] sp = collectionToArray(parameterList);
-            parameterList.clear();
+            String[] sp = collectionToArray(getParameterList());
+            getParameterList().clear();
             Cursor cursor = db.rawQuery(selectQuery, sp);
             return new ResultSetImpl(cursor);
         } catch (Throwable t) {
-            parameterList.clear();
+            getParameterList().clear();
             throw new Exception(t.getMessage(), t);
         }
     }
 
     @Override
-    public Long executeChange(String update) throws Exception  {
-        Long lastInsertedRowId = null;
+    public synchronized Long executeChange(String update) throws Exception  {
+        Long changeId = null;
         try {
             SQLiteStatement stmt = db.compileStatement(update);
             bindParams(stmt);
             if (update.trim().toLowerCase().startsWith("insert")) {
-                lastInsertedRowId = stmt.executeInsert();
+                changeId = stmt.executeInsert();
             } else {
-                stmt.executeUpdateDelete();
+                Integer rowCnt;
+                rowCnt = stmt.executeUpdateDelete();
+                if(rowCnt != null) {
+                    changeId = rowCnt.longValue();
+                }
             }
             stmt.close();
         } catch (Throwable t) {
-            parameterList.clear();
+            getParameterList().clear();
             throw new Exception(t.getMessage(), t);
         }
-        return lastInsertedRowId;
+        return changeId;
     }
 
-    private void bindParams(SQLiteStatement stmt) {
+    private synchronized void bindParams(SQLiteStatement stmt) {
         int i = 1;
-        for (Object o: parameterList) {
+        for (Object o: getParameterList()) {
             if(o == null) {
                 stmt.bindNull(i);
             } else if (o instanceof Double) {
@@ -367,7 +392,8 @@ public class SQLighterDbImpl implements SQLighterDb {
             }
             i++;
         }
-        parameterList.clear();
+        // parameterList.clear();
+        clearParameterList();
     }
 
     @Override
@@ -386,7 +412,10 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
 
     @Override
-    public void close() {
-        db.close();
+    public synchronized void close() {
+        if(isOpen) {
+            db.close();
+            isOpen = false;
+        }
     }
 }
