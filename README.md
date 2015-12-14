@@ -489,13 +489,17 @@ id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
 
 # Usage
 
-Usage is very straightforward.
+Usage is very straightforward. Mostly, it reminds Java JDBC style of database interface. 
+
+Most critical methods are thread safe, but if you have database logics that spans across multiple database methods, it's up to you to ensure your code's thread safety if needed.
 
 Positional parameters are supported. No naming parameter support.
 
 a) Use ``addParam*`` methods to bind positional parameters to your statements. Parameter 
 position is determined by the order in which it was added. Parameters are optional 
 as some statements may be parameterless.
+
+Sqlighter maintains a set of parameters per thread. It should be ok to specify parameters to statements concurrently at parallel threads. 
 
 b) Execute the statement by calling ``SQLighterDb.executeSelect(String sqlString)`` 
 (for Select...) or ``SQLighterDb.executeChange(String sqlString)`` 
