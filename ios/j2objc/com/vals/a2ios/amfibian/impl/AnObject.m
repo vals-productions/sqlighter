@@ -31,6 +31,8 @@
 
 - (void)initAttribsWithComValsA2iosAmfibianImplAnAttribArray:(IOSObjectArray *)attribMappers OBJC_METHOD_FAMILY_NONE;
 
+- (void)setValueWithId:(id)someValue;
+
 @end
 
 J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnObject, parentAnObject_, ComValsA2iosAmfibianImplAnObject *)
@@ -199,81 +201,95 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentM
   return jsonMap_;
 }
 
-- (id<JavaUtilMap>)getNativeObjectMap {
-  if (nativeObjectMap_ == nil) {
-    nativeObjectMap_ = new_JavaUtilHashMap_init();
-    id<JavaUtilSet> p = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
-    for (NSString * __strong pName in nil_chk(p)) {
-      ComValsA2iosAmfibianImplAnAttrib *pm = [attribMap_ getWithId:pName];
-      id value = [((ComValsA2iosAmfibianImplAnAttrib *) nil_chk(pm)) getValue];
-      if (value != nil) {
-        (void) [nativeObjectMap_ putWithId:pName withId:[pm getValue]];
+- (id<JavaUtilMap>)asMapWithId:(id)nativeObject {
+  @synchronized(self) {
+    [self setNativeObjectWithId:nativeObject];
+    if (nativeObjectMap_ == nil) {
+      nativeObjectMap_ = new_JavaUtilHashMap_init();
+      id<JavaUtilSet> p = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
+      for (NSString * __strong pName in nil_chk(p)) {
+        ComValsA2iosAmfibianImplAnAttrib *pm = [attribMap_ getWithId:pName];
+        id value = [((ComValsA2iosAmfibianImplAnAttrib *) nil_chk(pm)) getValue];
+        if (value != nil) {
+          (void) [nativeObjectMap_ putWithId:pName withId:[pm getValue]];
+        }
       }
     }
-  }
-  if (parentAnObject_ != nil) {
-    id<JavaUtilMap> parentMap = [parentAnObject_ getNativeObjectMap];
-    id<JavaUtilSet> keys = [((id<JavaUtilMap>) nil_chk(parentMap)) keySet];
-    for (NSString * __strong k in nil_chk(keys)) {
-      (void) [((id<JavaUtilMap>) nil_chk(nativeObjectMap_)) putWithId:k withId:[parentMap getWithId:k]];
-    }
-  }
-  return nativeObjectMap_;
-}
-
-- (OrgJsonJSONObject *)getJSONObject {
-  (void) [self getNativeObjectMap];
-  return new_OrgJsonJSONObject_initWithJavaUtilMap_([self getJsonMap]);
-}
-
-- (id)fromJsonObjectWithOrgJsonJSONObject:(OrgJsonJSONObject *)jsonObject {
-  if (nativeObject_ == nil) {
-    [self resetNativeObject];
-  }
-  if (parentAnObject_ != nil) {
-    (void) [parentAnObject_ fromJsonObjectWithOrgJsonJSONObject:jsonObject];
-  }
-  id<JavaUtilSet> attrObjsKeys = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
-  for (NSString * __strong attribName in nil_chk(attrObjsKeys)) {
-    ComValsA2iosAmfibianImplAnAttrib *attr = [attribMap_ getWithId:attribName];
-    if (![((OrgJsonJSONObject *) nil_chk(jsonObject)) isNullWithNSString:[((ComValsA2iosAmfibianImplAnAttrib *) nil_chk(attr)) getJsonOrAttribName]]) {
-      id attrValue = [jsonObject getWithNSString:[attr getJsonOrAttribName]];
-      if (attrValue != nil) {
-        [attr setValueWithId:attrValue];
+    if (parentAnObject_ != nil) {
+      id<JavaUtilMap> parentMap = [parentAnObject_ asMapWithId:nativeObject];
+      id<JavaUtilSet> keys = [((id<JavaUtilMap>) nil_chk(parentMap)) keySet];
+      for (NSString * __strong k in nil_chk(keys)) {
+        (void) [((id<JavaUtilMap>) nil_chk(nativeObjectMap_)) putWithId:k withId:[parentMap getWithId:k]];
       }
     }
+    return nativeObjectMap_;
   }
-  return nativeObject_;
 }
 
-- (id)fromJsonStringWithNSString:(NSString *)jsonString {
-  return [self fromJsonObjectWithOrgJsonJSONObject:new_OrgJsonJSONObject_initWithNSString_(jsonString)];
+- (OrgJsonJSONObject *)asJSONObjectWithId:(id)nativeObject {
+  @synchronized(self) {
+    [self setNativeObjectWithId:nativeObject];
+    (void) [self asMapWithId:nativeObject];
+    return new_OrgJsonJSONObject_initWithJavaUtilMap_([self getJsonMap]);
+  }
 }
 
-- (id<JavaUtilList>)fromJsonArrayStringWithNSString:(NSString *)jsonString {
-  OrgJsonJSONArray *jsonArray = new_OrgJsonJSONArray_initWithNSString_(jsonString);
-  id<JavaUtilList> l = new_JavaUtilLinkedList_init();
-  for (jint i = 0; i < [jsonArray length]; i++) {
-    id o = [jsonArray getWithInt:i];
+- (id)asNativeObjectWithOrgJsonJSONObject:(OrgJsonJSONObject *)jsonObject {
+  @synchronized(self) {
+    if (nativeObject_ == nil) {
+      [self resetNativeObject];
+    }
+    if (parentAnObject_ != nil) {
+      (void) [parentAnObject_ asNativeObjectWithOrgJsonJSONObject:jsonObject];
+    }
+    id<JavaUtilSet> attrObjsKeys = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
+    for (NSString * __strong attribName in nil_chk(attrObjsKeys)) {
+      ComValsA2iosAmfibianImplAnAttrib *attr = [attribMap_ getWithId:attribName];
+      if (![((OrgJsonJSONObject *) nil_chk(jsonObject)) isNullWithNSString:[((ComValsA2iosAmfibianImplAnAttrib *) nil_chk(attr)) getJsonOrAttribName]]) {
+        id attrValue = [jsonObject getWithNSString:[attr getJsonOrAttribName]];
+        if (attrValue != nil) {
+          [attr setValueWithId:attrValue];
+        }
+      }
+    }
+    return nativeObject_;
+  }
+}
+
+- (id)asNativeObjectWithNSString:(NSString *)jsonString {
+  @synchronized(self) {
+    return [self asNativeObjectWithOrgJsonJSONObject:new_OrgJsonJSONObject_initWithNSString_(jsonString)];
+  }
+}
+
+- (id<JavaUtilList>)asListWithNSString:(NSString *)jsonArrayString {
+  @synchronized(self) {
+    OrgJsonJSONArray *jsonArray = new_OrgJsonJSONArray_initWithNSString_(jsonArrayString);
+    id<JavaUtilList> l = new_JavaUtilLinkedList_init();
+    for (jint i = 0; i < [jsonArray length]; i++) {
+      id o = [jsonArray getWithInt:i];
+      [self resetNativeObject];
+      id t = [self asNativeObjectWithOrgJsonJSONObject:(OrgJsonJSONObject *) check_class_cast(o, [OrgJsonJSONObject class])];
+      [l addWithId:t];
+    }
     [self resetNativeObject];
-    id t = [self fromJsonObjectWithOrgJsonJSONObject:(OrgJsonJSONObject *) check_class_cast(o, [OrgJsonJSONObject class])];
-    [l addWithId:t];
+    return l;
   }
-  [self resetNativeObject];
-  return l;
 }
 
-- (NSString *)getJsonString {
-  return [((OrgJsonJSONObject *) nil_chk([self getJSONObject])) description];
+- (NSString *)asJsonStringWithId:(id)nativeObject {
+  @synchronized(self) {
+    return [((OrgJsonJSONObject *) nil_chk([self asJSONObjectWithId:nativeObject])) description];
+  }
 }
 
 - (void)setValueWithId:(id)someValue {
   if (someValue != nil) {
     if ([someValue isKindOfClass:[NSString class]]) {
-      (void) [self fromJsonStringWithNSString:(NSString *) check_class_cast(someValue, [NSString class])];
+      (void) [self asNativeObjectWithNSString:(NSString *) check_class_cast(someValue, [NSString class])];
     }
     else if ([someValue isKindOfClass:[OrgJsonJSONObject class]]) {
-      (void) [self fromJsonObjectWithOrgJsonJSONObject:(OrgJsonJSONObject *) check_class_cast(someValue, [OrgJsonJSONObject class])];
+      (void) [self asNativeObjectWithOrgJsonJSONObject:(OrgJsonJSONObject *) check_class_cast(someValue, [OrgJsonJSONObject class])];
     }
     else {
       id t = (id) someValue;

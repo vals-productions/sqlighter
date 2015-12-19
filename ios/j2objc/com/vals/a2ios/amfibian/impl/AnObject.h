@@ -43,35 +43,31 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentM
 
 - (void)addAttribWithComValsA2iosAmfibianImplAnAttrib:(ComValsA2iosAmfibianImplAnAttrib *)anAttribMapper;
 
-- (id<JavaUtilList>)fromJsonArrayStringWithNSString:(NSString *)jsonString;
+- (OrgJsonJSONObject *)asJSONObjectWithId:(id)nativeObject;
 
-- (id)fromJsonObjectWithOrgJsonJSONObject:(OrgJsonJSONObject *)jsonObject;
+- (NSString *)asJsonStringWithId:(id)nativeObject;
 
-- (id)fromJsonStringWithNSString:(NSString *)jsonString;
+- (id<JavaUtilList>)asListWithNSString:(NSString *)jsonArrayString;
+
+- (id<JavaUtilMap>)asMapWithId:(id)nativeObject;
+
+- (id)asNativeObjectWithOrgJsonJSONObject:(OrgJsonJSONObject *)jsonObject;
+
+- (id)asNativeObjectWithNSString:(NSString *)jsonString;
 
 - (ComValsA2iosAmfibianImplAnAttrib *)getAttribWithNSString:(NSString *)propertyName;
 
 - (id<JavaUtilMap>)getAttribList;
 
-- (id<JavaUtilMap>)getJsonMap;
-
-- (OrgJsonJSONObject *)getJSONObject;
-
-- (NSString *)getJsonString;
-
 - (IOSClass *)getNativeClass;
-
-- (id)getNativeObject;
-
-- (id<JavaUtilMap>)getNativeObjectMap;
 
 - (void)resetNativeObject;
 
-- (void)setNativeObjectWithId:(id)o;
-
-- (void)setValueWithId:(id)someValue;
-
 #pragma mark Protected
+
+- (id<JavaUtilMap>)getJsonMap;
+
+- (id)getNativeObject;
 
 - (void)init__WithIOSClass:(IOSClass *)anObjClass
 withComValsA2iosAmfibianImplAnAttribArray:(IOSObjectArray *)propertyMappers OBJC_METHOD_FAMILY_NONE;
@@ -91,6 +87,8 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentM
 withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentMapper OBJC_METHOD_FAMILY_NONE;
 
 - (void)setNativeClassWithIOSClass:(IOSClass *)anObjClass;
+
+- (void)setNativeObjectWithId:(id)o;
 
 @end
 

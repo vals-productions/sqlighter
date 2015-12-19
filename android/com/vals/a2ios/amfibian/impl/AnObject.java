@@ -30,14 +30,14 @@ public class AnObject<T> {
     }
 
 	@SuppressWarnings("unchecked")
-	public void setNativeObject(T o) throws Exception {
+	protected void setNativeObject(T o) throws Exception {
         this.nativeObject = o;
         if (parentAnObject != null) {
             parentAnObject.setNativeObject(o);
         }
     }
 
-    public T getNativeObject() {
+    protected T getNativeObject() {
         return nativeObject;
     }
 
@@ -148,7 +148,7 @@ public class AnObject<T> {
         attribMap.put(anAttribMapper.getAttribName(), anAttribMapper);
     }
 
-    public Map<String, Object> getJsonMap() throws Exception {
+    protected Map<String, Object> getJsonMap() throws Exception {
         if (jsonMap == null) {
         	jsonMap = new HashMap<>();
             Set<String> p = attribMap.keySet();
@@ -171,7 +171,8 @@ public class AnObject<T> {
         return jsonMap;
     }
     
-    public Map<String, Object> getNativeObjectMap() throws Exception {
+    public synchronized Map<String, Object> asMap(T nativeObject) throws Exception {
+        setNativeObject(nativeObject);
         if (nativeObjectMap == null) {
             nativeObjectMap = new HashMap<>();
             Set<String> p = attribMap.keySet();
@@ -185,7 +186,7 @@ public class AnObject<T> {
         }
         if (parentAnObject != null) {
             @SuppressWarnings("unchecked")
-			Map<String, Object> parentMap = parentAnObject.getNativeObjectMap();
+			Map<String, Object> parentMap = parentAnObject.asMap(nativeObject);
             Set<String> keys = parentMap.keySet();
             for (String k: keys) {
                 nativeObjectMap.put(k, parentMap.get(k));
@@ -194,17 +195,18 @@ public class AnObject<T> {
         return nativeObjectMap;
     }
 
-    public JSONObject getJSONObject() throws Exception {
-        getNativeObjectMap();
+    public synchronized JSONObject asJSONObject(T nativeObject) throws Exception {
+        setNativeObject(nativeObject);
+        asMap(nativeObject);
         return new JSONObject(getJsonMap());
     }
 
-    public T fromJsonObject(JSONObject jsonObject) throws Exception {
+    public synchronized T asNativeObject(JSONObject jsonObject) throws Exception {
         if (nativeObject == null) {
             resetNativeObject();
         }
         if (parentAnObject != null) {
-            parentAnObject.fromJsonObject(jsonObject);
+            parentAnObject.asNativeObject(jsonObject);
         }
         Set<String> attrObjsKeys = attribMap.keySet();
         for (String attribName: attrObjsKeys) {
@@ -219,25 +221,25 @@ public class AnObject<T> {
         return nativeObject;
     }
     
-    public T fromJsonString(String jsonString) throws Exception {
-        return fromJsonObject(new JSONObject(jsonString));
+    public synchronized T asNativeObject(String jsonString) throws Exception {
+        return asNativeObject(new JSONObject(jsonString));
     }
 
-    public List<T> fromJsonArrayString(String jsonString) throws Exception {
-        JSONArray jsonArray = new JSONArray(jsonString);
+    public synchronized List<T> asList(String jsonArrayString) throws Exception {
+        JSONArray jsonArray = new JSONArray(jsonArrayString);
         List<T> l = new LinkedList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             Object o = jsonArray.get(i);
             this.resetNativeObject();
-            T t = fromJsonObject((JSONObject)o);
+            T t = asNativeObject((JSONObject) o);
             l.add(t);
         }
         resetNativeObject();
         return l;
     }
 
-    public String getJsonString() throws Exception {
-        return getJSONObject().toString();
+    public synchronized String asJsonString(T nativeObject) throws Exception {
+        return asJSONObject(nativeObject).toString();
     }
 
     /**
@@ -247,12 +249,12 @@ public class AnObject<T> {
      *                  json string or json object
      * @throws Exception
      */
-    public void setValue(Object someValue) throws Exception {
+    private void setValue(Object someValue) throws Exception {
         if (someValue != null) {
             if (someValue instanceof String) {
-                fromJsonString((String)someValue);
+                asNativeObject((String) someValue);
             } else if (someValue instanceof JSONObject) {
-                fromJsonObject((JSONObject)someValue);
+                asNativeObject((JSONObject) someValue);
             } else {
             	@SuppressWarnings("unchecked")
 				T t = (T)someValue;

@@ -200,22 +200,22 @@ public class AnSql<T> extends AnObject<T> {
     
     public String getSqlTypeForClass(Class<?> columnJavaClass) {
         if (columnJavaClass != null) {
-                String className = columnJavaClass.getCanonicalName();
-                if (Long.class.getCanonicalName().equals(className)) {
-                        return "INTEGER";
-                } else if(Integer.class.getCanonicalName().equals(className)) {
-                        return "INTEGER";
-                } else if(Short.class.getCanonicalName().equals(className)) {
-                        return "INTEGER";
-                } else if(Float.class.getCanonicalName().equals(className)) {
-                        return "REAL";
-                } else if(Double.class.getCanonicalName().equals(className)) {
-                        return "REAL";
-                } else if(String.class.getCanonicalName().equals(className)) {
-                        return "TEXT";
-                } else if(Date.class.getCanonicalName().equals(className)) {
-                        return "TEXT"; 
-                }
+            String className = columnJavaClass.getCanonicalName();
+            if (Long.class.getCanonicalName().equals(className)) {
+                    return "INTEGER";
+            } else if(Integer.class.getCanonicalName().equals(className)) {
+                    return "INTEGER";
+            } else if(Short.class.getCanonicalName().equals(className)) {
+                    return "INTEGER";
+            } else if(Float.class.getCanonicalName().equals(className)) {
+                    return "REAL";
+            } else if(Double.class.getCanonicalName().equals(className)) {
+                    return "REAL";
+            } else if(String.class.getCanonicalName().equals(className)) {
+                    return "TEXT";
+            } else if(Date.class.getCanonicalName().equals(className)) {
+                    return "TEXT";
+            }
                 // "BLOB"
         }
         return "TEXT";
