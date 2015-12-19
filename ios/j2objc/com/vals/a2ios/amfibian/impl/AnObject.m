@@ -263,7 +263,7 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentM
   return l;
 }
 
-- (NSString *)toJsonString {
+- (NSString *)getJsonString {
   return [((OrgJsonJSONObject *) nil_chk([self getJSONObject])) description];
 }
 

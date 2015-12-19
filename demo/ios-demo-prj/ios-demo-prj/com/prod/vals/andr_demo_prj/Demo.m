@@ -178,38 +178,38 @@ void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLigh
 NSString *Demo_amfibianOperations() {
   Demo_initialize();
   @try {
-    NSString *jsonAppointment = @"{id: \"234\", name: \"Meet Amfibian!\", isProcessed: \"0\"}";
     id<SQLighterDb> sqlighterDb = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
+    NSString *jsonAppointment = @"{id: \"234\", name: \"Meet Amfibian!\", isProcessed: \"0\"}";
     ComValsA2iosAmfibianImplAnObject *anEntity = new_ComValsA2iosAmfibianImplAnObject_initWithIOSClass_withNSStringArray_(Entity_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"id" } count:1 type:NSString_class_()]);
-    ComValsA2iosAmfibianImplAnOrm *anAppointment = new_ComValsA2iosAmfibianImplAnOrm_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withComValsA2iosAmfibianImplAnObject_(sqlighterDb, @"appointment234", Appointment_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"name", @"isProcessed,is_processed" } count:2 type:NSString_class_()], anEntity);
-    Appointment *appointment234 = [anAppointment fromJsonStringWithNSString:jsonAppointment];
-    NSString *createAppointmentTableSql = [((ComValsA2iosAmfibianImplAnSql *) nil_chk([anAppointment startSqlCreate])) getQueryString];
+    ComValsA2iosAmfibianImplAnOrm *anOrm = new_ComValsA2iosAmfibianImplAnOrm_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withComValsA2iosAmfibianImplAnObject_(sqlighterDb, @"appointment", Appointment_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"name", @"isProcessed,is_processed" } count:2 type:NSString_class_()], anEntity);
+    Appointment *appointment234 = [anOrm fromJsonStringWithNSString:jsonAppointment];
+    NSString *createAppointmentTableSql = [((ComValsA2iosAmfibianImplAnSql *) nil_chk([anOrm startSqlCreate])) getQueryString];
     (void) [((id<SQLighterDb>) nil_chk(sqlighterDb)) executeChangeWithNSString:createAppointmentTableSql];
-    [anAppointment startSqlInsertWithId:appointment234];
-    (void) [anAppointment apply];
-    Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(anAppointment);
+    [anOrm startSqlInsertWithId:appointment234];
+    (void) [anOrm apply];
+    Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(anOrm);
     Appointment *appointment456 = new_Appointment_init();
     [appointment456 setNameWithNSString:@"Appointment #98"];
     [appointment456 setIsProcessedWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(0)];
     [appointment456 setIdWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(456)];
-    [anAppointment startSqlInsertWithId:appointment456];
-    (void) [anAppointment apply];
-    Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(anAppointment);
+    [anOrm startSqlInsertWithId:appointment456];
+    (void) [anOrm apply];
+    Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(anOrm);
     [((Appointment *) nil_chk(appointment234)) setIsProcessedWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(1)];
-    [anAppointment startSqlUpdateWithId:appointment234];
-    [anAppointment addWhereWithNSString:@"id = ?" withId:[appointment234 getId]];
-    (void) [anAppointment apply];
-    Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(anAppointment);
-    [anAppointment startSqlSelect];
-    [anAppointment addWhereWithNSString:@"and id = ?" withId:JavaLangInteger_valueOfWithInt_(234)];
-    id<JavaUtilList> list = [anAppointment getRecords];
+    [anOrm startSqlUpdateWithId:appointment234];
+    [anOrm addWhereWithNSString:@"id = ?" withId:[appointment234 getId]];
+    (void) [anOrm apply];
+    Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(anOrm);
+    [anOrm startSqlSelect];
+    [anOrm addWhereWithNSString:@"id = ?" withId:JavaLangInteger_valueOfWithInt_(234)];
+    id<JavaUtilList> list = [anOrm getRecords];
     if ([((id<JavaUtilList>) nil_chk(list)) size] == 1) {
       Appointment *meetAmfibian;
       meetAmfibian = [list getWithInt:0];
-      [anAppointment setNativeObjectWithId:meetAmfibian];
-      OrgJsonJSONObject *jsonObject = [anAppointment getJSONObject];
-      NSString *jsonString = [anAppointment toJsonString];
-      [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$$", @"Json string: ", jsonString)];
+      [anOrm setNativeObjectWithId:meetAmfibian];
+      OrgJsonJSONObject *jsonObject = [anOrm getJSONObject];
+      NSString *jsonString = [anOrm getJsonString];
+      [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$$", @"Back to Json string: ", jsonString)];
       return (NSString *) check_class_cast([((OrgJsonJSONObject *) nil_chk(jsonObject)) getWithNSString:@"name"], [NSString class]);
     }
   }

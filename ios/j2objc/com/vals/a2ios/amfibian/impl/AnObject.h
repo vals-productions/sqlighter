@@ -57,6 +57,8 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentM
 
 - (OrgJsonJSONObject *)getJSONObject;
 
+- (NSString *)getJsonString;
+
 - (IOSClass *)getNativeClass;
 
 - (id)getNativeObject;
@@ -68,8 +70,6 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentM
 - (void)setNativeObjectWithId:(id)o;
 
 - (void)setValueWithId:(id)someValue;
-
-- (NSString *)toJsonString;
 
 #pragma mark Protected
 
