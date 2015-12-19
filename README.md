@@ -6,7 +6,7 @@ You should be able to code SQLite database related logics in java on your Androi
 
 # Table of content
 * [Overview] (https://github.com/vals-productions/sqlighter#overview)
-* [Is there any ORM in here?] (https://github.com/vals-productions/#any-orm)
+* [Anything ORM?] (https://github.com/vals-productions/sqlighter/blob/master/README.md#anything-orm)
 * [Going by example] (https://github.com/vals-productions/sqlighter#going-by-example)
  * [Pre requisites] (https://github.com/vals-productions/sqlighter#pre-requisites)
  * [Android code] (https://github.com/vals-productions/sqlighter#android-code)
@@ -33,14 +33,18 @@ goal is to provide ability to execute pretty much any SQL statements at either o
 the platforms with single and simple interface without dependencies on existing
 platform specific implementations.
 
-# Any ORM?
+# Anything ORM?
 
-SQlighter by itself focuses on giving you amenities similar to ones you 
-get by using JDBC. [Amfibian](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
-is a sub-project that has elements of ORM,
-helps you with JSON <-> Native object transformations and is J2ObjC-able
-as well. 
-
+SQlighter by itself focuses on giving you functionality similar to one you get by using JDBC. [AmfibiaN](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
+is a sub-project that integrates with SQLighter, has elements of ORM / JSON / Native object transitions. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC process.
+```
+      AmfibiaN
+     
+  [Native Object]
+         / \
+        /   \
+  [JSON] --- [DB]
+```
 # Going by example
 
 The following sample Java code gives identical output after being converted into Objective-C using J2ObjC. Therefore, you can implement your database related logics in java language amd just convert/reuse it in iOS.
