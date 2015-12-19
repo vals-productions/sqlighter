@@ -36,7 +36,7 @@ platform specific implementations.
 # Anything ORM?
 
 SQlighter by itself focuses on giving you functionality similar to one you get by using JDBC. [AmfibiaN](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
-is a sub-project that integrates with SQLighter, has elements of ORM / JSON / Native object transitions. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC process.
+is a "swiss army knife" sub-project that integrates with SQLighter, has elements of ORM / JSON / Native object transitions. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC process.
 ```
       AmfibiaN
      
