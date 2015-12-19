@@ -9,4 +9,4 @@
 #
 # --strip-reflection
 #
- ../../../j2objc-0.9.7/j2objc -use-arc --prefixes pckgs.sh -d $1 -sourcepath $2 $3
+../../../j2objc/j2objc -use-arc --prefixes pckgs.sh -d $1 -sourcepath $2 $3

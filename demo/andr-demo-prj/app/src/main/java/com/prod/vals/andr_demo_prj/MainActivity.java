@@ -44,8 +44,19 @@ public class MainActivity extends ActionBarActivity {
          */
         String greetingStr = Demo.dbOperations();
 
-        TextView mGreetView = (TextView)findViewById(R.id.greet);
-        mGreetView.setText(greetingStr);
+        /**
+         * Demo db/json operations with Amfibian
+         */
+
+        String amfibianGreet = Demo.amfibianOperations();
+
+        Bootstrap.getInstance().getSqLighterDb().close();
+
+        TextView mGreetSqlighterView = (TextView)findViewById(R.id.sqlighter_greet);
+        mGreetSqlighterView.setText(greetingStr);
+
+        TextView mGreetAmfibianView = (TextView) findViewById(R.id.amfibian_greet);
+        mGreetAmfibianView.setText(amfibianGreet);
     }
 
     @Override

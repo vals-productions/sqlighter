@@ -17,8 +17,14 @@ ROOT_DIR=../../../..
 #
 
 #
- ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/sqlighter/intf/SQLighterDb.java
- ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/sqlighter/intf/SQLighterRs.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/sqlighter/intf/SQLighterDb.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/sqlighter/intf/SQLighterRs.java
+
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnAttrib.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnObject.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnSql.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnOrm.java
+
 #
 
 #
@@ -28,6 +34,9 @@ ROOT_DIR=../../../..
 # since Android proj. is including sqlighter files through gradle
 # we need to tmp bring these files directly into j2objc conversion
 cp -r $ROOT_DIR/android/com/vals $ROOT_DIR/demo/andr-demo-prj/app/src/main/java/com
+
+./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Entity.java
+./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Appointment.java
 
 ./j2objc.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Demo.java
 ./j2objc.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Bootstrap.java

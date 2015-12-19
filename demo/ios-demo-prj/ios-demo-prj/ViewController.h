@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface ViewController : UIViewController {
-    IBOutlet UILabel *greetLabel;
+    IBOutlet UILabel *greetLabel, *meetAmfibianLabel;
 }
 
 @end

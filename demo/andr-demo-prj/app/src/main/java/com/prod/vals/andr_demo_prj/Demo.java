@@ -1,9 +1,15 @@
 package com.prod.vals.andr_demo_prj;
 
+import com.vals.a2ios.amfibian.impl.AnObject;
+import com.vals.a2ios.amfibian.impl.AnOrm;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
+import org.json.JSONObject;
+
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * This class is being converted into iOS module. It represents some business
@@ -46,7 +52,7 @@ public class Demo {
             db.addParam("user name 5"); // name
             db.addParam("qw@er.ty1"); // email
                 // BLOB column
-                String dataStr = "Hello, sqlighter!";
+                String dataStr = "Hello, SQLighter!";
                 byte[] data = dataStr.getBytes();
             db.addParam(data); // data
             db.addParam(5.67); // height
@@ -204,7 +210,6 @@ public class Demo {
             }
             rs.close();
 
-            db.close();
         } catch(Exception e) {
             System.out.println(e.getMessage());
             /**
@@ -234,7 +239,7 @@ public class Demo {
             dataString = new String(dataBytes);
         }
         Number h = rs.getDouble(4);
-        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + ", blob data: " + dataString + ", height: " + h );
+        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + ", blob data: " + dataString + ", height: " + h);
     }
 
     /**
@@ -252,4 +257,129 @@ public class Demo {
         }
         rs.close();
     }
+
+    public static String amfibianOperations() {
+        try {
+            SQLighterDb sqlighterDb = Bootstrap.getInstance().getSqLighterDb();
+            /**
+             * The following JSON string might be result of server's response
+             * to on of our requests and represents Appointment object described
+             * below.
+             */
+            String jsonAppointment = "{id: \"234\", name: \"Meet Amfibian!\", isProcessed: \"0\"}";
+            /**
+             * Let's tell Amfibian about our business entities and properties we would
+             * like to manage.
+             *
+             * The Entity class is a base class for our imaginable project's business objects.
+             * It makes sure all our business objects have the id property.
+             */
+            AnObject<Entity> anEntity = new AnObject(
+                Entity.class,
+                /* attribute names/definitions */
+                new String[]{"id"});
+            /**
+             * An Appointment object extends the Entity and has appointment name property as
+             * well as isProcessed property that is represented by is_processed database
+             * column.
+             */
+            AnOrm<Appointment> anOrm = new AnOrm<>(
+                sqlighterDb, // reference to sqlighter database management object
+                "appointment", // table name
+                Appointment.class, // will
+                /* attribute names/definitions */
+                new String[]{"name", "isProcessed,is_processed"},
+                anEntity); // parent
+            /**
+             * get native object from json object
+             */
+            Appointment appointment234 = anOrm.fromJsonString(jsonAppointment);
+            /**
+             * Let's decide to store our appointment234 in the database. Since we do not have the
+             * table for this entity in our database yet, let's request for database create
+             * table statement.
+             */
+            String createAppointmentTableSql = anOrm.startSqlCreate().getQueryString();
+            /**
+             * The SQL query contained in the variable above is:
+             *
+             * create table appointment(name TEXT,id INTEGER,is_processed INTEGER )
+             *
+             * Note how column names relate between database columns and object attributes.
+             *
+             * Lets execute the query.
+             */
+            sqlighterDb.executeChange(createAppointmentTableSql);
+            /**
+             * Now, since the table for Appointment objects has been created,
+             * lets store our object in there.
+             */
+            anOrm.startSqlInsert(appointment234);
+            anOrm.apply();
+            printAppointments(anOrm); // Lets check what we've got in the table
+            /**
+             * Let's create a new appointment object
+             */
+            Appointment appointment456 = new Appointment();
+            appointment456.setName("Appointment #98");
+            appointment456.setIsProcessed(0);
+            appointment456.setId(456);
+            /**
+             * The following two lines generate insert into.... statement,
+             * bind object attributes and execute the query.
+             */
+            anOrm.startSqlInsert(appointment456);
+            anOrm.apply();
+            printAppointments(anOrm); // Lets check what we've got in the table
+            /**
+             * Lets update our "Meet Amfibian" object and specify that we processed
+             * an appointment.
+             */
+            appointment234.setIsProcessed(1);
+            anOrm.startSqlUpdate(appointment234);
+            /**
+             * The following two lines will generate SQL update statement,
+             * bind our object's attributes, set the where clause
+             * to WHERE ID = 234, and execute the statement.
+             */
+            anOrm.addWhere("id = ?", appointment234.getId());
+            anOrm.apply();
+            printAppointments(anOrm); // Lets check what we've got in the table
+
+            anOrm.startSqlSelect();
+            anOrm.addWhere("id = ?", 234);
+            List<Appointment> list = anOrm.getRecords();
+            if (list.size() == 1) {
+                Appointment meetAmfibian;
+                meetAmfibian = list.get(0);
+                anOrm.setNativeObject(meetAmfibian);
+                JSONObject jsonObject = anOrm.getJSONObject();
+                String jsonString = anOrm.getJsonString();
+                System.out.println("Back to Json string: " + jsonString);
+                return (String)jsonObject.get("name");
+            }
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    private static void printAppointments(AnOrm<Appointment> anOrm) throws Exception {
+        System.out.println("Appointment records");
+        anOrm.startSqlSelect();
+        print(anOrm.getRecords());
+    }
+
+    private static void print(Collection<Appointment> appointments) {
+        for (Appointment a: appointments) {
+            print(a);
+        }
+    }
+
+    private static void print(Appointment appointment) {
+        System.out.println(
+                "Appointment object. id: " + appointment.getId() +
+                        ", name: " + appointment.getName());
+    }
+
 }

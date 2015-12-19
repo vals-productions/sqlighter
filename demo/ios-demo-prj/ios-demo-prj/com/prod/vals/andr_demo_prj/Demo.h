@@ -14,6 +14,8 @@
 
 - (instancetype)init;
 
++ (NSString *)amfibianOperations;
+
 + (NSString *)dbOperations;
 
 @end
@@ -21,6 +23,8 @@
 J2OBJC_EMPTY_STATIC_INIT(Demo)
 
 FOUNDATION_EXPORT NSString *Demo_dbOperations();
+
+FOUNDATION_EXPORT NSString *Demo_amfibianOperations();
 
 FOUNDATION_EXPORT void Demo_init(Demo *self);
 

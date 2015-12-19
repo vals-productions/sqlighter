@@ -43,7 +43,7 @@
 
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery;
 
-- (JavaLangLong *)executeChangeWithNSString:(NSString *)insert;
+- (JavaLangLong *)executeChangeWithNSString:(NSString *)statementString;
 
 - (void)beginTransaction;
 

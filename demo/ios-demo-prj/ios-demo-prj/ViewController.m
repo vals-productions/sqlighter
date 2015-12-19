@@ -24,6 +24,8 @@
      *
      */
     greetLabel.text = [Demo dbOperations];
+    
+    meetAmfibianLabel.text = [Demo amfibianOperations];
 }
 
 - (void)didReceiveMemoryWarning {
