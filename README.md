@@ -6,7 +6,7 @@ You should be able to code SQLite database related logics in java on your Androi
 
 # Table of content
 * [Overview] (https://github.com/vals-productions/sqlighter#overview)
-* [Is there any ORM in here?] (https://github.com/vals-productions/#any-orm)
+* [Is there any ORM in here?] (https://github.com/vals-productions/sqlighter/blob/master/README.md#any-orm)
 * [Going by example] (https://github.com/vals-productions/sqlighter#going-by-example)
  * [Pre requisites] (https://github.com/vals-productions/sqlighter#pre-requisites)
  * [Android code] (https://github.com/vals-productions/sqlighter#android-code)
