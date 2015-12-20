@@ -268,12 +268,19 @@ public class Demo {
             /**
              * We might've received the following JSON string as a result of our mobile
              * app's data exchange with the server.
+             *
+             * Let's assume our goal is to convert this JSON string into a native business
+             * object, do some operations with the object, save it in the database and
+             * send transformed business object back to the server as JSON string.
+             *
+             * Server implementation is out of scope of the demo.
              */
             String jsonAppointment234 =
                     "{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
             /**
              * First, let's tell AmfibiaN about our business entities and their properties we
-             * would like to manage. We do not have to manage all of them.
+             * would like to manage. We do not have to manage all of them, just those we care
+             * of.
              *
              * The Entity class is a base class for our imaginable project's business objects.
              * It makes sure all our business objects have the id property.
@@ -285,7 +292,7 @@ public class Demo {
             /**
              * An Appointment object extends the Entity and has appointment name property as
              * well as isProcessed property that is represented by is_processed database
-             * column. Each attribute may contain a comma delimited mappings names.
+             * column. Each attribute may contain a comma delimited mapping names.
              * <pre>
              *     <li>native object mapping (required)</li>
              *     <li>db column mapping (optional)</li>
@@ -306,8 +313,8 @@ public class Demo {
             Appointment appointment234 = anOrm.asNativeObject(jsonAppointment234);
             /**
              * Let's decide to store our appointment234 in the database. Since we do not have the
-             * table for this entity in our database yet, we can request AmfibiaN for database
-             * create table statement:
+             * table for this entity in our database yet, we can ask AmfibiaN to give us database
+             * create table statement for or object:
              */
             String createAppointmentTableSql = anOrm.startSqlCreate().getQueryString();
             /**
@@ -320,7 +327,7 @@ public class Demo {
              * </pre>
              *
              * Note how column names relate with database column and object attributes.
-             * Lets execute the query.
+             * Lets execute the query:
              */
             sqlighterDb.executeChange(createAppointmentTableSql);
             /**
@@ -329,9 +336,10 @@ public class Demo {
              */
             anOrm.startSqlInsert(appointment234);
             anOrm.apply();
+
             printAppointments(anOrm); // Lets check what we've got in the table
             /**
-             * Let's create a new appointment object
+             * Let's create a new appointment native object:
              */
             Appointment appointment456 = new Appointment();
             appointment456.setName("Appointment #456");
@@ -343,57 +351,55 @@ public class Demo {
              */
             anOrm.startSqlInsert(appointment456);
             anOrm.apply();
+
             printAppointments(anOrm); // Lets check what we've got in the table
             /**
-             * Lets update our "Meet Amfibian" object and specify that we've processed
+             * Next, lets specify that we've processed
              * an appointment.
              */
             appointment234.setIsProcessed(1);
-            anOrm.startSqlUpdate(appointment234);
             /**
-             * The following two lines will generate SQL update statement,
-             * bind our object's attributes, set the where clause
-             * to WHERE id = 234, and execute the statement.
+             * Then, lets update our "Meet Amfibian" object in the database
              */
+            anOrm.startSqlUpdate(appointment234);
             anOrm.addWhere("id = ?", appointment234.getId());
             anOrm.apply();
+            /**
+             * First two lines above generated SQL update statement,
+             * bound our object's attributes, set the where clause
+             * to WHERE id = 234.
+             * The third line of the code executed the statement against
+             * database.
+             */
+
             printAppointments(anOrm); // Lets check what we've got in the table
 
             /**
              * Next, we are going to retrieve our info from the database and
-             * transfrom back to JSON
+             * transform back to JSON to be able to send it back to the server
+             * over the network.
              */
             anOrm.startSqlSelect();
             anOrm.addWhere("id = ?", 234);
             /**
-             * Before we will execute this statement AnOrm way,
-             * lets see what we could do if we wanted to execute the
-             * query in manual way. For example, we could have
-             * passed it to SQLighter for more granular processing.
-             */
-            String query = anOrm.getQueryString();
-            for (Object param: anOrm.getParameters()) {
-                sqlighterDb.addParamObj(param);
-            }
-            SQLighterRs rs = sqlighterDb.executeSelect(query);
-            // ... do result set processing here ...
-            /**
-             * The next line of the code executes the query, iterates
-             * through result set and maps business objects giving
-             * you a collection of objects ready to use.
+             * Two lines above set the query to SELECT records from
+             * appontment table where id  234.
+             *
+             * The following line of the code executes the query, iterates
+             * through result set and maps business objects with result set
+             * columns, giving you a collection of objects ready to use.
              */
             List<Appointment> list = anOrm.getRecords();
-            if (list.size() == 1) {
-                Appointment meetAmfibian;
-                meetAmfibian = list.get(0);
-                JSONObject jsonObject = anOrm.asJSONObject(meetAmfibian);
+            if (list.size() == 1) { // just making sure we've got the result
+                Appointment meetAmfibianAppointment = list.get(0);
                 System.out.println("Back to JSON string\nbecause we " +
                         "might want to send it\nback to the " +
-                        "server like so: " + anOrm.asJsonString(meetAmfibian));
+                        "server like so: " + anOrm.asJsonString(meetAmfibianAppointment));
                 /**
                  * return the value through JSONObject, just because
-                 * we can do it this way as well
+                 * we can do it this way as well.
                  */
+                JSONObject jsonObject = anOrm.asJSONObject(meetAmfibianAppointment);
                 return (String)jsonObject.get("name");
             }
         } catch (Exception e) {
