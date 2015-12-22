@@ -1,5 +1,6 @@
 package com.vals.a2ios.amfibian.impl;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -170,7 +171,16 @@ public class AnObject<T> {
         }
         return jsonMap;
     }
-    
+
+    /**
+     * Returns <String (parameter name), value> map of object's attributes.
+     * This might be useful if you'd like to build HTTP request's GET/POST
+     * parameters.
+     *
+     * @param nativeObject - native object to convert to the map
+     * @return
+     * @throws Exception
+     */
     public synchronized Map<String, Object> asMap(T nativeObject) throws Exception {
         setNativeObject(nativeObject);
         if (nativeObjectMap == null) {
@@ -195,12 +205,26 @@ public class AnObject<T> {
         return nativeObjectMap;
     }
 
+    /**
+     * Transfroms native object into a org.json.JSONObject
+     * @param nativeObject
+     * @return org.json.JSONObject representation of an object
+     *
+     * @throws Exception
+     */
     public synchronized JSONObject asJSONObject(T nativeObject) throws Exception {
         setNativeObject(nativeObject);
         asMap(nativeObject);
         return new JSONObject(getJsonMap());
     }
 
+    /**
+     * Transforms org.json.JSONObject into a native object.
+     *
+     * @param jsonObject
+     * @return T - native object
+     * @throws Exception
+     */
     public synchronized T asNativeObject(JSONObject jsonObject) throws Exception {
         if (nativeObject == null) {
             resetNativeObject();
@@ -220,12 +244,27 @@ public class AnObject<T> {
         }
         return nativeObject;
     }
-    
+
+    /**
+     * JSON String is converted into a native object
+     *
+     * @param jsonString
+     * @return
+     * @throws Exception
+     */
     public synchronized T asNativeObject(String jsonString) throws Exception {
         return asNativeObject(new JSONObject(jsonString));
     }
 
-    public synchronized List<T> asList(String jsonArrayString) throws Exception {
+    /**
+     * JSON String representing an array of T is being transformed into
+     * a collection<T>
+     *
+     * @param jsonArrayString
+     * @return
+     * @throws Exception
+     */
+    public synchronized Collection<T> asList(String jsonArrayString) throws Exception {
         JSONArray jsonArray = new JSONArray(jsonArrayString);
         List<T> l = new LinkedList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -238,6 +277,13 @@ public class AnObject<T> {
         return l;
     }
 
+    /**
+     * Native object is converted into a JSON string
+     *
+     * @param nativeObject
+     * @return JSON string
+     * @throws Exception
+     */
     public synchronized String asJsonString(T nativeObject) throws Exception {
         return asJSONObject(nativeObject).toString();
     }
@@ -249,6 +295,7 @@ public class AnObject<T> {
      *                  json string or json object
      * @throws Exception
      */
+    @Deprecated
     private void setValue(Object someValue) throws Exception {
         if (someValue != null) {
             if (someValue instanceof String) {
