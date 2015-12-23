@@ -1,4 +1,5 @@
 # AmfibiaN
+*This document is under construction.*
 
 AmfibiaN is a lightweight java framework that stands between native objects, their JSON repesentations, and CRUD database operations with elements of ORM. 
 
@@ -10,9 +11,106 @@ AmfibiaN's code is J2ObjC compatible. You would be able to execute your code in 
 
 Detailed and up to date example with extensive comments can
 be found at [Demo.java] 
-(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) class' [amfibianOperations()] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java#L261) method. 
+(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) class' [amfibianOperations()] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java#L261) method.
 
-*This document is under construction.*
+We would like to send/receive business objects to/from our server in JSON representation, convert them into native objects, use as such, also, perform some CRUD database operations.
+
+We will use two objects. The Entity:
+
+```
+public class Entity {
+    public Integer id;
+...
+```
+and the Appointment that extends the Entity
+
+```
+public class Appointment extends Entity {
+    private String name;
+    private Integer isProcessed;
+...
+```
+We might've received the following JSON string representation of the Appointment as a result of our mobile app's data exchange with the server. Let's assume our goal is to convert this JSON string into a native business object, do some operations with the object, save it in the database and  send transformed business object back to the server as JSON string.
+
+```json
+"{id: "234", name: "Meet AmfibiaN!", isProcessed: "0"}"
+```
+First, let's tell AmfibiaN about our business entities and their properties we would like to manage. We do not have to manage all of them, just those we care of.
+
+```
+AnObject<Entity> anEntity = 
+	new AnObject( Entity.class, new String[]{"id"});
+   
+AnOrm<Appointment> anOrm = new AnOrm<>(
+	sqlighterDb, // reference to sqlighter database management object
+	"appointment", // table name
+    Appointment.class, // will
+    new String[]{"name", "isProcessed,is_processed"},
+    anEntity);
+```
+After we've done this, we can get native object from json string so that we could manipulate it in native way:
+
+```java
+Appointment appointment234 = anOrm.asNativeObject(
+	"{id: "234", name: "Meet AmfibiaN!", isProcessed: "0"}");
+```
+
+Let's decide to store our ```appointment234``` in the database. Since we do not have the table for this entity in our database yet, we can ask AmfibiaN to give us database create table statement for or object:
+
+```
+String createAppointmentTableSql = anOrm.startSqlCreate().getQueryString();
+```
+
+the variable above will contain:
+
+``` sql
+create table appointment(
+  name TEXT,
+  id INTEGER,
+  is_processed INTEGER )
+```
+
+Note how column names relate with database column and object attributes. Lets execute the query:
+
+```java
+sqlighterDb.executeChange(createAppointmentTableSql);
+```
+
+Now, since the table for Appointment objects has been created, lets store our object in there. The following statements will prepare the query, bind parameters and execute the statement against the database:
+
+```java
+anOrm.startSqlInsert(appointment234);
+anOrm.apply();
+```
+
+Imagine we've done some appointment processing and would like to update
+our record in the database:
+
+```java
+appointment234.setIsProcessed(1);
+
+anOrm.startSqlUpdate(appointment234);
+anOrm.addWhere("id = ?", appointment234.getId());
+anOrm.apply();
+```
+
+Next, we are going to retrieve our info from the database and
+transform back to JSON to be able to send it back to the server
+over the network.
+
+```java
+anOrm.startSqlSelect();
+anOrm.addWhere("id = ?", 234);
+
+List<Appointment> list = anOrm.getRecords();
+if (list.size() == 1) { // just making sure we've got the result
+	Appointment meetAmfibianAppointment = list.get(0);
+	String jsonString = anOrm.asJsonString(meetAmfibianAppointment);
+}
+```    
+
+```jsonString``` above is ready to be sent back to the server.
+
 
 
 
