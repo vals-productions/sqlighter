@@ -17,14 +17,14 @@ We would like to send/receive business objects to/from our server in JSON repres
 
 We will use two objects. The Entity:
 
-```
+```java
 public class Entity {
     public Integer id;
 ...
 ```
 and the Appointment that extends the Entity
 
-```
+```java
 public class Appointment extends Entity {
     private String name;
     private Integer isProcessed;
@@ -37,7 +37,7 @@ We might've received the following JSON string representation of the Appointment
 ```
 First, let's tell AmfibiaN about our business entities and their properties we would like to manage. We do not have to manage all of them, just those we care of.
 
-```
+```java
 AnObject<Entity> anEntity = 
 	new AnObject( Entity.class, new String[]{"id"});
    
@@ -55,28 +55,28 @@ Appointment appointment234 = anOrm.asNativeObject(
 	"{id: "234", name: "Meet AmfibiaN!", isProcessed: "0"}");
 ```
 
-Let's decide to store our ```appointment234``` in the database. Since we do not have the table for this entity in our database yet, we can ask AmfibiaN to give us database create table statement for or object:
+Let's decide to store our ```appointment234``` native object in the database. Since we do not have the table for this entity in our database yet, we can ask AmfibiaN to give us database create table statement for or object:
 
-```
+```java
 String createAppointmentTableSql = anOrm.startSqlCreate().getQueryString();
 ```
 
 the variable above will contain:
 
-``` sql
+```
 create table appointment(
   name TEXT,
   id INTEGER,
   is_processed INTEGER )
 ```
 
-Note how column names relate with database column and object attributes. Lets execute the query:
+Note how database column names relate to object attributes. Lets execute the query:
 
 ```java
 sqlighterDb.executeChange(createAppointmentTableSql);
 ```
 
-Now, since the table for Appointment objects has been created, lets store our object in there. The following statements will prepare the query, bind parameters and execute the statement against the database:
+Now, since the table for Appointment objects has been created, lets store our object in there. The following two statements will prepare the query, bind parameters and execute the statement against the database:
 
 ```java
 anOrm.startSqlInsert(appointment234);
@@ -110,16 +110,3 @@ if (list.size() == 1) { // just making sure we've got the result
 ```    
 
 ```jsonString``` above is ready to be sent back to the server.
-
-
-
-
-
-
-
-
-
-
-
-
-
