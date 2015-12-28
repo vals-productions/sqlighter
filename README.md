@@ -35,16 +35,21 @@ platform specific implementations.
 
 # Anything ORM?
 
-SQlighter by itself focuses on giving you functionality similar to one you get by using JDBC. [AmfibiaN](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
-is a "swiss army knife" sub-project that integrates with SQLighter, has elements of ORM / JSON / Native object transitions. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC process.
+SQlighter by itself focuses on giving you functionality similar to one you get by using JDBC. [AmfibiaN sub-project](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
+is a "swiss army knife" tool that integrates with SQLighter, has elements of ORM / JSON / Native object transitions. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC process.
 ```
       AmfibiaN
      
   [Native Object]
-         / \
-        /   \
-  [JSON] --- [DB]
+          /  \
+        /      \
+  [JSON] -- [DB]
 ```
+
+For more information on AmfibiaN go  [here](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
+
+We will continue with SQLighter in this document.
+
 # Going by example
 
 The following sample Java code gives identical output after being converted into Objective-C using J2ObjC. Therefore, you can implement your database related logics in java language amd just convert/reuse it in iOS.
