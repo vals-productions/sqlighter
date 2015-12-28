@@ -113,3 +113,39 @@ if (list.size() == 1) { // just making sure we've got the result
 ```    
 
 ```jsonString``` above is ready to be sent back to the server.
+
+## Class diagram
+
+```
+   AmfibiaN
+             n
+AnObject o---- AnAttrib
+ ^
+ |
+AnSql
+ ^
+ |
+AnOrm
+
+```
+### AnAttrib
+
+AnAttrib defines a single property of AnObject. 
+
+### AnObject
+
+**AnObject** holds a collection of attribute definitions. As you work with your objects, it may process JSON <---> Native transformations for you.
+
+### AnSql
+
+**AnSql** extends an object and gives you database query generation capabilities on top of what AnObject provides. You can execute the queries through whatever Database implementation you have.
+
+### AnOrm
+
+**AnOrm** adds object mapping capabilities. You canperform CRUD operations on your objects, or, collections of objects.
+
+**AnOrm** does not cover all possible scenarios. The assumption is that the most complex and costly database operations occur at your server, and your mobile client received a simplified and limited subset of data.
+
+For the cases when you do need to do an outer join and retrieve hierarchical result set, you can always use Sqlighter directly and go as far as you want.
+
+
