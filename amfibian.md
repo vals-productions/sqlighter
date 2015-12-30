@@ -2,11 +2,21 @@
 
 *This document is under construction.*
 
+# Table of content
+* [Overview] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#vverview)
+* [Going by example] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#going-by-example)
+* [Class diagram] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#class-diagram)
+* [Database versioning] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#class-diagram)
+
+## Overview
+
 AmfibiaN is a lightweight java framework that stands between native objects, their JSON repesentations, and CRUD database operations with elements of ORM. 
 
 AmfibiaN's code is J2ObjC compatible. You would be able to execute your code in Android and iOS. You can use it in conjunction with SQLighter to implement local database storage and relevant business logics based on SQLite database.
 
 Unlike SQLighter, which has platform specific implementatin and is pre-built for both - Android and iOS platforms, AmfibiaN as of now does not have iOS specific code.
+
+AnUpgrade is a utility that helps to manage schema changes with new version deployments.
 
 *Dependencies:* `org.json` package. Currently `JSONObject` and `JSONArray` are being referenced directly.
 
@@ -122,7 +132,7 @@ if (list.size() == 1) { // just making sure we've got the result
 AnObject o---- AnAttrib
  ^
  |
-AnSql
+AnSql          AnUpgrade
  ^
  |
 AnOrm
@@ -148,4 +158,9 @@ AnAttrib defines a single property of AnObject.
 
 For the cases when you do need to do an outer join and retrieve hierarchical result set, you can always use Sqlighter directly and go as far as you want.
 
+## Database versioning
 
+### AnUpdate
+...
+
+*This document is under construction.*
