@@ -6,7 +6,7 @@
 * [Overview] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#vverview)
 * [Going by example] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#going-by-example)
 * [Class diagram] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#class-diagram)
-* [Database versioning] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#class-diagram)
+* [Database versioning] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#database-versioning)
 
 ## Overview
 
