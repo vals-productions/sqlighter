@@ -41,8 +41,8 @@ is a "swiss army knife" tool that integrates with SQLighter, has elements of ORM
       AmfibiaN
      
   [Native Object]
-          /  \
-        /      \
+         / \
+        /   \
   [JSON] -- [DB]
 ```
 
