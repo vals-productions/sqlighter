@@ -1,8 +1,8 @@
-# sqlighter
+# SQLighter
 
-SQLite implementation that works with J2ObjC on both - Android and iOS platforms.
+SQLite implementation that works with [J2ObjC](http://j2objc.org) on both - Android and iOS platforms.
 
-You should be able to code SQLite database related logics in java on your Android device and reuse it on your iOS application.
+You should be able to code SQLite database related logics in java for your Android device and translate/reuse it on your iOS mobile application using [J2ObjC](http://j2objc.org) tool from Google. 
 
 # Table of content
 * [Overview] (https://github.com/vals-productions/sqlighter#overview)
