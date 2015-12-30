@@ -28,7 +28,7 @@ public class AnSql<T> extends AnObject<T> {
     protected String tableName;
     private String alias = "";
     private StringBuilder whereClause;
-    private StringBuilder queryExtra;
+    private boolean isWhere = false;
     private StringBuilder insertParamClause;
 
     private List<String> attribNameList = new LinkedList<>();
@@ -71,7 +71,7 @@ public class AnSql<T> extends AnObject<T> {
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
 	}
-	public AnSql() {
+	protected AnSql() {
     }
     
     public List<Object> getParameters() {
@@ -92,19 +92,24 @@ public class AnSql<T> extends AnObject<T> {
     
     private void reset() {
        queryStr = new StringBuilder();
+       isWhere = false;
        whereClause = null;
        parameters.clear();
        attribNameList.clear();
     }
 
-    private boolean isSkipAttr(String propertyName) {
+    protected boolean isSkipAttr(String propertyName) {
         if (inclAttrNameList.size() > 0) {
             if (inclAttrNameList.contains(propertyName)) {
+                return false;
+            } else {
                 return true;
             }
         } else if (getSkipAttrNameList().size() > 0) {
             if (!getSkipAttrNameList().contains(propertyName)) {
                 return true;
+            } else {
+                return false;
             }
         }
         return false;
@@ -121,7 +126,6 @@ public class AnSql<T> extends AnObject<T> {
         type = TYPE_INSERT;
         insertParamClause = new StringBuilder();
         Map<String, AnAttrib> om = getAttribList();
-        int cnt = om.size(), c = 0;
         Set<String> attrNames = om.keySet();
         for (String attrName: attrNames) {
             if (!isSkipAttr(attrName)) {
@@ -136,13 +140,12 @@ public class AnSql<T> extends AnObject<T> {
                     insertParamClause.append("NULL");
                 }
                 attribNameList.add(attrName);
-                if(++c < cnt) {
-                    queryStr.append(',');
-                    insertParamClause.append(",");
-                }
-            }
+                queryStr.append(',');
+                insertParamClause.append(",");
         }
-        queryStr.append(' ');
+        }
+        queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
+        insertParamClause.replace(insertParamClause.length() - 1, insertParamClause.length(), " ");
         columnClause = queryStr.toString();
     }
 
@@ -151,7 +154,6 @@ public class AnSql<T> extends AnObject<T> {
         setNativeObject(objectToUpdate);
         type = TYPE_UPDATE;
         Map<String, AnAttrib> om = getAttribList();
-        int cnt = om.size(), c = 0;
         Set<String> attrNames = om.keySet();
         for (String attrName: attrNames) {
             if (!isSkipAttr(attrName)) {
@@ -163,12 +165,10 @@ public class AnSql<T> extends AnObject<T> {
                     queryStr.append(getColumnName(attrib) + " = NULL");
                 }
                 attribNameList.add(attrName);
-                if (++c < cnt) {
-                    queryStr.append(',');
-                }
+                queryStr.append(',');
             }
         }
-        queryStr.append(' ');
+        queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
         columnClause = queryStr.toString();
     }
 
@@ -182,18 +182,15 @@ public class AnSql<T> extends AnObject<T> {
         Map<String, AnAttrib> cm = 
         getAttribList();
         Set<String> attribNames = cm.keySet();
-        int cnt = attribNames.size(), c = 0;
         for (String attribName: attribNames) {
                 AnAttrib attr = cm.get(attribName);
                 String colName = getColumnName(attr);
                 queryStr.append(colName);
                 String columnType = getSqlTypeForClass(attr.getAttribClass());
                 queryStr.append(" " + columnType);
-                if (++c < cnt) {
-                    queryStr.append(',');
-                }
+                queryStr.append(',');
         }
-        queryStr.append(' ');
+        queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
         columnClause = queryStr.toString();
         return this;
     }
@@ -235,7 +232,6 @@ public class AnSql<T> extends AnObject<T> {
         alias = tableName + "0";
         Map<String, AnAttrib> cm = getAttribList();
         Set<String> propertyNames = cm.keySet();
-        int cnt = propertyNames.size(), c = 0;
         for (String pName: propertyNames) {
             if (!isSkipAttr(pName)) {
                 String colName = getColumnName(cm.get(pName));
@@ -243,12 +239,10 @@ public class AnSql<T> extends AnObject<T> {
                 queryStr.append('.');
                 queryStr.append(colName);
                 attribNameList.add(pName);
-                if (++c < cnt) {
-                    queryStr.append(',');
-                }
+                queryStr.append(',');
             }
         }
-        queryStr.append(' ');
+        queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
         columnClause = queryStr.toString();
     }
 
@@ -265,28 +259,28 @@ public class AnSql<T> extends AnObject<T> {
         return condition;
     }
 
-    public void addSql(String sqlString) {
-        if(queryExtra == null) {
-            queryExtra = new StringBuilder(" " + sqlString);
-        } else {
-            queryExtra.append(" " + sqlString);
-        }
-    }
-
     public void addWhere(String condition, Object param) {
         if (param != null) {
-            addWhere(ensureFirstCondition(condition));
+            addWhere(condition);
             parameters.add(param);
         }
     }
 
-    public AnSql<T> addWhere(String condition) {
+    public void addWhere(String condition) {
+        condition = ensureFirstCondition(condition);
+        isWhere = true;
+        addSql(condition);
+    }
+
+    public void addSql(String sql) {
+        if (whereClause == null) {
+            whereClause = new StringBuilder();
+        }
         queryStr = new StringBuilder();
         queryStr.append(' ');
-        queryStr.append(condition);
+        queryStr.append(sql);
         queryStr.append(' ');
         whereClause.append(queryStr);
-        return this;
     }
 
     public String getQueryString() {
@@ -304,12 +298,11 @@ public class AnSql<T> extends AnObject<T> {
             sb.append(columnClause);
             sb.append(" from ");
             sb.append(tableName + ' ' + alias);
-            if (whereClause != null) {
+            if (isWhere) {
                 sb.append(" where ");
-                sb.append(whereClause);
             }
-            if (queryExtra != null) {
-                sb.append(queryExtra);
+            if(whereClause != null) {
+                sb.append(whereClause);
             }
             String qString = sb.toString();
             qString = qString.replaceAll("#", getAlias());

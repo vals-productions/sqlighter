@@ -25,7 +25,6 @@
 #include "java/lang/Throwable.h"
 #include "java/util/Collection.h"
 #include "java/util/Date.h"
-#include "java/util/List.h"
 #include "org/json/JSONObject.h"
 
 __attribute__((unused)) static void Demo_printWithSQLighterRs_(id<SQLighterRs> rs);
@@ -40,8 +39,8 @@ __attribute__((unused)) static void Demo_printWithAppointment_(Appointment *appo
 
 @implementation Demo
 
-+ (NSString *)dbOperations {
-  return Demo_dbOperations();
++ (NSString *)sqlighterOperations {
+  return Demo_sqlighterOperations();
 }
 
 + (NSString *)amfibianOperations {
@@ -57,7 +56,7 @@ J2OBJC_IGNORE_DESIGNATED_END
 
 @end
 
-NSString *Demo_dbOperations() {
+NSString *Demo_sqlighterOperations() {
   Demo_initialize();
   NSString *greetingStr = nil;
   @try {
@@ -202,17 +201,10 @@ NSString *Demo_amfibianOperations() {
     Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(anOrm);
     [anOrm startSqlSelect];
     [anOrm addWhereWithNSString:@"id = ?" withId:JavaLangInteger_valueOfWithInt_(234)];
-    NSString *query = [anOrm getQueryString];
-    for (id __strong param in nil_chk([anOrm getParameters])) {
-      [sqlighterDb addParamObjWithId:param];
-    }
-    id<SQLighterRs> rs = [sqlighterDb executeSelectWithNSString:query];
-    id<JavaUtilList> list = [anOrm getRecords];
-    if ([((id<JavaUtilList>) nil_chk(list)) size] == 1) {
-      Appointment *meetAmfibian;
-      meetAmfibian = [list getWithInt:0];
-      OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId:meetAmfibian];
-      [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$$", @"Back to JSON string\nbecause we might want to send it\nback to the server like so: ", [anOrm asJsonStringWithId:meetAmfibian])];
+    Appointment *meetAmfibianAppointment = [anOrm getSingleResult];
+    if (meetAmfibianAppointment != nil) {
+      [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$$", @"Back to JSON string\nbecause we might want to send it\nback to the server like so: ", [anOrm asJsonStringWithId:meetAmfibianAppointment])];
+      OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId:meetAmfibianAppointment];
       return (NSString *) check_class_cast([((OrgJsonJSONObject *) nil_chk(jsonObject)) getWithNSString:@"name"], [NSString class]);
     }
   }

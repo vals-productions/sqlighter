@@ -9,6 +9,7 @@
 #include "com/vals/a2ios/amfibian/impl/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/impl/AnObject.h"
 #include "java/lang/Exception.h"
+#include "java/util/Collection.h"
 #include "java/util/HashMap.h"
 #include "java/util/LinkedHashMap.h"
 #include "java/util/LinkedList.h"
@@ -262,7 +263,7 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentM
   }
 }
 
-- (id<JavaUtilList>)asListWithNSString:(NSString *)jsonArrayString {
+- (id<JavaUtilCollection>)asListWithNSString:(NSString *)jsonArrayString {
   @synchronized(self) {
     OrgJsonJSONArray *jsonArray = new_OrgJsonJSONArray_initWithNSString_(jsonArrayString);
     id<JavaUtilList> l = new_JavaUtilLinkedList_init();

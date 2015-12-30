@@ -42,7 +42,7 @@ public class MainActivity extends ActionBarActivity {
         /**
          * Demo db operations with SQlighter
          */
-        String greetingStr = Demo.dbOperations();
+        String greetingStr = Demo.sqlighterOperations();
 
         /**
          * Demo db/json operations with Amfibian

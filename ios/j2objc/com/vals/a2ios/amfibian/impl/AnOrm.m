@@ -14,6 +14,8 @@
 #include "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 #include "java/lang/Exception.h"
 #include "java/lang/Long.h"
+#include "java/util/Collection.h"
+#include "java/util/Iterator.h"
 #include "java/util/LinkedList.h"
 #include "java/util/List.h"
 
@@ -52,44 +54,74 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentA
   return self;
 }
 
-- (id<JavaUtilList>)getRecords {
+- (id<JavaUtilCollection>)getRecords {
+  return [self getRecordsWithJavaUtilCollection:nil];
+}
+
+- (id<JavaUtilCollection>)getRecordsWithJavaUtilCollection:(id<JavaUtilCollection>)collectionToUse {
   NSString *queryStr = [self getQueryString];
-  id<JavaUtilList> resultList = new_JavaUtilLinkedList_init();
+  if (collectionToUse == nil) {
+    collectionToUse = new_JavaUtilLinkedList_init();
+  }
   ComValsA2iosAmfibianImplAnOrm_applyParameters(self);
-  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(sqLighterDb_)) executeSelectWithNSString:queryStr];
+  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeSelectWithNSString:queryStr];
   while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
     [self resetNativeObject];
     jint columnIndex = 0;
     for (NSString * __strong attribName in nil_chk([self getAttribNameList])) {
-      id columnValue = [rs getObjectWithInt:columnIndex++];
-      if (columnValue != nil) {
-        ComValsA2iosAmfibianImplAnAttrib *ap = [self getAttribWithNSString:attribName];
-        [((ComValsA2iosAmfibianImplAnAttrib *) nil_chk(ap)) setValueWithId:columnValue];
+      if (![self isSkipAttrWithNSString:attribName]) {
+        id columnValue = [rs getObjectWithInt:columnIndex++];
+        if (columnValue != nil) {
+          ComValsA2iosAmfibianImplAnAttrib *ap = [self getAttribWithNSString:attribName];
+          [((ComValsA2iosAmfibianImplAnAttrib *) nil_chk(ap)) setValueWithId:columnValue];
+        }
       }
     }
     id objectValue = [self getNativeObject];
     id ov = (id) objectValue;
-    [resultList addWithId:ov];
+    [((id<JavaUtilCollection>) nil_chk(collectionToUse)) addWithId:ov];
   }
-  return resultList;
+  [rs close];
+  return collectionToUse;
+}
+
+- (id)getSingleResult {
+  id<JavaUtilCollection> l = [self getRecordsWithJavaUtilCollection:nil];
+  if (l == nil || [l size] != 1) {
+    return nil;
+  }
+  return [((id<JavaUtilIterator>) nil_chk([((id<JavaUtilCollection>) nil_chk(l)) iterator])) next];
+}
+
+- (id)getFirstResultOrNull {
+  id<JavaUtilCollection> l = [self getRecordsWithJavaUtilCollection:nil];
+  if (l == nil || [l size] == 0) {
+    return nil;
+  }
+  id<JavaUtilIterator> i = [((id<JavaUtilCollection>) nil_chk(l)) iterator];
+  return [((id<JavaUtilIterator>) nil_chk(i)) next];
 }
 
 - (void)applyParameters {
   ComValsA2iosAmfibianImplAnOrm_applyParameters(self);
 }
 
-- (id)apply {
-  if ([self getType] == ComValsA2iosAmfibianImplAnSql_TYPE_INSERT || [self getType] == ComValsA2iosAmfibianImplAnSql_TYPE_UPDATE || [self getType] == ComValsA2iosAmfibianImplAnSql_TYPE_DELETE) {
+- (JavaLangLong *)apply {
+  if ([self getType] == ComValsA2iosAmfibianImplAnSql_TYPE_INSERT || [self getType] == ComValsA2iosAmfibianImplAnSql_TYPE_UPDATE || [self getType] == ComValsA2iosAmfibianImplAnSql_TYPE_DELETE || [self getType] == ComValsA2iosAmfibianImplAnSql_TYPE_CREATE) {
     NSString *q = [self getQueryString];
     ComValsA2iosAmfibianImplAnOrm_applyParameters(self);
-    JavaLangLong *updateInfo = [((id<SQLighterDb>) nil_chk([self getSqLighterDb])) executeChangeWithNSString:q];
+    JavaLangLong *updateInfo = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:q];
     return updateInfo;
   }
   return nil;
 }
 
-- (id<SQLighterDb>)getSqLighterDb {
-  return sqLighterDb_;
+- (void)setSqlighterDbWithSQLighterDb:(id<SQLighterDb>)sqlighterDb {
+  self->sqlighterDb_ = sqlighterDb;
+}
+
+- (id<SQLighterDb>)getSqlighterDb {
+  return sqlighterDb_;
 }
 
 @end
@@ -106,7 +138,7 @@ ComValsA2iosAmfibianImplAnOrm *new_ComValsA2iosAmfibianImplAnOrm_init() {
 
 void ComValsA2iosAmfibianImplAnOrm_initWithSQLighterDb_withNSString_withIOSClass_withComValsA2iosAmfibianImplAnAttribArray_withComValsA2iosAmfibianImplAnObject_(ComValsA2iosAmfibianImplAnOrm *self, id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, ComValsA2iosAmfibianImplAnObject *parentAnObject) {
   (void) ComValsA2iosAmfibianImplAnSql_initWithNSString_withIOSClass_withComValsA2iosAmfibianImplAnAttribArray_withComValsA2iosAmfibianImplAnObject_(self, tableName, anObjClass, attribList, parentAnObject);
-  self->sqLighterDb_ = sqLighterDb;
+  self->sqlighterDb_ = sqLighterDb;
 }
 
 ComValsA2iosAmfibianImplAnOrm *new_ComValsA2iosAmfibianImplAnOrm_initWithSQLighterDb_withNSString_withIOSClass_withComValsA2iosAmfibianImplAnAttribArray_withComValsA2iosAmfibianImplAnObject_(id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, ComValsA2iosAmfibianImplAnObject *parentAnObject) {
@@ -117,7 +149,7 @@ ComValsA2iosAmfibianImplAnOrm *new_ComValsA2iosAmfibianImplAnOrm_initWithSQLight
 
 void ComValsA2iosAmfibianImplAnOrm_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withComValsA2iosAmfibianImplAnObject_(ComValsA2iosAmfibianImplAnOrm *self, id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, ComValsA2iosAmfibianImplAnObject *parentAnObject) {
   (void) ComValsA2iosAmfibianImplAnSql_initWithNSString_withIOSClass_withNSStringArray_withComValsA2iosAmfibianImplAnObject_(self, tableName, anObjClass, attribColumnList, parentAnObject);
-  self->sqLighterDb_ = sqLighterDb;
+  self->sqlighterDb_ = sqLighterDb;
 }
 
 ComValsA2iosAmfibianImplAnOrm *new_ComValsA2iosAmfibianImplAnOrm_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withComValsA2iosAmfibianImplAnObject_(id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, ComValsA2iosAmfibianImplAnObject *parentAnObject) {
@@ -129,7 +161,7 @@ ComValsA2iosAmfibianImplAnOrm *new_ComValsA2iosAmfibianImplAnOrm_initWithSQLight
 void ComValsA2iosAmfibianImplAnOrm_applyParameters(ComValsA2iosAmfibianImplAnOrm *self) {
   id<JavaUtilList> parameters = [self getParameters];
   for (id __strong par in nil_chk(parameters)) {
-    [((id<SQLighterDb>) nil_chk(self->sqLighterDb_)) addParamObjWithId:par];
+    [((id<SQLighterDb>) nil_chk(self->sqlighterDb_)) addParamObjWithId:par];
   }
 }
 

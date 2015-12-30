@@ -12,17 +12,16 @@
 @class ComValsA2iosAmfibianImplAnObject;
 @class IOSClass;
 @class IOSObjectArray;
-@protocol JavaUtilList;
+@class JavaLangLong;
+@protocol JavaUtilCollection;
 @protocol SQLighterDb;
 
 @interface ComValsA2iosAmfibianImplAnOrm : ComValsA2iosAmfibianImplAnSql {
  @public
-  id<SQLighterDb> sqLighterDb_;
+  id<SQLighterDb> sqlighterDb_;
 }
 
 #pragma mark Public
-
-- (instancetype)init;
 
 - (instancetype)initWithSQLighterDb:(id<SQLighterDb>)sqLighterDb
                        withNSString:(NSString *)tableName
@@ -36,17 +35,29 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentA
                   withNSStringArray:(IOSObjectArray *)attribColumnList
 withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentAnObject;
 
-- (id)apply;
+- (JavaLangLong *)apply;
 
-- (id<JavaUtilList>)getRecords;
+- (id)getFirstResultOrNull;
 
-- (id<SQLighterDb>)getSqLighterDb;
+- (id<JavaUtilCollection>)getRecords;
+
+- (id<JavaUtilCollection>)getRecordsWithJavaUtilCollection:(id<JavaUtilCollection>)collectionToUse;
+
+- (id)getSingleResult;
+
+- (id<SQLighterDb>)getSqlighterDb;
+
+- (void)setSqlighterDbWithSQLighterDb:(id<SQLighterDb>)sqlighterDb;
+
+#pragma mark Protected
+
+- (instancetype)init;
 
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(ComValsA2iosAmfibianImplAnOrm)
 
-J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnOrm, sqLighterDb_, id<SQLighterDb>)
+J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnOrm, sqlighterDb_, id<SQLighterDb>)
 
 FOUNDATION_EXPORT void ComValsA2iosAmfibianImplAnOrm_init(ComValsA2iosAmfibianImplAnOrm *self);
 

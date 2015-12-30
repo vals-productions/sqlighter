@@ -33,7 +33,7 @@
   NSString *columnClause_;
   NSString *alias_;
   JavaLangStringBuilder *whereClause_;
-  JavaLangStringBuilder *queryExtra_;
+  jboolean isWhere_;
   JavaLangStringBuilder *insertParamClause_;
   id<JavaUtilList> attribNameList_;
   id<JavaUtilSet> skipAttrNameList_;
@@ -41,8 +41,6 @@
 }
 
 - (void)reset;
-
-- (jboolean)isSkipAttrWithNSString:(NSString *)propertyName;
 
 - (NSString *)getAlias;
 
@@ -55,15 +53,12 @@ J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnSql, parameters_, id<JavaUtilList>
 J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnSql, columnClause_, NSString *)
 J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnSql, alias_, NSString *)
 J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnSql, whereClause_, JavaLangStringBuilder *)
-J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnSql, queryExtra_, JavaLangStringBuilder *)
 J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnSql, insertParamClause_, JavaLangStringBuilder *)
 J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnSql, attribNameList_, id<JavaUtilList>)
 J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnSql, skipAttrNameList_, id<JavaUtilSet>)
 J2OBJC_FIELD_SETTER(ComValsA2iosAmfibianImplAnSql, inclAttrNameList_, id<JavaUtilSet>)
 
 __attribute__((unused)) static void ComValsA2iosAmfibianImplAnSql_reset(ComValsA2iosAmfibianImplAnSql *self);
-
-__attribute__((unused)) static jboolean ComValsA2iosAmfibianImplAnSql_isSkipAttrWithNSString_(ComValsA2iosAmfibianImplAnSql *self, NSString *propertyName);
 
 __attribute__((unused)) static NSString *ComValsA2iosAmfibianImplAnSql_getAlias(ComValsA2iosAmfibianImplAnSql *self);
 
@@ -143,7 +138,23 @@ J2OBJC_IGNORE_DESIGNATED_END
 }
 
 - (jboolean)isSkipAttrWithNSString:(NSString *)propertyName {
-  return ComValsA2iosAmfibianImplAnSql_isSkipAttrWithNSString_(self, propertyName);
+  if ([((id<JavaUtilSet>) nil_chk(inclAttrNameList_)) size] > 0) {
+    if ([inclAttrNameList_ containsWithId:propertyName]) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+  else if ([((id<JavaUtilSet>) nil_chk([self getSkipAttrNameList])) size] > 0) {
+    if (![((id<JavaUtilSet>) nil_chk([self getSkipAttrNameList])) containsWithId:propertyName]) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  return false;
 }
 
 - (void)startSqlDelete {
@@ -157,10 +168,9 @@ J2OBJC_IGNORE_DESIGNATED_END
   type_ = ComValsA2iosAmfibianImplAnSql_TYPE_INSERT;
   insertParamClause_ = new_JavaLangStringBuilder_init();
   id<JavaUtilMap> om = [self getAttribList];
-  jint cnt = [((id<JavaUtilMap>) nil_chk(om)) size], c = 0;
-  id<JavaUtilSet> attrNames = [om keySet];
+  id<JavaUtilSet> attrNames = [((id<JavaUtilMap>) nil_chk(om)) keySet];
   for (NSString * __strong attrName in nil_chk(attrNames)) {
-    if (!ComValsA2iosAmfibianImplAnSql_isSkipAttrWithNSString_(self, attrName)) {
+    if (![self isSkipAttrWithNSString:attrName]) {
       ComValsA2iosAmfibianImplAnAttrib *attr = [om getWithId:attrName];
       id value = [((ComValsA2iosAmfibianImplAnAttrib *) nil_chk(attr)) getValue];
       if (value != nil) {
@@ -173,13 +183,12 @@ J2OBJC_IGNORE_DESIGNATED_END
         (void) [insertParamClause_ appendWithNSString:@"NULL"];
       }
       [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
-      if (++c < cnt) {
-        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:','];
-        (void) [insertParamClause_ appendWithNSString:@","];
-      }
+      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:','];
+      (void) [insertParamClause_ appendWithNSString:@","];
     }
   }
-  (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:' '];
+  (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
+  (void) [insertParamClause_ replaceWithInt:[insertParamClause_ length] - 1 withInt:[insertParamClause_ length] withNSString:@" "];
   columnClause_ = [queryStr_ description];
 }
 
@@ -188,10 +197,9 @@ J2OBJC_IGNORE_DESIGNATED_END
   [self setNativeObjectWithId:objectToUpdate];
   type_ = ComValsA2iosAmfibianImplAnSql_TYPE_UPDATE;
   id<JavaUtilMap> om = [self getAttribList];
-  jint cnt = [((id<JavaUtilMap>) nil_chk(om)) size], c = 0;
-  id<JavaUtilSet> attrNames = [om keySet];
+  id<JavaUtilSet> attrNames = [((id<JavaUtilMap>) nil_chk(om)) keySet];
   for (NSString * __strong attrName in nil_chk(attrNames)) {
-    if (!ComValsA2iosAmfibianImplAnSql_isSkipAttrWithNSString_(self, attrName)) {
+    if (![self isSkipAttrWithNSString:attrName]) {
       ComValsA2iosAmfibianImplAnAttrib *attrib = [om getWithId:attrName];
       if (attrib != nil) {
         (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [self getColumnNameWithComValsA2iosAmfibianImplAnAttrib:attrib], @" = ?")];
@@ -201,12 +209,10 @@ J2OBJC_IGNORE_DESIGNATED_END
         (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [self getColumnNameWithComValsA2iosAmfibianImplAnAttrib:attrib], @" = NULL")];
       }
       [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
-      if (++c < cnt) {
-        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:','];
-      }
+      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:','];
     }
   }
-  (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:' '];
+  (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
   columnClause_ = [queryStr_ description];
 }
 
@@ -219,18 +225,15 @@ J2OBJC_IGNORE_DESIGNATED_END
   type_ = ComValsA2iosAmfibianImplAnSql_TYPE_CREATE;
   id<JavaUtilMap> cm = [self getAttribList];
   id<JavaUtilSet> attribNames = [((id<JavaUtilMap>) nil_chk(cm)) keySet];
-  jint cnt = [((id<JavaUtilSet>) nil_chk(attribNames)) size], c = 0;
-  for (NSString * __strong attribName in attribNames) {
+  for (NSString * __strong attribName in nil_chk(attribNames)) {
     ComValsA2iosAmfibianImplAnAttrib *attr = [cm getWithId:attribName];
     NSString *colName = [self getColumnNameWithComValsA2iosAmfibianImplAnAttrib:attr];
     (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:colName];
     NSString *columnType = [self getSqlTypeForClassWithIOSClass:[((ComValsA2iosAmfibianImplAnAttrib *) nil_chk(attr)) getAttribClass]];
     (void) [queryStr_ appendWithNSString:JreStrcat("C$", ' ', columnType)];
-    if (++c < cnt) {
-      (void) [queryStr_ appendWithChar:','];
-    }
+    (void) [queryStr_ appendWithChar:','];
   }
-  (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:' '];
+  (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
   columnClause_ = [queryStr_ description];
   return self;
 }
@@ -277,20 +280,17 @@ J2OBJC_IGNORE_DESIGNATED_END
   alias_ = JreStrcat("$C", tableName_, '0');
   id<JavaUtilMap> cm = [self getAttribList];
   id<JavaUtilSet> propertyNames = [((id<JavaUtilMap>) nil_chk(cm)) keySet];
-  jint cnt = [((id<JavaUtilSet>) nil_chk(propertyNames)) size], c = 0;
-  for (NSString * __strong pName in propertyNames) {
-    if (!ComValsA2iosAmfibianImplAnSql_isSkipAttrWithNSString_(self, pName)) {
+  for (NSString * __strong pName in nil_chk(propertyNames)) {
+    if (![self isSkipAttrWithNSString:pName]) {
       NSString *colName = [self getColumnNameWithComValsA2iosAmfibianImplAnAttrib:[cm getWithId:pName]];
       (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:alias_];
       (void) [queryStr_ appendWithChar:'.'];
       (void) [queryStr_ appendWithNSString:colName];
       [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:pName];
-      if (++c < cnt) {
-        (void) [queryStr_ appendWithChar:','];
-      }
+      (void) [queryStr_ appendWithChar:','];
     }
   }
-  (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:' '];
+  (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
   columnClause_ = [queryStr_ description];
 }
 
@@ -298,30 +298,29 @@ J2OBJC_IGNORE_DESIGNATED_END
   return ComValsA2iosAmfibianImplAnSql_ensureFirstConditionWithNSString_(self, condition);
 }
 
-- (void)addSqlWithNSString:(NSString *)sqlString {
-  if (queryExtra_ == nil) {
-    queryExtra_ = new_JavaLangStringBuilder_initWithNSString_(JreStrcat("C$", ' ', sqlString));
-  }
-  else {
-    (void) [queryExtra_ appendWithNSString:JreStrcat("C$", ' ', sqlString)];
-  }
-}
-
 - (void)addWhereWithNSString:(NSString *)condition
                       withId:(id)param {
   if (param != nil) {
-    (void) [self addWhereWithNSString:ComValsA2iosAmfibianImplAnSql_ensureFirstConditionWithNSString_(self, condition)];
+    [self addWhereWithNSString:condition];
     [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:param];
   }
 }
 
-- (ComValsA2iosAmfibianImplAnSql *)addWhereWithNSString:(NSString *)condition {
+- (void)addWhereWithNSString:(NSString *)condition {
+  condition = ComValsA2iosAmfibianImplAnSql_ensureFirstConditionWithNSString_(self, condition);
+  isWhere_ = true;
+  [self addSqlWithNSString:condition];
+}
+
+- (void)addSqlWithNSString:(NSString *)sql {
+  if (whereClause_ == nil) {
+    whereClause_ = new_JavaLangStringBuilder_init();
+  }
   queryStr_ = new_JavaLangStringBuilder_init();
   (void) [queryStr_ appendWithChar:' '];
-  (void) [queryStr_ appendWithNSString:condition];
+  (void) [queryStr_ appendWithNSString:sql];
   (void) [queryStr_ appendWithChar:' '];
   (void) [((JavaLangStringBuilder *) nil_chk(whereClause_)) appendWithJavaLangCharSequence:queryStr_];
-  return self;
 }
 
 - (NSString *)getQueryString {
@@ -340,12 +339,11 @@ J2OBJC_IGNORE_DESIGNATED_END
     (void) [sb appendWithNSString:columnClause_];
     (void) [sb appendWithNSString:@" from "];
     (void) [sb appendWithNSString:JreStrcat("$C$", tableName_, ' ', alias_)];
-    if (whereClause_ != nil) {
+    if (isWhere_) {
       (void) [sb appendWithNSString:@" where "];
-      (void) [sb appendWithJavaLangCharSequence:whereClause_];
     }
-    if (queryExtra_ != nil) {
-      (void) [sb appendWithJavaLangCharSequence:queryExtra_];
+    if (whereClause_ != nil) {
+      (void) [sb appendWithJavaLangCharSequence:whereClause_];
     }
     NSString *qString = [sb description];
     qString = [((NSString *) nil_chk(qString)) replaceAll:@"#" withReplacement:ComValsA2iosAmfibianImplAnSql_getAlias(self)];
@@ -393,6 +391,7 @@ void ComValsA2iosAmfibianImplAnSql_initWithNSString_withIOSClass_withComValsA2io
   (void) ComValsA2iosAmfibianImplAnObject_initWithIOSClass_withComValsA2iosAmfibianImplAnAttribArray_withComValsA2iosAmfibianImplAnObject_(self, anObjClass, attribList, parentAnObject);
   self->parameters_ = new_JavaUtilArrayList_init();
   self->alias_ = @"";
+  self->isWhere_ = false;
   self->attribNameList_ = new_JavaUtilLinkedList_init();
   self->skipAttrNameList_ = new_JavaUtilHashSet_init();
   self->inclAttrNameList_ = new_JavaUtilHashSet_init();
@@ -409,6 +408,7 @@ void ComValsA2iosAmfibianImplAnSql_initWithNSString_withIOSClass_withNSStringArr
   (void) ComValsA2iosAmfibianImplAnObject_initWithIOSClass_withNSStringArray_withComValsA2iosAmfibianImplAnObject_(self, anObjClass, attribColumnList, parentAnObject);
   self->parameters_ = new_JavaUtilArrayList_init();
   self->alias_ = @"";
+  self->isWhere_ = false;
   self->attribNameList_ = new_JavaUtilLinkedList_init();
   self->skipAttrNameList_ = new_JavaUtilHashSet_init();
   self->inclAttrNameList_ = new_JavaUtilHashSet_init();
@@ -425,6 +425,7 @@ void ComValsA2iosAmfibianImplAnSql_init(ComValsA2iosAmfibianImplAnSql *self) {
   (void) ComValsA2iosAmfibianImplAnObject_init(self);
   self->parameters_ = new_JavaUtilArrayList_init();
   self->alias_ = @"";
+  self->isWhere_ = false;
   self->attribNameList_ = new_JavaUtilLinkedList_init();
   self->skipAttrNameList_ = new_JavaUtilHashSet_init();
   self->inclAttrNameList_ = new_JavaUtilHashSet_init();
@@ -438,23 +439,10 @@ ComValsA2iosAmfibianImplAnSql *new_ComValsA2iosAmfibianImplAnSql_init() {
 
 void ComValsA2iosAmfibianImplAnSql_reset(ComValsA2iosAmfibianImplAnSql *self) {
   self->queryStr_ = new_JavaLangStringBuilder_init();
+  self->isWhere_ = false;
   self->whereClause_ = nil;
   [((id<JavaUtilList>) nil_chk(self->parameters_)) clear];
   [((id<JavaUtilList>) nil_chk(self->attribNameList_)) clear];
-}
-
-jboolean ComValsA2iosAmfibianImplAnSql_isSkipAttrWithNSString_(ComValsA2iosAmfibianImplAnSql *self, NSString *propertyName) {
-  if ([((id<JavaUtilSet>) nil_chk(self->inclAttrNameList_)) size] > 0) {
-    if ([self->inclAttrNameList_ containsWithId:propertyName]) {
-      return true;
-    }
-  }
-  else if ([((id<JavaUtilSet>) nil_chk([self getSkipAttrNameList])) size] > 0) {
-    if (![((id<JavaUtilSet>) nil_chk([self getSkipAttrNameList])) containsWithId:propertyName]) {
-      return true;
-    }
-  }
-  return false;
 }
 
 NSString *ComValsA2iosAmfibianImplAnSql_getAlias(ComValsA2iosAmfibianImplAnSql *self) {

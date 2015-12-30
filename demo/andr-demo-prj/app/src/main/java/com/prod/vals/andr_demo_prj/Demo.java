@@ -21,7 +21,7 @@ public class Demo {
      * Demo sequence of Db operations with SQLighter.
      * @return - greeting string to be displayed at the screen
      */
-    public static String dbOperations() {
+    public static String sqlighterOperations() {
         String greetingStr = null;
         try {
             SQLighterRs rs = null;
@@ -389,12 +389,12 @@ public class Demo {
              * through result set and maps business objects with result set
              * columns, giving you a collection of objects ready to use.
              */
-            List<Appointment> list = anOrm.getRecords();
-            if (list.size() == 1) { // just making sure we've got the result
-                Appointment meetAmfibianAppointment = list.get(0);
-                System.out.println("Back to JSON string\nbecause we " +
-                        "might want to send it\nback to the " +
-                        "server like so: " + anOrm.asJsonString(meetAmfibianAppointment));
+            Appointment meetAmfibianAppointment = anOrm.getSingleResult();
+            if (meetAmfibianAppointment != null) { // just making sure we've got the result
+                System.out.println(
+                    "Back to JSON string\nbecause we " +
+                    "might want to send it\nback to the " +
+                    "server like so: " + anOrm.asJsonString(meetAmfibianAppointment));
                 /**
                  * return the value through JSONObject, just because
                  * we can do it this way as well.

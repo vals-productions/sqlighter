@@ -10,6 +10,7 @@
 		8B028CA71BB1B20800AFD558 /* SQLighterDbImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */; };
 		8B028CA81BB1B20800AFD558 /* SQLighterRsImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */; };
 		8B0987001BBD8C4C003534E2 /* j2objc-w-refl.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */; };
+		8B1C0E1D1C33BC7700FEE4DF /* AnUpgrade.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B1C0E1C1C33BC7700FEE4DF /* AnUpgrade.m */; };
 		8B9848E21C2535A20098CF13 /* Appointment.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9848DF1C2535A20098CF13 /* Appointment.m */; };
 		8B9848E31C2535A20098CF13 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9848E11C2535A20098CF13 /* Entity.m */; };
 		8B9848EC1C2536BD0098CF13 /* AnAttrib.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9848E51C2536BD0098CF13 /* AnAttrib.m */; };
@@ -47,6 +48,8 @@
 		8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterDbImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterDbImpl.m; sourceTree = "<group>"; };
 		8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterRsImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterRsImpl.m; sourceTree = "<group>"; };
 		8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "j2objc-w-refl.sh"; path = "ios-demo-prj/script/j2objc-w-refl.sh"; sourceTree = "<group>"; };
+		8B1C0E1B1C33BC7700FEE4DF /* AnUpgrade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnUpgrade.h; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/impl/AnUpgrade.h; sourceTree = "<group>"; };
+		8B1C0E1C1C33BC7700FEE4DF /* AnUpgrade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnUpgrade.m; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/impl/AnUpgrade.m; sourceTree = "<group>"; };
 		8B9848DE1C2535A20098CF13 /* Appointment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Appointment.h; path = com/prod/vals/andr_demo_prj/Appointment.h; sourceTree = "<group>"; };
 		8B9848DF1C2535A20098CF13 /* Appointment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Appointment.m; path = com/prod/vals/andr_demo_prj/Appointment.m; sourceTree = "<group>"; };
 		8B9848E01C2535A20098CF13 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Entity.h; path = com/prod/vals/andr_demo_prj/Entity.h; sourceTree = "<group>"; };
@@ -167,6 +170,8 @@
 		F37D0D631B90180300E73A01 /* ios-demo-prj */ = {
 			isa = PBXGroup;
 			children = (
+				8B1C0E1B1C33BC7700FEE4DF /* AnUpgrade.h */,
+				8B1C0E1C1C33BC7700FEE4DF /* AnUpgrade.m */,
 				8B9848E41C2536BD0098CF13 /* AnAttrib.h */,
 				8B9848E51C2536BD0098CF13 /* AnAttrib.m */,
 				8B9848E61C2536BD0098CF13 /* AnObject.h */,
@@ -314,6 +319,7 @@
 				8B9848EE1C2536BD0098CF13 /* AnOrm.m in Sources */,
 				F37D0D671B90180300E73A01 /* main.m in Sources */,
 				F32A9EA71B9AD6BF0092C868 /* Demo.m in Sources */,
+				8B1C0E1D1C33BC7700FEE4DF /* AnUpgrade.m in Sources */,
 				8B028CA81BB1B20800AFD558 /* SQLighterRsImpl.m in Sources */,
 				8B9848E31C2535A20098CF13 /* Entity.m in Sources */,
 			);

@@ -16,13 +16,13 @@
 
 + (NSString *)amfibianOperations;
 
-+ (NSString *)dbOperations;
++ (NSString *)sqlighterOperations;
 
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(Demo)
 
-FOUNDATION_EXPORT NSString *Demo_dbOperations();
+FOUNDATION_EXPORT NSString *Demo_sqlighterOperations();
 
 FOUNDATION_EXPORT NSString *Demo_amfibianOperations();
 

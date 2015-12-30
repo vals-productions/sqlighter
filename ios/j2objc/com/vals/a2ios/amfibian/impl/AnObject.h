@@ -12,7 +12,7 @@
 @class IOSClass;
 @class IOSObjectArray;
 @class OrgJsonJSONObject;
-@protocol JavaUtilList;
+@protocol JavaUtilCollection;
 @protocol JavaUtilMap;
 
 @interface ComValsA2iosAmfibianImplAnObject : NSObject {
@@ -47,7 +47,7 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentM
 
 - (NSString *)asJsonStringWithId:(id)nativeObject;
 
-- (id<JavaUtilList>)asListWithNSString:(NSString *)jsonArrayString;
+- (id<JavaUtilCollection>)asListWithNSString:(NSString *)jsonArrayString;
 
 - (id<JavaUtilMap>)asMapWithId:(id)nativeObject;
 

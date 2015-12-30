@@ -28,8 +28,6 @@
 
 #pragma mark Public
 
-- (instancetype)init;
-
 - (instancetype)initWithNSString:(NSString *)tableName
                     withIOSClass:(IOSClass *)anObjClass
 withComValsA2iosAmfibianImplAnAttribArray:(IOSObjectArray *)attribList
@@ -44,9 +42,9 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentA
 
 - (void)addSkipAttribsWithNSStringArray:(IOSObjectArray *)names;
 
-- (void)addSqlWithNSString:(NSString *)sqlString;
+- (void)addSqlWithNSString:(NSString *)sql;
 
-- (ComValsA2iosAmfibianImplAnSql *)addWhereWithNSString:(NSString *)condition;
+- (void)addWhereWithNSString:(NSString *)condition;
 
 - (void)addWhereWithNSString:(NSString *)condition
                       withId:(id)param;
@@ -84,6 +82,12 @@ withComValsA2iosAmfibianImplAnObject:(ComValsA2iosAmfibianImplAnObject *)parentA
 - (void)startSqlSelect;
 
 - (void)startSqlUpdateWithId:(id)objectToUpdate;
+
+#pragma mark Protected
+
+- (instancetype)init;
+
+- (jboolean)isSkipAttrWithNSString:(NSString *)propertyName;
 
 @end
 
