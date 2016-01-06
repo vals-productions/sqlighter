@@ -1,4 +1,4 @@
-### Hello, sqlighter demo projects
+## Hello, sqlighter demo projects
 
 These examples demonstrate how sqlighter could be of use to code SQLite related code in
 java, and run it on iOS. These projects are setup by including actual sources from
@@ -6,8 +6,7 @@ sqligher library rather than libraries. They demonstrate this more complex appro
 Also, they are used as sort of test environment for sqlighter.
 
 [Demo.java] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
-class' ``dbOperations()`` static method performs some database activity, saves, retrieves
-and returns "Hello sqlighter!" blob value (as String) from database's user table.
+ class' ``sqlighterOperations()`` static method performs some database activity, saves, retrieves and returns "Hello sqlighter!" blob value (as String) from database's user table.
 
 Demo class is converted into its Objective-C counterpart, as well as Bootstrap that
 handles SQlite initialization and gives identical access to Database access 
@@ -15,10 +14,12 @@ interface\protocol in both platforms.
 
 Java to Objective-C conversion is done by shell scripts that are checked-in in iOS 
 project.
+
 ```
 sqlighter/demo/ios-demo-prj/ios-demo-prj/script> ./convert.sh
 ```
-You have to go into sqlighter/demo/ios-demo-prj/ios-demo-prj/script directory
+
+You have to go into ```sqlighter/demo/ios-demo-prj/ios-demo-prj/script``` directory
 and run the script if you make changes to the Demo class in your Android project and
 would like to propagate the changes to iOS.
 
@@ -29,11 +30,10 @@ in a predefined place. This is explained below.
 
 ## iOS
 
-First, look into crt-j2objc-link.sh for an example on how to create a link
-to J2ObjC distribution into the demo directory. iOS project refers
-this location for includes and lib paths. This is much easier than readjusting all
-path related properties one by one to your actual J2ObjC location. 
-So you are supposed to have 
+First, look into [crt-j2objc-link.sh] (https://github.com/vals-productions/sqlighter/blob/master/demo/crt-j2objc-link.sh) for instructions on how to create a link to J2ObjC distribution into the demo directory. iOS project refers this location for includes and lib paths. This is much easier than readjusting all path related properties one by one to your actual J2ObjC location.
+
+You are supposed to have 
+
 ```
 sqlighter
   demo
@@ -45,12 +45,13 @@ sqlighter
       lib
       ....
 ```
+
 So. 
 
-1. You have to be in this directory: ...sqlighter/demo
+1. You have to be in this directory: ```.../sqlighter/demo```
 <pre>
 > pwd
-...sqlighter/demo
+.../sqlighter/demo
 </pre>
 2. create a link while in the directory above:
 <pre>
@@ -77,10 +78,10 @@ You should see include and lib directories here, and they should actually contai
 include and lib files.
 
 If suggestion above does not work
-1) just go into Build Settings\Search Paths and update Header and Library Search path
-to your locations, then 
-2) go to Build Phases\Link Binary With Libraries and replace entries there with entires
-in your locations.
+
+1) just go into xCode Build Settings\Search Paths and update Header and Library Search path to your locations, then 
+
+2) go to Build Phases\Link Binary With Libraries and replace entries there with entires in your locations.
 
 #### Xcode project and github
 
@@ -105,6 +106,4 @@ this causes concurrency lockups and cyclic dependency issues.
 
 ## Android
 
-Make sure Android IDE at your computer has Android SDK 5.0 (21) and corresponding build
-tools installed. It is not a requirement, it's just the way the project is configured,
-unless you want to reconfigure the project to the SDK you have.
+If your Android Studio prompts you for particular Android SDK version upgrade/installation, just follow upgrade steps. It is not a requirement or specific dependency, it's just the way the project is configured and checked-in.

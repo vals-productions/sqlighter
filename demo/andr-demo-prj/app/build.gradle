@@ -18,7 +18,8 @@ android {
         }
     }
     sourceSets {
-        main.java.srcDirs += 'src/main/../../../../../android/'
+        main.java.srcDirs += 'src/main/../../../../../android/';
+        main.java.srcDirs += 'src/main/../../../../mobilighter/android/';
     }
 }
 
