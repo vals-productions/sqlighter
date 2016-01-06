@@ -1,12 +1,18 @@
 # SQLighter
 
-SQLite implementation that works with [J2ObjC](http://j2objc.org) on both - Android and iOS platforms.
+Object Oriented SQLite implementation for Android and iOS mobile platforms. 
 
-You should be able to code SQLite database related logics in java for your Android device and translate/reuse it on your iOS mobile application using [J2ObjC](http://j2objc.org) tool from Google. 
+SQLighter provides functionality to work with basic SQL statements, provides some ORM features, DB schema versioning/management and native object/JSON conversions for easy information exchange with the server.
+
+SQLighter is compatible with [J2ObjC](http://j2objc.org) technology.
+
+You should be able to code SQLite database related logics in java for your Android device and translate/reuse your code in your iOS mobile application using [J2ObjC](http://j2objc.org) tool from Google. 
+
+You can also use SQLighter independently on either of the platforms.
 
 # Table of content
 * [Overview] (https://github.com/vals-productions/sqlighter#overview)
-* [Anything ORM?] (https://github.com/vals-productions/sqlighter/blob/master/README.md#anything-orm)
+* [ORM] (https://github.com/vals-productions/sqlighter/blob/master/README.md#orm)
 * [Going by example] (https://github.com/vals-productions/sqlighter#going-by-example)
  * [Pre requisites] (https://github.com/vals-productions/sqlighter#pre-requisites)
  * [Android code] (https://github.com/vals-productions/sqlighter#android-code)
@@ -33,10 +39,11 @@ goal is to provide ability to execute pretty much any SQL statements at either o
 the platforms with single and simple interface without dependencies on existing
 platform specific implementations.
 
-# Anything ORM?
+# ORM
 
 SQlighter by itself focuses on giving you functionality similar to one you get by using JDBC. [AmfibiaN sub-project](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
 is a "swiss army knife" tool that integrates with SQLighter, has elements of ORM / JSON / Native object transitions. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC process.
+
 ```
       AmfibiaN
      
