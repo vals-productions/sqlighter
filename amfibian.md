@@ -16,7 +16,7 @@ AmfibiaN's code is J2ObjC compatible. You would be able to execute your code in 
 
 Unlike SQLighter, which has platform specific implementatin and is pre-built for both - Android and iOS platforms, AmfibiaN as of now does not have iOS specific code.
 
-AnUpgrade is a utility that helps to manage schema changes with new version deployments.
+AnUpgrade is a utility that helps to manage schema changes with new application version deployments.
 
 *Dependencies:* `org.json` package. Currently `JSONObject` and `JSONArray` are being referenced directly.
 

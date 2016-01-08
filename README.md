@@ -1,12 +1,16 @@
 # SQLighter
 
-Object Oriented SQLite implementation for Android and iOS mobile platforms. 
+SQLighter is Object Oriented SQLite implementation for Android and iOS mobile platforms. 
 
-SQLighter provides functionality to work with basic SQL statements, provides some ORM features, DB schema versioning/management and native object/JSON conversions for easy information exchange with the server.
+* Provides basic SQL capabilities and flexibilty
+* ORM convenience
+* Database schema versioning management 
+* JSON mappings
+* Portability of your implementation between Android and iOS platforms by being compliant with J2ObjC code translation standards.
 
 SQLighter is compatible with [J2ObjC](http://j2objc.org) technology.
 
-You should be able to code SQLite database related logics in java for your Android device and translate/reuse your code in your iOS mobile application using [J2ObjC](http://j2objc.org) tool from Google. 
+You should be able to code SQLite database related logics in java programming language for your Android application and translate/reuse your code for your iOS mobile application using [J2ObjC](http://j2objc.org) tool from Google. 
 
 You can also use SQLighter independently on either of the platforms.
 
@@ -41,8 +45,8 @@ platform specific implementations.
 
 # ORM
 
-SQlighter by itself focuses on giving you functionality similar to one you get by using JDBC. [AmfibiaN sub-project](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
-is a "swiss army knife" tool that integrates with SQLighter, has elements of ORM / JSON / Native object transitions. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC process.
+[AmfibiaN sub-project](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
+is a "swiss army knife" tool that is integrated with SQLighter. AmfibiaN lets you transition your domain objects between their native state, JSON representation and database persistent storage. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC translation process.
 
 ```
       AmfibiaN
@@ -55,7 +59,7 @@ is a "swiss army knife" tool that integrates with SQLighter, has elements of ORM
 
 For more information on AmfibiaN go  [here](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
 
-We will continue with SQLighter in this document.
+We will continue with SQLighter basic SQL features in this document.
 
 # Going by example
 
@@ -212,11 +216,9 @@ update user set email = null where email = 'qw@er.ty1';
 
 ### iOS code
 
-Normally you shouldn't need to do SQLite related coding in your iOS implementation, 'cause
-the whole goal of this library is to code in Java and convert to Objective-C.
+iOS impementation is identical.
 
-But if for whatever reason you have to code some sqlighter in iOS without J2ObjC, it's
-also possible:
+Below is iOS code snippet that executes and processes SQL SELECT query. It is easy to see that this code is J2ObjC compatible Objective C carbon copy of similar java code from one of the above examples.
 
 ``` objc
 id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
@@ -229,14 +231,15 @@ while([rs hasNext]) {
 
 ```
 
-# J2ObjC
+If you are familiar with both languages (and you should be if you are reading this), you do not need a complete Objective C tutorial of SQLighter to do the coding.
 
-You do not need to use J2ObjC tools to use this library as part of your project,
-because it includes classes\modules that are already j2objc'd.
+The biggest advantage you'd get if you reuse your java coding efforts at iOS platform using J2ObjC.
+
+# J2ObjC
 
 It is up to you how to setup J2ObjC conversions for business logics conversions of your
 project. You do it in whichever way works for you. There is no dependency here. Most
-likely you already have something setup by now. You just have to include provided classes
+likely you already have something setup by now. You just have to include provided java classes
 and interfaces into your Android project on one side, and iOS / Objective-C modules/protocols 
 at the other side, or, (easier) use provided jar file for Android and lib for iOS.
 
@@ -288,7 +291,7 @@ switch to prevent adding java package prefix to class names. Sample file is belo
 com.vals.a2ios.sqlighter=
 ...
 ```
-This makes code look cleaner in case you'd like to use sqlighter for some iOS 
+This makes code look cleaner in case you'd like to use SQLighter for some iOS 
 functionality that is not matching your Android counterpart. 
 
 ## Project configuration
