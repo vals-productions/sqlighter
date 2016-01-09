@@ -8,13 +8,6 @@ package com.vals.a2ios.mobilighter.intf;
  * Created by vsayenko on 8/15/15.
  */
 public interface Mobilighter {
-    
-    public static final String DATE_FORMAT_STR = "yyyy-MM-dd";
-    public static final String DATE_TIME_FORMAT_STR = "yyyy-MM-dd HH:mm:ss";
-
-    public static final String MESSAGE_BOX_ERROR_TITLE = "Oops...";
-//    public static final String MESSAGE_BOX_MESSAGE_TITLE = "Message";
-    public static final String MESSAGE_BOX_OK_BUTTON = "Ok";
 
     public void setContext(Object context);
 
@@ -32,5 +25,19 @@ public interface Mobilighter {
     public void addActionListener(Object widget, MobilAction action);
 
     public String dateToString(Object date, String pattern);
+
+    /**
+     * Created by vsayenko on 8/20/15.
+     */
+    public static interface Navigator {
+        public void navigateToScreen(String name, Object source);
+        public void cleanParameters();
+        public void setString(String name, String param);
+        public String getString(String name);
+        public void setObject(String name, Object param);
+        public Object getObject(String name);
+        public void setObject(Object param);
+        public Object getObject();
+    }
 
 }

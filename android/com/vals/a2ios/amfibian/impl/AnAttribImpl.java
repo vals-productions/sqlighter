@@ -1,5 +1,8 @@
 package com.vals.a2ios.amfibian.impl;
 
+import com.vals.a2ios.amfibian.intf.AnAttrib;
+import com.vals.a2ios.amfibian.intf.AnObject;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -10,23 +13,16 @@ import java.util.Map;
 /**
  * Created by vsayenko on 9/26/15.
  *
- * AmfibiaN AnObject's attribute descriptor/handler.
+ * AmfibiaN AnObjectImpl's attribute descriptor/handler.
  *
  * It is used for JSON/Database <-> Native object conversion
  * as necessary.
  */
-public class AnAttrib {
+public class AnAttribImpl implements AnAttrib {
     private AnObject<?> parentAnObject;
     private String attribName;
     private String columnName;
     private String jsonName;
-    /**
-     * Converter value may be used to implement customized
-     * attribute value conversions for specific cases.
-     */
-    public static interface CustomConverter {
-        public Object convert(Object value);
-    }
 
     private List<String> conversionMessages = new LinkedList<>();
     
@@ -38,54 +34,67 @@ public class AnAttrib {
     private Map<String, CustomConverter> converterMap = new HashMap<>();   
     private Map<String, CustomConverter> getConverterMap = new HashMap<>();    
     
+    @Override
     public void setCustomSetConverter(CustomConverter converter) {
         setCustomSetConverter(NONAME_CONVERSION_KEY, converter);
     }
+    @Override
     public void setCustomSetConverter(String key, CustomConverter converter) {
         converterMap.put(key, converter);
     }
+    @Override
     public CustomConverter getCustomSetConverter(String key) {
         return converterMap.get(key);
     }
+    @Override
     public CustomConverter getCustomSetConverter() {
         return converterMap.get(defaultConverterKey);
     }
+    @Override
     public void clearCustomSetConverters() {
         converterMap.clear();
     }
+    @Override
     public void setDefaultSetConversionKey(String key) {
     	defaultConverterKey = key;
     }
 
+    @Override
     public void setCustomGetConverter(CustomConverter converter) {
         setCustomGetConverter(NONAME_CONVERSION_KEY, converter);
     }
+    @Override
     public void setCustomGetConverter(String key, CustomConverter converter) {
         getConverterMap.put(key, converter);
     }
+    @Override
     public CustomConverter getCustomGetConverter(String key) {
         return getConverterMap.get(key);
     }
+    @Override
     public CustomConverter getCustomGetConverter() {
         return getConverterMap.get(defaultGetConverterKey);
     }
+    @Override
     public void clearCustomGetConverters() {
         getConverterMap.clear();
     }
+    @Override
     public void setDefaultGetConversionKey(String key) {
     	defaultGetConverterKey = key;
     }
+    @Override
     public void setAnObject(AnObject<?> anObject) {
         this.parentAnObject = anObject;
     }
 
-    public AnAttrib(String attribName, String columnName, String jsonName) {
+    public AnAttribImpl(String attribName, String columnName, String jsonName) {
         this(attribName);
         this.columnName = columnName;
         this.jsonName = jsonName;
     }
 
-    public AnAttrib(String attribColumnJsonName) {
+    public AnAttribImpl(String attribColumnJsonName) {
         if (attribColumnJsonName.indexOf(",") != -1) {
             String[] propColumn = attribColumnJsonName.split(",");
             this.attribName = propColumn[0].trim();
@@ -100,29 +109,27 @@ public class AnAttrib {
         }
     }
 
+    @Override
     public String getAttribName() {
         return attribName;
     }
 
+    @Override
     public void setAttribName(String attribName) {
         this.attribName = attribName;
     }
 
+    @Override
     public String getColumnName() {
         return columnName;
     }
 
+    @Override
     public void setColumnName(String columnName) {
         this.columnName = columnName;
     }
 
-    /**
-    * Sets native object's attribute value
-    *
-    * @param value - value to set. Sometimes it may not directly match 
-    * destination value type. For this case there will be an attempt to
-    * auto match the value, or, custom converter might be supplied
-    */
+    @Override
     public void setValue(Object value) throws Exception {
         Method m = getSetter();
         if(m != null) {
@@ -208,6 +215,7 @@ public class AnAttrib {
         return obj;
     }
 
+    @Override
     public Object getValue() throws Exception {
         Object value = null;
         Method m = getGetter();
@@ -222,6 +230,7 @@ public class AnAttrib {
         return value;
     }
     
+    @Override
     public Method getGetter() {
         Method[] methods = parentAnObject.getNativeClass().getMethods();
         for (Method m: methods) {
@@ -232,6 +241,7 @@ public class AnAttrib {
         return null;
     }
     
+    @Override
     public Method getSetter() {
         Method[] methods = parentAnObject.getNativeClass().getMethods();
         for (Method m: methods) {
@@ -242,6 +252,7 @@ public class AnAttrib {
         return null;
     }
     
+    @Override
     public Class<?> getAttribClass() {
         Method m = getGetter();
         if (m != null) {
@@ -251,12 +262,14 @@ public class AnAttrib {
         return null;
     }
     
+    @Override
     public String getJsonOrAttribName() {
     	if(jsonName != null) {
     		return jsonName;
     	}
     	return attribName;
     }
+    @Override
     public String getColumnOrAttribName() {
     	if(columnName != null) {
     		return columnName;

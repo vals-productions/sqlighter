@@ -147,4 +147,16 @@ public interface SQLighterDb {
      */
     public void setIsDateNamedColumn(boolean isDateNamedColumn);
 
+    /**
+     * Date is stored in database without milliseconds.
+     *
+     * This method might be useful to be able to eliminate
+     * milliseconds from java.util.Date for comparison
+     * purposes.
+     *
+     * @param date
+     * @return
+     */
+    public Date getDateWithoutMillis(Date date);
+
 }

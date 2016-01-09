@@ -20,9 +20,9 @@ import java.util.Date;
  */
 public class MobilighterImpl implements Mobilighter {
 
-    private Activity context;
+    protected Activity context;
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(Mobilighter.DATE_FORMAT_STR);
+    protected SimpleDateFormat dateFormat = new SimpleDateFormat();
     // private SimpleDateFormat dateTimeFormat = new SimpleDateFormat(Mobilighter.DATE_TIME_FORMAT_STR);
 
     public MobilighterImpl() {

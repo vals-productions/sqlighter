@@ -418,4 +418,13 @@ public class SQLighterDbImpl implements SQLighterDb {
             isOpen = false;
         }
     }
+
+    public Date getDateWithoutMillis(Date date) {
+        if(date != null) {
+            date.setTime(date.getTime() / 1000);
+            date.setTime(date.getTime() * 1000);
+            return date;
+        }
+        return null;
+    }
 }
