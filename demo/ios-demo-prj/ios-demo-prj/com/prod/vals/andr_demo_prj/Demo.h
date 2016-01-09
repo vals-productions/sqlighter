@@ -20,8 +20,11 @@
 
 @end
 
-J2OBJC_EMPTY_STATIC_INIT(Demo)
+J2OBJC_STATIC_INIT(Demo)
 
+FOUNDATION_EXPORT jint Demo_passedTestCount_;
+J2OBJC_STATIC_FIELD_GETTER(Demo, passedTestCount_, jint)
+J2OBJC_STATIC_FIELD_REF_GETTER(Demo, passedTestCount_, jint)
 FOUNDATION_EXPORT NSString *Demo_sqlighterOperations();
 
 FOUNDATION_EXPORT NSString *Demo_amfibianOperations();

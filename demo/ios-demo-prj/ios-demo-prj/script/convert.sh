@@ -20,11 +20,18 @@ ROOT_DIR=../../../..
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/sqlighter/intf/SQLighterDb.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/sqlighter/intf/SQLighterRs.java
 
-./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnAttrib.java
-./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnObject.java
-./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnSql.java
-./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnOrm.java
-./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnUpgrade.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/intf/AnAttrib.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/intf/AnObject.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/intf/AnSql.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/intf/AnOrm.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/intf/AnUpgrade.java
+
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnAttribImpl.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnObjectImpl.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnSqlImpl.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnOrmImpl.java
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnUpgradeImpl.java
+
 #
 
 #

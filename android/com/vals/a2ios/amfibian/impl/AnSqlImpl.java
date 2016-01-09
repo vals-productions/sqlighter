@@ -1,5 +1,9 @@
 package com.vals.a2ios.amfibian.impl;
 
+import com.vals.a2ios.amfibian.intf.AnAttrib;
+import com.vals.a2ios.amfibian.intf.AnObject;
+import com.vals.a2ios.amfibian.intf.AnSql;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -14,7 +18,7 @@ import java.util.Set;
  *
  * Amfibian SQL generation object
  */
-public class AnSql<T> extends AnObject<T> {
+public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     public static final int TYPE_SELECT = 1;
     public static final int TYPE_UPDATE = 2;
     public static final int TYPE_INSERT = 3;
@@ -36,56 +40,66 @@ public class AnSql<T> extends AnObject<T> {
     private Set<String> skipAttrNameList = new HashSet<>();
     private Set<String> inclAttrNameList = new HashSet<>();
 
-    public AnSql(String tableName, Class<T> anObjClass, AnAttrib[] attribList, AnObject<?> parentAnObject) {
+    public AnSqlImpl(String tableName, Class<T> anObjClass, AnAttrib[] attribList, AnObject<?> parentAnObject) {
         super(anObjClass, attribList, parentAnObject);
         this.tableName = tableName;
     }
-    public AnSql(String tableName, Class<T> anObjClass, String[] attribColumnList, AnObject<?> parentAnObject) {
+    public AnSqlImpl(String tableName, Class<T> anObjClass, String[] attribColumnList, AnObject<?> parentAnObject) {
         super(anObjClass, attribColumnList, parentAnObject);
         this.tableName = tableName;
     }
 
+    @Override
     public Set<String> getSkipAttrNameList() {
         return skipAttrNameList;
     }
 
+    @Override
     public void resetSkipInclAttrNameList() {
         skipAttrNameList.clear();
         inclAttrNameList.clear();
     }
     
+    @Override
     public void addInclAttribs(String[] names) {
         List<String> nms = Arrays.asList(names);
         inclAttrNameList.addAll(nms);
         skipAttrNameList.clear();
     }
     
+    @Override
     public void addSkipAttribs(String[] names) {
         List<String> nms = Arrays.asList(names);
         skipAttrNameList.addAll(nms);
     }
 
+    @Override
     public String getTableName() {
 		return tableName;
 	}
-	public void setTableName(String tableName) {
+	@Override
+    public void setTableName(String tableName) {
 		this.tableName = tableName;
 	}
-	protected AnSql() {
+	protected AnSqlImpl() {
     }
     
+    @Override
     public List<Object> getParameters() {
         return parameters;
     }
 
+    @Override
     public List<String> getAttribNameList() {
         return attribNameList;
     }
 
+    @Override
     public int getType() {
         return type;
     }
 
+    @Override
     public void setType(int type) {
         this.type = type;
     }
@@ -115,11 +129,13 @@ public class AnSql<T> extends AnObject<T> {
         return false;
     }
 
+    @Override
     public void startSqlDelete() throws Exception {
         reset();
         type = TYPE_DELETE;
     }
     
+    @Override
     public void startSqlInsert(T objectToInsert) throws Exception {
         reset();
         setNativeObject(objectToInsert);
@@ -149,6 +165,7 @@ public class AnSql<T> extends AnObject<T> {
         columnClause = queryStr.toString();
     }
 
+    @Override
     public void startSqlUpdate(T objectToUpdate) throws Exception {
         reset();
         setNativeObject(objectToUpdate);
@@ -172,14 +189,16 @@ public class AnSql<T> extends AnObject<T> {
         columnClause = queryStr.toString();
     }
 
+    @Override
     public String getColumnName(AnAttrib attrib) {
     	return attrib.getColumnOrAttribName();
     }
 
+    @Override
     public AnSql<?> startSqlCreate() {
         reset();
         type = TYPE_CREATE;
-        Map<String, AnAttrib> cm = 
+        Map<String, AnAttrib> cm =
         getAttribList();
         Set<String> attribNames = cm.keySet();
         for (String attribName: attribNames) {
@@ -195,6 +214,7 @@ public class AnSql<T> extends AnObject<T> {
         return this;
     }
     
+    @Override
     public String getSqlTypeForClass(Class<?> columnJavaClass) {
         if (columnJavaClass != null) {
             String className = columnJavaClass.getCanonicalName();
@@ -222,10 +242,12 @@ public class AnSql<T> extends AnObject<T> {
         return alias;
     }
 
+    @Override
     public String getAliasedColumn(String columnName) {
         return alias + "." + columnName;
     }
 
+    @Override
     public void startSqlSelect() {
         reset();
         type = TYPE_SELECT;
@@ -259,6 +281,7 @@ public class AnSql<T> extends AnObject<T> {
         return condition;
     }
 
+    @Override
     public void addWhere(String condition, Object param) {
         if (param != null) {
             addWhere(condition);
@@ -266,12 +289,14 @@ public class AnSql<T> extends AnObject<T> {
         }
     }
 
+    @Override
     public void addWhere(String condition) {
         condition = ensureFirstCondition(condition);
         isWhere = true;
         addSql(condition);
     }
 
+    @Override
     public void addSql(String sql) {
         if (whereClause == null) {
             whereClause = new StringBuilder();
@@ -283,6 +308,7 @@ public class AnSql<T> extends AnObject<T> {
         whereClause.append(queryStr);
     }
 
+    @Override
     public String getQueryString() {
         if(type == TYPE_CREATE) {
             StringBuilder sb = new StringBuilder();

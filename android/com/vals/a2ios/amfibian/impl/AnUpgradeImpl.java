@@ -1,32 +1,35 @@
 package com.vals.a2ios.amfibian.impl;
 
+import com.vals.a2ios.amfibian.intf.AnSql;
+import com.vals.a2ios.amfibian.intf.AnUpgrade;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * AnUpgrade maintains database structural
+ * AnUpgradeImpl maintains database structural
  * changes as needed.
  *
  * Created by vsayenko on 12/18/15.
  */
-public abstract class AnUpgrade {
+public abstract class AnUpgradeImpl implements AnUpgrade {
 
     private Map<Integer, List<String>> map;
     private SQLighterDb sqlighterDb;
-    private AnOrm<Upgrade> ap;
+    private AnOrmImpl<Upgrade> ap;
 
-    public AnUpgrade(SQLighterDb sqLighterDb) throws Exception {
+    public AnUpgradeImpl(SQLighterDb sqLighterDb) throws Exception {
         this.sqlighterDb = sqLighterDb;
-        ap = new AnOrm<>(
+        ap = new AnOrmImpl<>(
                 sqLighterDb,
                 getTableName(),
                 Upgrade.class,
-                new String[] { "key", "value" },
+                new String[] {"key","value","createDate,create_date"},
                 null);
         ensureStorage();
     }
@@ -69,6 +72,7 @@ public abstract class AnUpgrade {
         return keys;
     }
 
+    @Override
     public void applyTasks() throws Exception {
         Set<String> appliedKeys = getAppliedTasks();
         for (String updKey: getAllKeys()) {
@@ -87,7 +91,7 @@ public abstract class AnUpgrade {
                 sqlStr = (String) task;
                 sqlighterDb.executeChange(sqlStr);
             } else if (task instanceof AnSql<?>) {
-                AnOrm<?> sql = (AnOrm<?>)task;
+                AnOrmImpl<?> sql = (AnOrmImpl<?>)task;
                 sql.setSqlighterDb(sqlighterDb);
                 sql.startSqlCreate();
                 sqlStr = sql.getQueryString();
@@ -96,6 +100,7 @@ public abstract class AnUpgrade {
             Upgrade appUpdate = new Upgrade();
             appUpdate.setKey(key);
             appUpdate.setValue(sqlStr);
+            appUpdate.setCreateDate(new Date());
             ap.startSqlInsert(appUpdate);
             ap.apply();
         }
@@ -117,6 +122,7 @@ public abstract class AnUpgrade {
 
         private String key;
         private String value;
+        private Date createDate;
 
         public String getKey() {
             return key;
@@ -134,5 +140,12 @@ public abstract class AnUpgrade {
             this.value = value;
         }
 
+        public Date getCreateDate() {
+            return createDate;
+        }
+
+        public void setCreateDate(Date createDate) {
+            this.createDate = createDate;
+        }
     }
 }

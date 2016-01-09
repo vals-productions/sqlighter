@@ -1,5 +1,7 @@
 package com.vals.a2ios.amfibian.impl;
 
+import com.vals.a2ios.amfibian.intf.AnObject;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -11,13 +13,15 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.vals.a2ios.amfibian.intf.AnAttrib;
+
 /**
  * Created by vsayenko on 9/26/15.
  *
  * AmfibiaN Object management class.
  *
  */
-public class AnObject<T> {
+public class AnObjectImpl<T> implements AnObject<T> {
     @SuppressWarnings("rawtypes")
     private AnObject parentAnObject;
     private Map<String, Object> nativeObjectMap;
@@ -26,26 +30,29 @@ public class AnObject<T> {
     protected Class<T> nativeClass;
     private Map<String, AnAttrib> attribMap = new LinkedHashMap<>();
 
+    @Override
     public void resetNativeObject() throws Exception {
         setNativeObject(nativeClass.newInstance());
     }
 
 	@SuppressWarnings("unchecked")
-	protected void setNativeObject(T o) throws Exception {
+	public void setNativeObject(T o) throws Exception {
         this.nativeObject = o;
         if (parentAnObject != null) {
             parentAnObject.setNativeObject(o);
         }
     }
 
-    protected T getNativeObject() {
+    public T getNativeObject() {
         return nativeObject;
     }
 
+    @Override
     public Class<T> getNativeClass() {
         return nativeClass;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
 	public Map<String, AnAttrib> getAttribList() {
         Map<String, AnAttrib> p = new HashMap<>();
@@ -58,6 +65,7 @@ public class AnObject<T> {
         return p;
     }
 
+    @Override
     public AnAttrib getAttrib(String propertyName) {
         AnAttrib a = attribMap.get(propertyName);
         if (a == null && parentAnObject != null) {
@@ -67,7 +75,7 @@ public class AnObject<T> {
     }
 
     @SuppressWarnings("unchecked")
-	protected void setNativeClass(Class<T> anObjClass) {
+	public void setNativeClass(Class<T> anObjClass) {
         this.nativeClass = anObjClass;
         Class<?> superClass = anObjClass.getSuperclass();
         if (superClass != null) {
@@ -77,10 +85,10 @@ public class AnObject<T> {
         }
     }
     
-    public AnObject() {
+    public AnObjectImpl() {
     }
     
-    public AnObject(Class<T> anObjClass, AnObject<?> parentMapper) {
+    public AnObjectImpl(Class<T> anObjClass, AnObject<?> parentMapper) {
        init(anObjClass, parentMapper);
     }
     
@@ -89,7 +97,7 @@ public class AnObject<T> {
         setNativeClass(anObjClass);
     }
     
-    public AnObject(Class<T> anObjClass, AnAttrib[] propertyMappers, AnObject<?> parentMapper) {
+    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers, AnObject<?> parentMapper) {
         init(anObjClass, propertyMappers, parentMapper);
     }
     
@@ -98,7 +106,7 @@ public class AnObject<T> {
         initAttribs(propertyMappers);
     }
     
-    public AnObject(Class<T> anObjClass, AnAttrib[] propertyMappers) {
+    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers) {
         init(anObjClass, propertyMappers);
     }
     
@@ -107,7 +115,7 @@ public class AnObject<T> {
         setNativeClass(anObjClass);
     }
     
-    public AnObject(Class<T> anObjClass, String[] propertyNames, AnObject<?> parentMapper) {
+    public AnObjectImpl(Class<T> anObjClass, String[] propertyNames, AnObject<?> parentMapper) {
         init(anObjClass, propertyNames, parentMapper);
     }
     
@@ -116,7 +124,7 @@ public class AnObject<T> {
     		init(anObjClass, propertyNames);
     }
     
-    public AnObject(Class<T> anObjClass, String[] propertyNames) {
+    public AnObjectImpl(Class<T> anObjClass, String[] propertyNames) {
         init(anObjClass, propertyNames);
     }
     
@@ -131,7 +139,7 @@ public class AnObject<T> {
                 list = new AnAttrib[propertyNames.length];
                 int idx = 0;
                 for (String propertyName: propertyNames) {
-                        AnAttrib a = new AnAttrib(propertyName);
+                        AnAttrib a = new AnAttribImpl(propertyName);
                         list[idx++] = a;
                 }
         }    
@@ -144,12 +152,14 @@ public class AnObject<T> {
         }
     }
     
+    @Override
     public void addAttrib(AnAttrib anAttribMapper) {
         anAttribMapper.setAnObject(this);
         attribMap.put(anAttribMapper.getAttribName(), anAttribMapper);
     }
 
-    protected Map<String, Object> getJsonMap() throws Exception {
+    @Override
+    public Map<String, Object> getJsonMap() throws Exception {
         if (jsonMap == null) {
         	jsonMap = new HashMap<>();
             Set<String> p = attribMap.keySet();
@@ -172,15 +182,7 @@ public class AnObject<T> {
         return jsonMap;
     }
 
-    /**
-     * Returns <String (parameter name), value> map of object's attributes.
-     * This might be useful if you'd like to build HTTP request's GET/POST
-     * parameters.
-     *
-     * @param nativeObject - native object to convert to the map
-     * @return
-     * @throws Exception
-     */
+    @Override
     public synchronized Map<String, Object> asMap(T nativeObject) throws Exception {
         setNativeObject(nativeObject);
         if (nativeObjectMap == null) {
@@ -205,26 +207,14 @@ public class AnObject<T> {
         return nativeObjectMap;
     }
 
-    /**
-     * Transfroms native object into a org.json.JSONObject
-     * @param nativeObject
-     * @return org.json.JSONObject representation of an object
-     *
-     * @throws Exception
-     */
+    @Override
     public synchronized JSONObject asJSONObject(T nativeObject) throws Exception {
         setNativeObject(nativeObject);
         asMap(nativeObject);
         return new JSONObject(getJsonMap());
     }
 
-    /**
-     * Transforms org.json.JSONObject into a native object.
-     *
-     * @param jsonObject
-     * @return T - native object
-     * @throws Exception
-     */
+    @Override
     public synchronized T asNativeObject(JSONObject jsonObject) throws Exception {
         if (nativeObject == null) {
             resetNativeObject();
@@ -245,25 +235,12 @@ public class AnObject<T> {
         return nativeObject;
     }
 
-    /**
-     * JSON String is converted into a native object
-     *
-     * @param jsonString
-     * @return
-     * @throws Exception
-     */
+    @Override
     public synchronized T asNativeObject(String jsonString) throws Exception {
         return asNativeObject(new JSONObject(jsonString));
     }
 
-    /**
-     * JSON String representing an array of T is being transformed into
-     * a collection<T>
-     *
-     * @param jsonArrayString
-     * @return
-     * @throws Exception
-     */
+    @Override
     public synchronized Collection<T> asList(String jsonArrayString) throws Exception {
         JSONArray jsonArray = new JSONArray(jsonArrayString);
         List<T> l = new LinkedList<>();
@@ -277,36 +254,29 @@ public class AnObject<T> {
         return l;
     }
 
-    /**
-     * Native object is converted into a JSON string
-     *
-     * @param nativeObject
-     * @return JSON string
-     * @throws Exception
-     */
+    @Override
     public synchronized String asJsonString(T nativeObject) throws Exception {
         return asJSONObject(nativeObject).toString();
     }
 
-    /**
-     *
-     * @param someValue - this is expected to be
-     *                  either nativeObject, or,
-     *                  json string or json object
-     * @throws Exception
-     */
-    @Deprecated
-    private void setValue(Object someValue) throws Exception {
-        if (someValue != null) {
-            if (someValue instanceof String) {
-                asNativeObject((String) someValue);
-            } else if (someValue instanceof JSONObject) {
-                asNativeObject((JSONObject) someValue);
-            } else {
-            	@SuppressWarnings("unchecked")
-				T t = (T)someValue;
-                setNativeObject(t);
-            }
-        }
-     }
+//    /**
+//     *
+//     * @param someValue - this is expected to be
+//     *                  either nativeObject, or,
+//     *                  json string or json object
+//     * @throws Exception
+//     */
+//    @Deprecated
+//    private void setValue(Object someValue) throws Exception {
+//        if (someValue != null) {
+//            if (someValue instanceof String) {
+//                asNativeObject((String) someValue);
+//            } else if (someValue instanceof JSONObject) {
+//                asNativeObject((JSONObject) someValue);
+//            } else {
+//				T t = (T)someValue;
+//                setNativeObject(t);
+//            }
+//        }
+//     }
 }

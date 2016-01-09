@@ -1,7 +1,9 @@
 package com.prod.vals.andr_demo_prj;
 
-import com.vals.a2ios.amfibian.impl.AnObject;
-import com.vals.a2ios.amfibian.impl.AnOrm;
+import com.vals.a2ios.amfibian.impl.AnObjectImpl;
+import com.vals.a2ios.amfibian.impl.AnOrmImpl;
+import com.vals.a2ios.amfibian.intf.AnObject;
+import com.vals.a2ios.amfibian.intf.AnOrm;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -16,6 +19,46 @@ import java.util.List;
  * logic that utilizes SQLite db access. Produces the same output in iOS.
  */
 public class Demo {
+    public static int passedTestCount = 0;
+    private static List<String> testList = new LinkedList<>();
+
+    /**
+     * Prints single SQL result record
+     *
+     * @param rs - SQLighterRs reference
+     */
+    private static void print(SQLighterRs rs) {
+        Long pk = rs.getLong(0);
+        String e = rs.getString(1);
+        String n = rs.getString(2);
+        byte[] dataBytes = rs.getBlob(3);
+        String dataString = null;
+        if (dataBytes != null) {
+            dataString = new String(dataBytes);
+        }
+        Number h = rs.getDouble(4);
+        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + ", blob data: " + dataString + ", height: " + h);
+    }
+
+    private static boolean verifyRecord(SQLighterRs rs, String userName, String userEmail,
+                                        Double userHeight, String blobString, Long id) {
+        Long pk = rs.getLong(0);
+        String e = rs.getString(1);
+        String n = rs.getString(2);
+        byte[] dataBytes = rs.getBlob(3);
+        String dataString = null;
+        if (dataBytes != null) {
+            dataString = new String(dataBytes);
+        }
+        Number h = rs.getDouble(4);
+        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n +
+                ", blob data: " + dataString + ", height: " + h);
+        return (pk.equals(id) &&
+                e.equals(userEmail) &&
+                n.equals(userName) &&
+                dataString.equals(blobString) &&
+                h.doubleValue() == userHeight.doubleValue());
+    }
 
     /**
      * Demo sequence of Db operations with SQLighter.
@@ -24,6 +67,8 @@ public class Demo {
     public static String sqlighterOperations() {
         String greetingStr = null;
         try {
+            testList.clear();
+            passedTestCount = 0;
             SQLighterRs rs = null;
             SQLighterDb db = Bootstrap.getInstance().getSqLighterDb();
             /**
@@ -46,27 +91,35 @@ public class Demo {
              */
             printUserTable("initial state ", db);
 
+            String userName = "user 5";
+            String userEmail = "user5@email.com";
+            Double userHeight = 5.67;
+            String blobString = "Hello, SQLighter!";
+            Long insertedId = 5l;
             /**
              * Let's insert greeting record in User table
              */
-            db.addParam("user name 5"); // name
-            db.addParam("qw@er.ty1"); // email
+            db.addParam(userName);
+            db.addParam(userEmail);
                 // BLOB column
-                String dataStr = "Hello, SQLighter!";
+                String dataStr = blobString;
                 byte[] data = dataStr.getBytes();
             db.addParam(data); // data
-            db.addParam(5.67); // height
+            db.addParam(userHeight); // height
             Long rowId = db.executeChange("insert into user( name, email, data, height) values (?, ?, ?, ?)");
             System.out.println("Inserted id: " + rowId);
 
             /**
              * Let's query what we just inserted
              */
-            db.addParam("qw@er.ty1"); // select records with email == "qw@er.ty1"
+            db.addParam(userEmail); // select records with email == "user5@example.com"
             System.out.println("check if the record was inserted");
             rs = db.executeSelect("select id, email, name, data, height from user where email = ?");
+            testList.add("insert/select");
             while (rs.hasNext()) {
-                print(rs);
+                if(verifyRecord(rs, userName, userEmail, userHeight, blobString, insertedId)) {
+                    passedTestCount++;
+                }
             }
             rs.close();
 
@@ -74,49 +127,86 @@ public class Demo {
              * Lets make one more update
              */
             db.addParamNull(); // set email as null
-            db.addParam("qw@er.ty1"); // where email == "qw@er.ty1"
+            db.addParam(userEmail);
             Long alteredRows = db.executeChange("update user set email = ? where email = ?");
-            System.out.println("Updated rows: " + alteredRows);
+            System.out.println("Updated row count: " + alteredRows);
+
+            testList.add("update row count");
+            if(alteredRows.equals(1l)) {
+                passedTestCount++;
+            }
+
+            System.out.println("check if null was set");
+            db.addParam(insertedId); // id ==
+            rs = db.executeSelect("select email from user where id = ?");
+            testList.add("null handling");
+            while (rs.hasNext()) {
+                if(rs.isNull(0)) {
+                    passedTestCount++;
+                }
+            }
+            rs.close();
 
             printUserTable("after update state 1 ", db);
 
             /**
-             * More complex update where clause
+             * More complex update where clause. Set user 5's email
+             * back to original value
              */
-            db.addParam("user@email.com"); // set email = "user@email.com"
-            db.addParam("qw@er.ty1"); // where email == "qw@er.ty1"
-            db.executeChange("update user set email = ? where email is null or email = ?");
+            db.addParam(userEmail);
+            db.addParam(userEmail);
+            alteredRows = db.executeChange("update user set email = ? where email is null or email = ?");
+
+            System.out.println("Updated row count: " + alteredRows);
+
+            testList.add("batch update");
+            if(alteredRows.equals(2l)) { // null and userEmail
+                passedTestCount++;
+            }
 
             /**
              * And verify table content again
              */
+            testList.add("nested query update");
             System.out.println("after update state 2");
             rs = db.executeSelect("select id, email, name, data, height from user");
+            int counter = 0;
             while (rs.hasNext()) {
                 print(rs);
                 String s = rs.getString(1);
-                if (!"user@email.com".equals(s)) {
+                if (!userEmail.equals(s)) {
+                    /**
+                     * Test nested query execution
+                     */
                     Number id = rs.getLong(0);
                     db.addParam("inloop@email.com");
                     db.addParam(id.longValue());
-                    db.executeChange("update user set email = ? where id = ?");
+                    alteredRows = db.executeChange("update user set email = ? where id = ?");
+                    counter += alteredRows;
                 }
+            }
+            if(counter == 3) { // id == 1, 2, 3
+                passedTestCount++;
             }
             rs.close();
 
             /**
              * Delete example
              */
+            testList.add("delete test");
             db.addParam(2); // delete records where id == 2
             alteredRows = db.executeChange("delete from user where id = ?");
             System.out.println("Deleted rows: " + alteredRows);
-
+            if(alteredRows.equals(1l)) {
+                passedTestCount++;
+            }
             printUserTable("after delete state", db);
 
             /**
              * Create table example
              */
-            db.executeChange("create table address(" +
+            alteredRows =
+                    db.executeChange("create table address(" +
                     "id integer primary key autoincrement unique, " +
                     "name text, " +
                     "user_id integer, " +
@@ -126,6 +216,7 @@ public class Demo {
              */
             db.addParam("123 main str, walnut creek, ca");
             db.addParam(1);
+            testList.add("date handling test");
             Date dateNow = new Date();
             System.out.println("Date now: " + dateNow.toString());
             db.addParam(new Date());
@@ -141,7 +232,17 @@ public class Demo {
             while (rs.hasNext()) {
                 print(rs);
                 System.out.println(" address: " + rs.getString(5));
-                System.out.println(" update_date: " + rs.getDate(6));
+                Date date = rs.getDate(6);
+                System.out.println(" update_date: " + date);
+                /**
+                 * Dropping milliseconds from original java.util.Date.
+                 * The date is stored without milliseconds in the DB.
+                 * We need to drop them in order to pass the test below;
+                 */
+                dateNow = db.getDateWithoutMillis(dateNow);
+                if(date.equals(dateNow)) {
+                    passedTestCount++;
+                }
                 /*
                 This will treat the column as date because it contains '_date' in
                 its name.
@@ -156,6 +257,7 @@ public class Demo {
              * We would like to execute 2 updates as one
              * transaction.
              */
+            testList.add("transaction/exception handling");
             try {
                 /**
                  * Starts the transaction
@@ -190,6 +292,7 @@ public class Demo {
             } catch (Throwable e) {
                 // Do something....
                 System.out.println(e.getMessage());
+                passedTestCount++;
                 /**
                  * Rollback as something went wrong, and we wanted all
                  * or nothing.
@@ -218,28 +321,13 @@ public class Demo {
              */
             return e.getMessage();
         }
+        if (testList.size() != passedTestCount) {
+            return "SQLighter tests failed";
+        }
         /**
          * Return greet string to display on the screen
          */
-        return greetingStr;
-    }
-
-    /**
-     * Prints single SQL result record
-     *
-     * @param rs - SQLighterRs reference
-     */
-    private static void print(SQLighterRs rs) {
-        Long pk = rs.getLong(0);
-        String e = rs.getString(1);
-        String n = rs.getString(2);
-        byte[] dataBytes = rs.getBlob(3);
-        String dataString = null;
-        if (dataBytes != null) {
-            dataString = new String(dataBytes);
-        }
-        Number h = rs.getDouble(4);
-        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + ", blob data: " + dataString + ", height: " + h);
+        return greetingStr + " All tests passed.";
     }
 
     /**
@@ -259,11 +347,13 @@ public class Demo {
     }
 
     /**
-     * AnObject / AnSql / AnOrm demo
+     * AnObjectImpl / AnSqlImpl / AnOrmImpl demo
      * @return "Meet AmfiniaN greeting.
      */
     public static String amfibianOperations() {
         try {
+            testList.clear();
+            passedTestCount = 0;
             SQLighterDb sqlighterDb = Bootstrap.getInstance().getSqLighterDb();
             /**
              * We might've received the following JSON string as a result of our mobile
@@ -285,7 +375,7 @@ public class Demo {
              * The Entity class is a base class for our imaginable project's business objects.
              * It makes sure all our business objects have the id property.
              */
-            AnObject<Entity> anEntity = new AnObject(
+            AnObject<Entity> anEntity = new AnObjectImpl(
                 Entity.class,
                 /* attribute names/definitions */
                 new String[]{"id"});
@@ -299,7 +389,7 @@ public class Demo {
              *     <li>JSON object mapping (optional)</li>
              * </pre>
              */
-            AnOrm<Appointment> anOrm = new AnOrm<>(
+            AnOrm<Appointment> anOrm = new AnOrmImpl<Appointment>(
                 sqlighterDb, // reference to sqlighter database management object
                 "appointment", // table name
                 Appointment.class, // will
@@ -310,7 +400,12 @@ public class Demo {
              * Get native object from json object, so that we could manipulate
              * it with ease.
              */
+            testList.add("JSON 2 native mapping");
             Appointment appointment234 = anOrm.asNativeObject(jsonAppointment234);
+            if(appointment234.getId().equals(234) && appointment234.getName().equals("Meet AmfibiaN!") &&
+                    appointment234.getIsProcessed().equals(0)) {
+                passedTestCount++;
+            }
             /**
              * Let's decide to store our appointment234 in the database. Since we do not have the
              * table for this entity in our database yet, we can ask AmfibiaN to give us database
@@ -330,12 +425,17 @@ public class Demo {
              * Lets execute the query:
              */
             sqlighterDb.executeChange(createAppointmentTableSql);
+
             /**
              * Now, since the table for Appointment objects has been created,
              * lets store our object in there.
              */
+            testList.add("orm insert");
             anOrm.startSqlInsert(appointment234);
-            anOrm.apply();
+            Long rowsAffected = anOrm.apply();
+            if(rowsAffected.equals(1l)) {
+                passedTestCount++;
+            }
 
             printAppointments(anOrm); // Lets check what we've got in the table
             /**
@@ -361,9 +461,13 @@ public class Demo {
             /**
              * Then, lets update our "Meet Amfibian" object in the database
              */
+            testList.add("orm update");
             anOrm.startSqlUpdate(appointment234);
             anOrm.addWhere("id = ?", appointment234.getId());
-            anOrm.apply();
+            rowsAffected = anOrm.apply();
+            if(rowsAffected.equals(1l)) {
+                passedTestCount++;
+            }
             /**
              * First two lines above generated SQL update statement,
              * bound our object's attributes, set the where clause
@@ -400,7 +504,15 @@ public class Demo {
                  * we can do it this way as well.
                  */
                 JSONObject jsonObject = anOrm.asJSONObject(meetAmfibianAppointment);
-                return (String)jsonObject.get("name");
+                String name = (String)jsonObject.get("name");
+                testList.add("native toJSON");
+                if(name.equals("Meet AmfibiaN!")) {
+                    passedTestCount++;
+                }
+                if(testList.size() != passedTestCount) {
+                    return "Tests failed.";
+                }
+                return name + " All tests passed.";
             }
         } catch (Exception e) {
             return e.getMessage();

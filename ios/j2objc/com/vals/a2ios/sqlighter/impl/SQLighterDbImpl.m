@@ -373,4 +373,13 @@
     }
 }
 
+- (JavaUtilDate *)getDateWithoutMillisWithJavaUtilDate:(JavaUtilDate *)date {
+    if(date != nil) {
+        [date setTimeWithLong:[date getTime] / 1000];
+        [date setTimeWithLong:[date getTime] * 1000];
+        return date;
+    }
+    return nil;
+}
+
 @end

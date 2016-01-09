@@ -1,5 +1,8 @@
 package com.vals.a2ios.amfibian.impl;
 
+import com.vals.a2ios.amfibian.intf.AnAttrib;
+import com.vals.a2ios.amfibian.intf.AnObject;
+import com.vals.a2ios.amfibian.intf.AnOrm;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
@@ -14,45 +17,32 @@ import java.util.List;
  * AmfibiaN ORM class.
  *
  * This class facilitates business object persistence and
- * retrieval operations by extending AnSql query generation
+ * retrieval operations by extending AnSqlImpl query generation
  * capabilities.
  */
-public class AnOrm<T> extends AnSql<T> {
+public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
     protected SQLighterDb sqlighterDb;
 
-    protected AnOrm() {
+    protected AnOrmImpl() {
         super();
     }
 
-    public AnOrm(SQLighterDb sqLighterDb, String tableName, Class<T> anObjClass, AnAttrib[] attribList, AnObject<?> parentAnObject) {
+    public AnOrmImpl(SQLighterDb sqLighterDb, String tableName, Class<T> anObjClass, AnAttrib[] attribList, AnObject<?> parentAnObject) {
         super(tableName, anObjClass, attribList, parentAnObject);
         this.sqlighterDb = sqLighterDb;
     }
 
-    public AnOrm(SQLighterDb sqLighterDb, String tableName, Class<T> anObjClass, String[] attribColumnList, AnObject<?> parentAnObject) {
+    public AnOrmImpl(SQLighterDb sqLighterDb, String tableName, Class<T> anObjClass, String[] attribColumnList, AnObject<?> parentAnObject) {
         super(tableName, anObjClass, attribColumnList, parentAnObject);
         this.sqlighterDb = sqLighterDb;
     }
 
-    /**
-     * Executes SQL select query and returns results.
-     *
-     * Closes result set.
-     * @return
-     * @throws Exception
-     */
+    @Override
     public Collection<T> getRecords() throws Exception {
         return getRecords(null);
     }
 
-    /**
-     * Executes SQL select query and returns results placed
-     * in provided collection.
-     *
-     * Closes result set.
-     *
-     * @throws Exception
-     */
+    @Override
     public Collection<T> getRecords(Collection<T> collectionToUse) throws Exception {
         String queryStr = this.getQueryString();
         if (collectionToUse == null) {
@@ -82,16 +72,7 @@ public class AnOrm<T> extends AnSql<T> {
         return collectionToUse;
     }
 
-    /**
-     * Executes SQL select query and returns a single result
-     * if the query returns exactly one result.
-     *
-     * Otherwise returns null.
-     *
-     * Closes result set.
-     *
-     * @throws Exception
-     */
+    @Override
     public T getSingleResult() throws Exception {
         Collection<T> l = getRecords(null);
         if (l == null || l.size() != 1) {
@@ -100,16 +81,7 @@ public class AnOrm<T> extends AnSql<T> {
         return l.iterator().next();
     }
 
-    /**
-     * Executes SQL select query and returns the first result
-     * if the query returns one or more records.
-     *
-     * Otherwise returns null.
-     *
-     * Closes result set.
-     *
-     * @throws Exception
-     */
+    @Override
     public T getFirstResultOrNull() throws Exception {
         Collection<T> l = getRecords(null);
         if (l == null || l.size() == 0) {
@@ -126,19 +98,12 @@ public class AnOrm<T> extends AnSql<T> {
         }
     }
 
-    /**
-     * Executes INSERT/UPDATE/DELETE/CREATE type of queries.
-     *
-     * @return Last inserted row id in case of "insert" statement, affected row count in
-     * case of update/delete statements. Check SQLite docs on row id information.
-     *
-     * @throws Exception
-     */
+    @Override
     public Long apply() throws Exception {
-        if (this.getType() == AnSql.TYPE_INSERT ||
-            this.getType() == AnSql.TYPE_UPDATE ||
-            this.getType() == AnSql.TYPE_DELETE ||
-            this.getType() == AnSql.TYPE_CREATE) {
+        if (this.getType() == AnSqlImpl.TYPE_INSERT ||
+            this.getType() == AnSqlImpl.TYPE_UPDATE ||
+            this.getType() == AnSqlImpl.TYPE_DELETE ||
+            this.getType() == AnSqlImpl.TYPE_CREATE) {
             String q = this.getQueryString();
             applyParameters();
             Long updateInfo = sqlighterDb.executeChange(q);
@@ -147,10 +112,12 @@ public class AnOrm<T> extends AnSql<T> {
         return null;
     }
 
+    @Override
     public void setSqlighterDb(SQLighterDb sqlighterDb) {
         this.sqlighterDb = sqlighterDb;
     }
 
+    @Override
     public SQLighterDb getSqlighterDb() {
         return sqlighterDb;
     }

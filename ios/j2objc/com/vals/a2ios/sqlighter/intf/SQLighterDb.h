@@ -55,6 +55,8 @@
 
 - (void)setIsDateNamedColumnWithBoolean:(jboolean)isDateNamedColumn;
 
+- (JavaUtilDate *)getDateWithoutMillisWithJavaUtilDate:(JavaUtilDate *)date;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(SQLighterDb)

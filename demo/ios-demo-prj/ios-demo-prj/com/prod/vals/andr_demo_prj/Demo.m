@@ -11,9 +11,11 @@
 #include "com/prod/vals/andr_demo_prj/Bootstrap.h"
 #include "com/prod/vals/andr_demo_prj/Demo.h"
 #include "com/prod/vals/andr_demo_prj/Entity.h"
-#include "com/vals/a2ios/amfibian/impl/AnObject.h"
-#include "com/vals/a2ios/amfibian/impl/AnOrm.h"
-#include "com/vals/a2ios/amfibian/impl/AnSql.h"
+#include "com/vals/a2ios/amfibian/impl/AnObjectImpl.h"
+#include "com/vals/a2ios/amfibian/impl/AnOrmImpl.h"
+#include "com/vals/a2ios/amfibian/intf/AnObject.h"
+#include "com/vals/a2ios/amfibian/intf/AnOrm.h"
+#include "com/vals/a2ios/amfibian/intf/AnSql.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 #include "java/io/PrintStream.h"
@@ -25,17 +27,29 @@
 #include "java/lang/Throwable.h"
 #include "java/util/Collection.h"
 #include "java/util/Date.h"
+#include "java/util/LinkedList.h"
+#include "java/util/List.h"
 #include "org/json/JSONObject.h"
+
+static id<JavaUtilList> Demo_testList_;
+J2OBJC_STATIC_FIELD_GETTER(Demo, testList_, id<JavaUtilList>)
+J2OBJC_STATIC_FIELD_SETTER(Demo, testList_, id<JavaUtilList>)
 
 __attribute__((unused)) static void Demo_printWithSQLighterRs_(id<SQLighterRs> rs);
 
+__attribute__((unused)) static jboolean Demo_verifyRecordWithSQLighterRs_withNSString_withNSString_withJavaLangDouble_withNSString_withJavaLangLong_(id<SQLighterRs> rs, NSString *userName, NSString *userEmail, JavaLangDouble *userHeight, NSString *blobString, JavaLangLong *id_);
+
 __attribute__((unused)) static void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLighterDb> db);
 
-__attribute__((unused)) static void Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(ComValsA2iosAmfibianImplAnOrm *anOrm);
+__attribute__((unused)) static void Demo_printAppointmentsWithAnOrm_(id<AnOrm> anOrm);
 
 __attribute__((unused)) static void Demo_printWithJavaUtilCollection_(id<JavaUtilCollection> appointments);
 
 __attribute__((unused)) static void Demo_printWithAppointment_(Appointment *appointment);
+
+J2OBJC_INITIALIZED_DEFN(Demo)
+
+jint Demo_passedTestCount_ = 0;
 
 @implementation Demo
 
@@ -54,101 +68,14 @@ J2OBJC_IGNORE_DESIGNATED_BEGIN
 }
 J2OBJC_IGNORE_DESIGNATED_END
 
-@end
-
-NSString *Demo_sqlighterOperations() {
-  Demo_initialize();
-  NSString *greetingStr = nil;
-  @try {
-    id<SQLighterRs> rs = nil;
-    id<SQLighterDb> db = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
-    Demo_printUserTableWithNSString_withSQLighterDb_(@"initial state ", db);
-    [((id<SQLighterDb>) nil_chk(db)) addParamWithNSString:@"user name 5"];
-    [db addParamWithNSString:@"qw@er.ty1"];
-    NSString *dataStr = @"Hello, SQLighter!";
-    IOSByteArray *data = [dataStr getBytes];
-    [db addParamWithByteArray:data];
-    [db addParamWithDouble:5.67];
-    JavaLangLong *rowId = [db executeChangeWithNSString:@"insert into user( name, email, data, height) values (?, ?, ?, ?)"];
-    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@", @"Inserted id: ", rowId)];
-    [db addParamWithNSString:@"qw@er.ty1"];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"check if the record was inserted"];
-    rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user where email = ?"];
-    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
-      Demo_printWithSQLighterRs_(rs);
-    }
-    [rs close];
-    [db addParamNull];
-    [db addParamWithNSString:@"qw@er.ty1"];
-    JavaLangLong *alteredRows = [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @"Updated rows: ", alteredRows)];
-    Demo_printUserTableWithNSString_withSQLighterDb_(@"after update state 1 ", db);
-    [db addParamWithNSString:@"user@email.com"];
-    [db addParamWithNSString:@"qw@er.ty1"];
-    (void) [db executeChangeWithNSString:@"update user set email = ? where email is null or email = ?"];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after update state 2"];
-    rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user"];
-    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
-      Demo_printWithSQLighterRs_(rs);
-      NSString *s = [rs getStringWithInt:1];
-      if (![@"user@email.com" isEqual:s]) {
-        NSNumber *id_ = [rs getLongWithInt:0];
-        [db addParamWithNSString:@"inloop@email.com"];
-        [db addParamWithLong:[((NSNumber *) nil_chk(id_)) longLongValue]];
-        (void) [db executeChangeWithNSString:@"update user set email = ? where id = ?"];
-      }
-    }
-    [rs close];
-    [db addParamWithLong:2];
-    alteredRows = [db executeChangeWithNSString:@"delete from user where id = ?"];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @"Deleted rows: ", alteredRows)];
-    Demo_printUserTableWithNSString_withSQLighterDb_(@"after delete state", db);
-    (void) [db executeChangeWithNSString:@"create table address(id integer primary key autoincrement unique, name text, user_id integer, update_date text)"];
-    [db addParamWithNSString:@"123 main str, walnut creek, ca"];
-    [db addParamWithLong:1];
-    JavaUtilDate *dateNow = new_JavaUtilDate_init();
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$$", @"Date now: ", [dateNow description])];
-    [db addParamWithJavaUtilDate:new_JavaUtilDate_init()];
-    (void) [db executeChangeWithNSString:@"insert into address(name, user_id, update_date) values(?, ?, ?)"];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after address creation/population"];
-    rs = [db executeSelectWithNSString:@"select a.user_id, u.email, u.name, u.data, u.height, a.name, a.update_date from user u, address a where a.user_id = u.id"];
-    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
-      Demo_printWithSQLighterRs_(rs);
-      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$$", @" address: ", [rs getStringWithInt:5])];
-      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @" update_date: ", [rs getDateWithInt:6])];
-      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @" update_date: ", [rs getObjectWithInt:6])];
-    }
-    [rs close];
-    @try {
-      [db beginTransaction];
-      [db addParamWithNSString:@"trans@email.com"];
-      [db addParamWithNSString:@"inloop@email.com"];
-      (void) [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
-      Demo_printUserTableWithNSString_withSQLighterDb_(@"inside transaction", db);
-      [db addParamWithNSString:@"inloop2@email.com"];
-      [db addParamWithNSString:@"trans@email.com"];
-      (void) [db executeChangeWithNSString:@"updte user set email = ? where email = ?"];
-      [db commitTransaction];
-    }
-    @catch (JavaLangThrowable *e) {
-      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:[((JavaLangThrowable *) nil_chk(e)) getMessage]];
-      [db rollbackTransaction];
-    }
-    Demo_printUserTableWithNSString_withSQLighterDb_(@"after transaction commit or rollback", db);
-    [db addParamWithDouble:5.67];
-    rs = [db executeSelectWithNSString:@"select data from user where height = ?"];
-    if ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
-      IOSByteArray *greet = [rs getBlobWithInt:0];
-      greetingStr = [NSString stringWithBytes:greet];
-    }
-    [rs close];
++ (void)initialize {
+  if (self == [Demo class]) {
+    Demo_testList_ = new_JavaUtilLinkedList_init();
+    J2OBJC_SET_INITIALIZED(Demo)
   }
-  @catch (JavaLangException *e) {
-    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:[((JavaLangException *) nil_chk(e)) getMessage]];
-    return [e getMessage];
-  }
-  return greetingStr;
 }
+
+@end
 
 void Demo_printWithSQLighterRs_(id<SQLighterRs> rs) {
   Demo_initialize();
@@ -164,6 +91,165 @@ void Demo_printWithSQLighterRs_(id<SQLighterRs> rs) {
   [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
 }
 
+jboolean Demo_verifyRecordWithSQLighterRs_withNSString_withNSString_withJavaLangDouble_withNSString_withJavaLangLong_(id<SQLighterRs> rs, NSString *userName, NSString *userEmail, JavaLangDouble *userHeight, NSString *blobString, JavaLangLong *id_) {
+  Demo_initialize();
+  JavaLangLong *pk = [((id<SQLighterRs>) nil_chk(rs)) getLongWithInt:0];
+  NSString *e = [rs getStringWithInt:1];
+  NSString *n = [rs getStringWithInt:2];
+  IOSByteArray *dataBytes = [rs getBlobWithInt:3];
+  NSString *dataString = nil;
+  if (dataBytes != nil) {
+    dataString = [NSString stringWithBytes:dataBytes];
+  }
+  NSNumber *h = [rs getDoubleWithInt:4];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
+  return ([((JavaLangLong *) nil_chk(pk)) isEqual:id_] && [((NSString *) nil_chk(e)) isEqual:userEmail] && [((NSString *) nil_chk(n)) isEqual:userName] && [((NSString *) nil_chk(dataString)) isEqual:blobString] && [((NSNumber *) nil_chk(h)) doubleValue] == [((JavaLangDouble *) nil_chk(userHeight)) doubleValue]);
+}
+
+NSString *Demo_sqlighterOperations() {
+  Demo_initialize();
+  NSString *greetingStr = nil;
+  @try {
+    [((id<JavaUtilList>) nil_chk(Demo_testList_)) clear];
+    Demo_passedTestCount_ = 0;
+    id<SQLighterRs> rs = nil;
+    id<SQLighterDb> db = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
+    Demo_printUserTableWithNSString_withSQLighterDb_(@"initial state ", db);
+    NSString *userName = @"user 5";
+    NSString *userEmail = @"user5@email.com";
+    JavaLangDouble *userHeight = JavaLangDouble_valueOfWithDouble_(5.67);
+    NSString *blobString = @"Hello, SQLighter!";
+    JavaLangLong *insertedId = JavaLangLong_valueOfWithLong_(5l);
+    [((id<SQLighterDb>) nil_chk(db)) addParamWithNSString:userName];
+    [db addParamWithNSString:userEmail];
+    NSString *dataStr = blobString;
+    IOSByteArray *data = [dataStr getBytes];
+    [db addParamWithByteArray:data];
+    [db addParamWithDouble:[userHeight doubleValue]];
+    JavaLangLong *rowId = [db executeChangeWithNSString:@"insert into user( name, email, data, height) values (?, ?, ?, ?)"];
+    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@", @"Inserted id: ", rowId)];
+    [db addParamWithNSString:userEmail];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"check if the record was inserted"];
+    rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user where email = ?"];
+    [Demo_testList_ addWithId:@"insert/select"];
+    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+      if (Demo_verifyRecordWithSQLighterRs_withNSString_withNSString_withJavaLangDouble_withNSString_withJavaLangLong_(rs, userName, userEmail, userHeight, blobString, insertedId)) {
+        Demo_passedTestCount_++;
+      }
+    }
+    [rs close];
+    [db addParamNull];
+    [db addParamWithNSString:userEmail];
+    JavaLangLong *alteredRows = [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @"Updated row count: ", alteredRows)];
+    [Demo_testList_ addWithId:@"update row count"];
+    if ([((JavaLangLong *) nil_chk(alteredRows)) isEqual:JavaLangLong_valueOfWithLong_(1l)]) {
+      Demo_passedTestCount_++;
+    }
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"check if null was set"];
+    [db addParamWithLong:[insertedId longLongValue]];
+    rs = [db executeSelectWithNSString:@"select email from user where id = ?"];
+    [Demo_testList_ addWithId:@"null handling"];
+    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+      if ([rs isNullWithInt:0]) {
+        Demo_passedTestCount_++;
+      }
+    }
+    [rs close];
+    Demo_printUserTableWithNSString_withSQLighterDb_(@"after update state 1 ", db);
+    [db addParamWithNSString:userEmail];
+    [db addParamWithNSString:userEmail];
+    alteredRows = [db executeChangeWithNSString:@"update user set email = ? where email is null or email = ?"];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @"Updated row count: ", alteredRows)];
+    [Demo_testList_ addWithId:@"batch update"];
+    if ([((JavaLangLong *) nil_chk(alteredRows)) isEqual:JavaLangLong_valueOfWithLong_(2l)]) {
+      Demo_passedTestCount_++;
+    }
+    [Demo_testList_ addWithId:@"nested query update"];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after update state 2"];
+    rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user"];
+    jint counter = 0;
+    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+      Demo_printWithSQLighterRs_(rs);
+      NSString *s = [rs getStringWithInt:1];
+      if (![userEmail isEqual:s]) {
+        NSNumber *id_ = [rs getLongWithInt:0];
+        [db addParamWithNSString:@"inloop@email.com"];
+        [db addParamWithLong:[((NSNumber *) nil_chk(id_)) longLongValue]];
+        alteredRows = [db executeChangeWithNSString:@"update user set email = ? where id = ?"];
+        counter += [((JavaLangLong *) nil_chk(alteredRows)) longLongValue];
+      }
+    }
+    if (counter == 3) {
+      Demo_passedTestCount_++;
+    }
+    [rs close];
+    [Demo_testList_ addWithId:@"delete test"];
+    [db addParamWithLong:2];
+    alteredRows = [db executeChangeWithNSString:@"delete from user where id = ?"];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @"Deleted rows: ", alteredRows)];
+    if ([((JavaLangLong *) nil_chk(alteredRows)) isEqual:JavaLangLong_valueOfWithLong_(1l)]) {
+      Demo_passedTestCount_++;
+    }
+    Demo_printUserTableWithNSString_withSQLighterDb_(@"after delete state", db);
+    alteredRows = [db executeChangeWithNSString:@"create table address(id integer primary key autoincrement unique, name text, user_id integer, update_date text)"];
+    [db addParamWithNSString:@"123 main str, walnut creek, ca"];
+    [db addParamWithLong:1];
+    [Demo_testList_ addWithId:@"date handling test"];
+    JavaUtilDate *dateNow = new_JavaUtilDate_init();
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$$", @"Date now: ", [dateNow description])];
+    [db addParamWithJavaUtilDate:new_JavaUtilDate_init()];
+    (void) [db executeChangeWithNSString:@"insert into address(name, user_id, update_date) values(?, ?, ?)"];
+    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after address creation/population"];
+    rs = [db executeSelectWithNSString:@"select a.user_id, u.email, u.name, u.data, u.height, a.name, a.update_date from user u, address a where a.user_id = u.id"];
+    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+      Demo_printWithSQLighterRs_(rs);
+      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$$", @" address: ", [rs getStringWithInt:5])];
+      JavaUtilDate *date = [rs getDateWithInt:6];
+      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @" update_date: ", date)];
+      dateNow = [db getDateWithoutMillisWithJavaUtilDate:dateNow];
+      if ([((JavaUtilDate *) nil_chk(date)) isEqual:dateNow]) {
+        Demo_passedTestCount_++;
+      }
+      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @" update_date: ", [rs getObjectWithInt:6])];
+    }
+    [rs close];
+    [Demo_testList_ addWithId:@"transaction/exception handling"];
+    @try {
+      [db beginTransaction];
+      [db addParamWithNSString:@"trans@email.com"];
+      [db addParamWithNSString:@"inloop@email.com"];
+      (void) [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
+      Demo_printUserTableWithNSString_withSQLighterDb_(@"inside transaction", db);
+      [db addParamWithNSString:@"inloop2@email.com"];
+      [db addParamWithNSString:@"trans@email.com"];
+      (void) [db executeChangeWithNSString:@"updte user set email = ? where email = ?"];
+      [db commitTransaction];
+    }
+    @catch (JavaLangThrowable *e) {
+      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:[((JavaLangThrowable *) nil_chk(e)) getMessage]];
+      Demo_passedTestCount_++;
+      [db rollbackTransaction];
+    }
+    Demo_printUserTableWithNSString_withSQLighterDb_(@"after transaction commit or rollback", db);
+    [db addParamWithDouble:5.67];
+    rs = [db executeSelectWithNSString:@"select data from user where height = ?"];
+    if ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+      IOSByteArray *greet = [rs getBlobWithInt:0];
+      greetingStr = [NSString stringWithBytes:greet];
+    }
+    [rs close];
+  }
+  @catch (JavaLangException *e) {
+    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:[((JavaLangException *) nil_chk(e)) getMessage]];
+    return [e getMessage];
+  }
+  if ([((id<JavaUtilList>) nil_chk(Demo_testList_)) size] != Demo_passedTestCount_) {
+    return @"SQLighter tests failed";
+  }
+  return JreStrcat("$$", greetingStr, @" All tests passed.");
+}
+
 void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLighterDb> db) {
   Demo_initialize();
   [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:title];
@@ -177,35 +263,57 @@ void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLigh
 NSString *Demo_amfibianOperations() {
   Demo_initialize();
   @try {
+    [((id<JavaUtilList>) nil_chk(Demo_testList_)) clear];
+    Demo_passedTestCount_ = 0;
     id<SQLighterDb> sqlighterDb = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
     NSString *jsonAppointment234 = @"{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
-    ComValsA2iosAmfibianImplAnObject *anEntity = new_ComValsA2iosAmfibianImplAnObject_initWithIOSClass_withNSStringArray_(Entity_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"id" } count:1 type:NSString_class_()]);
-    ComValsA2iosAmfibianImplAnOrm *anOrm = new_ComValsA2iosAmfibianImplAnOrm_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withComValsA2iosAmfibianImplAnObject_(sqlighterDb, @"appointment", Appointment_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"name", @"isProcessed,is_processed" } count:2 type:NSString_class_()], anEntity);
+    id<AnObject> anEntity = new_AnObjectImpl_initWithIOSClass_withNSStringArray_(Entity_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"id" } count:1 type:NSString_class_()]);
+    id<AnOrm> anOrm = new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(sqlighterDb, @"appointment", Appointment_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"name", @"isProcessed,is_processed" } count:2 type:NSString_class_()], anEntity);
+    [Demo_testList_ addWithId:@"JSON 2 native mapping"];
     Appointment *appointment234 = [anOrm asNativeObjectWithNSString:jsonAppointment234];
-    NSString *createAppointmentTableSql = [((ComValsA2iosAmfibianImplAnSql *) nil_chk([anOrm startSqlCreate])) getQueryString];
+    if ([((JavaLangInteger *) nil_chk([((Appointment *) nil_chk(appointment234)) getId])) isEqual:JavaLangInteger_valueOfWithInt_(234)] && [((NSString *) nil_chk([appointment234 getName])) isEqual:@"Meet AmfibiaN!"] && [((JavaLangInteger *) nil_chk([appointment234 getIsProcessed])) isEqual:JavaLangInteger_valueOfWithInt_(0)]) {
+      Demo_passedTestCount_++;
+    }
+    NSString *createAppointmentTableSql = [((id<AnSql>) nil_chk([anOrm startSqlCreate])) getQueryString];
     (void) [((id<SQLighterDb>) nil_chk(sqlighterDb)) executeChangeWithNSString:createAppointmentTableSql];
+    [Demo_testList_ addWithId:@"orm insert"];
     [anOrm startSqlInsertWithId:appointment234];
-    (void) [anOrm apply];
-    Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(anOrm);
+    JavaLangLong *rowsAffected = [anOrm apply];
+    if ([((JavaLangLong *) nil_chk(rowsAffected)) isEqual:JavaLangLong_valueOfWithLong_(1l)]) {
+      Demo_passedTestCount_++;
+    }
+    Demo_printAppointmentsWithAnOrm_(anOrm);
     Appointment *appointment456 = new_Appointment_init();
     [appointment456 setNameWithNSString:@"Appointment #456"];
     [appointment456 setIsProcessedWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(0)];
     [appointment456 setIdWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(456)];
     [anOrm startSqlInsertWithId:appointment456];
     (void) [anOrm apply];
-    Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(anOrm);
-    [((Appointment *) nil_chk(appointment234)) setIsProcessedWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(1)];
+    Demo_printAppointmentsWithAnOrm_(anOrm);
+    [appointment234 setIsProcessedWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(1)];
+    [Demo_testList_ addWithId:@"orm update"];
     [anOrm startSqlUpdateWithId:appointment234];
     [anOrm addWhereWithNSString:@"id = ?" withId:[appointment234 getId]];
-    (void) [anOrm apply];
-    Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(anOrm);
+    rowsAffected = [anOrm apply];
+    if ([((JavaLangLong *) nil_chk(rowsAffected)) isEqual:JavaLangLong_valueOfWithLong_(1l)]) {
+      Demo_passedTestCount_++;
+    }
+    Demo_printAppointmentsWithAnOrm_(anOrm);
     [anOrm startSqlSelect];
     [anOrm addWhereWithNSString:@"id = ?" withId:JavaLangInteger_valueOfWithInt_(234)];
     Appointment *meetAmfibianAppointment = [anOrm getSingleResult];
     if (meetAmfibianAppointment != nil) {
       [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$$", @"Back to JSON string\nbecause we might want to send it\nback to the server like so: ", [anOrm asJsonStringWithId:meetAmfibianAppointment])];
       OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId:meetAmfibianAppointment];
-      return (NSString *) check_class_cast([((OrgJsonJSONObject *) nil_chk(jsonObject)) getWithNSString:@"name"], [NSString class]);
+      NSString *name = (NSString *) check_class_cast([((OrgJsonJSONObject *) nil_chk(jsonObject)) getWithNSString:@"name"], [NSString class]);
+      [Demo_testList_ addWithId:@"native toJSON"];
+      if ([((NSString *) nil_chk(name)) isEqual:@"Meet AmfibiaN!"]) {
+        Demo_passedTestCount_++;
+      }
+      if ([Demo_testList_ size] != Demo_passedTestCount_) {
+        return @"Tests failed.";
+      }
+      return JreStrcat("$$", name, @" All tests passed.");
     }
   }
   @catch (JavaLangException *e) {
@@ -214,10 +322,10 @@ NSString *Demo_amfibianOperations() {
   return nil;
 }
 
-void Demo_printAppointmentsWithComValsA2iosAmfibianImplAnOrm_(ComValsA2iosAmfibianImplAnOrm *anOrm) {
+void Demo_printAppointmentsWithAnOrm_(id<AnOrm> anOrm) {
   Demo_initialize();
   [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:@"Appointment records"];
-  [((ComValsA2iosAmfibianImplAnOrm *) nil_chk(anOrm)) startSqlSelect];
+  [((id<AnOrm>) nil_chk(anOrm)) startSqlSelect];
   Demo_printWithJavaUtilCollection_([anOrm getRecords]);
 }
 
