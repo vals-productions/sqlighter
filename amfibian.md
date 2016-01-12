@@ -10,6 +10,10 @@
 
 ## Overview
 
+AmfibiaN is called after amphibians,- inhabitants that inhabit in a variety of habitats.
+
+Inhabitants of modern software systems have to be able to transition between their native state, database persistent state, various text representations such as JSON format. AmfibiaN is here to help with these scenarios.
+
 AmfibiaN is a lightweight java framework that stands between native objects, their JSON repesentations, and CRUD database operations with elements of ORM. 
 
 AmfibiaN's code is J2ObjC compatible. You would be able to execute your code in Android and iOS. You can use it in conjunction with SQLighter to implement local database storage and relevant business logics based on SQLite database.
@@ -161,6 +165,13 @@ For the cases when you do need to do an outer join and retrieve hierarchical res
 ## Database versioning
 
 ### AnUpdate
-...
+
+AnUpdate is helping you with applying changes to your database schema to update particular device's database structure to the most current version.
+
+AnUpdate can work with low level SQL DDL statements, or, use some extended AmfibiaN features.
+
+For instance, istead of developing `CREATE TABLE ..` statement, you could specify AnObject as something you'd like to apply. AnUpdate will take care of ```CREATE TABLE...``` statement generation and execution.
+
+
 
 *This document is under construction.*
