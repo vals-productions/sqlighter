@@ -18,8 +18,6 @@ import com.vals.a2ios.amfibian.intf.AnAttrib;
 /**
  * Created by vsayenko on 9/26/15.
  *
- * AmfibiaN Object management class.
- *
  */
 public class AnObjectImpl<T> implements AnObject<T> {
     @SuppressWarnings("rawtypes")
@@ -29,6 +27,29 @@ public class AnObjectImpl<T> implements AnObject<T> {
     private T nativeObject;
     protected Class<T> nativeClass;
     private Map<String, AnAttrib> attribMap = new LinkedHashMap<>();
+
+    public AnObjectImpl() {
+    }
+
+    public AnObjectImpl(Class<T> anObjClass, AnObject<?> parentMapper) {
+        init(anObjClass, parentMapper);
+    }
+
+    public AnObjectImpl(Class<T> anObjClass, String[] propertyNames, AnObject<?> parentMapper) {
+        init(anObjClass, propertyNames, parentMapper);
+    }
+
+    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers, AnObject<?> parentMapper) {
+        init(anObjClass, propertyMappers, parentMapper);
+    }
+
+    public AnObjectImpl(Class<T> anObjClass, String[] propertyNames) {
+        init(anObjClass, propertyNames);
+    }
+
+    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers) {
+        init(anObjClass, propertyMappers);
+    }
 
     @Override
     public void resetNativeObject() throws Exception {
@@ -84,21 +105,10 @@ public class AnObjectImpl<T> implements AnObject<T> {
             }
         }
     }
-    
-    public AnObjectImpl() {
-    }
-    
-    public AnObjectImpl(Class<T> anObjClass, AnObject<?> parentMapper) {
-       init(anObjClass, parentMapper);
-    }
-    
+
     protected void init(Class<T> anObjClass, AnObject<?> parentMapper) {
         this.parentAnObject = parentMapper;
         setNativeClass(anObjClass);
-    }
-    
-    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers, AnObject<?> parentMapper) {
-        init(anObjClass, propertyMappers, parentMapper);
     }
     
     protected void init(Class<T> anObjClass, AnAttrib[] propertyMappers , AnObject<?> parentMapper) {
@@ -106,28 +116,16 @@ public class AnObjectImpl<T> implements AnObject<T> {
         initAttribs(propertyMappers);
     }
     
-    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers) {
-        init(anObjClass, propertyMappers);
-    }
-    
     protected void init(Class<T> anObjClass, AnAttrib[] propertyMappers) {
         initAttribs(propertyMappers);
         setNativeClass(anObjClass);
     }
-    
-    public AnObjectImpl(Class<T> anObjClass, String[] propertyNames, AnObject<?> parentMapper) {
-        init(anObjClass, propertyNames, parentMapper);
-    }
-    
+
     protected void init(Class<T> anObjClass, String[] propertyNames, AnObject<?> parentMapper) {
     		this.parentAnObject = parentMapper;
     		init(anObjClass, propertyNames);
     }
-    
-    public AnObjectImpl(Class<T> anObjClass, String[] propertyNames) {
-        init(anObjClass, propertyNames);
-    }
-    
+
     protected void init(Class<T> anObjClass, String[] propertyNames) {    
         AnAttrib[] list = stringsToAttribs(propertyNames);
         init(anObjClass, list);
@@ -258,25 +256,4 @@ public class AnObjectImpl<T> implements AnObject<T> {
     public synchronized String asJsonString(T nativeObject) throws Exception {
         return asJSONObject(nativeObject).toString();
     }
-
-//    /**
-//     *
-//     * @param someValue - this is expected to be
-//     *                  either nativeObject, or,
-//     *                  json string or json object
-//     * @throws Exception
-//     */
-//    @Deprecated
-//    private void setValue(Object someValue) throws Exception {
-//        if (someValue != null) {
-//            if (someValue instanceof String) {
-//                asNativeObject((String) someValue);
-//            } else if (someValue instanceof JSONObject) {
-//                asNativeObject((JSONObject) someValue);
-//            } else {
-//				T t = (T)someValue;
-//                setNativeObject(t);
-//            }
-//        }
-//     }
 }

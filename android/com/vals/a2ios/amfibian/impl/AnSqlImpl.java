@@ -15,8 +15,6 @@ import java.util.Set;
 
 /**
  * Created by vsayenko on 9/23/15.
- *
- * Amfibian SQL generation object
  */
 public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     public static final int TYPE_SELECT = 1;

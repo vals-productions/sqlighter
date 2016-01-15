@@ -6,7 +6,14 @@ import java.util.Collection;
 
 /**
  * Created by vsayenko on 1/8/16.
+ *
+ * AmfibiaN ORM class.
+ *
+ * This class facilitates business object persistence and
+ * retrieval operations by extending AnSqlImpl query generation
+ * capabilities.
  */
+
 public interface AnOrm<T> extends AnSql<T> {
     /**
      * Executes SQL select query and returns results.
@@ -61,7 +68,15 @@ public interface AnOrm<T> extends AnSql<T> {
      */
     Long apply() throws Exception;
 
+    /**
+     *
+     * @param sqlighterDb
+     */
     void setSqlighterDb(SQLighterDb sqlighterDb);
 
+    /**
+     *
+     * @return
+     */
     SQLighterDb getSqlighterDb();
 }

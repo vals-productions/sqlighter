@@ -12,9 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * AnUpgradeImpl maintains database structural
- * changes as needed.
- *
  * Created by vsayenko on 12/18/15.
  */
 public abstract class AnUpgradeImpl implements AnUpgrade {
@@ -23,6 +20,11 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
     private SQLighterDb sqlighterDb;
     private AnOrmImpl<Upgrade> ap;
 
+    /**
+     *
+     * @param sqLighterDb
+     * @throws Exception
+     */
     public AnUpgradeImpl(SQLighterDb sqLighterDb) throws Exception {
         this.sqlighterDb = sqLighterDb;
         ap = new AnOrmImpl<>(
@@ -34,13 +36,31 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         ensureStorage();
     }
 
-    protected abstract List<Object> getTaskByKey(String key);
-    protected abstract List<String> getAllKeys();
+    /**
+     *
+     * @param key
+     * @return
+     */
+    public abstract List<Object> getTaskByKey(String key);
 
+    /**
+     *
+     * @return
+     */
+    public abstract List<String> getUpdateKeys();
+
+    /**
+     *
+     * @return
+     */
     protected String getTableName() {
         return Upgrade.TABLE;
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void ensureStorage() throws Exception {
         SQLighterRs rs = sqlighterDb.executeSelect(
                 "SELECT name FROM sqlite_master " +
@@ -61,7 +81,12 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         }
     }
 
-    private Set<String> getAppliedTasks() throws Exception {
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
+    public Set<String> getAppliedUpdates() throws Exception {
         Set<String> keys = new HashSet<>();
         SQLighterRs rs = sqlighterDb.executeSelect("select key from " + Upgrade.TABLE + " where value is not null");
         while (rs.hasNext()) {
@@ -72,16 +97,29 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         return keys;
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @Override
-    public void applyTasks() throws Exception {
-        Set<String> appliedKeys = getAppliedTasks();
-        for (String updKey: getAllKeys()) {
+    public int applyUpdates() throws Exception {
+        int taskCount = 0;
+        Set<String> appliedKeys = getAppliedUpdates();
+        for (String updKey: getUpdateKeys()) {
             if(!appliedKeys.contains(updKey)) {
                 applyUpdate(updKey, getTaskByKey(updKey));
+                taskCount++;
             }
         }
+        return taskCount;
     }
 
+    /**
+     *
+     * @param key
+     * @param statementList
+     * @throws Exception
+     */
     private void applyUpdate(String key, List<Object> statementList) throws Exception {
         sqlighterDb.beginTransaction();
 

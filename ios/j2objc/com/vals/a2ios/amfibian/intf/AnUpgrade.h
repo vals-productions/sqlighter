@@ -8,9 +8,18 @@
 
 #include "J2ObjC_header.h"
 
+@protocol JavaUtilList;
+@protocol JavaUtilSet;
+
 @protocol AnUpgrade < NSObject, JavaObject >
 
-- (void)applyTasks;
+- (jint)applyUpdates;
+
+- (void)setUpdateKeysWithJavaUtilList:(id<JavaUtilList>)updateKeys;
+
+- (id<JavaUtilList>)getUpdateKeys;
+
+- (id<JavaUtilSet>)getAppliedUpdates;
 
 @end
 

@@ -11,6 +11,7 @@
 
 @class JavaUtilDate;
 @protocol JavaUtilList;
+@protocol JavaUtilSet;
 @protocol SQLighterDb;
 
 @interface AnUpgradeImpl : NSObject < AnUpgrade >
@@ -19,15 +20,17 @@
 
 - (instancetype)initWithSQLighterDb:(id<SQLighterDb>)sqLighterDb;
 
-- (void)applyTasks;
+- (jint)applyUpdates;
+
+- (id<JavaUtilSet>)getAppliedUpdates;
+
+- (id<JavaUtilList>)getTaskByKeyWithNSString:(NSString *)key;
+
+- (id<JavaUtilList>)getUpdateKeys;
 
 #pragma mark Protected
 
-- (id<JavaUtilList>)getAllKeys;
-
 - (NSString *)getTableName;
-
-- (id<JavaUtilList>)getTaskByKeyWithNSString:(NSString *)key;
 
 @end
 

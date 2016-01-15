@@ -17,6 +17,23 @@
 
 @protocol AnSql < AnObject, NSObject, JavaObject >
 
+- (void)startSqlSelect;
+
+- (void)startSqlDelete;
+
+- (void)startSqlInsertWithId:(id)objectToInsert;
+
+- (void)startSqlUpdateWithId:(id)objectToUpdate;
+
+- (void)addWhereWithNSString:(NSString *)condition
+                      withId:(id)param;
+
+- (void)addWhereWithNSString:(NSString *)condition;
+
+- (void)addSqlWithNSString:(NSString *)sql;
+
+- (NSString *)getQueryString;
+
 - (id<JavaUtilSet>)getSkipAttrNameList;
 
 - (void)resetSkipInclAttrNameList;
@@ -37,12 +54,6 @@
 
 - (void)setTypeWithInt:(jint)type;
 
-- (void)startSqlDelete;
-
-- (void)startSqlInsertWithId:(id)objectToInsert;
-
-- (void)startSqlUpdateWithId:(id)objectToUpdate;
-
 - (NSString *)getColumnNameWithAnAttrib:(id<AnAttrib>)attrib;
 
 - (id<AnSql>)startSqlCreate;
@@ -50,17 +61,6 @@
 - (NSString *)getSqlTypeForClassWithIOSClass:(IOSClass *)columnJavaClass;
 
 - (NSString *)getAliasedColumnWithNSString:(NSString *)columnName;
-
-- (void)startSqlSelect;
-
-- (void)addWhereWithNSString:(NSString *)condition
-                      withId:(id)param;
-
-- (void)addWhereWithNSString:(NSString *)condition;
-
-- (void)addSqlWithNSString:(NSString *)sql;
-
-- (NSString *)getQueryString;
 
 @end
 

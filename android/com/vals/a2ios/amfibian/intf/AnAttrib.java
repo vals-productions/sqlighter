@@ -3,7 +3,12 @@ package com.vals.a2ios.amfibian.intf;
 import java.lang.reflect.Method;
 
 /**
- * Created by vsayenko on 1/8/16.
+ * Created by vsayenko on 9/26/15.
+ *
+ * AmfibiaN AnObjectImpl's attribute descriptor/handler.
+ *
+ * It is used for JSON/Database/Native object conversion
+ * mappings.
  */
 public interface AnAttrib {
 

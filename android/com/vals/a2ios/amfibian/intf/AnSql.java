@@ -7,50 +7,145 @@ import java.util.Set;
 
 /**
  * Created by vsayenko on 1/8/16.
+ *
+ * AmfibiaN SQL generation interface
+ *
  */
 public interface AnSql<T> extends AnObject<T> {
-
-    Set<String> getSkipAttrNameList();
-
-    void resetSkipInclAttrNameList();
-
-    void addInclAttribs(String[] names);
-
-    void addSkipAttribs(String[] names);
-
-    String getTableName();
-
-    void setTableName(String tableName);
-
-    List<Object> getParameters();
-
-    List<String> getAttribNameList();
-
-    int getType();
-
-    void setType(int type);
-
-    void startSqlDelete() throws Exception;
-
-    void startSqlInsert(T objectToInsert) throws Exception;
-
-    void startSqlUpdate(T objectToUpdate) throws Exception;
-
-    String getColumnName(AnAttrib attrib);
-
-    AnSql<?> startSqlCreate();
-
-    String getSqlTypeForClass(Class<?> columnJavaClass);
-
-    String getAliasedColumn(String columnName);
-
+    /**
+     *
+     */
     void startSqlSelect();
 
+    /**
+     *
+     * @throws Exception
+     */
+    void startSqlDelete() throws Exception;
+
+    /**
+     *
+     * @param objectToInsert
+     * @throws Exception
+     */
+    void startSqlInsert(T objectToInsert) throws Exception;
+
+    /**
+     *
+     * @param objectToUpdate
+     * @throws Exception
+     */
+    void startSqlUpdate(T objectToUpdate) throws Exception;
+
+    /**
+     *
+     * @param condition
+     * @param param
+     */
     void addWhere(String condition, Object param);
 
+    /**
+     *
+     * @param condition
+     */
     void addWhere(String condition);
 
+    /**
+     *
+     * @param sql
+     */
     void addSql(String sql);
 
+    /**
+     *
+     * @return
+     */
     String getQueryString();
+
+    /**
+     *
+     * @return
+     */
+    Set<String> getSkipAttrNameList();
+
+    /**
+     *
+     */
+    void resetSkipInclAttrNameList();
+
+    /**
+     *
+     * @param names
+     */
+    void addInclAttribs(String[] names);
+
+    /**
+     *
+     * @param names
+     */
+    void addSkipAttribs(String[] names);
+
+    /**
+     *
+     * @return
+     */
+    String getTableName();
+
+    /**
+     *
+     * @param tableName
+     */
+    void setTableName(String tableName);
+
+    /**
+     *
+     * @return
+     */
+    List<Object> getParameters();
+
+    /**
+     *
+     * @return
+     */
+    List<String> getAttribNameList();
+
+    /**
+     *
+     * @return
+     */
+    int getType();
+
+    /**
+     *
+     * @param type
+     */
+    void setType(int type);
+
+    /**
+     *
+     * @param attrib
+     * @return
+     */
+    String getColumnName(AnAttrib attrib);
+
+    /**
+     *
+     * @return
+     */
+    AnSql<?> startSqlCreate();
+
+    /**
+     *
+     * @param columnJavaClass
+     * @return
+     */
+    String getSqlTypeForClass(Class<?> columnJavaClass);
+
+    /**
+     *
+     * @param columnName
+     * @return
+     */
+    String getAliasedColumn(String columnName);
+
 }

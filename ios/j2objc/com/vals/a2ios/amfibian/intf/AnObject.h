@@ -22,9 +22,9 @@
 
 - (id<JavaUtilMap>)getAttribList;
 
-- (id<AnAttrib>)getAttribWithNSString:(NSString *)propertyName;
+- (id<AnAttrib>)getAttribWithNSString:(NSString *)attribName;
 
-- (void)addAttribWithAnAttrib:(id<AnAttrib>)anAttribMapper;
+- (void)addAttribWithAnAttrib:(id<AnAttrib>)anAttrib;
 
 - (id<JavaUtilMap>)asMapWithId:(id)nativeObject;
 

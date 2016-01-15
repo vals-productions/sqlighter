@@ -2,8 +2,10 @@ package com.prod.vals.andr_demo_prj;
 
 import com.vals.a2ios.amfibian.impl.AnObjectImpl;
 import com.vals.a2ios.amfibian.impl.AnOrmImpl;
+import com.vals.a2ios.amfibian.impl.AnUpgradeImpl;
 import com.vals.a2ios.amfibian.intf.AnObject;
 import com.vals.a2ios.amfibian.intf.AnOrm;
+import com.vals.a2ios.amfibian.intf.AnUpgrade;
 import com.vals.a2ios.mobilighter.intf.MobilAction;
 import com.vals.a2ios.mobilighter.intf.Mobilighter;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
@@ -11,6 +13,7 @@ import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -23,90 +26,6 @@ import java.util.List;
 public class Demo {
     public static int passedTestCount = 0;
     private static List<String> testList = new LinkedList<>();
-
-    /**
-     * Prints single SQL result record
-     *
-     * @param rs - SQLighterRs reference
-     */
-    private static void print(SQLighterRs rs) {
-        Long pk = rs.getLong(0);
-        String e = rs.getString(1);
-        String n = rs.getString(2);
-        byte[] dataBytes = rs.getBlob(3);
-        String dataString = null;
-        if (dataBytes != null) {
-            dataString = new String(dataBytes);
-        }
-        Number h = rs.getDouble(4);
-        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + ", blob data: " + dataString + ", height: " + h);
-    }
-
-    private static boolean verifyRecord(SQLighterRs rs, String userName, String userEmail,
-                                        Double userHeight, String blobString, Long id) {
-        Long pk = rs.getLong(0);
-        String e = rs.getString(1);
-        String n = rs.getString(2);
-        byte[] dataBytes = rs.getBlob(3);
-        String dataString = null;
-        if (dataBytes != null) {
-            dataString = new String(dataBytes);
-        }
-        Number h = rs.getDouble(4);
-        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n +
-                ", blob data: " + dataString + ", height: " + h);
-        return (pk.equals(id) &&
-                e.equals(userEmail) &&
-                n.equals(userName) &&
-                dataString.equals(blobString) &&
-                h.doubleValue() == userHeight.doubleValue());
-    }
-
-    private static Object sqlighterHelloLabel, sqlighterDetailsLabel;
-    private static Object amfibianHelloLabel, amfibianDetailsLabel;
-    private static MobilAction sqlighterStartAction, amfibianStartAction;
-    public static void bindUi(
-            Object title,
-            Object sqlighterHelloLabel, Object sqlighterDetailsLabel, final Object sqlighterStartButton,
-            Object amfibianHelloLabel, Object amfibianDetailsLabel, final Object amfibianStartButton,
-            Object mobilighterCredit
-    ) {
-        Demo.sqlighterHelloLabel = sqlighterHelloLabel;
-        Demo.sqlighterDetailsLabel = sqlighterDetailsLabel;
-        Demo.amfibianHelloLabel = amfibianHelloLabel;
-        Demo.amfibianDetailsLabel = amfibianDetailsLabel;
-
-        final Mobilighter mobilighter = Bootstrap.getInstance().getMobilighter();
-
-        mobilighter.setText(title, "Welcome to SQLighter demo.");
-        mobilighter.setText(mobilighterCredit, "UI controled by Mobilighter.");
-
-        mobilighter.setText(sqlighterHelloLabel, "");
-        mobilighter.setText(amfibianHelloLabel, "");
-        mobilighter.setText(sqlighterDetailsLabel, "");
-        mobilighter.setText(amfibianDetailsLabel, "");
-
-        mobilighter.setText(sqlighterStartButton, "Start SQLighter");
-        mobilighter.setText(amfibianStartButton, "Start AmfibiaN");
-
-        sqlighterStartAction = new MobilAction() {
-            @Override
-            public void onAction(Object param) {
-                sqlighterOperations();
-                mobilighter.hide(sqlighterStartButton);
-            }
-        };
-        mobilighter.addActionListener(sqlighterStartButton, sqlighterStartAction);
-
-        amfibianStartAction = new MobilAction() {
-            @Override
-            public void onAction(Object param) {
-                amfibianOperations();
-                mobilighter.hide(amfibianStartButton);
-            }
-        };
-        mobilighter.addActionListener(amfibianStartButton, amfibianStartAction);
-    }
 
     /**
      * Demo sequence of Db operations with SQLighter.
@@ -343,7 +262,7 @@ public class Demo {
                 passedTestCount++;
                 /**
                  * Rollback as something went wrong, and we wanted all
-                 * or nothing.
+                 * or nothing to be saved.
                  */
                 db.rollbackTransaction();
             }
@@ -563,6 +482,12 @@ public class Demo {
                 if(name.equals("Meet AmfibiaN!")) {
                     passedTestCount++;
                 }
+
+                /**
+                 * AnUpdate demo/tests are in a separate method.
+                 */
+                anUpdateOperations();
+
                 if(testList.size() != passedTestCount) {
                     Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN Tests did not pass");
                     Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, "One or more tests failed");
@@ -577,7 +502,102 @@ public class Demo {
             Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, e.getMessage());
             return ;
         }
-//        return null;
+    }
+
+    /**
+     * Database upgrade strategy demonstration.
+     */
+    private static void anUpdateOperations() {
+        try {
+            SQLighterDb db = Bootstrap.getInstance().getSqLighterDb();
+            /**
+             * Our custom implementation on AnUpdate strategy.
+             */
+            AnUpgrade anUpgrade = new AnUpgradeImpl(db) {
+                List<String> updateKeys = new LinkedList<>();
+
+                /**
+                 * Here we have database DDL statements grouped by
+                 * respective key.
+                 * @param key
+                 * @return
+                 */
+                @Override
+                public List<Object> getTaskByKey(String key) {
+                    List<Object> l = new LinkedList<>();
+                    if ("2015-12-19".equals(key)) {
+                        l.add("create table db_upg_test(name text) ");
+                        l.add("insert into db_upg_test(name) values('Joe')");
+                    } else if ("2015-12-25".equals(key)) {
+                        l.add("alter table db_upg_test add column email text ");
+                        l.add("insert into db_upg_test(name,email) values " +
+                                                "('Peter', 'peter@email.com')");
+                    } else if ("2015-12-25--01".equals(key)) {
+                        l.add("drop table db_upg_test");
+                    }
+                    return l;
+                }
+
+                /**
+                 * This method is giving us list of update keys to
+                 * apply.
+                 * @return
+                 */
+                @Override
+                public List<String> getUpdateKeys() {
+                    return updateKeys;
+                }
+
+                /**
+                 * Through this method we set list of database update keys
+                 * available to be applied.
+                 * @param updateKeys
+                 */
+                @Override
+                public void setUpdateKeys(List<String> updateKeys) {
+                    this.updateKeys = updateKeys;
+                }
+            };
+            List<String> keys = new LinkedList<>();
+            keys.add("2015-12-19");
+            testList.add("database upgrade step 1");
+            anUpgrade.setUpdateKeys(keys);
+            anUpgrade.applyUpdates();
+            SQLighterRs rs = db.executeSelect("select count(*) from db_upg_test");
+            if(rs.hasNext()) {
+                Long cnt = rs.getLong(0);
+                if(cnt == 1) {
+                    passedTestCount++;
+                }
+            }
+            rs.close();
+            keys.add("2015-12-25");
+            testList.add("database upgrade step 2");
+            anUpgrade.setUpdateKeys(keys);
+            anUpgrade.applyUpdates();
+            rs = db.executeSelect("select email from db_upg_test where email is not null");
+            if(rs.hasNext()) {
+                String email = rs.getString(0);
+                if("peter@email.com".equals(email)) {
+                    passedTestCount++;
+                }
+            }
+            rs.close();
+            keys.add("2015-12-25--01");
+            testList.add("database upgrade step 3");
+            anUpgrade.setUpdateKeys(keys);
+            anUpgrade.applyUpdates();
+            try {
+                rs = db.executeSelect("select email from db_upg_test where email is not null");
+                rs.hasNext();
+            } catch (Exception t) {
+                // supposed to get sql syntax exception
+                passedTestCount++;
+            }
+            System.out.println("done with AnUpdate");
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     private static void printAppointments(AnOrm<Appointment> anOrm) throws Exception {
@@ -596,6 +616,89 @@ public class Demo {
         System.out.println(
                 "Appointment object. id: " + appointment.getId() +
                         ", name: " + appointment.getName());
+    }
+    /**
+     * Prints single SQL result record
+     *
+     * @param rs - SQLighterRs reference
+     */
+    private static void print(SQLighterRs rs) {
+        Long pk = rs.getLong(0);
+        String e = rs.getString(1);
+        String n = rs.getString(2);
+        byte[] dataBytes = rs.getBlob(3);
+        String dataString = null;
+        if (dataBytes != null) {
+            dataString = new String(dataBytes);
+        }
+        Number h = rs.getDouble(4);
+        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + ", blob data: " + dataString + ", height: " + h);
+    }
+
+    private static boolean verifyRecord(SQLighterRs rs, String userName, String userEmail,
+                                        Double userHeight, String blobString, Long id) {
+        Long pk = rs.getLong(0);
+        String e = rs.getString(1);
+        String n = rs.getString(2);
+        byte[] dataBytes = rs.getBlob(3);
+        String dataString = null;
+        if (dataBytes != null) {
+            dataString = new String(dataBytes);
+        }
+        Number h = rs.getDouble(4);
+        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n +
+                ", blob data: " + dataString + ", height: " + h);
+        return (pk.equals(id) &&
+                e.equals(userEmail) &&
+                n.equals(userName) &&
+                dataString.equals(blobString) &&
+                h.doubleValue() == userHeight.doubleValue());
+    }
+
+    private static Object sqlighterHelloLabel, sqlighterDetailsLabel;
+    private static Object amfibianHelloLabel, amfibianDetailsLabel;
+    private static MobilAction sqlighterStartAction, amfibianStartAction;
+    public static void bindUi(
+            Object title,
+            Object sqlighterHelloLabel, Object sqlighterDetailsLabel, final Object sqlighterStartButton,
+            Object amfibianHelloLabel, Object amfibianDetailsLabel, final Object amfibianStartButton,
+            Object mobilighterCredit
+    ) {
+        Demo.sqlighterHelloLabel = sqlighterHelloLabel;
+        Demo.sqlighterDetailsLabel = sqlighterDetailsLabel;
+        Demo.amfibianHelloLabel = amfibianHelloLabel;
+        Demo.amfibianDetailsLabel = amfibianDetailsLabel;
+
+        final Mobilighter mobilighter = Bootstrap.getInstance().getMobilighter();
+
+        mobilighter.setText(title, "Welcome to SQLighter demo.");
+        mobilighter.setText(mobilighterCredit, "UI controled by Mobilighter.");
+
+        mobilighter.setText(sqlighterHelloLabel, "");
+        mobilighter.setText(amfibianHelloLabel, "");
+        mobilighter.setText(sqlighterDetailsLabel, "");
+        mobilighter.setText(amfibianDetailsLabel, "");
+
+        mobilighter.setText(sqlighterStartButton, "Start SQLighter");
+        mobilighter.setText(amfibianStartButton, "Start AmfibiaN");
+
+        sqlighterStartAction = new MobilAction() {
+            @Override
+            public void onAction(Object param) {
+                sqlighterOperations();
+                mobilighter.hide(sqlighterStartButton);
+            }
+        };
+        mobilighter.addActionListener(sqlighterStartButton, sqlighterStartAction);
+
+        amfibianStartAction = new MobilAction() {
+            @Override
+            public void onAction(Object param) {
+                amfibianOperations();
+                mobilighter.hide(amfibianStartButton);
+            }
+        };
+        mobilighter.addActionListener(amfibianStartButton, amfibianStartAction);
     }
 
 }

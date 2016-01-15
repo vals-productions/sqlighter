@@ -13,12 +13,6 @@ import java.util.List;
 
 /**
  * Created by vsayenko on 9/30/15.
- *
- * AmfibiaN ORM class.
- *
- * This class facilitates business object persistence and
- * retrieval operations by extending AnSqlImpl query generation
- * capabilities.
  */
 public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
     protected SQLighterDb sqlighterDb;

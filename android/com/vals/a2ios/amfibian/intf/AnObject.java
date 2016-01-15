@@ -1,7 +1,5 @@
 package com.vals.a2ios.amfibian.intf;
 
-import com.vals.a2ios.amfibian.intf.AnAttrib;
-
 import org.json.JSONObject;
 
 import java.util.Collection;
@@ -9,17 +7,40 @@ import java.util.Map;
 
 /**
  * Created by vsayenko on 1/8/16.
+ *
+ * AmfibiaN Object management interface.
+ *
  */
 public interface AnObject<T> {
+    /**
+     *
+     * @throws Exception
+     */
     public void resetNativeObject() throws Exception;
 
+    /**
+     *
+     * @return
+     */
     public Class<T> getNativeClass();
 
-    // @SuppressWarnings("unchecked")
+    /**
+     *
+     * @return
+     */
     public Map<String, AnAttrib> getAttribList();
 
+    /**
+     *
+     * @param attribName
+     * @return
+     */
     public AnAttrib getAttrib(String attribName);
 
+    /**
+     *
+     * @param anAttrib
+     */
     public void addAttrib(AnAttrib anAttrib);
 
     /**
@@ -79,11 +100,29 @@ public interface AnObject<T> {
      */
     public String asJsonString(T nativeObject) throws Exception;
 
+    /**
+     *
+     * @return
+     */
     public T getNativeObject();
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     public Map<String, Object> getJsonMap() throws Exception;
 
+    /**
+     *
+     * @param anObjClass
+     */
     public void setNativeClass(Class<T> anObjClass);
 
+    /**
+     *
+     * @param o
+     * @throws Exception
+     */
     public void setNativeObject(T o) throws Exception;
 }

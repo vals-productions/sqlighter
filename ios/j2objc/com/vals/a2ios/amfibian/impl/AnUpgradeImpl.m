@@ -31,8 +31,6 @@
 
 - (void)ensureStorage;
 
-- (id<JavaUtilSet>)getAppliedTasks;
-
 - (void)applyUpdateWithNSString:(NSString *)key
                withJavaUtilList:(id<JavaUtilList>)statementList;
 
@@ -43,8 +41,6 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl, sqlighterDb_, id<SQLighterDb>)
 J2OBJC_FIELD_SETTER(AnUpgradeImpl, ap_, AnOrmImpl *)
 
 __attribute__((unused)) static void AnUpgradeImpl_ensureStorage(AnUpgradeImpl *self);
-
-__attribute__((unused)) static id<JavaUtilSet> AnUpgradeImpl_getAppliedTasks(AnUpgradeImpl *self);
 
 __attribute__((unused)) static void AnUpgradeImpl_applyUpdateWithNSString_withJavaUtilList_(AnUpgradeImpl *self, NSString *key, id<JavaUtilList> statementList);
 
@@ -76,17 +72,27 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, createDate_, JavaUtilDate *)
   AnUpgradeImpl_ensureStorage(self);
 }
 
-- (id<JavaUtilSet>)getAppliedTasks {
-  return AnUpgradeImpl_getAppliedTasks(self);
+- (id<JavaUtilSet>)getAppliedUpdates {
+  id<JavaUtilSet> keys = new_JavaUtilHashSet_init();
+  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeSelectWithNSString:JreStrcat("$$$", @"select key from ", AnUpgradeImpl_Upgrade_TABLE_, @" where value is not null")];
+  while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+    NSString *key = [rs getStringWithInt:0];
+    [keys addWithId:key];
+  }
+  [rs close];
+  return keys;
 }
 
-- (void)applyTasks {
-  id<JavaUtilSet> appliedKeys = AnUpgradeImpl_getAppliedTasks(self);
-  for (NSString * __strong updKey in nil_chk([self getAllKeys])) {
+- (jint)applyUpdates {
+  jint taskCount = 0;
+  id<JavaUtilSet> appliedKeys = [self getAppliedUpdates];
+  for (NSString * __strong updKey in nil_chk([self getUpdateKeys])) {
     if (![((id<JavaUtilSet>) nil_chk(appliedKeys)) containsWithId:updKey]) {
       AnUpgradeImpl_applyUpdateWithNSString_withJavaUtilList_(self, updKey, [self getTaskByKeyWithNSString:updKey]);
+      taskCount++;
     }
   }
+  return taskCount;
 }
 
 - (void)applyUpdateWithNSString:(NSString *)key
@@ -118,17 +124,6 @@ void AnUpgradeImpl_ensureStorage(AnUpgradeImpl *self) {
     NSString *createSql = [((id<AnSql>) nil_chk([((AnOrmImpl *) nil_chk(self->ap_)) startSqlCreate])) getQueryString];
     (void) [self->sqlighterDb_ executeChangeWithNSString:createSql];
   }
-}
-
-id<JavaUtilSet> AnUpgradeImpl_getAppliedTasks(AnUpgradeImpl *self) {
-  id<JavaUtilSet> keys = new_JavaUtilHashSet_init();
-  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(self->sqlighterDb_)) executeSelectWithNSString:JreStrcat("$$$", @"select key from ", AnUpgradeImpl_Upgrade_TABLE_, @" where value is not null")];
-  while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
-    NSString *key = [rs getStringWithInt:0];
-    [keys addWithId:key];
-  }
-  [rs close];
-  return keys;
 }
 
 void AnUpgradeImpl_applyUpdateWithNSString_withJavaUtilList_(AnUpgradeImpl *self, NSString *key, id<JavaUtilList> statementList) {

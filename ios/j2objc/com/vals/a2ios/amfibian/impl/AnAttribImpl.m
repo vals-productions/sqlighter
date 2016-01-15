@@ -48,6 +48,18 @@ NSString *AnAttribImpl_NONAME_CONVERSION_KEY_ = @"nonameConverter";
 
 @implementation AnAttribImpl
 
+- (instancetype)initWithNSString:(NSString *)attribName
+                    withNSString:(NSString *)columnName
+                    withNSString:(NSString *)jsonName {
+  AnAttribImpl_initWithNSString_withNSString_withNSString_(self, attribName, columnName, jsonName);
+  return self;
+}
+
+- (instancetype)initWithNSString:(NSString *)attribColumnJsonName {
+  AnAttribImpl_initWithNSString_(self, attribColumnJsonName);
+  return self;
+}
+
 - (void)setCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter {
   [self setCustomSetConverterWithNSString:AnAttribImpl_NONAME_CONVERSION_KEY_ withAnAttrib_CustomConverter:converter];
 }
@@ -100,18 +112,6 @@ NSString *AnAttribImpl_NONAME_CONVERSION_KEY_ = @"nonameConverter";
 
 - (void)setAnObjectWithAnObject:(id<AnObject>)anObject {
   self->parentAnObject_ = anObject;
-}
-
-- (instancetype)initWithNSString:(NSString *)attribName
-                    withNSString:(NSString *)columnName
-                    withNSString:(NSString *)jsonName {
-  AnAttribImpl_initWithNSString_withNSString_withNSString_(self, attribName, columnName, jsonName);
-  return self;
-}
-
-- (instancetype)initWithNSString:(NSString *)attribColumnJsonName {
-  AnAttribImpl_initWithNSString_(self, attribColumnJsonName);
-  return self;
 }
 
 - (NSString *)getAttribName {

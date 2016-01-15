@@ -12,11 +12,6 @@ import java.util.Map;
 
 /**
  * Created by vsayenko on 9/26/15.
- *
- * AmfibiaN AnObjectImpl's attribute descriptor/handler.
- *
- * It is used for JSON/Database <-> Native object conversion
- * as necessary.
  */
 public class AnAttribImpl implements AnAttrib {
     private AnObject<?> parentAnObject;
@@ -32,8 +27,29 @@ public class AnAttribImpl implements AnAttrib {
     public String defaultGetConverterKey = NONAME_CONVERSION_KEY;
     
     private Map<String, CustomConverter> converterMap = new HashMap<>();   
-    private Map<String, CustomConverter> getConverterMap = new HashMap<>();    
-    
+    private Map<String, CustomConverter> getConverterMap = new HashMap<>();
+
+    public AnAttribImpl(String attribName, String columnName, String jsonName) {
+        this(attribName);
+        this.columnName = columnName;
+        this.jsonName = jsonName;
+    }
+
+    public AnAttribImpl(String attribColumnJsonName) {
+        if (attribColumnJsonName.indexOf(",") != -1) {
+            String[] propColumn = attribColumnJsonName.split(",");
+            this.attribName = propColumn[0].trim();
+            if (propColumn.length > 1 && propColumn[1] != null) {
+                this.columnName = propColumn[1].trim();
+            }
+            if (propColumn.length > 2 && propColumn[2] != null) {
+                this.jsonName = propColumn[2].trim();
+            }
+        } else {
+            this.attribName = attribColumnJsonName;
+        }
+    }
+
     @Override
     public void setCustomSetConverter(CustomConverter converter) {
         setCustomSetConverter(NONAME_CONVERSION_KEY, converter);
@@ -86,27 +102,6 @@ public class AnAttribImpl implements AnAttrib {
     @Override
     public void setAnObject(AnObject<?> anObject) {
         this.parentAnObject = anObject;
-    }
-
-    public AnAttribImpl(String attribName, String columnName, String jsonName) {
-        this(attribName);
-        this.columnName = columnName;
-        this.jsonName = jsonName;
-    }
-
-    public AnAttribImpl(String attribColumnJsonName) {
-        if (attribColumnJsonName.indexOf(",") != -1) {
-            String[] propColumn = attribColumnJsonName.split(",");
-            this.attribName = propColumn[0].trim();
-            if (propColumn.length > 1 && propColumn[1] != null) {
-            	this.columnName = propColumn[1].trim();
-            }
-            if (propColumn.length > 2 && propColumn[2] != null) {
-            	this.jsonName = propColumn[2].trim();
-            }
-        } else {
-            this.attribName = attribColumnJsonName;
-        }
     }
 
     @Override
