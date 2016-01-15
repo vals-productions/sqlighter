@@ -152,7 +152,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
     }
 
     /**
-     * Created by developer on 12/23/15.
+     * Created by vsayenko on 12/23/15.
      */
     public static class Upgrade {
 

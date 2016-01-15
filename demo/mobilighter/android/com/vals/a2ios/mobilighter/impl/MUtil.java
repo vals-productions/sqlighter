@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ *
+ */
 public class MUtil {
 
-	public static final int MIN_PWD_LEN = 6;
-	
 	public static String actualUrl(String baseUrl, String paramString) {
         StringBuilder sb = new StringBuilder(baseUrl);
         if (!MUtil.isEmpty(paramString)) {
