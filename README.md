@@ -14,6 +14,8 @@ You should be able to code SQLite database related logics in java programming la
 
 You can also use SQLighter independently on either of the platforms.
 
+SQLite database is your best choice for mobile platform development since it is part of both iOS and Android SDKs.
+
 # Table of content
 * [Overview] (https://github.com/vals-productions/sqlighter#overview)
 * [ORM] (https://github.com/vals-productions/sqlighter/blob/master/README.md#orm)
@@ -45,8 +47,8 @@ platform specific implementations.
 
 # ORM
 
-[AmfibiaN sub-project](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
-is a "swiss army knife" tool that is integrated with SQLighter. AmfibiaN lets you transition your domain objects between their native state, JSON representation and database persistent storage. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC translation process.
+[AmfibiaN](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md), part of this repository,
+is a "swiss army knife" toolkit that is integrated with SQLighter. AmfibiaN lets you transition your domain objects between their native state, JSON representation and SQL database persistent storage. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC translation process.
 
 ```
       AmfibiaN

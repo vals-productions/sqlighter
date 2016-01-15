@@ -18,9 +18,9 @@ public interface AnObject<T> {
     // @SuppressWarnings("unchecked")
     public Map<String, AnAttrib> getAttribList();
 
-    public AnAttrib getAttrib(String propertyName);
+    public AnAttrib getAttrib(String attribName);
 
-    public void addAttrib(AnAttrib anAttribMapper);
+    public void addAttrib(AnAttrib anAttrib);
 
     /**
      * Returns <String (parameter name), value> map of object's attributes.
