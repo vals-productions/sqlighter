@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.vals.a2ios.mobilighter.impl.MobilighterImpl;
+import com.vals.a2ios.mobilighter.intf.Mobilighter;
 import com.vals.a2ios.sqlighter.impl.SQLighterDbImpl;
 
 public class MainActivity extends ActionBarActivity {
@@ -39,24 +42,36 @@ public class MainActivity extends ActionBarActivity {
         }
         Bootstrap.getInstance().setSqLighterDb(db);
 
-        /**
-         * Demo db operations with SQlighter
+        /*
+            Mobilighter initialization
          */
-        String greetingStr = Demo.sqlighterOperations();
+        Mobilighter mobilighter = new MobilighterImpl();
+        mobilighter.setContext(this);
+        Bootstrap.getInstance().setMobilighter(mobilighter);
 
-        /**
-         * Demo db/json operations with Amfibian
+        /*
+            Connect Ui controls.
          */
-
-        String amfibianGreet = Demo.amfibianOperations();
-
-        Bootstrap.getInstance().getSqLighterDb().close();
-
+        TextView titleText = (TextView) findViewById(R.id.demo_titleTextView);
         TextView mGreetSqlighterView = (TextView)findViewById(R.id.sqlighter_greet);
-        mGreetSqlighterView.setText(greetingStr);
+        TextView mSqlighterDetailsView = (TextView)findViewById(R.id.demo_sqlDemoStatTextView);
+        Button mStartSQLighterButton = (Button) findViewById(R.id.demo_startSqlDemoButton);
 
-        TextView mGreetAmfibianView = (TextView) findViewById(R.id.amfibian_greet);
-        mGreetAmfibianView.setText(amfibianGreet);
+        TextView mGreetAmfibianView = (TextView)findViewById(R.id.amfibian_greet);
+        TextView mAmfibianDetailsView = (TextView)findViewById(R.id.demo_anDemoStatVextView);
+        Button mStartAmfibianButton = (Button) findViewById(R.id.demo_startAnDemoButton);
+
+        TextView mMobilighterCreditTextView = (TextView) findViewById(R.id.demo_mobilighterCreditTextView);
+
+        /**
+         * Everything else is Java -> J2ObjC -> Objective C
+         */
+        Demo.bindUi(
+                titleText,
+                mGreetSqlighterView, mSqlighterDetailsView, mStartSQLighterButton,
+                mGreetAmfibianView, mAmfibianDetailsView, mStartAmfibianButton,
+                mMobilighterCreditTextView
+        );
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.vals.a2ios.amfibian.impl.AnObjectImpl;
 import com.vals.a2ios.amfibian.impl.AnOrmImpl;
 import com.vals.a2ios.amfibian.intf.AnObject;
 import com.vals.a2ios.amfibian.intf.AnOrm;
+import com.vals.a2ios.mobilighter.intf.MobilAction;
+import com.vals.a2ios.mobilighter.intf.Mobilighter;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
@@ -60,11 +62,57 @@ public class Demo {
                 h.doubleValue() == userHeight.doubleValue());
     }
 
+    private static Object sqlighterHelloLabel, sqlighterDetailsLabel;
+    private static Object amfibianHelloLabel, amfibianDetailsLabel;
+    private static MobilAction sqlighterStartAction, amfibianStartAction;
+    public static void bindUi(
+            Object title,
+            Object sqlighterHelloLabel, Object sqlighterDetailsLabel, final Object sqlighterStartButton,
+            Object amfibianHelloLabel, Object amfibianDetailsLabel, final Object amfibianStartButton,
+            Object mobilighterCredit
+    ) {
+        Demo.sqlighterHelloLabel = sqlighterHelloLabel;
+        Demo.sqlighterDetailsLabel = sqlighterDetailsLabel;
+        Demo.amfibianHelloLabel = amfibianHelloLabel;
+        Demo.amfibianDetailsLabel = amfibianDetailsLabel;
+
+        final Mobilighter mobilighter = Bootstrap.getInstance().getMobilighter();
+
+        mobilighter.setText(title, "Welcome to SQLighter demo.");
+        mobilighter.setText(mobilighterCredit, "UI controled by Mobilighter.");
+
+        mobilighter.setText(sqlighterHelloLabel, "");
+        mobilighter.setText(amfibianHelloLabel, "");
+        mobilighter.setText(sqlighterDetailsLabel, "");
+        mobilighter.setText(amfibianDetailsLabel, "");
+
+        mobilighter.setText(sqlighterStartButton, "Start SQLighter");
+        mobilighter.setText(amfibianStartButton, "Start AmfibiaN");
+
+        sqlighterStartAction = new MobilAction() {
+            @Override
+            public void onAction(Object param) {
+                sqlighterOperations();
+                mobilighter.hide(sqlighterStartButton);
+            }
+        };
+        mobilighter.addActionListener(sqlighterStartButton, sqlighterStartAction);
+
+        amfibianStartAction = new MobilAction() {
+            @Override
+            public void onAction(Object param) {
+                amfibianOperations();
+                mobilighter.hide(amfibianStartButton);
+            }
+        };
+        mobilighter.addActionListener(amfibianStartButton, amfibianStartAction);
+    }
+
     /**
      * Demo sequence of Db operations with SQLighter.
      * @return - greeting string to be displayed at the screen
      */
-    public static String sqlighterOperations() {
+    public static void sqlighterOperations() {
         String greetingStr = null;
         try {
             testList.clear();
@@ -319,15 +367,21 @@ public class Demo {
              * Return error message to display at the screen
              * if anything didn't work in the demo.
              */
-            return e.getMessage();
+            Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, "SQLighter Tests did not pass");
+            Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "Exception: " + e.getMessage());
+            return;
         }
         if (testList.size() != passedTestCount) {
-            return "SQLighter tests failed";
+            Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, "SQLighter Tests did not pass");
+            Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "One or more tests failed");
+            return ;
         }
         /**
          * Return greet string to display on the screen
          */
-        return greetingStr + " All tests passed.";
+        Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, greetingStr);
+        Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "All tests passed.");
+        return;
     }
 
     /**
@@ -350,7 +404,7 @@ public class Demo {
      * AnObjectImpl / AnSqlImpl / AnOrmImpl demo
      * @return "Meet AmfiniaN greeting.
      */
-    public static String amfibianOperations() {
+    public static void amfibianOperations() {
         try {
             testList.clear();
             passedTestCount = 0;
@@ -510,14 +564,20 @@ public class Demo {
                     passedTestCount++;
                 }
                 if(testList.size() != passedTestCount) {
-                    return "Tests failed.";
+                    Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN Tests did not pass");
+                    Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, "One or more tests failed");
+                    return;
                 }
-                return name + " All tests passed.";
+                Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, name);
+                Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, "All tests passed.");
+                return;
             }
         } catch (Exception e) {
-            return e.getMessage();
+            Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN Tests did not pass");
+            Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, e.getMessage());
+            return ;
         }
-        return null;
+//        return null;
     }
 
     private static void printAppointments(AnOrm<Appointment> anOrm) throws Exception {

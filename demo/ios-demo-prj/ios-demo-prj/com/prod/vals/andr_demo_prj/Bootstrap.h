@@ -8,6 +8,7 @@
 
 #include "J2ObjC_header.h"
 
+@protocol Mobilighter;
 @protocol SQLighterDb;
 
 @interface Bootstrap : NSObject
@@ -16,7 +17,11 @@
 
 + (Bootstrap *)getInstance;
 
+- (id<Mobilighter>)getMobilighter;
+
 - (id<SQLighterDb>)getSqLighterDb;
+
+- (void)setMobilighterWithMobilighter:(id<Mobilighter>)mobilighter;
 
 - (void)setSqLighterDbWithSQLighterDb:(id<SQLighterDb>)sqLighterDb;
 

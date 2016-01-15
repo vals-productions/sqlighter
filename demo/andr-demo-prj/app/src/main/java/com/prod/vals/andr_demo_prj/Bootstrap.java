@@ -1,5 +1,6 @@
 package com.prod.vals.andr_demo_prj;
 
+import com.vals.a2ios.mobilighter.intf.Mobilighter;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 
 /**
@@ -22,6 +23,7 @@ public class Bootstrap {
         return bootstrap;
     }
     private SQLighterDb sqLighterDb;
+    private Mobilighter mobilighter;
 
     public SQLighterDb getSqLighterDb() {
         return sqLighterDb;
@@ -29,5 +31,13 @@ public class Bootstrap {
 
     public void setSqLighterDb(SQLighterDb sqLighterDb) {
         this.sqLighterDb = sqLighterDb;
+    }
+
+    public Mobilighter getMobilighter() {
+        return mobilighter;
+    }
+
+    public void setMobilighter(Mobilighter mobilighter) {
+        this.mobilighter = mobilighter;
     }
 }

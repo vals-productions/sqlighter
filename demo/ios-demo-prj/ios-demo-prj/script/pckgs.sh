@@ -1,6 +1,8 @@
 #!/bin/sh
 # this is not actual .sh file
 # package name conversion flags used by j2objc
+com.vals.a2ios.mobilighter.intf=
+com.vals.a2ios.mobilighter.impl=
 com.vals.a2ios.sqlighter.intf=
 com.vals.a2ios.amfibian.intf=
 com.vals.a2ios.amfibian.impl=

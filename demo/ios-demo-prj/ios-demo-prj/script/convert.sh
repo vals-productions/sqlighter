@@ -32,15 +32,24 @@ ROOT_DIR=../../../..
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnOrmImpl.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnUpgradeImpl.java
 
+
+./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/mobilighter/android com/vals/a2ios/mobilighter/intf/Mobilighter.java
+./j2objc.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/mobilighter/android com/vals/a2ios/mobilighter/intf/MobilAction.java
+
 #
 
 #
 # Business functionality conversion
 #
 
-# since Android proj. is including sqlighter files through gradle
+# since Android proj. is including sqlighter files through gradle config file
 # we need to tmp bring these files directly into j2objc conversion
 cp -r $ROOT_DIR/android/com/vals $ROOT_DIR/demo/andr-demo-prj/app/src/main/java/com
+# also temporarily bring mibilighter in
+cp -r $ROOT_DIR/demo/mobilighter/android/com/vals $ROOT_DIR/demo/andr-demo-prj/app/src/main/java/com
+
+# ./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/mobilighter/android com/vals/a2ios/mobilighter/intf/Mobilighter.java
+# ./j2objc.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/mobilighter/android com/vals/a2ios/mobilighter/intf/MobilAction.java
 
 ./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Entity.java
 ./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Appointment.java

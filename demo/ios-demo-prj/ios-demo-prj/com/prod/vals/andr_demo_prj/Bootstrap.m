@@ -5,11 +5,13 @@
 
 #include "J2ObjC_source.h"
 #include "com/prod/vals/andr_demo_prj/Bootstrap.h"
+#include "com/vals/a2ios/mobilighter/intf/Mobilighter.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 
 @interface Bootstrap () {
  @public
   id<SQLighterDb> sqLighterDb_;
+  id<Mobilighter> mobilighter_;
 }
 
 - (instancetype)init;
@@ -17,6 +19,7 @@
 @end
 
 J2OBJC_FIELD_SETTER(Bootstrap, sqLighterDb_, id<SQLighterDb>)
+J2OBJC_FIELD_SETTER(Bootstrap, mobilighter_, id<Mobilighter>)
 
 static Bootstrap *Bootstrap_bootstrap_;
 J2OBJC_STATIC_FIELD_GETTER(Bootstrap, bootstrap_, Bootstrap *)
@@ -45,6 +48,14 @@ J2OBJC_IGNORE_DESIGNATED_END
 
 - (void)setSqLighterDbWithSQLighterDb:(id<SQLighterDb>)sqLighterDb {
   self->sqLighterDb_ = sqLighterDb;
+}
+
+- (id<Mobilighter>)getMobilighter {
+  return mobilighter_;
+}
+
+- (void)setMobilighterWithMobilighter:(id<Mobilighter>)mobilighter {
+  self->mobilighter_ = mobilighter;
 }
 
 @end

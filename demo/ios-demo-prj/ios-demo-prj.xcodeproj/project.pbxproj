@@ -79,6 +79,8 @@
 		8B1C0E4C1C3FA4A300FEE4DF /* AnSql.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnSql.m; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/intf/AnSql.m; sourceTree = "<group>"; };
 		8B1C0E4D1C3FA4A300FEE4DF /* AnUpgrade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnUpgrade.h; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/intf/AnUpgrade.h; sourceTree = "<group>"; };
 		8B1C0E4E1C3FA4A300FEE4DF /* AnUpgrade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnUpgrade.m; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/intf/AnUpgrade.m; sourceTree = "<group>"; };
+		8B1C0E551C487E9400FEE4DF /* MobilAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MobilAction.h; path = ../../mobilighter/ios/j2objc/com/vals/a2ios/mobilighter/intf/MobilAction.h; sourceTree = "<group>"; };
+		8B1C0E561C487E9400FEE4DF /* Mobilighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mobilighter.h; path = ../../mobilighter/ios/j2objc/com/vals/a2ios/mobilighter/intf/Mobilighter.h; sourceTree = "<group>"; };
 		8B9848DE1C2535A20098CF13 /* Appointment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Appointment.h; path = com/prod/vals/andr_demo_prj/Appointment.h; sourceTree = "<group>"; };
 		8B9848DF1C2535A20098CF13 /* Appointment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Appointment.m; path = com/prod/vals/andr_demo_prj/Appointment.m; sourceTree = "<group>"; };
 		8B9848E01C2535A20098CF13 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Entity.h; path = com/prod/vals/andr_demo_prj/Entity.h; sourceTree = "<group>"; };
@@ -191,6 +193,8 @@
 		F37D0D631B90180300E73A01 /* ios-demo-prj */ = {
 			isa = PBXGroup;
 			children = (
+				8B1C0E551C487E9400FEE4DF /* MobilAction.h */,
+				8B1C0E561C487E9400FEE4DF /* Mobilighter.h */,
 				8B1C0E451C3FA4A300FEE4DF /* AnAttrib.h */,
 				8B1C0E461C3FA4A300FEE4DF /* AnAttrib.m */,
 				8B1C0E471C3FA4A300FEE4DF /* AnObject.h */,

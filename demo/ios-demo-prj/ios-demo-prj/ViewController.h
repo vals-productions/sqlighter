@@ -9,7 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @interface ViewController : UIViewController {
-    IBOutlet UILabel *greetLabel, *meetAmfibianLabel;
+    IBOutlet UILabel *titleText,
+        *mGreetSqlighterView, *mSqlighterDetailsView,
+        *mGreetAmfibianView, *mAmfibianDetailsView,
+        *mMobilighterCreditTextView;
+    IBOutlet UIButton *mStartSQLighterButton, *mStartAmfibianButton;
 }
 
 @end

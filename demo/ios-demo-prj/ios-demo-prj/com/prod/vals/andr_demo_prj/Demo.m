@@ -16,6 +16,8 @@
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "com/vals/a2ios/amfibian/intf/AnOrm.h"
 #include "com/vals/a2ios/amfibian/intf/AnSql.h"
+#include "com/vals/a2ios/mobilighter/intf/MobilAction.h"
+#include "com/vals/a2ios/mobilighter/intf/Mobilighter.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 #include "java/io/PrintStream.h"
@@ -35,6 +37,30 @@ static id<JavaUtilList> Demo_testList_;
 J2OBJC_STATIC_FIELD_GETTER(Demo, testList_, id<JavaUtilList>)
 J2OBJC_STATIC_FIELD_SETTER(Demo, testList_, id<JavaUtilList>)
 
+static id Demo_sqlighterHelloLabel_;
+J2OBJC_STATIC_FIELD_GETTER(Demo, sqlighterHelloLabel_, id)
+J2OBJC_STATIC_FIELD_SETTER(Demo, sqlighterHelloLabel_, id)
+
+static id Demo_sqlighterDetailsLabel_;
+J2OBJC_STATIC_FIELD_GETTER(Demo, sqlighterDetailsLabel_, id)
+J2OBJC_STATIC_FIELD_SETTER(Demo, sqlighterDetailsLabel_, id)
+
+static id Demo_amfibianHelloLabel_;
+J2OBJC_STATIC_FIELD_GETTER(Demo, amfibianHelloLabel_, id)
+J2OBJC_STATIC_FIELD_SETTER(Demo, amfibianHelloLabel_, id)
+
+static id Demo_amfibianDetailsLabel_;
+J2OBJC_STATIC_FIELD_GETTER(Demo, amfibianDetailsLabel_, id)
+J2OBJC_STATIC_FIELD_SETTER(Demo, amfibianDetailsLabel_, id)
+
+static id<MobilAction> Demo_sqlighterStartAction_;
+J2OBJC_STATIC_FIELD_GETTER(Demo, sqlighterStartAction_, id<MobilAction>)
+J2OBJC_STATIC_FIELD_SETTER(Demo, sqlighterStartAction_, id<MobilAction>)
+
+static id<MobilAction> Demo_amfibianStartAction_;
+J2OBJC_STATIC_FIELD_GETTER(Demo, amfibianStartAction_, id<MobilAction>)
+J2OBJC_STATIC_FIELD_SETTER(Demo, amfibianStartAction_, id<MobilAction>)
+
 __attribute__((unused)) static void Demo_printWithSQLighterRs_(id<SQLighterRs> rs);
 
 __attribute__((unused)) static jboolean Demo_verifyRecordWithSQLighterRs_withNSString_withNSString_withJavaLangDouble_withNSString_withJavaLangLong_(id<SQLighterRs> rs, NSString *userName, NSString *userEmail, JavaLangDouble *userHeight, NSString *blobString, JavaLangLong *id_);
@@ -47,18 +73,77 @@ __attribute__((unused)) static void Demo_printWithJavaUtilCollection_(id<JavaUti
 
 __attribute__((unused)) static void Demo_printWithAppointment_(Appointment *appointment);
 
+@interface Demo_$1 : NSObject < MobilAction > {
+ @public
+  id<Mobilighter> val$mobilighter_;
+  id val$sqlighterStartButton_;
+}
+
+- (void)onActionWithId:(id)param;
+
+- (instancetype)initWithMobilighter:(id<Mobilighter>)capture$0
+                             withId:(id)capture$1;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(Demo_$1)
+
+J2OBJC_FIELD_SETTER(Demo_$1, val$mobilighter_, id<Mobilighter>)
+J2OBJC_FIELD_SETTER(Demo_$1, val$sqlighterStartButton_, id)
+
+__attribute__((unused)) static void Demo_$1_initWithMobilighter_withId_(Demo_$1 *self, id<Mobilighter> capture$0, id capture$1);
+
+__attribute__((unused)) static Demo_$1 *new_Demo_$1_initWithMobilighter_withId_(id<Mobilighter> capture$0, id capture$1) NS_RETURNS_RETAINED;
+
+J2OBJC_TYPE_LITERAL_HEADER(Demo_$1)
+
+@interface Demo_$2 : NSObject < MobilAction > {
+ @public
+  id<Mobilighter> val$mobilighter_;
+  id val$amfibianStartButton_;
+}
+
+- (void)onActionWithId:(id)param;
+
+- (instancetype)initWithMobilighter:(id<Mobilighter>)capture$0
+                             withId:(id)capture$1;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(Demo_$2)
+
+J2OBJC_FIELD_SETTER(Demo_$2, val$mobilighter_, id<Mobilighter>)
+J2OBJC_FIELD_SETTER(Demo_$2, val$amfibianStartButton_, id)
+
+__attribute__((unused)) static void Demo_$2_initWithMobilighter_withId_(Demo_$2 *self, id<Mobilighter> capture$0, id capture$1);
+
+__attribute__((unused)) static Demo_$2 *new_Demo_$2_initWithMobilighter_withId_(id<Mobilighter> capture$0, id capture$1) NS_RETURNS_RETAINED;
+
+J2OBJC_TYPE_LITERAL_HEADER(Demo_$2)
+
 J2OBJC_INITIALIZED_DEFN(Demo)
 
 jint Demo_passedTestCount_ = 0;
 
 @implementation Demo
 
-+ (NSString *)sqlighterOperations {
-  return Demo_sqlighterOperations();
++ (void)bindUiWithId:(id)title
+              withId:(id)sqlighterHelloLabel
+              withId:(id)sqlighterDetailsLabel
+              withId:(id)sqlighterStartButton
+              withId:(id)amfibianHelloLabel
+              withId:(id)amfibianDetailsLabel
+              withId:(id)amfibianStartButton
+              withId:(id)mobilighterCredit {
+  Demo_bindUiWithId_withId_withId_withId_withId_withId_withId_withId_(title, sqlighterHelloLabel, sqlighterDetailsLabel, sqlighterStartButton, amfibianHelloLabel, amfibianDetailsLabel, amfibianStartButton, mobilighterCredit);
 }
 
-+ (NSString *)amfibianOperations {
-  return Demo_amfibianOperations();
++ (void)sqlighterOperations {
+  Demo_sqlighterOperations();
+}
+
++ (void)amfibianOperations {
+  Demo_amfibianOperations();
 }
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN
@@ -106,7 +191,28 @@ jboolean Demo_verifyRecordWithSQLighterRs_withNSString_withNSString_withJavaLang
   return ([((JavaLangLong *) nil_chk(pk)) isEqual:id_] && [((NSString *) nil_chk(e)) isEqual:userEmail] && [((NSString *) nil_chk(n)) isEqual:userName] && [((NSString *) nil_chk(dataString)) isEqual:blobString] && [((NSNumber *) nil_chk(h)) doubleValue] == [((JavaLangDouble *) nil_chk(userHeight)) doubleValue]);
 }
 
-NSString *Demo_sqlighterOperations() {
+void Demo_bindUiWithId_withId_withId_withId_withId_withId_withId_withId_(id title, id sqlighterHelloLabel, id sqlighterDetailsLabel, id sqlighterStartButton, id amfibianHelloLabel, id amfibianDetailsLabel, id amfibianStartButton, id mobilighterCredit) {
+  Demo_initialize();
+  Demo_sqlighterHelloLabel_ = sqlighterHelloLabel;
+  Demo_sqlighterDetailsLabel_ = sqlighterDetailsLabel;
+  Demo_amfibianHelloLabel_ = amfibianHelloLabel;
+  Demo_amfibianDetailsLabel_ = amfibianDetailsLabel;
+  id<Mobilighter> mobilighter = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter];
+  [((id<Mobilighter>) nil_chk(mobilighter)) setTextWithId:title withNSString:@"Welcome to SQLighter demo."];
+  [mobilighter setTextWithId:mobilighterCredit withNSString:@"UI controled by Mobilighter."];
+  [mobilighter setTextWithId:sqlighterHelloLabel withNSString:@""];
+  [mobilighter setTextWithId:amfibianHelloLabel withNSString:@""];
+  [mobilighter setTextWithId:sqlighterDetailsLabel withNSString:@""];
+  [mobilighter setTextWithId:amfibianDetailsLabel withNSString:@""];
+  [mobilighter setTextWithId:sqlighterStartButton withNSString:@"Start SQLighter"];
+  [mobilighter setTextWithId:amfibianStartButton withNSString:@"Start AmfibiaN"];
+  Demo_sqlighterStartAction_ = new_Demo_$1_initWithMobilighter_withId_(mobilighter, sqlighterStartButton);
+  [mobilighter addActionListenerWithId:sqlighterStartButton withMobilAction:Demo_sqlighterStartAction_];
+  Demo_amfibianStartAction_ = new_Demo_$2_initWithMobilighter_withId_(mobilighter, amfibianStartButton);
+  [mobilighter addActionListenerWithId:amfibianStartButton withMobilAction:Demo_amfibianStartAction_];
+}
+
+void Demo_sqlighterOperations() {
   Demo_initialize();
   NSString *greetingStr = nil;
   @try {
@@ -242,12 +348,18 @@ NSString *Demo_sqlighterOperations() {
   }
   @catch (JavaLangException *e) {
     [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:[((JavaLangException *) nil_chk(e)) getMessage]];
-    return [e getMessage];
+    [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_sqlighterHelloLabel_ withNSString:@"SQLighter Tests did not pass"];
+    [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_sqlighterDetailsLabel_ withNSString:JreStrcat("$$", @"Exception: ", [e getMessage])];
+    return;
   }
   if ([((id<JavaUtilList>) nil_chk(Demo_testList_)) size] != Demo_passedTestCount_) {
-    return @"SQLighter tests failed";
+    [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_sqlighterHelloLabel_ withNSString:@"SQLighter Tests did not pass"];
+    [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_sqlighterDetailsLabel_ withNSString:@"One or more tests failed"];
+    return;
   }
-  return JreStrcat("$$", greetingStr, @" All tests passed.");
+  [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_sqlighterHelloLabel_ withNSString:greetingStr];
+  [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_sqlighterDetailsLabel_ withNSString:@"All tests passed."];
+  return;
 }
 
 void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLighterDb> db) {
@@ -260,7 +372,7 @@ void Demo_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLigh
   [rs close];
 }
 
-NSString *Demo_amfibianOperations() {
+void Demo_amfibianOperations() {
   Demo_initialize();
   @try {
     [((id<JavaUtilList>) nil_chk(Demo_testList_)) clear];
@@ -311,15 +423,20 @@ NSString *Demo_amfibianOperations() {
         Demo_passedTestCount_++;
       }
       if ([Demo_testList_ size] != Demo_passedTestCount_) {
-        return @"Tests failed.";
+        [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_amfibianHelloLabel_ withNSString:@"AmfibiaN Tests did not pass"];
+        [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_amfibianDetailsLabel_ withNSString:@"One or more tests failed"];
+        return;
       }
-      return JreStrcat("$$", name, @" All tests passed.");
+      [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_amfibianHelloLabel_ withNSString:name];
+      [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_amfibianDetailsLabel_ withNSString:@"All tests passed."];
+      return;
     }
   }
   @catch (JavaLangException *e) {
-    return [((JavaLangException *) nil_chk(e)) getMessage];
+    [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_amfibianHelloLabel_ withNSString:@"AmfibiaN Tests did not pass"];
+    [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:Demo_amfibianDetailsLabel_ withNSString:[((JavaLangException *) nil_chk(e)) getMessage]];
+    return;
   }
-  return nil;
 }
 
 void Demo_printAppointmentsWithAnOrm_(id<AnOrm> anOrm) {
@@ -352,3 +469,61 @@ Demo *new_Demo_init() {
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo)
+
+@implementation Demo_$1
+
+- (void)onActionWithId:(id)param {
+  Demo_sqlighterOperations();
+  [((id<Mobilighter>) nil_chk(val$mobilighter_)) hideWithId:val$sqlighterStartButton_];
+}
+
+- (instancetype)initWithMobilighter:(id<Mobilighter>)capture$0
+                             withId:(id)capture$1 {
+  Demo_$1_initWithMobilighter_withId_(self, capture$0, capture$1);
+  return self;
+}
+
+@end
+
+void Demo_$1_initWithMobilighter_withId_(Demo_$1 *self, id<Mobilighter> capture$0, id capture$1) {
+  self->val$mobilighter_ = capture$0;
+  self->val$sqlighterStartButton_ = capture$1;
+  (void) NSObject_init(self);
+}
+
+Demo_$1 *new_Demo_$1_initWithMobilighter_withId_(id<Mobilighter> capture$0, id capture$1) {
+  Demo_$1 *self = [Demo_$1 alloc];
+  Demo_$1_initWithMobilighter_withId_(self, capture$0, capture$1);
+  return self;
+}
+
+J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo_$1)
+
+@implementation Demo_$2
+
+- (void)onActionWithId:(id)param {
+  Demo_amfibianOperations();
+  [((id<Mobilighter>) nil_chk(val$mobilighter_)) hideWithId:val$amfibianStartButton_];
+}
+
+- (instancetype)initWithMobilighter:(id<Mobilighter>)capture$0
+                             withId:(id)capture$1 {
+  Demo_$2_initWithMobilighter_withId_(self, capture$0, capture$1);
+  return self;
+}
+
+@end
+
+void Demo_$2_initWithMobilighter_withId_(Demo_$2 *self, id<Mobilighter> capture$0, id capture$1) {
+  self->val$mobilighter_ = capture$0;
+  self->val$amfibianStartButton_ = capture$1;
+  (void) NSObject_init(self);
+}
+
+Demo_$2 *new_Demo_$2_initWithMobilighter_withId_(id<Mobilighter> capture$0, id capture$1) {
+  Demo_$2 *self = [Demo_$2 alloc];
+  Demo_$2_initWithMobilighter_withId_(self, capture$0, capture$1);
+  return self;
+}
+
+J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo_$2)

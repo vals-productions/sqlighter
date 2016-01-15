@@ -11,6 +11,9 @@
 #import "com/vals/a2ios/sqlighter/impl/SQLighterDbImpl.h"
 #import "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 
+#import "com/vals/a2ios/mobilighter/intf/Mobilighter.h"
+#import "com/vals/a2ios/mobilighter/impl/MobilighterImpl.h"
+
 @interface AppDelegate ()
 
 @end
@@ -36,6 +39,10 @@
     [db copyDbOnce];
     [db openIfClosed];
     [b setSqLighterDbWithSQLighterDb:db];
+    
+    MobilighterImpl *m = [[MobilighterImpl alloc] init];
+    
+    [b setMobilighterWithMobilighter: m];
     
     return YES;
 }
