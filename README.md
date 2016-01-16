@@ -256,6 +256,7 @@ to be converted into Objective-C to become SQLighterDb.h, SQLighterDb.m
 and SQLighterRs.h, SQLighterRs.m.
 
 Here's the diagram:
+
 ```
    			  Implementation diagram
    			  
@@ -276,8 +277,16 @@ SQLighterDbImpl.java         SQLighterDbImpl.h
                                /*provided*/ 
                              SQLighterRsImpl.h
                              SQLighterRsImpl.m
-
+                             
+           AmfibiaN
+/*provided*/         /*generated / provided */
+AnAtrib*.java         AnAttrib*.h AnAttrib*.m
+AnObject*.java      AnObject*.h AnObject*.m
+AnSql*.java            AnSql*.h AnSql*.m
+AnOrm*.java          AnOrm*.h AnOrm*.m
+AnUpgrade*.java   AnUpgrade*.h AnUpgrade*.m
 ```
+
 Both implementations conform to SQLighterDb (core database methods) and
 SQLighterRs (ResultSet processing) interfaces. Android implementation for these is
 SQLighterDbImpl.java that is included. iOS implementation is a set of ios/impl *Impl.h 
@@ -320,7 +329,7 @@ the library build. If you need the very latest, use source code integration.
 
 It is actually pretty simple (but using libs is easier) - include java files to Android, 
 include *.h and *.m file to your xCode, make sure everything compiles. If something does
-not work, check doc for more detailed explainations.
+not work, check docs for more detailed explainations.
 
 #### Sqlighter at Android
 

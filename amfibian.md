@@ -7,18 +7,17 @@
 * [Going by example] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#going-by-example)
 * [Class diagram] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#class-diagram)
 * [Database versioning] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#database-versioning)
+* [Install] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#install)
 
 ## Overview
 
 AmfibiaN is called after amphibians,- inhabitants that inhabit in a variety of habitats.
 
-Inhabitants of modern software systems have to be able to transition between their native state, database persistent state, various text representations such as JSON format. AmfibiaN is here to help with these scenarios.
+Inhabitants of modern software systems have to be able to transition between their native state on different platforms, database persistent state and various text representations such as JSON format. AmfibiaN is here to help with these scenarios.
 
 AmfibiaN is a lightweight java framework that stands between native objects, their JSON repesentations, and CRUD database operations with elements of ORM. 
 
 AmfibiaN's code is J2ObjC compatible. You would be able to execute your code in Android and iOS. You can use it in conjunction with SQLighter to implement local database storage and relevant business logics based on SQLite database.
-
-Unlike SQLighter, which has platform specific implementatin and is pre-built for both - Android and iOS platforms, AmfibiaN as of now does not have iOS specific code.
 
 AnUpgrade is a utility that helps to manage schema changes with new application version deployments.
 
@@ -172,6 +171,10 @@ AnUpdate can work with low level SQL DDL statements, or, use some extended Amfib
 
 For instance, istead of developing `CREATE TABLE ..` statement, you could specify AnObject as something you'd like to apply. AnUpdate will take care of ```CREATE TABLE...``` statement generation and execution.
 
+## Install
 
+AmfibiaN is part of SQLighter repository. Follow SQLighter installation instructions.
+
+Note: currently AmfibiaN is not part of library based distribution. Use source code inclusion approach. This note will be removed if/once AmfibiaN becomes available through jar/lib.
 
 *This document is under construction.*
