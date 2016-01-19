@@ -279,12 +279,12 @@ SQLighterDbImpl.java         SQLighterDbImpl.h
                              SQLighterRsImpl.m
                              
            AmfibiaN
-/*provided*/         /*generated / provided */
-AnAtrib*.java         AnAttrib*.h AnAttrib*.m
-AnObject*.java      AnObject*.h AnObject*.m
-AnSql*.java            AnSql*.h AnSql*.m
-AnOrm*.java          AnOrm*.h AnOrm*.m
-AnUpgrade*.java   AnUpgrade*.h AnUpgrade*.m
+  /*provided*/                /*generated / provided */
+AnAtrib*.java                AnAttrib*.h AnAttrib*.m
+AnObject*.java               AnObject*.h AnObject*.m
+AnSql*.java                  AnSql*.h AnSql*.m
+AnOrm*.java                  AnOrm*.h AnOrm*.m
+AnUpgrade*.java              AnUpgrade*.h AnUpgrade*.m
 ```
 
 Both implementations conform to SQLighterDb (core database methods) and
