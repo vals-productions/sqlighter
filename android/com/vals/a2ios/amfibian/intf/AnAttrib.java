@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
  * AmfibiaN AnObjectImpl's attribute descriptor/handler.
  *
  * It is used for JSON/Database/Native object conversion
- * mappings.
+ * mappings. Simple way of thinking of this  - it is a mapper between native objetct's attributes and their JSON and Database counterparts. Also, it might define some custom converters between them in case default converters do not work for you. 
  */
 public interface AnAttrib {
     /**
