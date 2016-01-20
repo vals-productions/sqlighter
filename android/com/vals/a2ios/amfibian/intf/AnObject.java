@@ -28,7 +28,7 @@ public interface AnObject<T> {
      *
      * @return
      */
-    public Map<String, AnAttrib> getAttribList();
+    public Map<String, AnAttrib> getAllAttribMap();
 
     /**
      *
@@ -125,4 +125,22 @@ public interface AnObject<T> {
      * @throws Exception
      */
     public void setNativeObject(T o) throws Exception;
+
+    /**
+     *
+     * @return
+     */
+    AnAttrib[] getAllAttribs();
+
+    /**
+     *
+     * @return
+     */
+    AnObject getParentAnObject();
+
+    /**
+     *
+     * @return
+     */
+    AnAttrib[] getOwnAttribs();
 }

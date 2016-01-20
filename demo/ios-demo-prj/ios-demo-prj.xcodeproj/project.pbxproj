@@ -23,6 +23,7 @@
 		8B1C0E511C3FA4A300FEE4DF /* AnOrm.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B1C0E4A1C3FA4A300FEE4DF /* AnOrm.m */; };
 		8B1C0E521C3FA4A300FEE4DF /* AnSql.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B1C0E4C1C3FA4A300FEE4DF /* AnSql.m */; };
 		8B1C0E531C3FA4A300FEE4DF /* AnUpgrade.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B1C0E4E1C3FA4A300FEE4DF /* AnUpgrade.m */; };
+		8B493BC81C4EA41400D58FD5 /* DemoBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B493BC71C4EA41400D58FD5 /* DemoBase.m */; };
 		8B9848E21C2535A20098CF13 /* Appointment.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9848DF1C2535A20098CF13 /* Appointment.m */; };
 		8B9848E31C2535A20098CF13 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9848E11C2535A20098CF13 /* Entity.m */; };
 		8B9E83DD1C043F4500F8CE66 /* SQLighterDb.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E83DA1C043F4500F8CE66 /* SQLighterDb.m */; };
@@ -81,6 +82,8 @@
 		8B1C0E4E1C3FA4A300FEE4DF /* AnUpgrade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnUpgrade.m; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/intf/AnUpgrade.m; sourceTree = "<group>"; };
 		8B1C0E551C487E9400FEE4DF /* MobilAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MobilAction.h; path = ../../mobilighter/ios/j2objc/com/vals/a2ios/mobilighter/intf/MobilAction.h; sourceTree = "<group>"; };
 		8B1C0E561C487E9400FEE4DF /* Mobilighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mobilighter.h; path = ../../mobilighter/ios/j2objc/com/vals/a2ios/mobilighter/intf/Mobilighter.h; sourceTree = "<group>"; };
+		8B493BC61C4EA41400D58FD5 /* DemoBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DemoBase.h; path = com/prod/vals/andr_demo_prj/DemoBase.h; sourceTree = "<group>"; };
+		8B493BC71C4EA41400D58FD5 /* DemoBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DemoBase.m; path = com/prod/vals/andr_demo_prj/DemoBase.m; sourceTree = "<group>"; };
 		8B9848DE1C2535A20098CF13 /* Appointment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Appointment.h; path = com/prod/vals/andr_demo_prj/Appointment.h; sourceTree = "<group>"; };
 		8B9848DF1C2535A20098CF13 /* Appointment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Appointment.m; path = com/prod/vals/andr_demo_prj/Appointment.m; sourceTree = "<group>"; };
 		8B9848E01C2535A20098CF13 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Entity.h; path = com/prod/vals/andr_demo_prj/Entity.h; sourceTree = "<group>"; };
@@ -193,6 +196,8 @@
 		F37D0D631B90180300E73A01 /* ios-demo-prj */ = {
 			isa = PBXGroup;
 			children = (
+				8B493BC61C4EA41400D58FD5 /* DemoBase.h */,
+				8B493BC71C4EA41400D58FD5 /* DemoBase.m */,
 				8B1C0E551C487E9400FEE4DF /* MobilAction.h */,
 				8B1C0E561C487E9400FEE4DF /* Mobilighter.h */,
 				8B1C0E451C3FA4A300FEE4DF /* AnAttrib.h */,
@@ -360,6 +365,7 @@
 				8B1C0E531C3FA4A300FEE4DF /* AnUpgrade.m in Sources */,
 				8B1C0E331C3CDBA600FEE4DF /* MobilighterImpl.m in Sources */,
 				8B1C0E421C3FA49100FEE4DF /* AnOrmImpl.m in Sources */,
+				8B493BC81C4EA41400D58FD5 /* DemoBase.m in Sources */,
 				8B1C0E351C3CDBA600FEE4DF /* Mobilighter.m in Sources */,
 				F37D0D671B90180300E73A01 /* main.m in Sources */,
 				F32A9EA71B9AD6BF0092C868 /* Demo.m in Sources */,

@@ -23,7 +23,6 @@ public class MobilighterImpl implements Mobilighter {
     protected Activity context;
 
     protected SimpleDateFormat dateFormat = new SimpleDateFormat();
-    // private SimpleDateFormat dateTimeFormat = new SimpleDateFormat(Mobilighter.DATE_TIME_FORMAT_STR);
 
     public MobilighterImpl() {
     }

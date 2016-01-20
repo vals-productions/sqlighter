@@ -56,22 +56,16 @@ J2OBJC_IGNORE_DESIGNATED_BEGIN
 J2OBJC_IGNORE_DESIGNATED_END
 
 - (instancetype)initWithIOSClass:(IOSClass *)anObjClass
-                    withAnObject:(id<AnObject>)parentMapper {
-  AnObjectImpl_initWithIOSClass_withAnObject_(self, anObjClass, parentMapper);
-  return self;
-}
-
-- (instancetype)initWithIOSClass:(IOSClass *)anObjClass
                withNSStringArray:(IOSObjectArray *)propertyNames
-                    withAnObject:(id<AnObject>)parentMapper {
-  AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(self, anObjClass, propertyNames, parentMapper);
+                    withAnObject:(id<AnObject>)parentAnObject {
+  AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(self, anObjClass, propertyNames, parentAnObject);
   return self;
 }
 
 - (instancetype)initWithIOSClass:(IOSClass *)anObjClass
                withAnAttribArray:(IOSObjectArray *)propertyMappers
-                    withAnObject:(id<AnObject>)parentMapper {
-  AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(self, anObjClass, propertyMappers, parentMapper);
+                    withAnObject:(id<AnObject>)parentAnObject {
+  AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(self, anObjClass, propertyMappers, parentAnObject);
   return self;
 }
 
@@ -81,10 +75,8 @@ J2OBJC_IGNORE_DESIGNATED_END
   return self;
 }
 
-- (instancetype)initWithIOSClass:(IOSClass *)anObjClass
-               withAnAttribArray:(IOSObjectArray *)propertyMappers {
-  AnObjectImpl_initWithIOSClass_withAnAttribArray_(self, anObjClass, propertyMappers);
-  return self;
+- (id<AnObject>)getParentAnObject {
+  return parentAnObject_;
 }
 
 - (void)resetNativeObject {
@@ -106,15 +98,37 @@ J2OBJC_IGNORE_DESIGNATED_END
   return nativeClass_;
 }
 
-- (id<JavaUtilMap>)getAttribList {
+- (id<JavaUtilMap>)getAllAttribMap {
   id<JavaUtilMap> p = new_JavaUtilHashMap_init();
   if (parentAnObject_ != nil) {
-    [p putAllWithJavaUtilMap:[parentAnObject_ getAttribList]];
+    [p putAllWithJavaUtilMap:[parentAnObject_ getAllAttribMap]];
   }
   if (attribMap_ != nil) {
     [p putAllWithJavaUtilMap:attribMap_];
   }
   return p;
+}
+
+- (IOSObjectArray *)getAllAttribs {
+  id<JavaUtilMap> map = [self getAllAttribMap];
+  IOSObjectArray *attribs = [IOSObjectArray newArrayWithLength:[((id<JavaUtilMap>) nil_chk(map)) size] type:AnAttrib_class_()];
+  id<JavaUtilSet> keys = [map keySet];
+  jint i = 0;
+  for (NSString * __strong key in nil_chk(keys)) {
+    (void) IOSObjectArray_Set(attribs, i++, [map getWithId:key]);
+  }
+  return attribs;
+}
+
+- (IOSObjectArray *)getOwnAttribs {
+  id<JavaUtilMap> map = attribMap_;
+  IOSObjectArray *attribs = [IOSObjectArray newArrayWithLength:[((id<JavaUtilMap>) nil_chk(map)) size] type:AnAttrib_class_()];
+  id<JavaUtilSet> keys = [map keySet];
+  jint i = 0;
+  for (NSString * __strong key in nil_chk(keys)) {
+    (void) IOSObjectArray_Set(attribs, i++, [map getWithId:key]);
+  }
+  return attribs;
 }
 
 - (id<AnAttrib>)getAttribWithNSString:(NSString *)propertyName {
@@ -297,39 +311,27 @@ AnObjectImpl *new_AnObjectImpl_init() {
   return self;
 }
 
-void AnObjectImpl_initWithIOSClass_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, id<AnObject> parentMapper) {
+void AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentAnObject) {
   (void) NSObject_init(self);
   self->attribMap_ = new_JavaUtilLinkedHashMap_init();
-  [self init__WithIOSClass:anObjClass withAnObject:parentMapper];
+  [self init__WithIOSClass:anObjClass withNSStringArray:propertyNames withAnObject:parentAnObject];
 }
 
-AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnObject_(IOSClass *anObjClass, id<AnObject> parentMapper) {
+AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentAnObject) {
   AnObjectImpl *self = [AnObjectImpl alloc];
-  AnObjectImpl_initWithIOSClass_withAnObject_(self, anObjClass, parentMapper);
+  AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(self, anObjClass, propertyNames, parentAnObject);
   return self;
 }
 
-void AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentMapper) {
+void AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentAnObject) {
   (void) NSObject_init(self);
   self->attribMap_ = new_JavaUtilLinkedHashMap_init();
-  [self init__WithIOSClass:anObjClass withNSStringArray:propertyNames withAnObject:parentMapper];
+  [self init__WithIOSClass:anObjClass withAnAttribArray:propertyMappers withAnObject:parentAnObject];
 }
 
-AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentMapper) {
+AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentAnObject) {
   AnObjectImpl *self = [AnObjectImpl alloc];
-  AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(self, anObjClass, propertyNames, parentMapper);
-  return self;
-}
-
-void AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentMapper) {
-  (void) NSObject_init(self);
-  self->attribMap_ = new_JavaUtilLinkedHashMap_init();
-  [self init__WithIOSClass:anObjClass withAnAttribArray:propertyMappers withAnObject:parentMapper];
-}
-
-AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentMapper) {
-  AnObjectImpl *self = [AnObjectImpl alloc];
-  AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(self, anObjClass, propertyMappers, parentMapper);
+  AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(self, anObjClass, propertyMappers, parentAnObject);
   return self;
 }
 
@@ -342,18 +344,6 @@ void AnObjectImpl_initWithIOSClass_withNSStringArray_(AnObjectImpl *self, IOSCla
 AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withNSStringArray_(IOSClass *anObjClass, IOSObjectArray *propertyNames) {
   AnObjectImpl *self = [AnObjectImpl alloc];
   AnObjectImpl_initWithIOSClass_withNSStringArray_(self, anObjClass, propertyNames);
-  return self;
-}
-
-void AnObjectImpl_initWithIOSClass_withAnAttribArray_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyMappers) {
-  (void) NSObject_init(self);
-  self->attribMap_ = new_JavaUtilLinkedHashMap_init();
-  [self init__WithIOSClass:anObjClass withAnAttribArray:propertyMappers];
-}
-
-AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_(IOSClass *anObjClass, IOSObjectArray *propertyMappers) {
-  AnObjectImpl *self = [AnObjectImpl alloc];
-  AnObjectImpl_initWithIOSClass_withAnAttribArray_(self, anObjClass, propertyMappers);
   return self;
 }
 

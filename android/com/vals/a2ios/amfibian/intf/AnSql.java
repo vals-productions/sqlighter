@@ -77,13 +77,13 @@ public interface AnSql<T> extends AnObject<T> {
      *
      * @param names
      */
-    void addInclAttribs(String[] names);
+    void addInclAttribs(String... names);
 
     /**
      *
      * @param names
      */
-    void addSkipAttribs(String[] names);
+    void addSkipAttribs(String... names);
 
     /**
      *

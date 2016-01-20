@@ -23,7 +23,6 @@
     self = [super init];
     if ( self ) {
         self.dateFormatter = [[NSDateFormatter alloc] init];
-        [self.dateFormatter setDateFormat: Mobilighter_DATE_FORMAT_STR_];
     }
     return self;
 }

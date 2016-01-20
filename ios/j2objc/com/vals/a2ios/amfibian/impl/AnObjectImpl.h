@@ -26,21 +26,15 @@
 - (instancetype)init;
 
 - (instancetype)initWithIOSClass:(IOSClass *)anObjClass
-               withAnAttribArray:(IOSObjectArray *)propertyMappers;
-
-- (instancetype)initWithIOSClass:(IOSClass *)anObjClass
                withAnAttribArray:(IOSObjectArray *)propertyMappers
-                    withAnObject:(id<AnObject>)parentMapper;
-
-- (instancetype)initWithIOSClass:(IOSClass *)anObjClass
-                    withAnObject:(id<AnObject>)parentMapper;
+                    withAnObject:(id<AnObject>)parentAnObject;
 
 - (instancetype)initWithIOSClass:(IOSClass *)anObjClass
                withNSStringArray:(IOSObjectArray *)propertyNames;
 
 - (instancetype)initWithIOSClass:(IOSClass *)anObjClass
                withNSStringArray:(IOSObjectArray *)propertyNames
-                    withAnObject:(id<AnObject>)parentMapper;
+                    withAnObject:(id<AnObject>)parentAnObject;
 
 - (void)addAttribWithAnAttrib:(id<AnAttrib>)anAttribMapper;
 
@@ -56,15 +50,21 @@
 
 - (id)asNativeObjectWithNSString:(NSString *)jsonString;
 
-- (id<AnAttrib>)getAttribWithNSString:(NSString *)propertyName;
+- (id<JavaUtilMap>)getAllAttribMap;
 
-- (id<JavaUtilMap>)getAttribList;
+- (IOSObjectArray *)getAllAttribs;
+
+- (id<AnAttrib>)getAttribWithNSString:(NSString *)propertyName;
 
 - (id<JavaUtilMap>)getJsonMap;
 
 - (IOSClass *)getNativeClass;
 
 - (id)getNativeObject;
+
+- (IOSObjectArray *)getOwnAttribs;
+
+- (id<AnObject>)getParentAnObject;
 
 - (void)resetNativeObject;
 
@@ -101,25 +101,17 @@ FOUNDATION_EXPORT void AnObjectImpl_init(AnObjectImpl *self);
 
 FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_init() NS_RETURNS_RETAINED;
 
-FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, id<AnObject> parentMapper);
+FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentAnObject);
 
-FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnObject_(IOSClass *anObjClass, id<AnObject> parentMapper) NS_RETURNS_RETAINED;
+FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentAnObject) NS_RETURNS_RETAINED;
 
-FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentMapper);
+FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentAnObject);
 
-FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentMapper) NS_RETURNS_RETAINED;
-
-FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentMapper);
-
-FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentMapper) NS_RETURNS_RETAINED;
+FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentAnObject) NS_RETURNS_RETAINED;
 
 FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withNSStringArray_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyNames);
 
 FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withNSStringArray_(IOSClass *anObjClass, IOSObjectArray *propertyNames) NS_RETURNS_RETAINED;
-
-FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withAnAttribArray_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyMappers);
-
-FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_(IOSClass *anObjClass, IOSObjectArray *propertyMappers) NS_RETURNS_RETAINED;
 
 J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl)
 

@@ -9,6 +9,7 @@
 #include "J2ObjC_header.h"
 
 @class IOSClass;
+@class IOSObjectArray;
 @class OrgJsonJSONObject;
 @protocol AnAttrib;
 @protocol JavaUtilCollection;
@@ -20,7 +21,7 @@
 
 - (IOSClass *)getNativeClass;
 
-- (id<JavaUtilMap>)getAttribList;
+- (id<JavaUtilMap>)getAllAttribMap;
 
 - (id<AnAttrib>)getAttribWithNSString:(NSString *)attribName;
 
@@ -45,6 +46,12 @@
 - (void)setNativeClassWithIOSClass:(IOSClass *)anObjClass;
 
 - (void)setNativeObjectWithId:(id)o;
+
+- (IOSObjectArray *)getAllAttribs;
+
+- (id<AnObject>)getParentAnObject;
+
+- (IOSObjectArray *)getOwnAttribs;
 
 @end
 

@@ -31,6 +31,9 @@
 #pragma mark Public
 
 - (instancetype)initWithNSString:(NSString *)tableName
+                    withAnObject:(id<AnObject>)anAllDefinedObject;
+
+- (instancetype)initWithNSString:(NSString *)tableName
                     withIOSClass:(IOSClass *)anObjClass
                withAnAttribArray:(IOSObjectArray *)attribList
                     withAnObject:(id<AnObject>)parentAnObject;
@@ -114,6 +117,10 @@ FOUNDATION_EXPORT AnSqlImpl *new_AnSqlImpl_initWithNSString_withIOSClass_withAnA
 FOUNDATION_EXPORT void AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(AnSqlImpl *self, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject);
 
 FOUNDATION_EXPORT AnSqlImpl *new_AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject) NS_RETURNS_RETAINED;
+
+FOUNDATION_EXPORT void AnSqlImpl_initWithNSString_withAnObject_(AnSqlImpl *self, NSString *tableName, id<AnObject> anAllDefinedObject);
+
+FOUNDATION_EXPORT AnSqlImpl *new_AnSqlImpl_initWithNSString_withAnObject_(NSString *tableName, id<AnObject> anAllDefinedObject) NS_RETURNS_RETAINED;
 
 FOUNDATION_EXPORT void AnSqlImpl_init(AnSqlImpl *self);
 

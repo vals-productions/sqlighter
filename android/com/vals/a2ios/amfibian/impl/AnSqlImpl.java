@@ -42,8 +42,19 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         super(anObjClass, attribList, parentAnObject);
         this.tableName = tableName;
     }
+
     public AnSqlImpl(String tableName, Class<T> anObjClass, String[] attribColumnList, AnObject<?> parentAnObject) {
         super(anObjClass, attribColumnList, parentAnObject);
+        this.tableName = tableName;
+    }
+
+    public AnSqlImpl(String tableName, AnObject<T> anAllDefinedObject) throws Exception {
+        if(anAllDefinedObject.getNativeObject() == null) {
+            anAllDefinedObject.resetNativeObject();
+        }
+        init(anAllDefinedObject.getNativeClass(),
+             anAllDefinedObject.getOwnAttribs(),
+             anAllDefinedObject.getParentAnObject());
         this.tableName = tableName;
     }
 
@@ -118,7 +129,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
                 return true;
             }
         } else if (getSkipAttrNameList().size() > 0) {
-            if (!getSkipAttrNameList().contains(propertyName)) {
+            if (getSkipAttrNameList().contains(propertyName)) {
                 return true;
             } else {
                 return false;
@@ -139,7 +150,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         setNativeObject(objectToInsert);
         type = TYPE_INSERT;
         insertParamClause = new StringBuilder();
-        Map<String, AnAttrib> om = getAttribList();
+        Map<String, AnAttrib> om = getAllAttribMap();
         Set<String> attrNames = om.keySet();
         for (String attrName: attrNames) {
             if (!isSkipAttr(attrName)) {
@@ -168,7 +179,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         reset();
         setNativeObject(objectToUpdate);
         type = TYPE_UPDATE;
-        Map<String, AnAttrib> om = getAttribList();
+        Map<String, AnAttrib> om = getAllAttribMap();
         Set<String> attrNames = om.keySet();
         for (String attrName: attrNames) {
             if (!isSkipAttr(attrName)) {
@@ -197,7 +208,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         reset();
         type = TYPE_CREATE;
         Map<String, AnAttrib> cm =
-        getAttribList();
+        getAllAttribMap();
         Set<String> attribNames = cm.keySet();
         for (String attribName: attribNames) {
                 AnAttrib attr = cm.get(attribName);
@@ -250,7 +261,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         reset();
         type = TYPE_SELECT;
         alias = tableName + "0";
-        Map<String, AnAttrib> cm = getAttribList();
+        Map<String, AnAttrib> cm = getAllAttribMap();
         Set<String> propertyNames = cm.keySet();
         for (String pName: propertyNames) {
             if (!isSkipAttr(pName)) {

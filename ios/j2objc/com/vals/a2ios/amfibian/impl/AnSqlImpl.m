@@ -84,6 +84,12 @@ __attribute__((unused)) static NSString *AnSqlImpl_ensureFirstConditionWithNSStr
   return self;
 }
 
+- (instancetype)initWithNSString:(NSString *)tableName
+                    withAnObject:(id<AnObject>)anAllDefinedObject {
+  AnSqlImpl_initWithNSString_withAnObject_(self, tableName, anAllDefinedObject);
+  return self;
+}
+
 - (id<JavaUtilSet>)getSkipAttrNameList {
   return skipAttrNameList_;
 }
@@ -149,7 +155,7 @@ J2OBJC_IGNORE_DESIGNATED_END
     }
   }
   else if ([((id<JavaUtilSet>) nil_chk([self getSkipAttrNameList])) size] > 0) {
-    if (![((id<JavaUtilSet>) nil_chk([self getSkipAttrNameList])) containsWithId:propertyName]) {
+    if ([((id<JavaUtilSet>) nil_chk([self getSkipAttrNameList])) containsWithId:propertyName]) {
       return true;
     }
     else {
@@ -169,7 +175,7 @@ J2OBJC_IGNORE_DESIGNATED_END
   [self setNativeObjectWithId:objectToInsert];
   type_ = AnSqlImpl_TYPE_INSERT;
   insertParamClause_ = new_JavaLangStringBuilder_init();
-  id<JavaUtilMap> om = [self getAttribList];
+  id<JavaUtilMap> om = [self getAllAttribMap];
   id<JavaUtilSet> attrNames = [((id<JavaUtilMap>) nil_chk(om)) keySet];
   for (NSString * __strong attrName in nil_chk(attrNames)) {
     if (![self isSkipAttrWithNSString:attrName]) {
@@ -198,7 +204,7 @@ J2OBJC_IGNORE_DESIGNATED_END
   AnSqlImpl_reset(self);
   [self setNativeObjectWithId:objectToUpdate];
   type_ = AnSqlImpl_TYPE_UPDATE;
-  id<JavaUtilMap> om = [self getAttribList];
+  id<JavaUtilMap> om = [self getAllAttribMap];
   id<JavaUtilSet> attrNames = [((id<JavaUtilMap>) nil_chk(om)) keySet];
   for (NSString * __strong attrName in nil_chk(attrNames)) {
     if (![self isSkipAttrWithNSString:attrName]) {
@@ -225,7 +231,7 @@ J2OBJC_IGNORE_DESIGNATED_END
 - (id<AnSql>)startSqlCreate {
   AnSqlImpl_reset(self);
   type_ = AnSqlImpl_TYPE_CREATE;
-  id<JavaUtilMap> cm = [self getAttribList];
+  id<JavaUtilMap> cm = [self getAllAttribMap];
   id<JavaUtilSet> attribNames = [((id<JavaUtilMap>) nil_chk(cm)) keySet];
   for (NSString * __strong attribName in nil_chk(attribNames)) {
     id<AnAttrib> attr = [cm getWithId:attribName];
@@ -280,7 +286,7 @@ J2OBJC_IGNORE_DESIGNATED_END
   AnSqlImpl_reset(self);
   type_ = AnSqlImpl_TYPE_SELECT;
   alias_ = JreStrcat("$C", tableName_, '0');
-  id<JavaUtilMap> cm = [self getAttribList];
+  id<JavaUtilMap> cm = [self getAllAttribMap];
   id<JavaUtilSet> propertyNames = [((id<JavaUtilMap>) nil_chk(cm)) keySet];
   for (NSString * __strong pName in nil_chk(propertyNames)) {
     if (![self isSkipAttrWithNSString:pName]) {
@@ -420,6 +426,27 @@ void AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(AnS
 AnSqlImpl *new_AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject) {
   AnSqlImpl *self = [AnSqlImpl alloc];
   AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(self, tableName, anObjClass, attribColumnList, parentAnObject);
+  return self;
+}
+
+void AnSqlImpl_initWithNSString_withAnObject_(AnSqlImpl *self, NSString *tableName, id<AnObject> anAllDefinedObject) {
+  (void) AnObjectImpl_init(self);
+  self->parameters_ = new_JavaUtilArrayList_init();
+  self->alias_ = @"";
+  self->isWhere_ = false;
+  self->attribNameList_ = new_JavaUtilLinkedList_init();
+  self->skipAttrNameList_ = new_JavaUtilHashSet_init();
+  self->inclAttrNameList_ = new_JavaUtilHashSet_init();
+  if ([((id<AnObject>) nil_chk(anAllDefinedObject)) getNativeObject] == nil) {
+    [anAllDefinedObject resetNativeObject];
+  }
+  [self init__WithIOSClass:[anAllDefinedObject getNativeClass] withAnAttribArray:[anAllDefinedObject getOwnAttribs] withAnObject:[anAllDefinedObject getParentAnObject]];
+  self->tableName_ = tableName;
+}
+
+AnSqlImpl *new_AnSqlImpl_initWithNSString_withAnObject_(NSString *tableName, id<AnObject> anAllDefinedObject) {
+  AnSqlImpl *self = [AnSqlImpl alloc];
+  AnSqlImpl_initWithNSString_withAnObject_(self, tableName, anAllDefinedObject);
   return self;
 }
 

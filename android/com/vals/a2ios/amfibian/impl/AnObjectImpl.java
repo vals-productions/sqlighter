@@ -31,24 +31,28 @@ public class AnObjectImpl<T> implements AnObject<T> {
     public AnObjectImpl() {
     }
 
-    public AnObjectImpl(Class<T> anObjClass, AnObject<?> parentMapper) {
-        init(anObjClass, parentMapper);
+//    public AnObjectImpl(Class<T> anObjClass, AnObject<?> parentAnObject) {
+//        init(anObjClass, parentAnObject);
+//    }
+
+    public AnObjectImpl(Class<T> anObjClass, String[] propertyNames, AnObject<?> parentAnObject) {
+        init(anObjClass, propertyNames, parentAnObject);
     }
 
-    public AnObjectImpl(Class<T> anObjClass, String[] propertyNames, AnObject<?> parentMapper) {
-        init(anObjClass, propertyNames, parentMapper);
-    }
-
-    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers, AnObject<?> parentMapper) {
-        init(anObjClass, propertyMappers, parentMapper);
+    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers, AnObject<?> parentAnObject) {
+        init(anObjClass, propertyMappers, parentAnObject);
     }
 
     public AnObjectImpl(Class<T> anObjClass, String[] propertyNames) {
         init(anObjClass, propertyNames);
     }
 
-    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers) {
-        init(anObjClass, propertyMappers);
+//    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers) {
+//        init(anObjClass, propertyMappers);
+//    }
+
+    public AnObject getParentAnObject() {
+        return parentAnObject;
     }
 
     @Override
@@ -75,15 +79,38 @@ public class AnObjectImpl<T> implements AnObject<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-	public Map<String, AnAttrib> getAttribList() {
+	public Map<String, AnAttrib> getAllAttribMap() {
         Map<String, AnAttrib> p = new HashMap<>();
         if(parentAnObject != null) {
-            p.putAll(parentAnObject.getAttribList());
+            p.putAll(parentAnObject.getAllAttribMap());
         }
         if (attribMap != null) {
             p.putAll(attribMap);
         }
         return p;
+    }
+
+    public AnAttrib[] getAllAttribs() {
+        Map<String, AnAttrib> map = getAllAttribMap();
+        AnAttrib[] attribs = new AnAttrib[map.size()];
+        Set<String> keys = map.keySet();
+        int i = 0;
+        for (String key: keys) {
+            attribs[i++] = map.get(key);
+        }
+        return attribs;
+    }
+
+    public AnAttrib[] getOwnAttribs() {
+        Map<String, AnAttrib> map = attribMap;
+        AnAttrib[] attribs = new AnAttrib[map.size()];
+        Set<String> keys = map.keySet();
+        int i = 0;
+        for (String key: keys) {
+            attribs[i++] = map.get(key);
+        }
+        return attribs;
+
     }
 
     @Override

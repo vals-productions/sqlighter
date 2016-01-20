@@ -7,8 +7,9 @@
 #define _ComProdValsAndr_demo_prjDemo_H_
 
 #include "J2ObjC_header.h"
+#include "com/prod/vals/andr_demo_prj/DemoBase.h"
 
-@interface Demo : NSObject
+@interface Demo : DemoBase
 
 #pragma mark Public
 
@@ -29,11 +30,8 @@
 
 @end
 
-J2OBJC_STATIC_INIT(Demo)
+J2OBJC_EMPTY_STATIC_INIT(Demo)
 
-FOUNDATION_EXPORT jint Demo_passedTestCount_;
-J2OBJC_STATIC_FIELD_GETTER(Demo, passedTestCount_, jint)
-J2OBJC_STATIC_FIELD_REF_GETTER(Demo, passedTestCount_, jint)
 FOUNDATION_EXPORT void Demo_sqlighterOperations();
 
 FOUNDATION_EXPORT void Demo_amfibianOperations();

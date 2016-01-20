@@ -13,8 +13,6 @@ import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,9 +21,7 @@ import java.util.List;
  * This class is being converted into iOS module. It represents some business
  * logic that utilizes SQLite db access. Produces the same output in iOS.
  */
-public class Demo {
-    public static int passedTestCount = 0;
-    private static List<String> testList = new LinkedList<>();
+public class Demo extends DemoBase {
 
     /**
      * Demo sequence of Db operations with SQLighter.
@@ -34,8 +30,7 @@ public class Demo {
     public static void sqlighterOperations() {
         String greetingStr = null;
         try {
-            testList.clear();
-            passedTestCount = 0;
+            resetTestCounters();
             SQLighterRs rs = null;
             SQLighterDb db = Bootstrap.getInstance().getSqLighterDb();
             /**
@@ -82,11 +77,9 @@ public class Demo {
             db.addParam(userEmail); // select records with email == "user5@example.com"
             System.out.println("check if the record was inserted");
             rs = db.executeSelect("select id, email, name, data, height from user where email = ?");
-            testList.add("insert/select");
+            startTest("insert/select test");
             while (rs.hasNext()) {
-                if(verifyRecord(rs, userName, userEmail, userHeight, blobString, insertedId)) {
-                    passedTestCount++;
-                }
+                verifyTest(verifyRecord(rs, userName, userEmail, userHeight, blobString, insertedId));
             }
             rs.close();
 
@@ -98,19 +91,14 @@ public class Demo {
             Long alteredRows = db.executeChange("update user set email = ? where email = ?");
             System.out.println("Updated row count: " + alteredRows);
 
-            testList.add("update row count");
-            if(alteredRows.equals(1l)) {
-                passedTestCount++;
-            }
+            checkTest("update row count", alteredRows.equals(1l));
 
             System.out.println("check if null was set");
             db.addParam(insertedId); // id ==
             rs = db.executeSelect("select email from user where id = ?");
-            testList.add("null handling");
+            startTest("null handling");
             while (rs.hasNext()) {
-                if(rs.isNull(0)) {
-                    passedTestCount++;
-                }
+                verifyTest(rs.isNull(0));
             }
             rs.close();
 
@@ -126,15 +114,11 @@ public class Demo {
 
             System.out.println("Updated row count: " + alteredRows);
 
-            testList.add("batch update");
-            if(alteredRows.equals(2l)) { // null and userEmail
-                passedTestCount++;
-            }
+            checkTest("batch update", alteredRows.equals(2l));
 
             /**
              * And verify table content again
              */
-            testList.add("nested query update");
             System.out.println("after update state 2");
             rs = db.executeSelect("select id, email, name, data, height from user");
             int counter = 0;
@@ -152,21 +136,16 @@ public class Demo {
                     counter += alteredRows;
                 }
             }
-            if(counter == 3) { // id == 1, 2, 3
-                passedTestCount++;
-            }
+            checkTest("nested query update", counter == 3); // id == 1, 2, 3
             rs.close();
 
             /**
              * Delete example
              */
-            testList.add("delete test");
             db.addParam(2); // delete records where id == 2
             alteredRows = db.executeChange("delete from user where id = ?");
             System.out.println("Deleted rows: " + alteredRows);
-            if(alteredRows.equals(1l)) {
-                passedTestCount++;
-            }
+            checkTest("delete test", alteredRows.equals(1l));
             printUserTable("after delete state", db);
 
             /**
@@ -183,7 +162,6 @@ public class Demo {
              */
             db.addParam("123 main str, walnut creek, ca");
             db.addParam(1);
-            testList.add("date handling test");
             Date dateNow = new Date();
             System.out.println("Date now: " + dateNow.toString());
             db.addParam(new Date());
@@ -207,9 +185,7 @@ public class Demo {
                  * We need to drop them in order to pass the test below;
                  */
                 dateNow = db.getDateWithoutMillis(dateNow);
-                if(date.equals(dateNow)) {
-                    passedTestCount++;
-                }
+                checkTest("date handling test", date.equals(dateNow));
                 /*
                 This will treat the column as date because it contains '_date' in
                 its name.
@@ -224,7 +200,7 @@ public class Demo {
              * We would like to execute 2 updates as one
              * transaction.
              */
-            testList.add("transaction/exception handling");
+            startTest("transaction/exception handling");
             try {
                 /**
                  * Starts the transaction
@@ -259,12 +235,12 @@ public class Demo {
             } catch (Throwable e) {
                 // Do something....
                 System.out.println(e.getMessage());
-                passedTestCount++;
                 /**
                  * Rollback as something went wrong, and we wanted all
                  * or nothing to be saved.
                  */
                 db.rollbackTransaction();
+                verifyTest(true);
             }
 
             printUserTable("after transaction commit or rollback", db);
@@ -279,19 +255,18 @@ public class Demo {
                 greetingStr =  new String(greet);
             }
             rs.close();
-
         } catch(Exception e) {
             System.out.println(e.getMessage());
             /**
              * Return error message to display at the screen
              * if anything didn't work in the demo.
              */
-            Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, "SQLighter Tests did not pass");
+            Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, "SQLighter DemoBase did not pass");
             Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "Exception: " + e.getMessage());
             return;
         }
-        if (testList.size() != passedTestCount) {
-            Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, "SQLighter Tests did not pass");
+        if (!testSummaryCheck()) {
+            Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, "SQLighter DemoBase did not pass");
             Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "One or more tests failed");
             return ;
         }
@@ -325,8 +300,7 @@ public class Demo {
      */
     public static void amfibianOperations() {
         try {
-            testList.clear();
-            passedTestCount = 0;
+            resetTestCounters();
             SQLighterDb sqlighterDb = Bootstrap.getInstance().getSqLighterDb();
             /**
              * We might've received the following JSON string as a result of our mobile
@@ -373,12 +347,11 @@ public class Demo {
              * Get native object from json object, so that we could manipulate
              * it with ease.
              */
-            testList.add("JSON 2 native mapping");
             Appointment appointment234 = anOrm.asNativeObject(jsonAppointment234);
-            if(appointment234.getId().equals(234) && appointment234.getName().equals("Meet AmfibiaN!") &&
-                    appointment234.getIsProcessed().equals(0)) {
-                passedTestCount++;
-            }
+            checkTest("JSON 2 native mapping",
+                    appointment234.getId().equals(234) &&
+                            appointment234.getName().equals("Meet AmfibiaN!") &&
+                            appointment234.getIsProcessed().equals(0));
             /**
              * Let's decide to store our appointment234 in the database. Since we do not have the
              * table for this entity in our database yet, we can ask AmfibiaN to give us database
@@ -403,12 +376,9 @@ public class Demo {
              * Now, since the table for Appointment objects has been created,
              * lets store our object in there.
              */
-            testList.add("orm insert");
             anOrm.startSqlInsert(appointment234);
             Long rowsAffected = anOrm.apply();
-            if(rowsAffected.equals(1l)) {
-                passedTestCount++;
-            }
+            checkTest("orm insert", rowsAffected.equals(1l));
 
             printAppointments(anOrm); // Lets check what we've got in the table
             /**
@@ -434,13 +404,10 @@ public class Demo {
             /**
              * Then, lets update our "Meet Amfibian" object in the database
              */
-            testList.add("orm update");
             anOrm.startSqlUpdate(appointment234);
             anOrm.addWhere("id = ?", appointment234.getId());
             rowsAffected = anOrm.apply();
-            if(rowsAffected.equals(1l)) {
-                passedTestCount++;
-            }
+            checkTest("orm update", rowsAffected.equals(1l));
             /**
              * First two lines above generated SQL update statement,
              * bound our object's attributes, set the where clause
@@ -478,18 +445,20 @@ public class Demo {
                  */
                 JSONObject jsonObject = anOrm.asJSONObject(meetAmfibianAppointment);
                 String name = (String)jsonObject.get("name");
-                testList.add("native toJSON");
-                if(name.equals("Meet AmfibiaN!")) {
-                    passedTestCount++;
-                }
+                checkTest("native to JSON", name.equals("Meet AmfibiaN!"));
 
                 /**
                  * AnUpdate demo/tests are in a separate method.
                  */
                 anUpdateOperations();
 
-                if(testList.size() != passedTestCount) {
-                    Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN Tests did not pass");
+                /**
+                 * Run extra tests
+                 */
+                extraAmfibianTests(anOrm);
+
+                if(!testSummaryCheck()) {
+                    Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN DemoBase did not pass");
                     Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, "One or more tests failed");
                     return;
                 }
@@ -498,7 +467,7 @@ public class Demo {
                 return;
             }
         } catch (Exception e) {
-            Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN Tests did not pass");
+            Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN DemoBase did not pass");
             Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, e.getMessage());
             return ;
         }
@@ -560,31 +529,26 @@ public class Demo {
             };
             List<String> keys = new LinkedList<>();
             keys.add("2015-12-19");
-            testList.add("database upgrade step 1");
             anUpgrade.setUpdateKeys(keys);
             anUpgrade.applyUpdates();
             SQLighterRs rs = db.executeSelect("select count(*) from db_upg_test");
             if(rs.hasNext()) {
                 Long cnt = rs.getLong(0);
-                if(cnt == 1) {
-                    passedTestCount++;
-                }
+                checkTest("database upgrade step 1", cnt == 1);
             }
             rs.close();
             keys.add("2015-12-25");
-            testList.add("database upgrade step 2");
+            startTest("database upgrade step 2");
             anUpgrade.setUpdateKeys(keys);
             anUpgrade.applyUpdates();
             rs = db.executeSelect("select email from db_upg_test where email is not null");
             if(rs.hasNext()) {
                 String email = rs.getString(0);
-                if("peter@email.com".equals(email)) {
-                    passedTestCount++;
-                }
+                verifyTest("peter@email.com".equals(email));
             }
             rs.close();
             keys.add("2015-12-25--01");
-            testList.add("database upgrade step 3");
+            startTest("database upgrade step 3");
             anUpgrade.setUpdateKeys(keys);
             anUpgrade.applyUpdates();
             try {
@@ -592,7 +556,7 @@ public class Demo {
                 rs.hasNext();
             } catch (Exception t) {
                 // supposed to get sql syntax exception
-                passedTestCount++;
+                verifyTest(true);
             }
             System.out.println("done with AnUpdate");
         } catch (Throwable t) {
@@ -600,41 +564,17 @@ public class Demo {
         }
     }
 
-    private static void printAppointments(AnOrm<Appointment> anOrm) throws Exception {
-        System.out.println("Appointment records");
-        anOrm.startSqlSelect();
-        print(anOrm.getRecords());
-    }
-
-    private static void print(Collection<Appointment> appointments) {
-        for (Appointment a: appointments) {
-            print(a);
-        }
-    }
-
-    private static void print(Appointment appointment) {
-        System.out.println(
-                "Appointment object. id: " + appointment.getId() +
-                        ", name: " + appointment.getName());
-    }
     /**
-     * Prints single SQL result record
+     * This method prints the record and verifies its values
      *
-     * @param rs - SQLighterRs reference
+     * @param rs
+     * @param userName
+     * @param userEmail
+     * @param userHeight
+     * @param blobString
+     * @param id
+     * @return
      */
-    private static void print(SQLighterRs rs) {
-        Long pk = rs.getLong(0);
-        String e = rs.getString(1);
-        String n = rs.getString(2);
-        byte[] dataBytes = rs.getBlob(3);
-        String dataString = null;
-        if (dataBytes != null) {
-            dataString = new String(dataBytes);
-        }
-        Number h = rs.getDouble(4);
-        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + ", blob data: " + dataString + ", height: " + h);
-    }
-
     private static boolean verifyRecord(SQLighterRs rs, String userName, String userEmail,
                                         Double userHeight, String blobString, Long id) {
         Long pk = rs.getLong(0);

@@ -11,39 +11,108 @@ import java.lang.reflect.Method;
  * mappings.
  */
 public interface AnAttrib {
-
+    /**
+     *
+     * @param converter
+     */
     void setCustomSetConverter(CustomConverter converter);
 
+    /**
+     *
+     * @param key
+     * @param converter
+     */
     void setCustomSetConverter(String key, CustomConverter converter);
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     CustomConverter getCustomSetConverter(String key);
 
+    /**
+     *
+     * @return
+     */
     CustomConverter getCustomSetConverter();
 
+    /**
+     *
+     */
     void clearCustomSetConverters();
 
+    /**
+     *
+     * @param key
+     */
     void setDefaultSetConversionKey(String key);
 
+    /**
+     *
+     * @param converter
+     */
     void setCustomGetConverter(CustomConverter converter);
 
+    /**
+     *
+     * @param key
+     * @param converter
+     */
     void setCustomGetConverter(String key, CustomConverter converter);
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     CustomConverter getCustomGetConverter(String key);
 
+    /**
+     *
+     * @return
+     */
     CustomConverter getCustomGetConverter();
 
+    /**
+     *
+     */
     void clearCustomGetConverters();
 
+    /**
+     *
+     * @param key
+     */
     void setDefaultGetConversionKey(String key);
 
+    /**
+     *
+     * @param anObject
+     */
     void setAnObject(AnObject<?> anObject);
 
+    /**
+     *
+     * @return
+     */
     String getAttribName();
 
+    /**
+     *
+     * @param attribName
+     */
     void setAttribName(String attribName);
 
+    /**
+     *
+     * @return
+     */
     String getColumnName();
 
+    /**
+     *
+     * @param columnName
+     */
     void setColumnName(String columnName);
 
     /**
@@ -55,16 +124,41 @@ public interface AnAttrib {
     */
     void setValue(Object value) throws Exception;
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     Object getValue() throws Exception;
 
+    /**
+     *
+     * @return
+     */
     Method getGetter();
 
+    /**
+     *
+     * @return
+     */
     Method getSetter();
 
+    /**
+     *
+     * @return
+     */
     Class<?> getAttribClass();
 
+    /**
+     *
+     * @return
+     */
     String getJsonOrAttribName();
 
+    /**
+     *
+     * @return
+     */
     String getColumnOrAttribName();
 
     /**
