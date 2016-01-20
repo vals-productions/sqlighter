@@ -70,7 +70,7 @@ __attribute__((unused)) static jboolean Demo_verifyRecordWithSQLighterRs_withNSS
   id<JavaUtilList> updateKeys_;
 }
 
-- (id<JavaUtilList>)getTaskByKeyWithNSString:(NSString *)key;
+- (id<JavaUtilList>)getTasksByKeyWithNSString:(NSString *)key;
 
 - (id<JavaUtilList>)getUpdateKeys;
 
@@ -457,7 +457,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo)
 
 @implementation Demo_$1
 
-- (id<JavaUtilList>)getTaskByKeyWithNSString:(NSString *)key {
+- (id<JavaUtilList>)getTasksByKeyWithNSString:(NSString *)key {
   id<JavaUtilList> l = new_JavaUtilLinkedList_init();
   if ([@"2015-12-19" isEqual:key]) {
     [l addWithId:@"create table db_upg_test(name text) "];

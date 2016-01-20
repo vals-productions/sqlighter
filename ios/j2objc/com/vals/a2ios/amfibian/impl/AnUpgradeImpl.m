@@ -88,7 +88,7 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, createDate_, JavaUtilDate *)
   id<JavaUtilSet> appliedKeys = [self getAppliedUpdates];
   for (NSString * __strong updKey in nil_chk([self getUpdateKeys])) {
     if (![((id<JavaUtilSet>) nil_chk(appliedKeys)) containsWithId:updKey]) {
-      AnUpgradeImpl_applyUpdateWithNSString_withJavaUtilList_(self, updKey, [self getTaskByKeyWithNSString:updKey]);
+      AnUpgradeImpl_applyUpdateWithNSString_withJavaUtilList_(self, updKey, [self getTasksByKeyWithNSString:updKey]);
       taskCount++;
     }
   }

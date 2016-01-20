@@ -41,7 +41,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      * @param key
      * @return
      */
-    public abstract List<Object> getTaskByKey(String key);
+    public abstract List<Object> getTasksByKey(String key);
 
     /**
      *
@@ -107,7 +107,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         Set<String> appliedKeys = getAppliedUpdates();
         for (String updKey: getUpdateKeys()) {
             if(!appliedKeys.contains(updKey)) {
-                applyUpdate(updKey, getTaskByKey(updKey));
+                applyUpdate(updKey, getTasksByKey(updKey));
                 taskCount++;
             }
         }

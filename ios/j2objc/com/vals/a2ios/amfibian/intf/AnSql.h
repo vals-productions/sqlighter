@@ -9,9 +9,7 @@
 #include "J2ObjC_header.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 
-@class IOSClass;
 @class IOSObjectArray;
-@protocol AnAttrib;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
 
@@ -48,19 +46,7 @@
 
 - (id<JavaUtilList>)getParameters;
 
-- (id<JavaUtilList>)getAttribNameList;
-
-- (jint)getType;
-
-- (void)setTypeWithInt:(jint)type;
-
-- (NSString *)getColumnNameWithAnAttrib:(id<AnAttrib>)attrib;
-
 - (id<AnSql>)startSqlCreate;
-
-- (NSString *)getSqlTypeForClassWithIOSClass:(IOSClass *)columnJavaClass;
-
-- (NSString *)getAliasedColumnWithNSString:(NSString *)columnName;
 
 @end
 

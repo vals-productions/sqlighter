@@ -8,7 +8,8 @@ import java.util.Set;
 /**
  * Created by vsayenko on 1/8/16.
  *
- * AmfibiaN SQL generation interface. AnSql builds queries based on AnObject's attributes.
+ * AmfibiaN SQL generation interface. AnSql builds
+ * queries based on AnObject's attributes.
  *
  */
 public interface AnSql<T> extends AnObject<T> {
@@ -32,32 +33,42 @@ public interface AnSql<T> extends AnObject<T> {
 
     /**
      * Initiate SQL update query generation.
-     * @param objectToUpdate - this object's values will be applied to "set ..."  clause of the query.
+     * @param objectToUpdate - this object's values will be applied
+     *                       to "set ..."  clause of the query.
      * @throws Exception
      */
     void startSqlUpdate(T objectToUpdate) throws Exception;
 
     /**
-     * Adds where condition to previously initiated SELECT, UPDATE or DELETE query.
+     * Adds where condition to previously
+     * initiated SELECT, UPDATE or DELETE query.
+     *
      * @param condition - " and/or [sql condition]" format.
-     * @param param - param to bind. If param == null, the condition is being skipped.
+     * @param param - param to bind. If param == null,
+     *              the condition is being skipped.
      */
     void addWhere(String condition, Object param);
 
     /**
-     *Adds parameterless where condition to previously initiated SELECT, UPDATE or DELETE query.
+     * Adds parameter-less where condition to previously
+     * initiated SELECT, UPDATE or DELETE query.
+     *
      * @param condition
      */
     void addWhere(String condition);
 
     /**
      * Adds custom SQL to previously initiated SELECT, UPDATE or DELETE statement.
+     *
      * @param sql
      */
     void addSql(String sql);
 
     /**
-     * Returns current SQL query string. May be used for verification purposes or in conjunction with whatever SQL engine you use.
+     * Returns current SQL query string. May be used for
+     * verification purposes or in conjunction with
+     * whatever SQL engine you use.
+     *
      * @return
      */
     String getQueryString();
@@ -74,13 +85,18 @@ public interface AnSql<T> extends AnObject<T> {
     void resetSkipInclAttrNameList();
 
     /**
-     * limits SELECT SQL query select clause to attributes listed in the call to this method.
+     * limits SELECT SQL query select clause to attributes
+     * listed in the call to this method.
+     *
      * @param names
      */
     void addInclAttribs(String... names);
 
     /**
-     *  limits SELECT SQL query select clause to all  attributes less atributes listed in the call to this method.
+     * limits SELECT SQL query select clause to all
+     * attributes less atributes listed in the call
+     * to this method.
+     *
      * @param names
      */
     void addSkipAttribs(String... names);
@@ -93,40 +109,39 @@ public interface AnSql<T> extends AnObject<T> {
 
     /**
      * Sets DB table name to use with queries.
+     *
      * @param tableName
      */
     void setTableName(String tableName);
 
     /**
-     * Gives the final list of parameters associated with the query throuh "addWhere" statements.
+     * Gives the final list of parameters associated
+     * with the query throuh "addWhere" statements.
+     *
      * @return
      */
     List<Object> getParameters();
 
     /**
-     * // TODO: remove from interface for now.
      * @return
      */
-    List<String> getAttribNameList();
+    // List<String> getAttribNameList();
 
     /**
-     * TODO: remove from interface.
      * @return
      */
-    int getType();
+    // int getType();
 
     /**
-     * TODO: remove from interface.
      * @param type
      */
-    void setType(int type);
+    // void setType(int type);
 
     /**
-     * // TODO: remove from interface for now.
      * @param attrib
      * @return
      */
-    String getColumnName(AnAttrib attrib);
+    // String getColumnName(AnAttrib attrib);
 
     /**
      * Initiates CREATE table SQL statement.
@@ -135,17 +150,15 @@ public interface AnSql<T> extends AnObject<T> {
     AnSql<?> startSqlCreate();
 
     /**
-     * // TODO: remove from interface for now
      * @param columnJavaClass
      * @return
      */
-    String getSqlTypeForClass(Class<?> columnJavaClass);
+    // String getSqlTypeForClass(Class<?> columnJavaClass);
 
     /**
-     * // TODO: remove from interface for now.
      * @param columnName
      * @return
      */
-    String getAliasedColumn(String columnName);
+    // String getAliasedColumn(String columnName);
 
 }

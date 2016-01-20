@@ -98,17 +98,14 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         return parameters;
     }
 
-    @Override
     public List<String> getAttribNameList() {
         return attribNameList;
     }
 
-    @Override
     public int getType() {
         return type;
     }
 
-    @Override
     public void setType(int type) {
         this.type = type;
     }
@@ -198,7 +195,6 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         columnClause = queryStr.toString();
     }
 
-    @Override
     public String getColumnName(AnAttrib attrib) {
     	return attrib.getColumnOrAttribName();
     }
@@ -223,7 +219,6 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         return this;
     }
     
-    @Override
     public String getSqlTypeForClass(Class<?> columnJavaClass) {
         if (columnJavaClass != null) {
             String className = columnJavaClass.getCanonicalName();
@@ -251,7 +246,6 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         return alias;
     }
 
-    @Override
     public String getAliasedColumn(String columnName) {
         return alias + "." + columnName;
     }

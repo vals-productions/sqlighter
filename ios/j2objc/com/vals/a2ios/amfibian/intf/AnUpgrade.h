@@ -21,7 +21,7 @@
 
 - (id<JavaUtilSet>)getAppliedUpdates;
 
-- (id<JavaUtilList>)getTaskByKeyWithNSString:(NSString *)key;
+- (id<JavaUtilList>)getTasksByKeyWithNSString:(NSString *)key;
 
 @end
 

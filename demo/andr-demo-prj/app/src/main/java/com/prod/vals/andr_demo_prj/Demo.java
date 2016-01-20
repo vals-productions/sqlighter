@@ -492,7 +492,7 @@ public class Demo extends DemoBase {
                  * @return
                  */
                 @Override
-                public List<Object> getTaskByKey(String key) {
+                public List<Object> getTasksByKey(String key) {
                     List<Object> l = new LinkedList<>();
                     if ("2015-12-19".equals(key)) {
                         l.add("create table db_upg_test(name text) ");

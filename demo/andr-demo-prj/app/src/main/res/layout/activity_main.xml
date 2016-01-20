@@ -24,7 +24,8 @@
 
         <TextView android:id="@+id/sqlighter_greet" android:text="@string/hello_world" android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-        />
+            android:textSize="34dp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -43,7 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/sqlighter_greet"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:textSize="34dp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="fill_parent"
