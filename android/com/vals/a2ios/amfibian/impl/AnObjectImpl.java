@@ -31,9 +31,9 @@ public class AnObjectImpl<T> implements AnObject<T> {
     public AnObjectImpl() {
     }
 
-//    public AnObjectImpl(Class<T> anObjClass, AnObject<?> parentAnObject) {
-//        init(anObjClass, parentAnObject);
-//    }
+    public AnObjectImpl(Class<T> anObjClass, AnObject<?> parentAnObject) {
+        init(anObjClass, parentAnObject);
+    }
 
     public AnObjectImpl(Class<T> anObjClass, String[] propertyNames, AnObject<?> parentAnObject) {
         init(anObjClass, propertyNames, parentAnObject);
@@ -47,9 +47,9 @@ public class AnObjectImpl<T> implements AnObject<T> {
         init(anObjClass, propertyNames);
     }
 
-//    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers) {
-//        init(anObjClass, propertyMappers);
-//    }
+    public AnObjectImpl(Class<T> anObjClass, AnAttrib[] propertyMappers) {
+        init(anObjClass, propertyMappers);
+    }
 
     public AnObject getParentAnObject() {
         return parentAnObject;

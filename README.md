@@ -84,7 +84,9 @@ CREATE TABLE "user" (
 	`height` REAL
 );
 ```
+
 Let's insert the following initial records:
+
 ``` sql
 INSERT INTO user(name, email, data, height) values ('user 1', 'user1@email.com', null, 1.4);
 INSERT INTO user(name, email, data, height) values ('user 2', 'user2@email.com', null, null);
@@ -106,7 +108,9 @@ while (rs.hasNext()) {
 }
 rs.close();
 ```
+
 And this should result in:
+
 ```
 initial state 
 pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
@@ -114,7 +118,9 @@ pk: 2, email: user2@email.com, name: user 2, blob data: , height: null
 pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
 pk: 4, email: null, name: user 4, blob data: , height: null
 ```
+
 print function looks just like this and is used in all examples: 
+
 ``` java
 private void print(SQLighterRs rs) {
 	Long pk = rs.getLong(0);
@@ -130,7 +136,9 @@ private void print(SQLighterRs rs) {
     						", blob data: " + dataString + ", height: " + h );
 }
 ```
+
 Then, add another record with some blob value:
+
 ``` java
 String dataStr = "This is blob string example";
 byte[] data = dataStr.getBytes();
@@ -140,7 +148,9 @@ db.addParam(data); // bind to the data column
 db.addParam(5.67); // bind to the height column
 db.executeChange("insert into user( name, email, data, height) values (?, ?, ?, ?)");
 ```
+
 And let's also requery what we just inserted
+
 ``` java
 db.addParam("qw@er.ty1"); // bind to the where email filter condition
 System.out.println("check if the record was inserted");
@@ -150,18 +160,24 @@ while (rs.hasNext()) {
 }
 rs.close();
 ```
+
 Which should result in:
+
 ```
 check if the record was inserted
 pk: 5, email: qw@er.ty1, name: user name 5, blob data: This is blob string example, height: 5.67
 ```
+
 Then, let's do some update
+
 ``` java
 db.addParam("user@email.com"); // bind to the set email = ? 
 db.addParam("qw@er.ty1"); // bind to where email = ?
 db.executeChange("update user set email = ? where email is null or email = ?");
 ```
+
 ... and verify the output with above select all code
+
 ```
 after update state
 pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
@@ -170,19 +186,25 @@ pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
 pk: 4, email: user@email.com, name: user 4, blob data: , height: null
 pk: 5, email: user@email.com, name: user name 5, blob data: This is blob string example, height: 5.67
 ```
+
 Let's delete something
+
 ``` java
 db.addParam("user@email.com");
 db.executeChange("delete from user where email = ?");
 ```
+
 and see what we get:
+
 ```
 after delete state
 pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
 pk: 2, email: user2@email.com, name: user 2, blob data: , height: null
 pk: 3, email: user3@email.com, name: user 3, blob data: , height: 4.89
 ```
+
 And finally, let's create another table, populate with data and run the query with join
+
 ``` java
 db.executeChange("create table address(id integer primary key autoincrement unique, name text, user_id integer)");
 db.addParam("123 main str, walnut creek, ca");
@@ -198,7 +220,9 @@ while (rs.hasNext()) {
 }
 rs.close();
 ```
+
 the output:
+
 ```
 after address creation/population
 pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
@@ -206,12 +230,15 @@ pk: 1, email: user1@email.com, name: user 1, blob data: , height: 1.4
 ```
 
 And, in case you'd like to bind some NULL parameter, it can be done this way:
+
 ``` java
 db.addParamNull(); // bind first param to update as null
 db.addParam("qw@er.ty1"); // bind second param as where filter condition
 db.executeChange("update user set email = ? where email = ?");
 ```
+
 will result in:
+
 ``` sql
 update user set email = null where email = 'qw@er.ty1';
 ```
@@ -219,6 +246,8 @@ update user set email = null where email = 'qw@er.ty1';
 ### iOS code
 
 iOS impementation is identical.
+
+If you work on iOS only project but would like to have some freedom to add Android platform to your implementation in the future, it also might make sense to use SQLighter as your iOS SQLite library because of its logical compatibility.
 
 Below is iOS code snippet that executes and processes SQL SELECT query. It is easy to see that this code is J2ObjC compatible Objective C carbon copy of similar java code from one of the above examples.
 
