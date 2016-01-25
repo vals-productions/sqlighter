@@ -9,10 +9,13 @@
 #include "com/vals/a2ios/amfibian/impl/AnOrmImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnUpgradeImpl.h"
 #include "com/vals/a2ios/amfibian/intf/AnSql.h"
+#include "com/vals/a2ios/amfibian/intf/AnUpgrade.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 #include "java/lang/Exception.h"
+#include "java/lang/Integer.h"
 #include "java/lang/Long.h"
+#include "java/lang/Throwable.h"
 #include "java/util/Date.h"
 #include "java/util/HashSet.h"
 #include "java/util/List.h"
@@ -26,29 +29,33 @@
  @public
   id<JavaUtilMap> map_;
   id<SQLighterDb> sqlighterDb_;
-  AnOrmImpl *ap_;
+  AnOrmImpl *anOrm_;
+  NSString *lastKey_, *recoverKey_;
 }
 
-- (void)ensureStorage;
+- (void)ensureStorageWithBoolean:(jboolean)isForceRecreate;
 
-- (void)applyUpdateWithNSString:(NSString *)key
-               withJavaUtilList:(id<JavaUtilList>)statementList;
+- (void)logKeyWithNSString:(NSString *)key
+       withJavaLangInteger:(JavaLangInteger *)status;
 
 @end
 
 J2OBJC_FIELD_SETTER(AnUpgradeImpl, map_, id<JavaUtilMap>)
 J2OBJC_FIELD_SETTER(AnUpgradeImpl, sqlighterDb_, id<SQLighterDb>)
-J2OBJC_FIELD_SETTER(AnUpgradeImpl, ap_, AnOrmImpl *)
+J2OBJC_FIELD_SETTER(AnUpgradeImpl, anOrm_, AnOrmImpl *)
+J2OBJC_FIELD_SETTER(AnUpgradeImpl, lastKey_, NSString *)
+J2OBJC_FIELD_SETTER(AnUpgradeImpl, recoverKey_, NSString *)
 
-__attribute__((unused)) static void AnUpgradeImpl_ensureStorage(AnUpgradeImpl *self);
+__attribute__((unused)) static void AnUpgradeImpl_ensureStorageWithBoolean_(AnUpgradeImpl *self, jboolean isForceRecreate);
 
-__attribute__((unused)) static void AnUpgradeImpl_applyUpdateWithNSString_withJavaUtilList_(AnUpgradeImpl *self, NSString *key, id<JavaUtilList> statementList);
+__attribute__((unused)) static void AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(AnUpgradeImpl *self, NSString *key, JavaLangInteger *status);
 
 @interface AnUpgradeImpl_Upgrade () {
  @public
   NSString *key_;
   NSString *value_;
   JavaUtilDate *createDate_;
+  JavaLangInteger *status_;
 }
 
 @end
@@ -56,6 +63,7 @@ __attribute__((unused)) static void AnUpgradeImpl_applyUpdateWithNSString_withJa
 J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, key_, NSString *)
 J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, value_, NSString *)
 J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, createDate_, JavaUtilDate *)
+J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, status_, JavaLangInteger *)
 
 @implementation AnUpgradeImpl
 
@@ -68,8 +76,8 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, createDate_, JavaUtilDate *)
   return AnUpgradeImpl_Upgrade_TABLE_;
 }
 
-- (void)ensureStorage {
-  AnUpgradeImpl_ensureStorage(self);
+- (void)ensureStorageWithBoolean:(jboolean)isForceRecreate {
+  AnUpgradeImpl_ensureStorageWithBoolean_(self, isForceRecreate);
 }
 
 - (id<JavaUtilSet>)getAppliedUpdates {
@@ -87,29 +95,103 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, createDate_, JavaUtilDate *)
   jint taskCount = 0;
   id<JavaUtilSet> appliedKeys = [self getAppliedUpdates];
   for (NSString * __strong updKey in nil_chk([self getUpdateKeys])) {
+    lastKey_ = updKey;
     if (![((id<JavaUtilSet>) nil_chk(appliedKeys)) containsWithId:updKey]) {
-      AnUpgradeImpl_applyUpdateWithNSString_withJavaUtilList_(self, updKey, [self getTasksByKeyWithNSString:updKey]);
+      if (![self applyUpdateWithNSString:updKey withJavaUtilList:[self getTasksByKeyWithNSString:updKey]]) {
+        return -1;
+      }
       taskCount++;
     }
   }
   return taskCount;
 }
 
-- (void)applyUpdateWithNSString:(NSString *)key
-               withJavaUtilList:(id<JavaUtilList>)statementList {
-  AnUpgradeImpl_applyUpdateWithNSString_withJavaUtilList_(self, key, statementList);
+- (jboolean)applyUpdateWithNSString:(NSString *)key
+                   withJavaUtilList:(id<JavaUtilList>)statementList {
+  @try {
+    [((id<SQLighterDb>) nil_chk(sqlighterDb_)) beginTransaction];
+    for (id __strong task in nil_chk(statementList)) {
+      NSString *sqlStr = nil;
+      if ([task isKindOfClass:[NSString class]]) {
+        sqlStr = (NSString *) check_class_cast(task, [NSString class]);
+        (void) [sqlighterDb_ executeChangeWithNSString:sqlStr];
+      }
+      else if ([AnSql_class_() isInstance:task]) {
+        AnOrmImpl *createObjectTask = (AnOrmImpl *) check_class_cast(task, [AnOrmImpl class]);
+        [((AnOrmImpl *) nil_chk(createObjectTask)) setSqlighterDbWithSQLighterDb:sqlighterDb_];
+        (void) [createObjectTask startSqlCreate];
+        sqlStr = [createObjectTask getQueryString];
+        (void) [sqlighterDb_ executeChangeWithNSString:JreStrcat("$$", @"drop table if exists ", [createObjectTask getTableName])];
+        (void) [sqlighterDb_ executeChangeWithNSString:sqlStr];
+      }
+      AnUpgradeImpl_Upgrade *appUpdate = new_AnUpgradeImpl_Upgrade_init();
+      [appUpdate setKeyWithNSString:key];
+      [appUpdate setValueWithNSString:sqlStr];
+      [appUpdate setCreateDateWithJavaUtilDate:new_JavaUtilDate_init()];
+      [appUpdate setStatusWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(1)];
+      [((AnOrmImpl *) nil_chk(anOrm_)) startSqlInsertWithId:appUpdate];
+      (void) [anOrm_ apply];
+    }
+    AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, JavaLangInteger_valueOfWithInt_(1));
+    [sqlighterDb_ commitTransaction];
+    return true;
+  }
+  @catch (JavaLangThrowable *t) {
+    @try {
+      [((id<SQLighterDb>) nil_chk(sqlighterDb_)) rollbackTransaction];
+    }
+    @catch (JavaLangThrowable *rollbackExcp) {
+    }
+    @try {
+      AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, JavaLangInteger_valueOfWithInt_(0));
+    }
+    @catch (JavaLangThrowable *failureMarkExcp) {
+    }
+    return false;
+  }
+}
+
+- (void)logKeyWithNSString:(NSString *)key
+       withJavaLangInteger:(JavaLangInteger *)status {
+  AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, status);
+}
+
+- (void)attemptToRecover {
+  id<JavaUtilList> recoverTasks = [self getTasksByKeyWithNSString:recoverKey_];
+  if ([((id<JavaUtilList>) nil_chk(recoverTasks)) size] > 0) {
+    AnUpgradeImpl_ensureStorageWithBoolean_(self, true);
+    for (NSString * __strong key in nil_chk([self getUpdateKeys])) {
+      if ([((NSString *) nil_chk(key)) isEqual:recoverKey_]) {
+        [self applyUpdateWithNSString:key withJavaUtilList:recoverTasks];
+        continue;
+      }
+      AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, JavaLangInteger_valueOfWithInt_(0));
+    }
+  }
+}
+
+- (void)setRecoverKeyWithNSString:(NSString *)recoverKey {
+  self->recoverKey_ = recoverKey;
+}
+
+- (NSString *)getLastKey {
+  return lastKey_;
 }
 
 @end
 
 void AnUpgradeImpl_initWithSQLighterDb_(AnUpgradeImpl *self, id<SQLighterDb> sqLighterDb) {
   (void) NSObject_init(self);
+  self->recoverKey_ = AnUpgrade_DB_RECOVER_KEY_;
   self->sqlighterDb_ = sqLighterDb;
-  self->ap_ = new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(sqLighterDb, [self getTableName], AnUpgradeImpl_Upgrade_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"key", @"value", @"createDate,create_date" } count:3 type:NSString_class_()], nil);
-  AnUpgradeImpl_ensureStorage(self);
+  self->anOrm_ = new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(sqLighterDb, [self getTableName], AnUpgradeImpl_Upgrade_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"key", @"value", @"createDate,create_date" } count:3 type:NSString_class_()], nil);
+  AnUpgradeImpl_ensureStorageWithBoolean_(self, false);
 }
 
-void AnUpgradeImpl_ensureStorage(AnUpgradeImpl *self) {
+void AnUpgradeImpl_ensureStorageWithBoolean_(AnUpgradeImpl *self, jboolean isForceRecreate) {
+  if (isForceRecreate) {
+    (void) [((id<SQLighterDb>) nil_chk(self->sqlighterDb_)) executeChangeWithNSString:JreStrcat("$$", @"drop table if exists ", AnUpgradeImpl_Upgrade_TABLE_)];
+  }
   id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(self->sqlighterDb_)) executeSelectWithNSString:@"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"];
   jboolean isFound = false;
   while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
@@ -121,38 +203,18 @@ void AnUpgradeImpl_ensureStorage(AnUpgradeImpl *self) {
   }
   [rs close];
   if (!isFound) {
-    NSString *createSql = [((id<AnSql>) nil_chk([((AnOrmImpl *) nil_chk(self->ap_)) startSqlCreate])) getQueryString];
+    NSString *createSql = [((id<AnSql>) nil_chk([((AnOrmImpl *) nil_chk(self->anOrm_)) startSqlCreate])) getQueryString];
     (void) [self->sqlighterDb_ executeChangeWithNSString:createSql];
   }
 }
 
-void AnUpgradeImpl_applyUpdateWithNSString_withJavaUtilList_(AnUpgradeImpl *self, NSString *key, id<JavaUtilList> statementList) {
-  [((id<SQLighterDb>) nil_chk(self->sqlighterDb_)) beginTransaction];
-  for (id __strong task in nil_chk(statementList)) {
-    NSString *sqlStr = nil;
-    if ([task isKindOfClass:[NSString class]]) {
-      sqlStr = (NSString *) check_class_cast(task, [NSString class]);
-      (void) [self->sqlighterDb_ executeChangeWithNSString:sqlStr];
-    }
-    else if ([AnSql_class_() isInstance:task]) {
-      AnOrmImpl *sql = (AnOrmImpl *) check_class_cast(task, [AnOrmImpl class]);
-      [((AnOrmImpl *) nil_chk(sql)) setSqlighterDbWithSQLighterDb:self->sqlighterDb_];
-      (void) [sql startSqlCreate];
-      sqlStr = [sql getQueryString];
-      (void) [self->sqlighterDb_ executeChangeWithNSString:sqlStr];
-    }
-    AnUpgradeImpl_Upgrade *appUpdate = new_AnUpgradeImpl_Upgrade_init();
-    [appUpdate setKeyWithNSString:key];
-    [appUpdate setValueWithNSString:sqlStr];
-    [appUpdate setCreateDateWithJavaUtilDate:new_JavaUtilDate_init()];
-    [((AnOrmImpl *) nil_chk(self->ap_)) startSqlInsertWithId:appUpdate];
-    (void) [self->ap_ apply];
-  }
+void AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(AnUpgradeImpl *self, NSString *key, JavaLangInteger *status) {
   AnUpgradeImpl_Upgrade *appUpdateMark = new_AnUpgradeImpl_Upgrade_init();
   [appUpdateMark setKeyWithNSString:key];
-  [((AnOrmImpl *) nil_chk(self->ap_)) startSqlInsertWithId:appUpdateMark];
-  (void) [self->ap_ apply];
-  [self->sqlighterDb_ commitTransaction];
+  [appUpdateMark setStatusWithJavaLangInteger:status];
+  [appUpdateMark setCreateDateWithJavaUtilDate:new_JavaUtilDate_init()];
+  [((AnOrmImpl *) nil_chk(self->anOrm_)) startSqlInsertWithId:appUpdateMark];
+  (void) [self->anOrm_ apply];
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnUpgradeImpl)
@@ -183,6 +245,14 @@ NSString *AnUpgradeImpl_Upgrade_TABLE_ = @"app_db_maint";
 
 - (void)setCreateDateWithJavaUtilDate:(JavaUtilDate *)createDate {
   self->createDate_ = createDate;
+}
+
+- (JavaLangInteger *)getStatus {
+  return status_;
+}
+
+- (void)setStatusWithJavaLangInteger:(JavaLangInteger *)status {
+  self->status_ = status;
 }
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN

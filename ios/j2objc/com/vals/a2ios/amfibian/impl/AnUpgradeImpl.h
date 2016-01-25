@@ -9,6 +9,7 @@
 #include "J2ObjC_header.h"
 #include "com/vals/a2ios/amfibian/intf/AnUpgrade.h"
 
+@class JavaLangInteger;
 @class JavaUtilDate;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
@@ -22,13 +23,22 @@
 
 - (jint)applyUpdates;
 
+- (void)attemptToRecover;
+
 - (id<JavaUtilSet>)getAppliedUpdates;
+
+- (NSString *)getLastKey;
 
 - (id<JavaUtilList>)getTasksByKeyWithNSString:(NSString *)key;
 
 - (id<JavaUtilList>)getUpdateKeys;
 
+- (void)setRecoverKeyWithNSString:(NSString *)recoverKey;
+
 #pragma mark Protected
+
+- (jboolean)applyUpdateWithNSString:(NSString *)key
+                   withJavaUtilList:(id<JavaUtilList>)statementList;
 
 - (NSString *)getTableName;
 
@@ -52,11 +62,15 @@ J2OBJC_TYPE_LITERAL_HEADER(AnUpgradeImpl)
 
 - (NSString *)getKey;
 
+- (JavaLangInteger *)getStatus;
+
 - (NSString *)getValue;
 
 - (void)setCreateDateWithJavaUtilDate:(JavaUtilDate *)createDate;
 
 - (void)setKeyWithNSString:(NSString *)key;
+
+- (void)setStatusWithJavaLangInteger:(JavaLangInteger *)status;
 
 - (void)setValueWithNSString:(NSString *)value;
 

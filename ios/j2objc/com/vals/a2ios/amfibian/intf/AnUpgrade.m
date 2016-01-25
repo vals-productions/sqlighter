@@ -10,4 +10,6 @@
 #include "java/util/List.h"
 #include "java/util/Set.h"
 
+NSString *AnUpgrade_DB_RECOVER_KEY_ = @"recoveryKey";
+
 J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(AnUpgrade)

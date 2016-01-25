@@ -2,7 +2,6 @@ package com.vals.a2ios.amfibian.impl;
 
 import com.vals.a2ios.amfibian.intf.AnSql;
 import com.vals.a2ios.amfibian.intf.AnUpgrade;
-import com.vals.a2ios.mobilighter.impl.MUtil;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
@@ -14,12 +13,16 @@ import java.util.Set;
 
 /**
  * Created by vsayenko on 12/18/15.
+ *
+ * Base implementation of AnUpgrade interface.
+ *
  */
 public abstract class AnUpgradeImpl implements AnUpgrade {
 
     private Map<Integer, List<String>> map;
     private SQLighterDb sqlighterDb;
     private AnOrmImpl<Upgrade> anOrm;
+    private String lastKey, recoverKey = AnUpgrade.DB_RECOVER_KEY;
 
     /**
      *
@@ -66,7 +69,6 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         if(isForceRecreate) {
             sqlighterDb.executeChange("drop table if exists " + Upgrade.TABLE);
         }
-        //TODO if recovery key is executed - drop/create always?
         SQLighterRs rs = sqlighterDb.executeSelect(
                 "SELECT name FROM sqlite_master " +
                 "WHERE type='table' " +
@@ -111,10 +113,13 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         int taskCount = 0;
         Set<String> appliedKeys = getAppliedUpdates();
         for (String updKey: getUpdateKeys()) {
+            lastKey = updKey;
             if(!appliedKeys.contains(updKey)) {
                 if(!applyUpdate(updKey, getTasksByKey(updKey))) {
-                    attemptToRecover(updKey);
-                    return -1; // failure during db upgrade
+                    /**
+                     * failure during db upgrade
+                     */
+                    return -1;
                 }
                 taskCount++;
             }
@@ -128,44 +133,71 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      * @param statementList
      * @throws Exception
      */
-    private boolean applyUpdate(String key, List<Object> statementList) {
+    protected boolean applyUpdate(String key, List<Object> statementList) {
         try {
             sqlighterDb.beginTransaction();
 
             for (Object task : statementList) {
                 String sqlStr = null;
                 if (task instanceof String) {
+                    /**
+                     * Run raw SQL query.
+                     */
                     sqlStr = (String) task;
                     sqlighterDb.executeChange(sqlStr);
                 } else if (task instanceof AnSql<?>) {
+                    /**
+                     * Auto create AnObject
+                     */
                     AnOrmImpl<?> createObjectTask = (AnOrmImpl<?>) task;
                     createObjectTask.setSqlighterDb(sqlighterDb);
                     createObjectTask.startSqlCreate();
                     sqlStr = createObjectTask.getQueryString();
-                    sqlighterDb.executeChange("drop table if exists " + createObjectTask.getTableName());
+                    sqlighterDb.executeChange("drop table if exists " +
+                            createObjectTask.getTableName());
                     sqlighterDb.executeChange(sqlStr);
                 }
+                /**
+                 * Log upgrade step
+                 */
                 Upgrade appUpdate = new Upgrade();
                 appUpdate.setKey(key);
                 appUpdate.setValue(sqlStr);
                 appUpdate.setCreateDate(new Date());
+                appUpdate.setStatus(1);
                 anOrm.startSqlInsert(appUpdate);
                 anOrm.apply();
-            }
+            } // end for
 
+            /**
+             * Mark key as success
+             */
             logKey(key, 1);
 
             sqlighterDb.commitTransaction();
+            /*
+            Success
+             */
             return true;
         } catch (Throwable t) {
             try {
+                /**
+                 * Something failed during DB upgrade.
+                 * Let's try to rollback.
+                 */
                 sqlighterDb.rollbackTransaction();
             } catch (Throwable rollbackExcp) {
             }
             try {
+                /**
+                 * Log the key as failure.
+                 */
                 logKey(key, 0);
             } catch (Throwable failureMarkExcp) {
             }
+            /**
+             * Something failed
+             */
             return false;
         }
     }
@@ -179,18 +211,31 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         anOrm.apply();
     }
 
-    protected void attemptToRecover(String failedKey) throws Exception {
-        List<Object> recoverTasks = getTasksByKey("recover key");
+    @Override
+    public void attemptToRecover() throws Exception {
+        List<Object> recoverTasks = getTasksByKey(recoverKey);
         if(recoverTasks.size() > 0) {
+            /**
+             * recover key tasks provided
+             */
             ensureStorage(true); // drop/create db upgrade log table
             for(String key: getUpdateKeys()) {
-                if(key.equals("recover key")) {
+                if(key.equals(recoverKey)) {
                     applyUpdate(key, recoverTasks);
                     continue;
                 }
-                logKey(key, key.equals(failedKey) ? 0: 1);
+                logKey(key, 0);
             }
         }
+    }
+
+    @Override
+    public void setRecoverKey(String recoverKey) {
+        this.recoverKey = recoverKey;
+    }
+
+    public String getLastKey() {
+        return lastKey;
     }
 
     /**
