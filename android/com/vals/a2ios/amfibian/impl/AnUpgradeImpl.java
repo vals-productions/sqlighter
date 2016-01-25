@@ -19,7 +19,9 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
     private Map<Integer, List<String>> map;
     private SQLighterDb sqlighterDb;
     private AnOrmImpl<Upgrade> ap;
-
+    // TODO use in failure handling situations.
+    private boolean isFailure = false;
+    
     /**
      *
      * @param sqLighterDb
@@ -27,6 +29,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      */
     public AnUpgradeImpl(SQLighterDb sqLighterDb) throws Exception {
         this.sqlighterDb = sqLighterDb;
+// TODO: add "status" column
         ap = new AnOrmImpl<>(
                 sqLighterDb,
                 getTableName(),
@@ -104,6 +107,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
     @Override
     public int applyUpdates() throws Exception {
         int taskCount = 0;
+        isFailure = false;
         Set<String> appliedKeys = getAppliedUpdates();
         for (String updKey: getUpdateKeys()) {
             if(!appliedKeys.contains(updKey)) {
