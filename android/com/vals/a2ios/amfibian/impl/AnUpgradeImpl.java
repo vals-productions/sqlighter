@@ -2,6 +2,7 @@ package com.vals.a2ios.amfibian.impl;
 
 import com.vals.a2ios.amfibian.intf.AnSql;
 import com.vals.a2ios.amfibian.intf.AnUpgrade;
+import com.vals.a2ios.mobilighter.impl.MUtil;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
@@ -18,7 +19,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
 
     private Map<Integer, List<String>> map;
     private SQLighterDb sqlighterDb;
-    private AnOrmImpl<Upgrade> ap;
+    private AnOrmImpl<Upgrade> anOrm;
 
     /**
      *
@@ -27,13 +28,13 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      */
     public AnUpgradeImpl(SQLighterDb sqLighterDb) throws Exception {
         this.sqlighterDb = sqLighterDb;
-        ap = new AnOrmImpl<>(
+        anOrm = new AnOrmImpl<>(
                 sqLighterDb,
                 getTableName(),
                 Upgrade.class,
                 new String[] {"key","value","createDate,create_date"},
                 null);
-        ensureStorage();
+        ensureStorage(false);
     }
 
     /**
@@ -61,7 +62,11 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      *
      * @throws Exception
      */
-    private void ensureStorage() throws Exception {
+    private void ensureStorage(boolean isForceRecreate) throws Exception {
+        if(isForceRecreate) {
+            sqlighterDb.executeChange("drop table if exists " + Upgrade.TABLE);
+        }
+        //TODO if recovery key is executed - drop/create always?
         SQLighterRs rs = sqlighterDb.executeSelect(
                 "SELECT name FROM sqlite_master " +
                 "WHERE type='table' " +
@@ -76,7 +81,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         }
         rs.close();
         if (!isFound) {
-            String createSql = ap.startSqlCreate().getQueryString();
+            String createSql = anOrm.startSqlCreate().getQueryString();
             sqlighterDb.executeChange(createSql);
         }
     }
@@ -107,7 +112,10 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         Set<String> appliedKeys = getAppliedUpdates();
         for (String updKey: getUpdateKeys()) {
             if(!appliedKeys.contains(updKey)) {
-                applyUpdate(updKey, getTasksByKey(updKey));
+                if(!applyUpdate(updKey, getTasksByKey(updKey))) {
+                    attemptToRecover(updKey);
+                    return -1; // failure during db upgrade
+                }
                 taskCount++;
             }
         }
@@ -120,35 +128,69 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      * @param statementList
      * @throws Exception
      */
-    private void applyUpdate(String key, List<Object> statementList) throws Exception {
-        sqlighterDb.beginTransaction();
+    private boolean applyUpdate(String key, List<Object> statementList) {
+        try {
+            sqlighterDb.beginTransaction();
 
-        for (Object task: statementList) {
-            String sqlStr = null;
-            if (task instanceof String) {
-                sqlStr = (String) task;
-                sqlighterDb.executeChange(sqlStr);
-            } else if (task instanceof AnSql<?>) {
-                AnOrmImpl<?> sql = (AnOrmImpl<?>)task;
-                sql.setSqlighterDb(sqlighterDb);
-                sql.startSqlCreate();
-                sqlStr = sql.getQueryString();
-                sqlighterDb.executeChange(sqlStr);
+            for (Object task : statementList) {
+                String sqlStr = null;
+                if (task instanceof String) {
+                    sqlStr = (String) task;
+                    sqlighterDb.executeChange(sqlStr);
+                } else if (task instanceof AnSql<?>) {
+                    AnOrmImpl<?> createObjectTask = (AnOrmImpl<?>) task;
+                    createObjectTask.setSqlighterDb(sqlighterDb);
+                    createObjectTask.startSqlCreate();
+                    sqlStr = createObjectTask.getQueryString();
+                    sqlighterDb.executeChange("drop table if exists " + createObjectTask.getTableName());
+                    sqlighterDb.executeChange(sqlStr);
+                }
+                Upgrade appUpdate = new Upgrade();
+                appUpdate.setKey(key);
+                appUpdate.setValue(sqlStr);
+                appUpdate.setCreateDate(new Date());
+                anOrm.startSqlInsert(appUpdate);
+                anOrm.apply();
             }
-            Upgrade appUpdate = new Upgrade();
-            appUpdate.setKey(key);
-            appUpdate.setValue(sqlStr);
-            appUpdate.setCreateDate(new Date());
-            ap.startSqlInsert(appUpdate);
-            ap.apply();
-        }
 
+            logKey(key, 1);
+
+            sqlighterDb.commitTransaction();
+            return true;
+        } catch (Throwable t) {
+            try {
+                sqlighterDb.rollbackTransaction();
+            } catch (Throwable rollbackExcp) {
+            }
+            try {
+                logKey(key, 0);
+            } catch (Throwable failureMarkExcp) {
+            }
+            return false;
+        }
+    }
+
+    private void logKey(String key, Integer status) throws Exception {
         Upgrade appUpdateMark = new Upgrade();
         appUpdateMark.setKey(key);
-        ap.startSqlInsert(appUpdateMark);
-        ap.apply();
+        appUpdateMark.setStatus(status);
+        appUpdateMark.setCreateDate(new Date());
+        anOrm.startSqlInsert(appUpdateMark);
+        anOrm.apply();
+    }
 
-        sqlighterDb.commitTransaction();
+    protected void attemptToRecover(String failedKey) throws Exception {
+        List<Object> recoverTasks = getTasksByKey("recover key");
+        if(recoverTasks.size() > 0) {
+            ensureStorage(true); // drop/create db upgrade log table
+            for(String key: getUpdateKeys()) {
+                if(key.equals("recover key")) {
+                    applyUpdate(key, recoverTasks);
+                    continue;
+                }
+                logKey(key, key.equals(failedKey) ? 0: 1);
+            }
+        }
     }
 
     /**
@@ -161,6 +203,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         private String key;
         private String value;
         private Date createDate;
+        private Integer status;
 
         public String getKey() {
             return key;
@@ -184,6 +227,14 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
 
         public void setCreateDate(Date createDate) {
             this.createDate = createDate;
+        }
+
+        public Integer getStatus() {
+            return status;
+        }
+
+        public void setStatus(Integer status) {
+            this.status = status;
         }
     }
 }
