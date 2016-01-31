@@ -15,7 +15,7 @@
 
 - (jint)applyUpdates;
 
-- (void)attemptToRecover;
+- (jint)attemptToRecover;
 
 - (void)setRecoverKeyWithNSString:(NSString *)recoverKey;
 

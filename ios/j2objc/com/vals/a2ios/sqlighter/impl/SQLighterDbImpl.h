@@ -14,6 +14,8 @@
     int code;
     BOOL isOpen;
     BOOL isCopied;
+    long stmtOpenCnt;
+    long stmtCloseCnt;
 }
 
 @property (nonatomic, retain) NSString *dbName;

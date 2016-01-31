@@ -12,9 +12,11 @@
 #include "com/vals/a2ios/amfibian/intf/AnUpgrade.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
+#include "java/io/PrintStream.h"
 #include "java/lang/Exception.h"
 #include "java/lang/Integer.h"
 #include "java/lang/Long.h"
+#include "java/lang/System.h"
 #include "java/lang/Throwable.h"
 #include "java/util/Date.h"
 #include "java/util/HashSet.h"
@@ -95,6 +97,9 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, status_, JavaLangInteger *)
   jint taskCount = 0;
   id<JavaUtilSet> appliedKeys = [self getAppliedUpdates];
   for (NSString * __strong updKey in nil_chk([self getUpdateKeys])) {
+    if ([((NSString *) nil_chk(updKey)) isEqual:recoverKey_]) {
+      continue;
+    }
     lastKey_ = updKey;
     if (![((id<JavaUtilSet>) nil_chk(appliedKeys)) containsWithId:updKey]) {
       if (![self applyUpdateWithNSString:updKey withJavaUtilList:[self getTasksByKeyWithNSString:updKey]]) {
@@ -109,21 +114,22 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, status_, JavaLangInteger *)
 - (jboolean)applyUpdateWithNSString:(NSString *)key
                    withJavaUtilList:(id<JavaUtilList>)statementList {
   @try {
-    [((id<SQLighterDb>) nil_chk(sqlighterDb_)) beginTransaction];
     for (id __strong task in nil_chk(statementList)) {
       NSString *sqlStr = nil;
+      JavaLangLong *result = nil;
       if ([task isKindOfClass:[NSString class]]) {
         sqlStr = (NSString *) check_class_cast(task, [NSString class]);
-        (void) [sqlighterDb_ executeChangeWithNSString:sqlStr];
+        result = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:sqlStr];
       }
       else if ([AnSql_class_() isInstance:task]) {
         AnOrmImpl *createObjectTask = (AnOrmImpl *) check_class_cast(task, [AnOrmImpl class]);
         [((AnOrmImpl *) nil_chk(createObjectTask)) setSqlighterDbWithSQLighterDb:sqlighterDb_];
         (void) [createObjectTask startSqlCreate];
         sqlStr = [createObjectTask getQueryString];
-        (void) [sqlighterDb_ executeChangeWithNSString:JreStrcat("$$", @"drop table if exists ", [createObjectTask getTableName])];
-        (void) [sqlighterDb_ executeChangeWithNSString:sqlStr];
+        (void) [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:JreStrcat("$$", @"drop table if exists ", [createObjectTask getTableName])];
+        result = [sqlighterDb_ executeChangeWithNSString:sqlStr];
       }
+      [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$", @"result: ", result, @" for ", sqlStr)];
       AnUpgradeImpl_Upgrade *appUpdate = new_AnUpgradeImpl_Upgrade_init();
       [appUpdate setKeyWithNSString:key];
       [appUpdate setValueWithNSString:sqlStr];
@@ -133,15 +139,11 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, status_, JavaLangInteger *)
       (void) [anOrm_ apply];
     }
     AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, JavaLangInteger_valueOfWithInt_(1));
-    [sqlighterDb_ commitTransaction];
     return true;
   }
   @catch (JavaLangThrowable *t) {
-    @try {
-      [((id<SQLighterDb>) nil_chk(sqlighterDb_)) rollbackTransaction];
-    }
-    @catch (JavaLangThrowable *rollbackExcp) {
-    }
+    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:[((JavaLangThrowable *) nil_chk(t)) getMessage]];
+    [t printStackTrace];
     @try {
       AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, JavaLangInteger_valueOfWithInt_(0));
     }
@@ -156,18 +158,22 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, status_, JavaLangInteger *)
   AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, status);
 }
 
-- (void)attemptToRecover {
+- (jint)attemptToRecover {
   id<JavaUtilList> recoverTasks = [self getTasksByKeyWithNSString:recoverKey_];
   if ([((id<JavaUtilList>) nil_chk(recoverTasks)) size] > 0) {
     AnUpgradeImpl_ensureStorageWithBoolean_(self, true);
     for (NSString * __strong key in nil_chk([self getUpdateKeys])) {
       if ([((NSString *) nil_chk(key)) isEqual:recoverKey_]) {
-        [self applyUpdateWithNSString:key withJavaUtilList:recoverTasks];
-        continue;
+        jboolean result = [self applyUpdateWithNSString:key withJavaUtilList:recoverTasks];
+        if (!result) {
+          return -1;
+        }
+        return 1;
       }
       AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, JavaLangInteger_valueOfWithInt_(0));
     }
   }
+  return 0;
 }
 
 - (void)setRecoverKeyWithNSString:(NSString *)recoverKey {

@@ -9,6 +9,8 @@
 #include "J2ObjC_header.h"
 #include "com/prod/vals/andr_demo_prj/DemoBase.h"
 
+@protocol AnObject;
+
 @interface Demo : DemoBase
 
 #pragma mark Public
@@ -16,6 +18,8 @@
 - (instancetype)init;
 
 + (void)amfibianOperations;
+
++ (void)anUpdateOperationsWithAnObject:(id<AnObject>)anAppointment;
 
 + (void)bindUiWithId:(id)title
               withId:(id)sqlighterHelloLabel
@@ -35,6 +39,8 @@ J2OBJC_EMPTY_STATIC_INIT(Demo)
 FOUNDATION_EXPORT void Demo_sqlighterOperations();
 
 FOUNDATION_EXPORT void Demo_amfibianOperations();
+
+FOUNDATION_EXPORT void Demo_anUpdateOperationsWithAnObject_(id<AnObject> anAppointment);
 
 FOUNDATION_EXPORT void Demo_bindUiWithId_withId_withId_withId_withId_withId_withId_withId_(id title, id sqlighterHelloLabel, id sqlighterDetailsLabel, id sqlighterStartButton, id amfibianHelloLabel, id amfibianDetailsLabel, id amfibianStartButton, id mobilighterCredit);
 

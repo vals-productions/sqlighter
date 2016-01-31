@@ -79,7 +79,7 @@ public class Demo extends DemoBase {
             rs = db.executeSelect("select id, email, name, data, height from user where email = ?");
             startTest("insert/select test");
             while (rs.hasNext()) {
-                verifyTest(verifyRecord(rs, userName, userEmail, userHeight, blobString, insertedId));
+                finishTest(verifyRecord(rs, userName, userEmail, userHeight, blobString, insertedId));
             }
             rs.close();
 
@@ -98,7 +98,7 @@ public class Demo extends DemoBase {
             rs = db.executeSelect("select email from user where id = ?");
             startTest("null handling");
             while (rs.hasNext()) {
-                verifyTest(rs.isNull(0));
+                finishTest(rs.isNull(0));
             }
             rs.close();
 
@@ -240,7 +240,7 @@ public class Demo extends DemoBase {
                  * or nothing to be saved.
                  */
                 db.rollbackTransaction();
-                verifyTest(true);
+                finishTest(true);
             }
 
             printUserTable("after transaction commit or rollback", db);
@@ -276,22 +276,6 @@ public class Demo extends DemoBase {
         Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, greetingStr);
         Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "All tests passed.");
         return;
-    }
-
-    /**
-     * Iterate through all records in User table
-     *
-     * @param title - report title
-     * @param db - SQLighterDb reference
-     * @throws Exception
-     */
-    private static void printUserTable(String title, SQLighterDb db) throws Exception {
-        System.out.println(title);
-        SQLighterRs rs = db.executeSelect("select id, email, name, data, height from user");
-        while (rs.hasNext()) {
-            print(rs);
-        }
-        rs.close();
     }
 
     /**
@@ -449,8 +433,11 @@ public class Demo extends DemoBase {
 
                 /**
                  * AnUpdate demo/tests are in a separate method.
+                 * We'll pass our AnAppointment Amfibian object
+                 * in so that we can reuse it there and keep our
+                 * demo code smaller.
                  */
-                anUpdateOperations();
+                anUpdateOperations(anOrm);
 
                 /**
                  * Run extra tests
@@ -473,11 +460,13 @@ public class Demo extends DemoBase {
         }
     }
 
+    private static AnObject<Appointment> anAppointmentObject;
     /**
      * Database upgrade strategy demonstration.
      */
-    private static void anUpdateOperations() {
+    public static void anUpdateOperations(final AnObject<Appointment> anAppointment) {
         try {
+            anAppointmentObject = anAppointment;
             SQLighterDb db = Bootstrap.getInstance().getSqLighterDb();
             /**
              * Our custom implementation on AnUpdate strategy.
@@ -495,14 +484,60 @@ public class Demo extends DemoBase {
                 public List<Object> getTasksByKey(String key) {
                     List<Object> l = new LinkedList<>();
                     if ("2015-12-19".equals(key)) {
+                        /**
+                         * First update we decided to apply
+                         */
+                        l.add("create table db_drop_test (name text) ");
                         l.add("create table db_upg_test(name text) ");
                         l.add("insert into db_upg_test(name) values('Joe')");
                     } else if ("2015-12-25".equals(key)) {
+                        /**
+                         * Second update we decided to apply
+                         */
                         l.add("alter table db_upg_test add column email text ");
                         l.add("insert into db_upg_test(name,email) values " +
                                                 "('Peter', 'peter@email.com')");
                     } else if ("2015-12-25--01".equals(key)) {
-                        l.add("drop table db_upg_test");
+                        /**
+                         * Third database update we wanted to make
+                         */
+                        l.add("drop table db_drop_test");
+                    } else if ("2016-01-26".equals(key)) {
+                        // intentional failure
+                        /**
+                         * Here we made an error. Things happen.
+                         *
+                         * Since it is not always possible to realize
+                         * what went wrong and fix it right away...
+                         *
+                         * For cases like that we have the DB_RECOVER_KEY
+                         * operation below.
+                         */
+                        l.add("create tble db_drop_test (name text) ");
+                    } else if (AnUpgrade.DB_RECOVER_KEY.equals(key)) {
+                        /**
+                         * In case any db upgrade fails, this key
+                         * is recreating the most up to date
+                         * DB structure that's guaranteed to work.
+                         *
+                         * This demo drops and re-creates the database
+                         * file, so we just need to provide create....
+                         * statements. This is generally more robust approach
+                         * as not always DROP.... statements work.
+                         *
+                         * It's up to you to define this set of statements.
+                         * Alternatively, you might use SQLighter database
+                         * copy and just overwrite inconsistent db file
+                         * with the new one with pre-created DB structure.
+                         */
+                        l.add("create table db_drop_test(name text) ");
+                        l.add("create table db_upg_test(name text) ");
+                        /*
+                         * If your business objects are supported by
+                         * Amfibian, then recreating DB structure
+                         * may be simpler task.
+                         */
+                        l.add(anAppointmentObject);
                     }
                     return l;
                 }
@@ -528,76 +563,68 @@ public class Demo extends DemoBase {
                 }
             };
             List<String> keys = new LinkedList<>();
+            int upgradeCount;
+            /**
+             * Simulate DB upgrade #1
+             */
             keys.add("2015-12-19");
             anUpgrade.setUpdateKeys(keys);
-            anUpgrade.applyUpdates();
+            upgradeCount = anUpgrade.applyUpdates();
             SQLighterRs rs = db.executeSelect("select count(*) from db_upg_test");
             if(rs.hasNext()) {
                 Long cnt = rs.getLong(0);
-                checkTest("database upgrade step 1", cnt == 1);
+                checkTest("database upgrade step 1", cnt == 1 && upgradeCount == 1);
             }
             rs.close();
+            /**
+             * Simulate DB upgrade #2 with several upgrade keys
+             */
             keys.add("2015-12-25");
+            keys.add("2015-12-25--01");
             startTest("database upgrade step 2");
-            anUpgrade.setUpdateKeys(keys);
-            anUpgrade.applyUpdates();
+            upgradeCount = anUpgrade.applyUpdates();
             rs = db.executeSelect("select email from db_upg_test where email is not null");
             if(rs.hasNext()) {
                 String email = rs.getString(0);
-                verifyTest("peter@email.com".equals(email));
+                finishTest("peter@email.com".equals(email) && upgradeCount == 2);
             }
             rs.close();
-            keys.add("2015-12-25--01");
-            startTest("database upgrade step 3");
-            anUpgrade.setUpdateKeys(keys);
-            anUpgrade.applyUpdates();
             try {
                 rs = db.executeSelect("select email from db_upg_test where email is not null");
                 rs.hasNext();
             } catch (Exception t) {
                 // supposed to get sql syntax exception
-                verifyTest(true);
+                finishTest(true);
+            } finally {
+                rs.close();
+            }
+            keys.add("2016-01-26");
+            keys.add(AnUpgrade.DB_RECOVER_KEY);
+            upgradeCount = anUpgrade.applyUpdates();
+            checkTest("Failure during DB upgrade", upgradeCount == -1);
+            startTest("db recovery test");
+            if(upgradeCount == -1) {
+                /*
+                 Our recovery strategy  - close
+                 database, delete database file, start
+                 from empty file. You have flexibility
+                 to design your own strategy such as
+                 reuse the file by dropping all tables/indexes
+                 etc.
+                */
+                db.close();
+                db.deleteDBFile();
+                db.openIfClosed();
+                upgradeCount = anUpgrade.attemptToRecover();
+                finishTest(upgradeCount == 1);
             }
             System.out.println("done with AnUpdate");
         } catch (Throwable t) {
+            makeTestsFail();
             t.printStackTrace();
         }
     }
 
-    /**
-     * This method prints the record and verifies its values
-     *
-     * @param rs
-     * @param userName
-     * @param userEmail
-     * @param userHeight
-     * @param blobString
-     * @param id
-     * @return
-     */
-    private static boolean verifyRecord(SQLighterRs rs, String userName, String userEmail,
-                                        Double userHeight, String blobString, Long id) {
-        Long pk = rs.getLong(0);
-        String e = rs.getString(1);
-        String n = rs.getString(2);
-        byte[] dataBytes = rs.getBlob(3);
-        String dataString = null;
-        if (dataBytes != null) {
-            dataString = new String(dataBytes);
-        }
-        Number h = rs.getDouble(4);
-        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n +
-                ", blob data: " + dataString + ", height: " + h);
-        return (pk.equals(id) &&
-                e.equals(userEmail) &&
-                n.equals(userName) &&
-                dataString.equals(blobString) &&
-                h.doubleValue() == userHeight.doubleValue());
-    }
-
-    private static Object sqlighterHelloLabel, sqlighterDetailsLabel;
-    private static Object amfibianHelloLabel, amfibianDetailsLabel;
-    private static MobilAction sqlighterStartAction, amfibianStartAction;
     public static void bindUi(
             Object title,
             Object sqlighterHelloLabel, Object sqlighterDetailsLabel, final Object sqlighterStartButton,
@@ -619,14 +646,17 @@ public class Demo extends DemoBase {
         mobilighter.setText(sqlighterDetailsLabel, "");
         mobilighter.setText(amfibianDetailsLabel, "");
 
-        mobilighter.setText(sqlighterStartButton, "Start SQLighter");
-        mobilighter.setText(amfibianStartButton, "Start AmfibiaN");
+        mobilighter.setText(sqlighterStartButton, "Begin SQLighter tests");
+        mobilighter.setText(amfibianStartButton, "Begin AmfibiaN tests");
+
+        mobilighter.hide(amfibianStartButton);
 
         sqlighterStartAction = new MobilAction() {
             @Override
             public void onAction(Object param) {
                 sqlighterOperations();
                 mobilighter.hide(sqlighterStartButton);
+                mobilighter.show(amfibianStartButton);
             }
         };
         mobilighter.addActionListener(sqlighterStartButton, sqlighterStartAction);

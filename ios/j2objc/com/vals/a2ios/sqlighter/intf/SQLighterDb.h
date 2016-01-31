@@ -53,6 +53,8 @@
 
 - (void)close;
 
+- (jboolean)deleteDBFile;
+
 - (void)setIsDateNamedColumnWithBoolean:(jboolean)isDateNamedColumn;
 
 - (JavaUtilDate *)getDateWithoutMillisWithJavaUtilDate:(JavaUtilDate *)date;

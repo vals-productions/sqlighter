@@ -11,6 +11,7 @@
 #include "com/prod/vals/andr_demo_prj/Bootstrap.h"
 #include "com/prod/vals/andr_demo_prj/DemoBase.h"
 #include "com/vals/a2ios/amfibian/intf/AnOrm.h"
+#include "com/vals/a2ios/mobilighter/intf/MobilAction.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 #include "java/io/PrintStream.h"
@@ -41,6 +42,13 @@ J2OBJC_STATIC_FIELD_SETTER(DemoBase, testList_, id<JavaUtilList>)
 
 J2OBJC_INITIALIZED_DEFN(DemoBase)
 
+id DemoBase_sqlighterHelloLabel_;
+id DemoBase_sqlighterDetailsLabel_;
+id DemoBase_amfibianHelloLabel_;
+id DemoBase_amfibianDetailsLabel_;
+id<MobilAction> DemoBase_sqlighterStartAction_;
+id<MobilAction> DemoBase_amfibianStartAction_;
+
 @implementation DemoBase
 
 + (void)resetTestCounters {
@@ -56,8 +64,12 @@ J2OBJC_INITIALIZED_DEFN(DemoBase)
   DemoBase_startTestWithNSString_(name);
 }
 
-+ (void)verifyTestWithBoolean:(jboolean)isPassed {
-  DemoBase_verifyTestWithBoolean_(isPassed);
++ (void)finishTestWithBoolean:(jboolean)isPassed {
+  DemoBase_finishTestWithBoolean_(isPassed);
+}
+
++ (void)makeTestsFail {
+  DemoBase_makeTestsFail();
 }
 
 + (jboolean)testSummaryCheck {
@@ -82,6 +94,20 @@ J2OBJC_INITIALIZED_DEFN(DemoBase)
 
 + (void)printWithSQLighterRs:(id<SQLighterRs>)rs {
   DemoBase_printWithSQLighterRs_(rs);
+}
+
++ (void)printUserTableWithNSString:(NSString *)title
+                   withSQLighterDb:(id<SQLighterDb>)db {
+  DemoBase_printUserTableWithNSString_withSQLighterDb_(title, db);
+}
+
++ (jboolean)verifyRecordWithSQLighterRs:(id<SQLighterRs>)rs
+                           withNSString:(NSString *)userName
+                           withNSString:(NSString *)userEmail
+                     withJavaLangDouble:(JavaLangDouble *)userHeight
+                           withNSString:(NSString *)blobString
+                       withJavaLangLong:(JavaLangLong *)id_ {
+  return DemoBase_verifyRecordWithSQLighterRs_withNSString_withNSString_withJavaLangDouble_withNSString_withJavaLangLong_(rs, userName, userEmail, userHeight, blobString, id_);
 }
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN
@@ -119,11 +145,16 @@ void DemoBase_startTestWithNSString_(NSString *name) {
   [((id<JavaUtilList>) nil_chk(DemoBase_testList_)) addWithId:name];
 }
 
-void DemoBase_verifyTestWithBoolean_(jboolean isPassed) {
+void DemoBase_finishTestWithBoolean_(jboolean isPassed) {
   DemoBase_initialize();
   if (isPassed) {
     DemoBase_passedTestCount_++;
   }
+}
+
+void DemoBase_makeTestsFail() {
+  DemoBase_initialize();
+  DemoBase_passedTestCount_ = 0;
 }
 
 jboolean DemoBase_testSummaryCheck() {
@@ -177,15 +208,34 @@ void DemoBase_printWithSQLighterRs_(id<SQLighterRs> rs) {
   [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
 }
 
+void DemoBase_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLighterDb> db) {
+  DemoBase_initialize();
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:title];
+  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(db)) executeSelectWithNSString:@"select id, email, name, data, height from user"];
+  while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+    DemoBase_printWithSQLighterRs_(rs);
+  }
+  [rs close];
+}
+
+jboolean DemoBase_verifyRecordWithSQLighterRs_withNSString_withNSString_withJavaLangDouble_withNSString_withJavaLangLong_(id<SQLighterRs> rs, NSString *userName, NSString *userEmail, JavaLangDouble *userHeight, NSString *blobString, JavaLangLong *id_) {
+  DemoBase_initialize();
+  JavaLangLong *pk = [((id<SQLighterRs>) nil_chk(rs)) getLongWithInt:0];
+  NSString *e = [rs getStringWithInt:1];
+  NSString *n = [rs getStringWithInt:2];
+  IOSByteArray *dataBytes = [rs getBlobWithInt:3];
+  NSString *dataString = nil;
+  if (dataBytes != nil) {
+    dataString = [NSString stringWithBytes:dataBytes];
+  }
+  NSNumber *h = [rs getDoubleWithInt:4];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
+  return ([((JavaLangLong *) nil_chk(pk)) isEqual:id_] && [((NSString *) nil_chk(e)) isEqual:userEmail] && [((NSString *) nil_chk(n)) isEqual:userName] && [((NSString *) nil_chk(dataString)) isEqual:blobString] && [((NSNumber *) nil_chk(h)) doubleValue] == [((JavaLangDouble *) nil_chk(userHeight)) doubleValue]);
+}
+
 void DemoBase_init(DemoBase *self) {
   (void) NSObject_init(self);
   self->sqLighterDb_ = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
-}
-
-DemoBase *new_DemoBase_init() {
-  DemoBase *self = [DemoBase alloc];
-  DemoBase_init(self);
-  return self;
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(DemoBase)

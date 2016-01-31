@@ -23,7 +23,7 @@
 
 - (jint)applyUpdates;
 
-- (void)attemptToRecover;
+- (jint)attemptToRecover;
 
 - (id<JavaUtilSet>)getAppliedUpdates;
 

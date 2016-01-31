@@ -95,6 +95,11 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      */
     public Set<String> getAppliedUpdates() throws Exception {
         Set<String> keys = new HashSet<>();
+        /**
+         * Retrieve all update keys, regardless of the status
+         * of the update. We will not retry whatever already
+         * failed.
+         */
         SQLighterRs rs = sqlighterDb.executeSelect("select key from " + Upgrade.TABLE + " where value is not null");
         while (rs.hasNext()) {
             String key = rs.getString(0);
@@ -111,16 +116,32 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
     @Override
     public int applyUpdates() throws Exception {
         int taskCount = 0;
+        /**
+         * Get the list of update keys that already
+         * had been applied.
+         */
         Set<String> appliedKeys = getAppliedUpdates();
         for (String updKey: getUpdateKeys()) {
+            /**
+             * Skip DB recovery key
+             */
+            if(updKey.equals(recoverKey)) {
+                continue;
+            }
+            /**
+             * For every available key
+             */
             lastKey = updKey;
-            if(!appliedKeys.contains(updKey)) {
+            if(!appliedKeys.contains(updKey)) { // exclude already applied keys
                 if(!applyUpdate(updKey, getTasksByKey(updKey))) {
                     /**
                      * failure during db upgrade
                      */
                     return -1;
                 }
+                /**
+                 * Success, try next key.
+                 */
                 taskCount++;
             }
         }
@@ -131,20 +152,19 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      *
      * @param key
      * @param statementList
-     * @throws Exception
+     * @return true if no errors, false if failed
      */
     protected boolean applyUpdate(String key, List<Object> statementList) {
         try {
-            sqlighterDb.beginTransaction();
-
             for (Object task : statementList) {
                 String sqlStr = null;
+                Long result = null;
                 if (task instanceof String) {
                     /**
                      * Run raw SQL query.
                      */
                     sqlStr = (String) task;
-                    sqlighterDb.executeChange(sqlStr);
+                    result = sqlighterDb.executeChange(sqlStr);
                 } else if (task instanceof AnSql<?>) {
                     /**
                      * Auto create AnObject
@@ -155,11 +175,12 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
                     sqlStr = createObjectTask.getQueryString();
                     sqlighterDb.executeChange("drop table if exists " +
                             createObjectTask.getTableName());
-                    sqlighterDb.executeChange(sqlStr);
+                    result = sqlighterDb.executeChange(sqlStr);
                 }
                 /**
                  * Log upgrade step
                  */
+                System.out.println("result: " + result + " for " + sqlStr);
                 Upgrade appUpdate = new Upgrade();
                 appUpdate.setKey(key);
                 appUpdate.setValue(sqlStr);
@@ -174,23 +195,17 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
              */
             logKey(key, 1);
 
-            sqlighterDb.commitTransaction();
             /*
-            Success
+                Success
              */
             return true;
         } catch (Throwable t) {
+            // TODO: remove debug print
+            System.out.println(t.getMessage());
+            t.printStackTrace();
             try {
                 /**
-                 * Something failed during DB upgrade.
-                 * Let's try to rollback.
-                 */
-                sqlighterDb.rollbackTransaction();
-            } catch (Throwable rollbackExcp) {
-            }
-            try {
-                /**
-                 * Log the key as failure.
+                 * Log the key as failure if possible
                  */
                 logKey(key, 0);
             } catch (Throwable failureMarkExcp) {
@@ -212,7 +227,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
     }
 
     @Override
-    public void attemptToRecover() throws Exception {
+    public int attemptToRecover() throws Exception {
         List<Object> recoverTasks = getTasksByKey(recoverKey);
         if(recoverTasks.size() > 0) {
             /**
@@ -221,12 +236,21 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
             ensureStorage(true); // drop/create db upgrade log table
             for(String key: getUpdateKeys()) {
                 if(key.equals(recoverKey)) {
-                    applyUpdate(key, recoverTasks);
-                    continue;
+                    boolean result = applyUpdate(key, recoverTasks);
+                    if(!result) {
+                        // failed to apply
+                        return -1;
+                    }
+                    // success
+                    return 1;
                 }
                 logKey(key, 0);
             }
         }
+        /**
+         * No keys found/applied
+         */
+        return 0;
     }
 
     @Override

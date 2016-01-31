@@ -219,10 +219,22 @@ public class SQLighterDbImpl implements SQLighterDb {
     }
 
     @Override
+    public boolean deleteDBFile() {
+        File f = new File(getDeviceDbFileName());
+        boolean result = f.delete();
+        isDbCopied = false;
+        return result;
+    }
+
+    private String getDeviceDbFileName() {
+        return dbPath + dbName;
+    }
+
+    @Override
     public synchronized void copyDbOnce() throws Exception {
         if (!isDbCopied) {
             isDbCopied = true;
-            String deviceDbFileName = dbPath + dbName;
+            String deviceDbFileName = getDeviceDbFileName();
             ensureInitialState(deviceDbFileName);
             File f = new File(deviceDbFileName);
             boolean isDeviceDbFileExists = f.exists();

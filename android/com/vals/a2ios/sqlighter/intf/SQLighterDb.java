@@ -141,6 +141,11 @@ public interface SQLighterDb {
     public void close();
 
     /**
+     * TBD
+     */
+    public boolean deleteDBFile();
+
+    /**
      * @param isDateNamedColumn - if true, then Any string type column having "date"
      * in its name will be attempted to be parsed as a Date when processing a result set.
      * Otherwise, will be treated as a string.

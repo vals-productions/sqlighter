@@ -1,6 +1,8 @@
 package com.prod.vals.andr_demo_prj;
 
 import com.vals.a2ios.amfibian.intf.AnOrm;
+import com.vals.a2ios.mobilighter.intf.MobilAction;
+import com.vals.a2ios.mobilighter.intf.Mobilighter;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
@@ -13,7 +15,7 @@ import java.util.List;
  *
  * Created by vsayenko on 1/18/16.
  */
-public class DemoBase {
+public abstract class DemoBase {
 
     private SQLighterDb sqLighterDb = Bootstrap.getInstance().getSqLighterDb();
     /**
@@ -21,6 +23,10 @@ public class DemoBase {
      */
     private static int passedTestCount = 0;
     private static List<String> testList = new LinkedList<>();
+
+    protected static Object sqlighterHelloLabel, sqlighterDetailsLabel;
+    protected static Object amfibianHelloLabel, amfibianDetailsLabel;
+    protected static MobilAction sqlighterStartAction, amfibianStartAction;
 
     protected static void resetTestCounters() {
         testList.clear();
@@ -37,10 +43,14 @@ public class DemoBase {
         testList.add(name);
     }
 
-    protected static void verifyTest(boolean isPassed) {
+    protected static void finishTest(boolean isPassed) {
         if(isPassed) {
             passedTestCount++;
         }
+    }
+
+    protected static void makeTestsFail() {
+        passedTestCount = 0;
     }
 
     protected static boolean testSummaryCheck() {
@@ -99,6 +109,53 @@ public class DemoBase {
         }
         Number h = rs.getDouble(4);
         System.out.println("pk: " + pk + ", email: " + e + ", name: " + n + ", blob data: " + dataString + ", height: " + h);
+    }
+
+    /**
+     * Iterate through all records in User table
+     *
+     * @param title - report title
+     * @param db - SQLighterDb reference
+     * @throws Exception
+     */
+    protected static void printUserTable(String title, SQLighterDb db) throws Exception {
+        System.out.println(title);
+        SQLighterRs rs = db.executeSelect("select id, email, name, data, height from user");
+        while (rs.hasNext()) {
+            print(rs);
+        }
+        rs.close();
+    }
+
+    /**
+     * This method prints the record and verifies its values
+     *
+     * @param rs
+     * @param userName
+     * @param userEmail
+     * @param userHeight
+     * @param blobString
+     * @param id
+     * @return
+     */
+    protected static boolean verifyRecord(SQLighterRs rs, String userName, String userEmail,
+                                          Double userHeight, String blobString, Long id) {
+        Long pk = rs.getLong(0);
+        String e = rs.getString(1);
+        String n = rs.getString(2);
+        byte[] dataBytes = rs.getBlob(3);
+        String dataString = null;
+        if (dataBytes != null) {
+            dataString = new String(dataBytes);
+        }
+        Number h = rs.getDouble(4);
+        System.out.println("pk: " + pk + ", email: " + e + ", name: " + n +
+                ", blob data: " + dataString + ", height: " + h);
+        return (pk.equals(id) &&
+                e.equals(userEmail) &&
+                n.equals(userName) &&
+                dataString.equals(blobString) &&
+                h.doubleValue() == userHeight.doubleValue());
     }
 
 

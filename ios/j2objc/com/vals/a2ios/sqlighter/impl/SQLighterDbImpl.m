@@ -21,6 +21,8 @@
         self.parameterDictionary = [NSMutableDictionary dictionary];
         isOpen = NO;
         isCopied = NO;
+        stmtOpenCnt = 0;
+        stmtCloseCnt = 0;
         self.isDateNamedColumn = YES;
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setDateFormat:SQLighterDb_DATE_FORMAT_];
@@ -63,7 +65,11 @@
 -(sqlite3_stmt *) prepareStatementWithSql: (NSString *) sqlString  {
     @synchronized(self) {
         sqlite3_stmt *statement;
-        if (sqlite3_prepare_v2(database, [sqlString  UTF8String], -1, &statement, NULL) != SQLITE_OK) {
+//        if(stmtOpenCnt != stmtCloseCnt) {
+//            NSLog(@"Potential resource leak");
+//        }
+        stmtOpenCnt++;
+        if ((code = sqlite3_prepare_v2(database, [sqlString  UTF8String], -1, &statement, NULL)) != SQLITE_OK) {
             // [[self parameterArray] removeAllObjects];
             [self clearParameterArray];
             @throw [[JavaLangException alloc]
@@ -77,41 +83,59 @@
 
 - (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery {
     @synchronized(self) {
-        sqlite3_stmt *statement = [self prepareStatementWithSql: selectQuery];
-        [self bindParameters: [self parameterArray]];
-        SQLighterRsImpl *rs = [[SQLighterRsImpl alloc] init];
-        rs.stmt = statement;
-        rs.db = self;
-        // [[self parameterArray] removeAllObjects];
-        [self clearParameterArray];
-        return rs;
+        @try {
+            sqlite3_stmt *statement = [self prepareStatementWithSql: selectQuery];
+            [self bindParameters: [self parameterArray]];
+            SQLighterRsImpl *rs = [[SQLighterRsImpl alloc] init];
+            rs.stmt = statement;
+            rs.db = self;
+            // [[self parameterArray] removeAllObjects];
+            [self clearParameterArray];
+            return rs;
+        } @catch (JavaLangException *exception) {
+            @throw exception;
+        } @finally {
+        }
     }
 }
 
 - (JavaLangLong *)executeChangeWithNSString:(NSString *) makeChangeQuery {
     @synchronized(self) {
-        JavaLangLong *resultInfo = nil;
-        sqlite3_stmt *statement = [self prepareStatementWithSql: makeChangeQuery];
-        [self bindParameters: [self parameterArray]];
-        code = sqlite3_step(statement);
-        NSString *alteredQuery = [self substringWithoutLeadingWhitespace: [makeChangeQuery lowercaseString]];
-        if ([alteredQuery hasPrefix:@"insert"]) {
-            sqlite_int64 rows = sqlite3_last_insert_rowid(database);
-            resultInfo = [[JavaLangLong alloc]initWithLong: rows];
-        } else if ([alteredQuery hasPrefix:@"update"] || [alteredQuery hasPrefix:@"delete"]) {
-            int rows = sqlite3_changes(database);
-            resultInfo = [[JavaLangLong alloc]initWithLong: (long)rows];
+        @try {
+            JavaLangLong *resultInfo = nil;
+            sqlite3_stmt *statement = [self prepareStatementWithSql: makeChangeQuery];
+            [self bindParameters: [self parameterArray]];
+            code = sqlite3_step(statement);
+            NSString *alteredQuery = [self substringWithoutLeadingWhitespace: [makeChangeQuery lowercaseString]];
+            if ([alteredQuery hasPrefix:@"insert"]) {
+                sqlite_int64 rows = sqlite3_last_insert_rowid(database);
+                resultInfo = [[JavaLangLong alloc]initWithLong: rows];
+            } else if ([alteredQuery hasPrefix:@"update"] || [alteredQuery hasPrefix:@"delete"]) {
+                int rows = sqlite3_changes(database);
+                resultInfo = [[JavaLangLong alloc]initWithLong: (long)rows];
+            } else {
+                int rows = sqlite3_changes(database);
+                resultInfo = [[JavaLangLong alloc]initWithLong: (long)rows];
+            }
+            [self closeStmt: statement];
+            return resultInfo;
+        } @catch (JavaLangException *exception) {
+            @throw exception;
+        } @finally {
         }
-        [self closeStmt: statement];
-        return resultInfo;
     }
 }
 
 -(void) closeStmt: (sqlite3_stmt *) statement {
     @synchronized(self) {
-        if (sqlite3_finalize(statement) == SQLITE_ERROR) {
+        stmtCloseCnt++;
+        if((code = sqlite3_reset(statement)) != SQLITE_OK) {
             @throw [[JavaLangException alloc] initWithNSString:
-                    [NSString stringWithFormat: @"Database SQL Error: '%s'.", sqlite3_errmsg(database)]];
+                    [NSString stringWithFormat: @"Database SQL Error on reset stmt: '%s'.", sqlite3_errmsg(database)]];
+        }
+        if ((code = sqlite3_finalize(statement)) != SQLITE_OK) {
+            @throw [[JavaLangException alloc] initWithNSString:
+                    [NSString stringWithFormat: @"Database SQL Error on fin stmt: '%s'.", sqlite3_errmsg(database)]];
         }
     }
 }
@@ -166,6 +190,27 @@
     // not used in iOS.
 }
 
+- (jboolean)deleteDBFile {
+    NSError *error;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *dbFile = [self getFilePath];
+    isCopied = NO;
+    return [fileManager removeItemAtPath:dbFile error:&error];
+}
+
+-(NSString*) getFilePath {
+    /**
+     * Documents directory under application's directory
+     */
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentDirectory = [paths objectAtIndex:0];
+    /**
+     * Full path\file to DB file
+     */
+    NSString *writableDbPath = [documentDirectory stringByAppendingPathComponent: dbName];
+    return writableDbPath;
+}
+
 -(void) copyDbOnce {
     @synchronized(self) {
         if (!isCopied) {
@@ -176,15 +221,8 @@
         BOOL success;
         NSError *error;
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        /**
-         * Documents directory under application's directory
-         */
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentDirectory = [paths objectAtIndex:0];
-        /**
-         * Full path\file to DB file
-         */
-        NSString *writableDbPath = [documentDirectory stringByAppendingPathComponent: dbName];
+        
+        NSString *writableDbPath = [self getFilePath];
         if (replaceDatabase == YES) {
             NSLog(@"Service: Attempt to replace existing DB.");
             if (![fileManager removeItemAtPath:writableDbPath error:&error]) {
@@ -217,20 +255,16 @@
 - (void)openIfClosed {
     @synchronized(self) {
         if(!isOpen) {
+            NSString *path = [self getFilePath]; // [documentsDirectory stringByAppendingPathComponent: dbName];
+            // Open the database.
+            if (sqlite3_open([path UTF8String], &database) != SQLITE_OK) {
+                // Even though the open failed, call close to properly clean up resources.
+                // [paths release];
+                sqlite3_close(database);
+                @throw [[JavaLangException alloc] initWithNSString:
+                        [NSString stringWithFormat: @"Database Error: '%s'.", sqlite3_errmsg(database)]];
+            }
             isOpen = YES;
-        } else {
-            return;
-        }
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString *path = [documentsDirectory stringByAppendingPathComponent: dbName];
-        // Open the database. The database was prepared outside the application.
-        if (sqlite3_open([path UTF8String], &database) != SQLITE_OK) {
-            // Even though the open failed, call close to properly clean up resources.
-            //[paths release];
-            sqlite3_close(database);
-            @throw [[JavaLangException alloc] initWithNSString:
-                    [NSString stringWithFormat: @"Database Error: '%s'.", sqlite3_errmsg(database)]];
         }
     }
 }

@@ -28,15 +28,18 @@ public interface AnUpgrade {
      * keys and applies statements associated with
      * them as needed.
      *
+     * It skips the recovery key.
+     *
      * @throws Exception
      */
     int applyUpdates() throws Exception;
 
     /**
-     * TBD
+     * Attempts to apply recovery key.
+     *
      * @throws Exception
      */
-    void attemptToRecover() throws Exception;
+    int attemptToRecover() throws Exception;
 
     /**
      * TBD
