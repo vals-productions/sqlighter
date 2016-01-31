@@ -17,10 +17,9 @@ import java.util.Set;
  */
 public interface AnUpgrade {
     /**
-     * In case sequential DB upgrade fails, check
-     * if recovery key is provided, apply. Recovery key is
+     * For the case sequential DB upgrade fails, specify recovery key set of statements. Recovery key is
      * supposed to contain statements to recreate DB from
-     * the beginning in its latest structural state.
+     * the beginning in its latest structural state. You may choose to execute a series of ```DROP``` statements followed by ```CREATE``` statements, or, delete existing file, create new one, and execute ```CREATE``` statements from there.
      */
     public static final String DB_RECOVER_KEY = "recoveryKey";
     /**
@@ -35,20 +34,20 @@ public interface AnUpgrade {
     int applyUpdates() throws Exception;
 
     /**
-     * Attempts to apply recovery key.
-     *
+     * Attempts to apply recovery key tasks. At the same time this method will mark all other existing keys as executed. There is no need to execute anything else if the database is in its latest. 
+     * @return 
      * @throws Exception
      */
     int attemptToRecover() throws Exception;
 
     /**
-     * TBD
+     * Lets you override recoverKey value.
      * @param recoverKey
      */
     void setRecoverKey(String recoverKey);
 
     /**
-     * TBD
+     * Gets you value of the last executed key. You might need this to know which key has failed.
      * @return
      */
     String getLastKey();

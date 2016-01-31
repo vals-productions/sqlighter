@@ -141,7 +141,7 @@ public interface SQLighterDb {
     public void close();
 
     /**
-     * TBD
+     * Lets you delete your database file from the device in case you need this.
      */
     public boolean deleteDBFile();
 

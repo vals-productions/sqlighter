@@ -91,31 +91,31 @@ public interface AnAttrib {
     void setDefaultGetConversionKey(String key);
 
     /**
-     *
+     * Sets an object associated with native object.
      * @param anObject
      */
     void setAnObject(AnObject<?> anObject);
 
     /**
-     *
-     * @return
+     * 
+     * @return attribute name
      */
     String getAttribName();
 
     /**
-     *
+     * Sets attribute name
      * @param attribName
      */
     void setAttribName(String attribName);
 
     /**
-     *
-     * @return
+     * 
+     * @return DB column name, or null if undefined.
      */
     String getColumnName();
 
     /**
-     *
+     * Specifies DB column name associated with this atribute.
      * @param columnName
      */
     void setColumnName(String columnName);
@@ -130,20 +130,20 @@ public interface AnAttrib {
     void setValue(Object value) throws Exception;
 
     /**
-     *
-     * @return
-     * @throws Exception
+     * Retrieves attribute value fron associated native object.
+     * @return attribute value
+     * @throws Exception in case value extraction experiences issues
      */
     Object getValue() throws Exception;
 
     /**
-     *
+     * Returns getter method object for the attribute.
      * @return
      */
     Method getGetter();
 
     /**
-     *
+     * Returns setter method object for the attribute.
      * @return
      */
     Method getSetter();
@@ -155,13 +155,13 @@ public interface AnAttrib {
     Class<?> getAttribClass();
 
     /**
-     *
+     * Gives JSON attribute name, if different from attribute name. Otherwise return attribute name.
      * @return
      */
     String getJsonOrAttribName();
 
     /**
-     *
+     * Gives DB column name, if different from attribute name. Otherwise return attribute name.
      * @return
      */
     String getColumnOrAttribName();
