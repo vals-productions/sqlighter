@@ -9,9 +9,9 @@ import java.lang.reflect.Method;
  *
  * It is used for JSON/Database/Native object conversion
  * mappings. Simple way of thinking of this  - it is a
- * mapper between native objetct's attributes and their
+ * mapper between native object's attributes and their
  * JSON and Database counterparts. Also, it might define
- * some custom converters between them in case default
+ * some custom converters between respective attribute values in case default
  * converters do not work for you.
  *
  */

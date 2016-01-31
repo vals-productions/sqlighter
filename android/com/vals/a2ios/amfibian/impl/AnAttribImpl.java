@@ -28,7 +28,13 @@ public class AnAttribImpl implements AnAttrib {
     
     private Map<String, CustomConverter> converterMap = new HashMap<>();   
     private Map<String, CustomConverter> getConverterMap = new HashMap<>();
+    /**
+     
 
+      @parameter attribName
+      @parameter columnName
+      @parameter jsonName
+    */
     public AnAttribImpl(String attribName, String columnName, String jsonName) {
         this(attribName);
         this.columnName = columnName;
