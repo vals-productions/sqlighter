@@ -262,6 +262,7 @@ void Demo_sqlighterOperations() {
       greetingStr = [NSString stringWithBytes:greet];
     }
     [rs close];
+    DemoBase_checkTestWithNSString_withBoolean_(@"Statement balance", [db getStatementBalance] == 0);
   }
   @catch (JavaLangException *e) {
     [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:[((JavaLangException *) nil_chk(e)) getMessage]];
@@ -384,6 +385,7 @@ void Demo_anUpdateOperationsWithAnObject_(id<AnObject> anAppointment) {
       upgradeCount = [anUpgrade attemptToRecover];
       DemoBase_finishTestWithBoolean_(upgradeCount == 1);
     }
+    DemoBase_checkTestWithNSString_withBoolean_(@"Statement balance", [db getStatementBalance] == 0);
     [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:@"done with AnUpdate"];
   }
   @catch (JavaLangThrowable *t) {

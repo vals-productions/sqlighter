@@ -27,6 +27,8 @@
 
 - (void)copyDbOnce OBJC_METHOD_FAMILY_NONE;
 
+- (void)deployDbOnce;
+
 - (void)addParamWithNSString:(NSString *)s;
 
 - (void)addParamWithDouble:(jdouble)d;
@@ -58,6 +60,8 @@
 - (void)setIsDateNamedColumnWithBoolean:(jboolean)isDateNamedColumn;
 
 - (JavaUtilDate *)getDateWithoutMillisWithJavaUtilDate:(JavaUtilDate *)date;
+
+- (jlong)getStatementBalance;
 
 @end
 

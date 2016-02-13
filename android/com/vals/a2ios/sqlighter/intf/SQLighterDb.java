@@ -62,8 +62,20 @@ public interface SQLighterDb {
      * https://github.com/vals-productions/sqlighter#sqlighterdbcopydbonce
      *
      * @throws Exception in case of input\output exceptions
+     *
+     * @deprecated - see deployDBOnce. No functionality change,
+     * just naming consistency.
      */
     public void copyDbOnce() throws Exception;
+
+    /**
+     * Check this doc for detailed info:
+     *
+     * https://github.com/vals-productions/sqlighter#sqlighterdbcopydbonce
+     *
+     * @throws Exception in case of input\output exceptions
+     */
+    public void deployDbOnce() throws Exception;
 
     /**
      * Bind the param for the statement that will be executed next
@@ -163,5 +175,14 @@ public interface SQLighterDb {
      * @return
      */
     public Date getDateWithoutMillis(Date date);
+
+    /**
+     * Returns created / closed statements balance. You
+     * can check the balance once in a while to make sure
+     * there's no resource leaks.
+     *
+     * @return
+     */
+    public long getStatementBalance();
 
 }

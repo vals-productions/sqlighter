@@ -18,7 +18,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         /**
-         * SQLite initialization
+         * SQLite initialization. This portion is
+         * platform specific, but common by most part.
          */
         SQLighterDbImpl db = new SQLighterDbImpl();
         String dbPath =
@@ -26,16 +27,20 @@ public class MainActivity extends ActionBarActivity {
                         .getParentFile().getPath() + "/databases/";
         db.setDbPath(dbPath);
         db.setDbName("sqlite.sqlite");
-        boolean isDbFileDeployed = db.isDbFileDeployed();
-        if(!isDbFileDeployed) {
+        if(!db.isDbFileDeployed()) {
             System.out.println("DB file is not deployed");
         } else {
             System.out.println("DB file is deployed");
         }
         db.setContext(this);
+        /* Will overwrite destination DB file at device.
+         * Good for the demo since we have the same starting point
+         * and can implement tests. Production app settings most
+         * likely would be different.
+         */
         db.setOverwriteDb(true);
         try {
-            db.copyDbOnce();
+            db.deployDbOnce();
             db.openIfClosed();
         } catch (Throwable t) {
             t.printStackTrace();

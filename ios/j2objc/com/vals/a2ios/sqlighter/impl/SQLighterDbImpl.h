@@ -13,7 +13,7 @@
 @interface SQLighterDbImpl : NSObject<SQLighterDb> {
     int code;
     BOOL isOpen;
-    BOOL isCopied;
+    BOOL isDeployed;
     long stmtOpenCnt;
     long stmtCloseCnt;
 }

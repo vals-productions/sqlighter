@@ -20,7 +20,7 @@
     if( self = [super init]) {
         self.parameterDictionary = [NSMutableDictionary dictionary];
         isOpen = NO;
-        isCopied = NO;
+        isDeployed = NO;
         stmtOpenCnt = 0;
         stmtCloseCnt = 0;
         self.isDateNamedColumn = YES;
@@ -65,18 +65,14 @@
 -(sqlite3_stmt *) prepareStatementWithSql: (NSString *) sqlString  {
     @synchronized(self) {
         sqlite3_stmt *statement;
-//        if(stmtOpenCnt != stmtCloseCnt) {
-//            NSLog(@"Potential resource leak");
-//        }
-        stmtOpenCnt++;
         if ((code = sqlite3_prepare_v2(database, [sqlString  UTF8String], -1, &statement, NULL)) != SQLITE_OK) {
-            // [[self parameterArray] removeAllObjects];
             [self clearParameterArray];
             @throw [[JavaLangException alloc]
                     initWithNSString:[NSString stringWithFormat:
                        @"Database SQL Error: '%s'.", sqlite3_errmsg(database)]];
         }
         self.lastPreparedStmt = statement;
+        stmtOpenCnt++;
         return statement;
     }
 }
@@ -194,7 +190,7 @@
     NSError *error;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *dbFile = [self getFilePath];
-    isCopied = NO;
+    isDeployed = NO;
     return [fileManager removeItemAtPath:dbFile error:&error];
 }
 
@@ -212,9 +208,13 @@
 }
 
 -(void) copyDbOnce {
+    [self deployDbOnce];
+}
+
+-(void) deployDbOnce {
     @synchronized(self) {
-        if (!isCopied) {
-            isCopied = YES;
+        if (!isDeployed) {
+            isDeployed = YES;
         } else {
             return;
         }
@@ -414,6 +414,10 @@
         return date;
     }
     return nil;
+}
+
+-(jlong) getStatementBalance {
+    return stmtOpenCnt - stmtCloseCnt;
 }
 
 @end

@@ -255,6 +255,12 @@ public class Demo extends DemoBase {
                 greetingStr =  new String(greet);
             }
             rs.close();
+
+            /**
+             * Verify that all opened statements were closed.
+             */
+            checkTest("Statement balance", db.getStatementBalance() == 0);
+
         } catch(Exception e) {
             System.out.println(e.getMessage());
             /**
@@ -503,8 +509,9 @@ public class Demo extends DemoBase {
                          */
                         l.add("drop table db_drop_test");
                     } else if ("2016-01-26".equals(key)) {
-                        // intentional failure
                         /**
+                         * Intentional failure
+                         *
                          * Here we made an error. Things happen.
                          *
                          * Since it is not always possible to realize
@@ -618,6 +625,11 @@ public class Demo extends DemoBase {
                 upgradeCount = anUpgrade.attemptToRecover();
                 finishTest(upgradeCount == 1);
             }
+            /**
+             * Verify that all opened statements were closed.
+             */
+            checkTest("Statement balance", db.getStatementBalance() == 0);
+
             System.out.println("done with AnUpdate");
         } catch (Throwable t) {
             makeTestsFail();

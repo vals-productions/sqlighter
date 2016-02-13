@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Android implementation of SQLighter interfaces.
@@ -33,8 +32,9 @@ public class SQLighterDbImpl implements SQLighterDb {
     private Context context;
     private SQLiteDatabase db;
     private boolean isOpen = false;
-    private boolean isDbCopied = false;
-    // private List<Object> parameterList = new LinkedList<Object>();
+    private boolean isDeployed = false;
+    private long stmtOpenCnt = 0;
+    private long stmtCloseCnt = 0;
     private Map<Long, List<Object>> parameterMap = new HashMap<>();
     private SimpleDateFormat dateFormat = new SimpleDateFormat(SQLighterDb.DATE_FORMAT);
     private boolean isDateNamedColumn = true;
@@ -121,6 +121,7 @@ public class SQLighterDbImpl implements SQLighterDb {
         @Override
         public void close() {
             cursor.close();
+            stmtCloseCnt++;
         }
 
         @Override
@@ -222,7 +223,7 @@ public class SQLighterDbImpl implements SQLighterDb {
     public boolean deleteDBFile() {
         File f = new File(getDeviceDbFileName());
         boolean result = f.delete();
-        isDbCopied = false;
+        isDeployed = false;
         return result;
     }
 
@@ -232,8 +233,13 @@ public class SQLighterDbImpl implements SQLighterDb {
 
     @Override
     public synchronized void copyDbOnce() throws Exception {
-        if (!isDbCopied) {
-            isDbCopied = true;
+        deployDbOnce();
+    }
+
+    @Override
+    public synchronized void deployDbOnce() throws Exception {
+        if(!isDeployed) {
+            isDeployed = true;
             String deviceDbFileName = getDeviceDbFileName();
             ensureInitialState(deviceDbFileName);
             File f = new File(deviceDbFileName);
@@ -348,7 +354,9 @@ public class SQLighterDbImpl implements SQLighterDb {
             String[] sp = collectionToArray(getParameterList());
             getParameterList().clear();
             Cursor cursor = db.rawQuery(selectQuery, sp);
-            return new ResultSetImpl(cursor);
+            stmtOpenCnt++;
+            SQLighterRs rs = new ResultSetImpl(cursor);
+            return rs;
         } catch (Throwable t) {
             getParameterList().clear();
             throw new Exception(t.getMessage(), t);
@@ -360,6 +368,7 @@ public class SQLighterDbImpl implements SQLighterDb {
         Long changeId = null;
         try {
             SQLiteStatement stmt = db.compileStatement(update);
+            stmtOpenCnt++;
             bindParams(stmt);
             if (update.trim().toLowerCase().startsWith("insert")) {
                 changeId = stmt.executeInsert();
@@ -371,6 +380,7 @@ public class SQLighterDbImpl implements SQLighterDb {
                 }
             }
             stmt.close();
+            stmtCloseCnt++;
         } catch (Throwable t) {
             getParameterList().clear();
             throw new Exception(t.getMessage(), t);
@@ -438,5 +448,9 @@ public class SQLighterDbImpl implements SQLighterDb {
             return date;
         }
         return null;
+    }
+
+    public long getStatementBalance() {
+        return stmtOpenCnt - stmtCloseCnt;
     }
 }

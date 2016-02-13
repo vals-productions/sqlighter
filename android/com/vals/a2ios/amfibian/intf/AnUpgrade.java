@@ -12,14 +12,20 @@ import java.util.Set;
  * statements may be associated with the
  * version update. AnUpgrade logs changes
  * that had been applied in a table named
- * "app_db_maint" by default. The table will be automatically created if does not exists.
+ * "app_db_maint" by default. The table will
+ * be automatically created if does not exists.
  *
  */
 public interface AnUpgrade {
     /**
-     * For the case sequential DB upgrade fails, specify recovery key set of statements. Recovery key is
+     * For the case sequential DB upgrade fails, specify
+     * recovery key set of statements. Recovery key is
      * supposed to contain statements to recreate DB from
-     * the beginning in its latest structural state. You may choose to execute a series of ```DROP``` statements followed by ```CREATE``` statements, or, delete existing file, create new one, and execute ```CREATE``` statements from there.
+     * the beginning in its latest structural state.
+     * You may choose to execute a series of ```DROP```
+     * statements followed by ```CREATE``` statements,
+     * or, delete existing file, create new one, and
+     * execute ```CREATE``` statements from there.
      */
     public static final String DB_RECOVER_KEY = "recoveryKey";
     /**
@@ -29,12 +35,21 @@ public interface AnUpgrade {
      *
      * It skips the recovery key.
      *
-     * @throws Exception
+     * @throws Exception - in case of unforeseen failure.
+     * @return number of updates successfully applied (>= 0).
+     * -1 in case of failure. Failure means that fro some reason
+     * some SQL statement failed. Time to think of DB recovery
+     * strategy execution.
      */
     int applyUpdates() throws Exception;
 
     /**
-     * Attempts to apply recovery key tasks. At the same time this method will mark all other existing keys as executed. There is no need to execute anything else if the database is in its latest. 
+     * Attempts to apply recovery key tasks.
+     * At the same time this method will mark
+     * all other existing keys as executed.
+     * There is no need to execute anything
+     * else if the database is in its latest.
+     *
      * @return 
      * @throws Exception
      */
@@ -47,7 +62,10 @@ public interface AnUpgrade {
     void setRecoverKey(String recoverKey);
 
     /**
-     * Gets you value of the last executed key. You might need this to know which key has failed.
+     * Gets you value of the last executed key.
+     * You might need this to know which key has
+     * failed.
+     *
      * @return
      */
     String getLastKey();
@@ -62,7 +80,16 @@ public interface AnUpgrade {
     void setUpdateKeys(List<String> updateKeys);
 
     /**
-     * Gets the global list of available keys. This method is called by AnUpgrade in the process of database upgrade application (applyUpdates ();). Updates are applied in the order of keys in the List. AnUpgrade checks every key against already applied upgrade keys (stored in the "app_db_maint" table). If the key hasn't been applied before, AnUpgrade will request the list of statements associated with the key, and attempt to apply them.
+     * Gets the global list of available keys. This method
+     * is called by AnUpgrade in the process of database
+     * upgrade application (applyUpdates ();). Updates are
+     * applied in the order of keys in the List. AnUpgrade
+     * checks every key against already applied upgrade keys
+     * (stored in the "app_db_maint" table). If the key hasn't
+     * been applied before, AnUpgrade will request the list
+     * of statements associated with the key, and attempt
+     * to apply them.
+     *
      * @return
      */
     List<String> getUpdateKeys();

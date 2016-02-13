@@ -22,21 +22,21 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     /**
-     * Database initialization steps
+     * Database initialization steps. Similar
+     * to Android with minor differences.
      */
     Bootstrap *b = [Bootstrap getInstance];
     SQLighterDbImpl *db = [[SQLighterDbImpl alloc] init];
     [db setDbNameWithNSString: @"sqlite.sqlite"];
     
-    BOOL isDbFileDeployed = [db isDbFileDeployed];
-    if (!isDbFileDeployed) {
+    if (![db isDbFileDeployed]) {
         NSLog(@"DB file is not deployed");
     } else {
         NSLog(@"DB file is deployed");
     }
     
     [db setOverwriteDbWithBoolean:true];
-    [db copyDbOnce];
+    [db deployDbOnce];
     [db openIfClosed];
     [b setSqLighterDbWithSQLighterDb:db];
     

@@ -15,6 +15,30 @@
 
 @protocol AnAttrib < NSObject, JavaObject >
 
+- (void)setAnObjectWithAnObject:(id<AnObject>)anObject;
+
+- (NSString *)getAttribName;
+
+- (void)setAttribNameWithNSString:(NSString *)attribName;
+
+- (NSString *)getColumnName;
+
+- (void)setColumnNameWithNSString:(NSString *)columnName;
+
+- (void)setValueWithId:(id)value;
+
+- (id)getValue;
+
+- (JavaLangReflectMethod *)getGetter;
+
+- (JavaLangReflectMethod *)getSetter;
+
+- (IOSClass *)getAttribClass;
+
+- (NSString *)getJsonOrAttribName;
+
+- (NSString *)getColumnOrAttribName;
+
 - (void)setCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
 
 - (void)setCustomSetConverterWithNSString:(NSString *)key
@@ -40,30 +64,6 @@
 - (void)clearCustomGetConverters;
 
 - (void)setDefaultGetConversionKeyWithNSString:(NSString *)key;
-
-- (void)setAnObjectWithAnObject:(id<AnObject>)anObject;
-
-- (NSString *)getAttribName;
-
-- (void)setAttribNameWithNSString:(NSString *)attribName;
-
-- (NSString *)getColumnName;
-
-- (void)setColumnNameWithNSString:(NSString *)columnName;
-
-- (void)setValueWithId:(id)value;
-
-- (id)getValue;
-
-- (JavaLangReflectMethod *)getGetter;
-
-- (JavaLangReflectMethod *)getSetter;
-
-- (IOSClass *)getAttribClass;
-
-- (NSString *)getJsonOrAttribName;
-
-- (NSString *)getColumnOrAttribName;
 
 @end
 
