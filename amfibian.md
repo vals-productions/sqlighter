@@ -67,11 +67,16 @@ AnObject<Entity> anEntity =
 	new AnObject( Entity.class, new String[]{"id"});
    
 AnOrm<Appointment> anOrm = new AnOrm<>(
-	sqlighterDb, // reference sqlighter database management object
-	"appointment", // database table name
-
-    Appointment.class, // provide the class info for java reflection
-// Provide column mappings, here isProcessed attribute is mapped to  "is_processed" database column in "amfibian" database table, while the "name" is named identically everywhere
+	/* reference sqlighter database management object */
+	sqlighterDb,
+	/*database table name*/
+	"appointment",
+	/*provide the class info for java reflection*/
+    Appointment.class, 
+	/* Provide column mappings, here isProcessed 
+	attribute is mapped to  "is_processed" database
+	column in "amfibian" database table, while the
+	"name" is named identically everywhere */
     new String[]{"name", "isProcessed,is_processed"},
     anEntity);
 ```
@@ -85,7 +90,8 @@ Appointment appointment234 = anOrm.asNativeObject(
 Let's store our ```appointment234``` native object in the database. Since we do not have the table for this entity in our database yet, we can ask AmfibiaN to give us database create table statement for or object:
 
 ```java
-String createAppointmentTableSql = anOrm.startSqlCreate().getQueryString();
+String createAppointmentTableSql =
+	anOrm.startSqlCreate().getQueryString();
 ```
 
 the variable above will contain:
@@ -130,9 +136,9 @@ anOrm.addWhere("id = ?", 234);
 
 List<Appointment> list = anOrm.getRecords();
 if (list.size() == 1) { // just making sure we've got the result
-// get native object
+	// get native object
 	Appointment meetAmfibianAppointment = list.get(0);
-// get JSON
+	// get JSON
 	String jsonString = anOrm.asJsonString(meetAmfibianAppointment);
 }
 ```    

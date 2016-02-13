@@ -30,7 +30,7 @@ SQLite database is your best choice for mobile platform development since it is 
   * [Sqlighter at Android] (https://github.com/vals-productions/sqlighter#sqlighter-at-android)  
   * [Sqlighter at iOS] (https://github.com/vals-productions/sqlighter#sqlighter-at-ios)
  * [Database file] (https://github.com/vals-productions/sqlighter#database-file) 
-  * [SQLighterDb.copyDbOnce()] (https://github.com/vals-productions/sqlighter#sqlighterdbcopydbonce)
+  * [SQLighterDb.deployDbOnce()] (https://github.com/vals-productions/sqlighter#sqlighterdbdeploydbonce)
  * [Instantiation example] (https://github.com/vals-productions/sqlighter#instantiation-example) 
 * [Usage] (https://github.com/vals-productions/sqlighter#usage) 
  * [Exception and error handling] (https://github.com/vals-productions/sqlighter#exception-and-error-handling)  
@@ -245,11 +245,11 @@ update user set email = null where email = 'qw@er.ty1';
 
 ### iOS code
 
-iOS impementation is identical.
+iOS impementation is mirror-like.
 
-If you work on iOS only project but would like to have some freedom to add Android platform to your implementation in the future, it also might make sense to use SQLighter as your iOS SQLite library because of its logical compatibility.
+If you work on iOS only project but would like to have some freedom to add Android platform to your implementation in the future, it also might make sense to use SQLighter because of its logical compatibility.
 
-Below is iOS code snippet that executes and processes SQL SELECT query. It is easy to see that this code is J2ObjC compatible Objective C carbon copy of similar java code from one of the above examples.
+Below is iOS code snippet that executes and processes SQL SELECT query. It is easy to see that this code is J2ObjC compatible Objective C carbon copy of similar java code from one of the above SQL statements.
 
 ``` objc
 id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
@@ -264,7 +264,15 @@ while([rs hasNext]) {
 
 If you are familiar with both languages (and you should be if you are reading this), you do not need a complete Objective C tutorial of SQLighter to do the coding.
 
+```java
+	if([db getStatementBalance] != 0) {
+		NSLog(@"DB resource leak detected");
+	}
+```
+
 The biggest advantage you'd get if you reuse your java coding efforts at iOS platform using J2ObjC.
+
+Since Objective C classes are overwritten during J2ObjC conversion, only java classes and interfaces are documented.
 
 # J2ObjC
 
@@ -308,7 +316,7 @@ SQLighterDbImpl.java         SQLighterDbImpl.h
                              SQLighterRsImpl.m
                              
            AmfibiaN
-  /*provided*/                /*generated / provided */
+  /*provided*/                 /*generated / provided */
 AnAtrib*.java                AnAttrib*.h AnAttrib*.m
 AnObject*.java               AnObject*.h AnObject*.m
 AnSql*.java                  AnSql*.h AnSql*.m
@@ -394,10 +402,12 @@ the place where you cloned sqlighter repository, and add those files.
 Add path to the sqlighter/ios/j2objc to your project's include's search path. I.e. you
 should be able to use the following in your code, because these files are under 
 sqlighter/ios/j2objc and Xcode has sqlighter/ios/j2objc in include search path:
+
 ```
 #import "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #import "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 ```
+
 J2ObjC toolkit also has to be part of the project since some specific classes from the
 toolkit are referenced from sqlighter. You include this according to J2ObjC guidelines. If
 you need sqlighter project, I assume, you've already familiarized yourself with this
@@ -437,13 +447,13 @@ Otherwise...
 
 #### The database file is not provided
 
-If the file is not provided, then you should not use`` SQLighterDb.copyDbOnce();`` 
+If the file is not provided, then you should not use`` SQLighterDb.deployDbOnce();`` 
 method (see more on this method in the next provision). Since the initial file is not
 provided, it would be created. In this case you do not have an option of the database
 preloaded with data, but you can compensate for that by running your initial database 
 initialization script.
 
-#### SQLighterDb.copyDbOnce()
+#### SQLighterDb.deployDbOnce()
 
 Your initial sqlite database file is stored somewhere within your project structure.
 This file could contain no tables/information whatsoever, or, contain some
@@ -462,23 +472,23 @@ overwriting user data in the real application.
 Whenever the user starts your application the very first time, the database file
 should be copied from its project location into designated device's target location.
 
-This, also, should be done before you start using the database. Basically #copyDbOnce
+This, also, should be done before you start using the database. Basically #deployDbOnce
 takes the complexity of various checks out of your hands.
 
-copyDbOnce works only once per SQLighterDb instance per application startup. This is 
+```deployDbOnce``` works only once per SQLighterDb instance per application startup. This is 
 just to prevent erroneous database overrides during application runs.
 
 Once invoked:
 
-a) copyDbOnce checks the target location for the database file. If database file is
+a) deployDbOnce checks the target location for the database file. If database file is
 already there (probably, because it is not the first start and target location has been 
 previously initialized), it will NOT copy the database file.
 
-b) If the database file is not found at the target location, the copyDbOnce will
+b) If the database file is not found at the target location, the deployDbOnce will
 copy the initial database file from the project into device's target location.
 
 There's also SQLighterDb.setOverwriteDb method, that lets you override default behavior
-SQLighterDb.copyDbOnce. If called with true, it will let copyDbOnce override the 
+SQLighterDb.deployDbOnce. If called with true, it will let deployDbOncedeployDbOnce override the 
 destination database file even if the file is there. Normally, this is necessary for your
 development process where you would like to roll database back and start fresh until you
 develop and test some particular. Normally, you do not want to call #setOverwriteDb with
@@ -522,7 +532,7 @@ protected void onCreate(Bundle savedInstanceState) {
      if it's not there yet. If the file is already on the device, will proceed
      according to db.setOverwriteDb(boolean) method.
      */
-    db.copyDbOnce(); 
+    db.deployDbOnce(); 
     db.openIfClosed();
   } catch (Exception e) {
   ...
@@ -538,7 +548,7 @@ Bootstrap is just a j2objc clone of Android's Bootstrap class.
     // platform specific initialization
     [db setDbNameWithNSString: @"sqlite.sqlite"];
     [db setOverwriteDbWithBoolean: false];
-    [db copyDbOnce];
+    [db deployDbOnce];
     [db openIfClosed];
     [b setDbWithSQLighterDb:db];
     return YES;
@@ -603,6 +613,7 @@ is - java.lang.Exception. Using try catch is very desirable because of the signi
 difference of how uncaught exceptions are handled in iOS and Java/Android.
 
 Sample code
+
 ```java
 	try {
 		db.addParam("trans@email.com");
@@ -613,4 +624,5 @@ Sample code
 		System.out.println(e.getMessage());
 	}
 ```
+
 # That's it so far. Happy SQLighting :)
