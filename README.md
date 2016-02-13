@@ -68,7 +68,7 @@ We will continue with SQLighter basic SQL features in this document.
 The following sample Java code gives identical output after being converted into Objective-C using J2ObjC. Therefore, you can implement your database related logics in java language amd just convert/reuse it in iOS.
 
 Note: for more up to date examples please check some demo code [Demo.java] 
-(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) which is part of the actual demo project code.
+(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) which is part of the actual demo project code. 
 
 ### Pre requisites
 
@@ -407,7 +407,7 @@ Make sure your project compiles.
 
 ### Database file
 
-Database file may be initially provided by the developer, or created by the library.
+Database file may be initially provided by the developer, optionally, with some data, or created by the library.
 
 #### The file is provided 
 

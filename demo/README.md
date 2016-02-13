@@ -2,11 +2,10 @@
 
 These examples demonstrate how sqlighter could be of use to code SQLite related code in
 java, and run it on iOS. These projects are setup by including actual sources from
-sqligher library rather than libraries. They demonstrate this more complex approach.
-Also, they are used as sort of test environment for sqlighter.
+sqligher library rather than libraries. They demonstrate this more complex approach of project setup.
 
 [Demo.java] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
- class' ``sqlighterOperations()`` static method performs some database activity, saves, retrieves and returns "Hello sqlighter!" blob value (as String) from database's user table.
+ class' ``sqlighterOperations()`` static method performs some database activity demonstration.  Besides the demonstration itself, the code contains functionality tests that have to pass on both - Android and iOS platforms.
 
 Demo class is converted into its Objective-C counterpart, as well as Bootstrap that
 handles SQlite initialization and gives identical access to Database access 
