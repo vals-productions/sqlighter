@@ -26,7 +26,7 @@ public class AnObjectImpl<T> implements AnObject<T> {
     private Map<String, Object> jsonMap;
     private T nativeObject;
     protected Class<T> nativeClass;
-    private Map<String, AnAttrib> attribMap = new LinkedHashMap<>();
+    private Map<String, AnAttrib> attribMap = new LinkedHashMap<String, AnAttrib>();
 
     public AnObjectImpl() {
     }
@@ -80,7 +80,7 @@ public class AnObjectImpl<T> implements AnObject<T> {
     @Override
     @SuppressWarnings("unchecked")
 	public Map<String, AnAttrib> getAllAttribMap() {
-        Map<String, AnAttrib> p = new HashMap<>();
+        Map<String, AnAttrib> p = new HashMap<String, AnAttrib>();
         if(parentAnObject != null) {
             p.putAll(parentAnObject.getAllAttribMap());
         }
@@ -186,7 +186,7 @@ public class AnObjectImpl<T> implements AnObject<T> {
     @Override
     public Map<String, Object> getJsonMap() throws Exception {
         if (jsonMap == null) {
-        	jsonMap = new HashMap<>();
+        	jsonMap = new HashMap<String, Object>();
             Set<String> p = attribMap.keySet();
             for (String attrName : p) {
                 AnAttrib attr =  attribMap.get(attrName);
@@ -211,7 +211,7 @@ public class AnObjectImpl<T> implements AnObject<T> {
     public synchronized Map<String, Object> asMap(T nativeObject) throws Exception {
         setNativeObject(nativeObject);
         if (nativeObjectMap == null) {
-            nativeObjectMap = new HashMap<>();
+            nativeObjectMap = new HashMap<String, Object>();
             Set<String> p = attribMap.keySet();
             for (String pName : p) {
                 AnAttrib pm =  attribMap.get(pName);
@@ -268,7 +268,7 @@ public class AnObjectImpl<T> implements AnObject<T> {
     @Override
     public synchronized Collection<T> asList(String jsonArrayString) throws Exception {
         JSONArray jsonArray = new JSONArray(jsonArrayString);
-        List<T> l = new LinkedList<>();
+        List<T> l = new LinkedList<T>();
         for (int i = 0; i < jsonArray.length(); i++) {
             Object o = jsonArray.get(i);
             this.resetNativeObject();

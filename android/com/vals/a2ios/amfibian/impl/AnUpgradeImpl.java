@@ -31,7 +31,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      */
     public AnUpgradeImpl(SQLighterDb sqLighterDb) throws Exception {
         this.sqlighterDb = sqLighterDb;
-        anOrm = new AnOrmImpl<>(
+        anOrm = new AnOrmImpl<Upgrade>(
                 sqLighterDb,
                 getTableName(),
                 Upgrade.class,
@@ -94,7 +94,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      * @throws Exception
      */
     public Set<String> getAppliedUpdates() throws Exception {
-        Set<String> keys = new HashSet<>();
+        Set<String> keys = new HashSet<String>();
         /**
          * Retrieve all update keys, regardless of the status
          * of the update. We will not retry whatever already

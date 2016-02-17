@@ -19,15 +19,15 @@ public class AnAttribImpl implements AnAttrib {
     private String columnName;
     private String jsonName;
 
-    private List<String> conversionMessages = new LinkedList<>();
+    private List<String> conversionMessages = new LinkedList<String>();
     
     public static final String NONAME_CONVERSION_KEY = "nonameConverter";
     
     public String defaultConverterKey = NONAME_CONVERSION_KEY;
     public String defaultGetConverterKey = NONAME_CONVERSION_KEY;
     
-    private Map<String, CustomConverter> converterMap = new HashMap<>();   
-    private Map<String, CustomConverter> getConverterMap = new HashMap<>();
+    private Map<String, CustomConverter> converterMap = new HashMap<String, CustomConverter>();   
+    private Map<String, CustomConverter> getConverterMap = new HashMap<String, CustomConverter>();
     /**
      
 

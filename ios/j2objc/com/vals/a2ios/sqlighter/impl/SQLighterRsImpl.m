@@ -25,7 +25,7 @@
     return hasIt;
 }
 
--(BOOL) isNullWithInt: (int) idx {
+-(jboolean) isNullWithInt: (int) idx {
     const char *buffer = (char*)sqlite3_column_text(stmt, idx);
     int retVal = buffer == nil;
     return retVal;

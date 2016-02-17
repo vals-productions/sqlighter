@@ -35,7 +35,7 @@ public class SQLighterDbImpl implements SQLighterDb {
     private boolean isDeployed = false;
     private long stmtOpenCnt = 0;
     private long stmtCloseCnt = 0;
-    private Map<Long, List<Object>> parameterMap = new HashMap<>();
+    private Map<Long, List<Object>> parameterMap = new HashMap<Long, List<Object>>();
     private SimpleDateFormat dateFormat = new SimpleDateFormat(SQLighterDb.DATE_FORMAT);
     private boolean isDateNamedColumn = true;
 

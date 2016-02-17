@@ -274,7 +274,7 @@
 }
 
 -(void) bindJavaUtilDate: (JavaUtilDate *) date atIndex: (int) paramIdx {
-    long t = [date getTime];
+    jlong t = [date getTime];
     NSDate *dt = [NSDate dateWithTimeIntervalSince1970:t/1000];
     NSString *dateStr = [self.dateFormatter stringFromDate:dt];
     [self bindString:dateStr atIndex: paramIdx];
@@ -301,7 +301,7 @@
 }
 
 -(void) addParamWithLong: (jlong) par {
-    [[self parameterArray] addObject: [NSNumber numberWithLong: par ]];
+    [[self parameterArray] addObject: [NSNumber numberWithLong: (long)par]];
 }
 
 //-(void) addParamWithDate: (NSDate*) date atIndex: (int) idx {

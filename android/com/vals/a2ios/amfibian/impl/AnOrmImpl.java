@@ -40,7 +40,7 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
     public Collection<T> getRecords(Collection<T> collectionToUse) throws Exception {
         String queryStr = this.getQueryString();
         if (collectionToUse == null) {
-            collectionToUse = new LinkedList<>();
+            collectionToUse = new LinkedList<T>();
         }
         applyParameters();
 
