@@ -17,6 +17,7 @@ import java.util.Set;
  *
  */
 public interface AnUpgrade {
+
     /**
      * For the case sequential DB upgrade fails, specify
      * recovery key set of statements. Recovery key is
@@ -28,6 +29,7 @@ public interface AnUpgrade {
      * execute ```CREATE``` statements from there.
      */
     public static final String DB_RECOVER_KEY = "recoveryKey";
+
     /**
      * This method goes through available update
      * keys and applies statements associated with
@@ -44,9 +46,14 @@ public interface AnUpgrade {
     int applyUpdates() throws Exception;
 
     /**
-     * Attempts to apply recovery key tasks.
+     * This method goes through available update
+     * keys and searches for DB RECOVER KEY.
+     *
+     * Attempts to apply recover key tasks.
+     *
      * At the same time this method will mark
      * all other existing keys as executed.
+     *
      * There is no need to execute anything
      * else if the database is in its latest.
      *
@@ -89,6 +96,9 @@ public interface AnUpgrade {
      * been applied before, AnUpgrade will request the list
      * of statements associated with the key, and attempt
      * to apply them.
+     *
+     * the DB RECOVER KEY is a special key and is not being
+     * executed during normal upgrades.
      *
      * @return
      */
