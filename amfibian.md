@@ -191,6 +191,8 @@ For the cases when you do need to do an outer join and retrieve hierarchical res
 
 **AnUpdate** can work with low level SQL DDL statements, or, use some extended AmfibiaN features where instead of specifying ```CREATE TABLE ... ``` statements, you pass a list of ```AnObject <....>``` instances, and AmfibiaN will take care of the rest and will generate respective statements and execute them. Other than obvious convenience, there will be less chance to execute ```CREATE``` statement that are out of date with your latest object model. Less things to maintain.
 
+<b>AnUpdate is under current development, new features are being added, some may be not backward compatible. Evaluate it, but use with caution until this notice is removed.</b>
+
 ## Installation
 
 AmfibiaN is part of SQLighter repository. Follow SQLighter installation instructions.
