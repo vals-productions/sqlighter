@@ -26,7 +26,7 @@ public interface AnUpgrade {
      * You may choose to execute a series of ```DROP```
      * statements followed by ```CREATE``` statements,
      * or, delete existing file, create new one, and
-     * execute ```CREATE``` statements from there.
+     * execute ```CREATE``` statements from there. Also check getUpdateKeys method doc. for additional DB recover key information.
      */
     public static final String DB_RECOVER_KEY = "recoveryKey";
 
@@ -97,8 +97,8 @@ public interface AnUpgrade {
      * of statements associated with the key, and attempt
      * to apply them.
      *
-     * the DB RECOVER KEY is a special key and is not being
-     * executed during normal upgrades.
+     * The DB RECOVER KEY is a special key and is not being
+     * executed during normal upgrades. It still needs to be included in the list of update keys returned by this method. This lets you enable or disable the key. 
      *
      * @return
      */

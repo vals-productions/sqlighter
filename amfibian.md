@@ -1,7 +1,5 @@
 # AmfibiaN
 
-*This document is under construction.*
-
 # Table of content
 * [Overview] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#vverview)
 * [Going by example] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#going-by-example)
@@ -195,6 +193,4 @@ For the cases when you do need to do an outer join and retrieve hierarchical res
 
 AmfibiaN is part of SQLighter repository. Follow SQLighter installation instructions.
 
-Note: currently AmfibiaN is not part of library based distribution. Use source code inclusion approach. This note will be removed if/once AmfibiaN becomes available through jar/lib.
-
-*This document is under construction.*
+<b>AmfibiaN is a part of library based distribution since v 2.0.0. </b>

@@ -584,7 +584,7 @@ public class Demo extends DemoBase {
             }
             rs.close();
             /**
-             * Simulate DB upgrade #2 with several upgrade keys
+             * Simulate DB upgrade #2 with several upgrade keys. With yhe key "2015-12-19" being already previously applied.
              */
             keys.add("2015-12-25");
             keys.add("2015-12-25--01");
@@ -605,6 +605,7 @@ public class Demo extends DemoBase {
             } finally {
                 rs.close();
             }
+            /**   Add two more keys with the last one being DB recover key.*/
             keys.add("2016-01-26");
             keys.add(AnUpgrade.DB_RECOVER_KEY);
             upgradeCount = anUpgrade.applyUpdates();
