@@ -9,17 +9,27 @@
 #include "J2ObjC_header.h"
 #include "com/vals/a2ios/amfibian/intf/AnUpgrade.h"
 
+@class AnOrmImpl;
+@class JavaLangDouble;
 @class JavaLangInteger;
 @class JavaUtilDate;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
 @protocol SQLighterDb;
 
-@interface AnUpgradeImpl : NSObject < AnUpgrade >
+@interface AnUpgradeImpl : NSObject < AnUpgrade > {
+ @public
+  id<SQLighterDb> sqlighterDb_;
+  AnOrmImpl *anOrm_;
+}
 
 #pragma mark Public
 
 - (instancetype)initWithSQLighterDb:(id<SQLighterDb>)sqLighterDb;
+
+- (instancetype)initWithSQLighterDb:(id<SQLighterDb>)sqLighterDb
+                       withNSString:(NSString *)tableName
+                       withNSString:(NSString *)recoveryKey;
 
 - (jint)applyUpdates;
 
@@ -27,11 +37,13 @@
 
 - (id<JavaUtilSet>)getAppliedUpdates;
 
-- (NSString *)getLastKey;
+- (NSString *)getLogTableName;
 
 - (id<JavaUtilList>)getTasksByKeyWithNSString:(NSString *)key;
 
 - (id<JavaUtilList>)getUpdateKeys;
+
+- (void)setLogTableNameWithNSString:(NSString *)logTableName;
 
 - (void)setRecoverKeyWithNSString:(NSString *)recoverKey;
 
@@ -40,11 +52,14 @@
 - (jboolean)applyUpdateWithNSString:(NSString *)key
                    withJavaUtilList:(id<JavaUtilList>)statementList;
 
-- (NSString *)getTableName;
-
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(AnUpgradeImpl)
+
+J2OBJC_FIELD_SETTER(AnUpgradeImpl, sqlighterDb_, id<SQLighterDb>)
+J2OBJC_FIELD_SETTER(AnUpgradeImpl, anOrm_, AnOrmImpl *)
+
+FOUNDATION_EXPORT void AnUpgradeImpl_initWithSQLighterDb_withNSString_withNSString_(AnUpgradeImpl *self, id<SQLighterDb> sqLighterDb, NSString *tableName, NSString *recoveryKey);
 
 FOUNDATION_EXPORT void AnUpgradeImpl_initWithSQLighterDb_(AnUpgradeImpl *self, id<SQLighterDb> sqLighterDb);
 
@@ -62,7 +77,15 @@ J2OBJC_TYPE_LITERAL_HEADER(AnUpgradeImpl)
 
 - (NSString *)getKey;
 
+- (JavaLangDouble *)getRefd;
+
+- (JavaLangInteger *)getRefi;
+
+- (JavaLangInteger *)getRefs;
+
 - (JavaLangInteger *)getStatus;
+
+- (JavaLangInteger *)getType;
 
 - (NSString *)getValue;
 
@@ -70,16 +93,21 @@ J2OBJC_TYPE_LITERAL_HEADER(AnUpgradeImpl)
 
 - (void)setKeyWithNSString:(NSString *)key;
 
+- (void)setRefdWithJavaLangDouble:(JavaLangDouble *)refd;
+
+- (void)setRefiWithJavaLangInteger:(JavaLangInteger *)refi;
+
+- (void)setRefsWithJavaLangInteger:(JavaLangInteger *)refs;
+
 - (void)setStatusWithJavaLangInteger:(JavaLangInteger *)status;
+
+- (void)setTypeWithJavaLangInteger:(JavaLangInteger *)type;
 
 - (void)setValueWithNSString:(NSString *)value;
 
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(AnUpgradeImpl_Upgrade)
-
-FOUNDATION_EXPORT NSString *AnUpgradeImpl_Upgrade_TABLE_;
-J2OBJC_STATIC_FIELD_GETTER(AnUpgradeImpl_Upgrade, TABLE_, NSString *)
 
 FOUNDATION_EXPORT void AnUpgradeImpl_Upgrade_init(AnUpgradeImpl_Upgrade *self);
 

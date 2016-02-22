@@ -5,8 +5,10 @@ import com.vals.a2ios.amfibian.intf.AnUpgrade;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,9 +22,25 @@ import java.util.Set;
 public abstract class AnUpgradeImpl implements AnUpgrade {
 
     private Map<Integer, List<String>> map;
-    private SQLighterDb sqlighterDb;
-    private AnOrmImpl<Upgrade> anOrm;
-    private String lastKey, recoverKey = AnUpgrade.DB_RECOVER_KEY;
+    protected SQLighterDb sqlighterDb;
+    private String recoverKey = AnUpgrade.DB_RECOVER_KEY;
+    private String logTableName = TABLE_NAME;
+    protected AnOrmImpl<Upgrade> anOrm;
+    private List<Upgrade> delayedLogs = new LinkedList<Upgrade>();
+
+    /**
+     *
+     * @param sqLighterDb
+     * @param tableName
+     * @param recoveryKey
+     *
+     * @throws Exception
+     */
+    public AnUpgradeImpl(SQLighterDb sqLighterDb, String tableName, String recoveryKey) throws Exception {
+        this(sqLighterDb);
+        this.logTableName = tableName;
+        this.recoverKey = recoveryKey;
+    }
 
     /**
      *
@@ -33,11 +51,19 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         this.sqlighterDb = sqLighterDb;
         anOrm = new AnOrmImpl<Upgrade>(
                 sqLighterDb,
-                getTableName(),
+                getLogTableName(),
                 Upgrade.class,
-                new String[] {"key","value","createDate,create_date"},
+                new String[] {
+                        "key",
+                        "value",
+                        "createDate,create_date",
+                        "status",
+                        "type",
+                        "refi",
+                        "refd",
+                        "refs"
+                },
                 null);
-        ensureStorage(false);
     }
 
     /**
@@ -57,35 +83,12 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      *
      * @return
      */
-    protected String getTableName() {
-        return Upgrade.TABLE;
+    public String getLogTableName() {
+        return logTableName;
     }
 
-    /**
-     *
-     * @throws Exception
-     */
-    private void ensureStorage(boolean isForceRecreate) throws Exception {
-        if(isForceRecreate) {
-            sqlighterDb.executeChange("drop table if exists " + Upgrade.TABLE);
-        }
-        SQLighterRs rs = sqlighterDb.executeSelect(
-                "SELECT name FROM sqlite_master " +
-                "WHERE type='table' " +
-                "ORDER BY name");
-        boolean isFound = false;
-        while (rs.hasNext()) {
-            String tableName = rs.getString(0);
-            if (tableName.equals(getTableName())) {
-                isFound = true;
-                break;
-            }
-        }
-        rs.close();
-        if (!isFound) {
-            String createSql = anOrm.startSqlCreate().getQueryString();
-            sqlighterDb.executeChange(createSql);
-        }
+    public void setLogTableName(String logTableName) {
+        this.logTableName = logTableName;
     }
 
     /**
@@ -95,12 +98,15 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      */
     public Set<String> getAppliedUpdates() throws Exception {
         Set<String> keys = new HashSet<String>();
+        if(!findTable(getLogTableName())) {
+            return keys;
+        }
         /**
          * Retrieve all update keys, regardless of the status
          * of the update. We will not retry whatever already
          * failed.
          */
-        SQLighterRs rs = sqlighterDb.executeSelect("select key from " + Upgrade.TABLE + " where value is not null");
+        SQLighterRs rs = sqlighterDb.executeSelect("select key from " + TABLE_NAME + " where type = 0");
         while (rs.hasNext()) {
             String key = rs.getString(0);
             keys.add(key);
@@ -115,13 +121,29 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      */
     @Override
     public int applyUpdates() throws Exception {
+        if(!findTable(getLogTableName())) {
+            int returnCode = attemptToRecover(0); // private updates
+            if(returnCode == -1) {
+                return returnCode;
+            }
+        }
+        int taskCount = applyUpdates(0); // private updates
+        if(taskCount == -1) {
+            return taskCount;
+        }
+        taskCount = applyUpdates(1); // public updates
+        return taskCount;
+    }
+
+    private int applyUpdates(int privatePublic) throws Exception {
         int taskCount = 0;
         /**
          * Get the list of update keys that already
          * had been applied.
          */
         Set<String> appliedKeys = getAppliedUpdates();
-        for (String updKey: getUpdateKeys()) {
+        List<String> keys = (privatePublic == 0) ? getPrivateUpdateKeys():getUpdateKeys();
+        for (String updKey: keys) {
             /**
              * Skip DB recovery key
              */
@@ -131,9 +153,12 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
             /**
              * For every available key
              */
-            lastKey = updKey;
             if(!appliedKeys.contains(updKey)) { // exclude already applied keys
-                if(!applyUpdate(updKey, getTasksByKey(updKey))) {
+                List<Object> tasks =
+                        (privatePublic == 0) ?
+                                getPrivateTasksByKey(updKey):
+                                getTasksByKey(updKey);
+                if(!applyUpdate(updKey, tasks)) {
                     /**
                      * failure during db upgrade
                      */
@@ -149,7 +174,6 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
     }
 
     /**
-     *
      * @param key
      * @param statementList
      * @return true if no errors, false if failed
@@ -180,14 +204,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
                 /**
                  * Log upgrade step
                  */
-                System.out.println("result: " + result + " for " + sqlStr);
-                Upgrade appUpdate = new Upgrade();
-                appUpdate.setKey(key);
-                appUpdate.setValue(sqlStr);
-                appUpdate.setCreateDate(new Date());
-                appUpdate.setStatus(1);
-                anOrm.startSqlInsert(appUpdate);
-                anOrm.apply();
+                logUpgradeStep(key, sqlStr, result);
             } // end for
 
             /**
@@ -200,15 +217,13 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
              */
             return true;
         } catch (Throwable t) {
-            // TODO: remove debug print
-            System.out.println(t.getMessage());
-            t.printStackTrace();
             try {
                 /**
                  * Log the key as failure if possible
                  */
                 logKey(key, 0);
             } catch (Throwable failureMarkExcp) {
+                // it's not ok, but lets continue
             }
             /**
              * Something failed
@@ -217,40 +232,51 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         }
     }
 
-    private void logKey(String key, Integer status) throws Exception {
-        Upgrade appUpdateMark = new Upgrade();
-        appUpdateMark.setKey(key);
-        appUpdateMark.setStatus(status);
-        appUpdateMark.setCreateDate(new Date());
-        anOrm.startSqlInsert(appUpdateMark);
-        anOrm.apply();
-    }
-
     @Override
     public int attemptToRecover() throws Exception {
-        List<Object> recoverTasks = getTasksByKey(recoverKey);
+        int returnCode = attemptToRecover(0); // private
+        if(returnCode == -1) {
+            return returnCode;
+        }
+        returnCode  = attemptToRecover(1); // public
+        return returnCode;
+    }
+
+    private int attemptToRecover(int privatePublic) throws Exception {
+        List<Object> recoverTasks =
+                (privatePublic == 0) ?
+                        getPrivateTasksByKey(PRIVATE_REC_KEY) :
+                        getTasksByKey(recoverKey);
+        int rc = 0;
         if(recoverTasks.size() > 0) {
             /**
              * recover key tasks provided
              */
-            ensureStorage(true); // drop/create db upgrade log table
-            for(String key: getUpdateKeys()) {
-                if(key.equals(recoverKey)) {
+            List<String> keys = (privatePublic == 0) ? getPrivateUpdateKeys() : getUpdateKeys();
+            for(String key: keys) {
+                String recKey = (privatePublic == 0) ? PRIVATE_REC_KEY:recoverKey;
+                if(key.equals(recKey)) {
                     boolean result = applyUpdate(key, recoverTasks);
                     if(!result) {
                         // failed to apply
                         return -1;
                     }
                     // success
-                    return 1;
+                    rc++;
                 }
-                logKey(key, 0);
+                if(!key.equals(recoverKey)) {
+                    /*
+                     * enter non recovery key so that we
+                     * do not apply it again
+                     */
+                    logKey(key, 0);
+                }
             }
         }
         /**
          * No keys found/applied
          */
-        return 0;
+        return rc;
     }
 
     @Override
@@ -258,8 +284,55 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         this.recoverKey = recoverKey;
     }
 
-    public String getLastKey() {
-        return lastKey;
+    private void logUpgradeStep(String key, String sqlStr, Long result) throws Exception {
+        System.out.println("result: " + result + " for " + sqlStr);
+        Upgrade appUpdate = new Upgrade();
+        appUpdate.setKey(key);
+        appUpdate.setValue(sqlStr);
+        appUpdate.setCreateDate(new Date());
+        appUpdate.setStatus(1);
+        appUpdate.setType(1);
+        saveLog(appUpdate);
+    }
+
+    private void logKey(String key, Integer status) throws Exception {
+        Upgrade appUpdateMark = new Upgrade();
+        appUpdateMark.setKey(key);
+        appUpdateMark.setStatus(status);
+        appUpdateMark.setCreateDate(new Date());
+        appUpdateMark.setType(0);
+        saveLog(appUpdateMark);
+    }
+
+    private void saveLog(Upgrade appUpdateEntry) throws Exception {
+        if (!findTable(getLogTableName())) {
+            delayedLogs.add(appUpdateEntry);
+        } else {
+            for (Upgrade upgradeLog: delayedLogs) {
+                anOrm.startSqlInsert(upgradeLog);
+                anOrm.apply();
+            }
+            delayedLogs.clear();
+            anOrm.startSqlInsert(appUpdateEntry);
+            anOrm.apply();
+        }
+    }
+
+    private boolean findTable(String searchTableName) throws Exception {
+        SQLighterRs rs = sqlighterDb.executeSelect(
+                "SELECT name FROM sqlite_master " +
+                        "WHERE type='table' " +
+                        "ORDER BY name");
+        boolean isFound = false;
+        while (rs.hasNext()) {
+            String tableName = rs.getString(0);
+            if (tableName.equals(getLogTableName())) {
+                isFound = true;
+                break;
+            }
+        }
+        rs.close();
+        return isFound;
     }
 
     /**
@@ -267,12 +340,14 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      */
     public static class Upgrade {
 
-        public static final String TABLE = "app_db_maint";
-
         private String key;
         private String value;
         private Date createDate;
-        private Integer status;
+        private Integer status; // 0 - failed, 1 - success
+        private Integer type; // 0 - key , 1 - statement under the key
+        private Integer refi; // reserved
+        private Double refd; // reserved
+        private Integer refs; // reserved
 
         public String getKey() {
             return key;
@@ -305,5 +380,71 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         public void setStatus(Integer status) {
             this.status = status;
         }
+
+        public Integer getType() {
+            return type;
+        }
+
+        public void setType(Integer type) {
+            this.type = type;
+        }
+
+        public Integer getRefi() {
+            return refi;
+        }
+
+        public void setRefi(Integer refi) {
+            this.refi = refi;
+        }
+
+        public Double getRefd() {
+            return refd;
+        }
+
+        public void setRefd(Double refd) {
+            this.refd = refd;
+        }
+
+        public Integer getRefs() {
+            return refs;
+        }
+
+        public void setRefs(Integer refs) {
+            this.refs = refs;
+        }
     }
+
+    /**
+     * Private operations
+     */
+    private static final String PRIVATE_PREFIX = "an-upg-";
+    private static final String PRIVATE_REC_KEY = PRIVATE_PREFIX + DB_RECOVER_KEY;
+    private static final String PRIVATE_KEY1 = PRIVATE_PREFIX + "init-1";
+
+    private List<String> getPrivateUpdateKeys() {
+        return Arrays.asList(PRIVATE_KEY1, PRIVATE_REC_KEY);
+    }
+
+    private List<Object> getPrivateTasksByKey(String key) {
+        List<Object> tasks = new LinkedList<Object>();
+        if(PRIVATE_REC_KEY.equals(key)) {
+            /* initial DB state */
+            // tasks.add("drop table if exists " + getLogTableName());
+            tasks.add(anOrm);
+            tasks.add("create index " + getLogTableName() + "_idx on " + getLogTableName() +
+                            "(key, type, status)");
+        } else if(PRIVATE_KEY1.equals(key)) {
+            tasks.add("alter table " + getLogTableName() + " add column type INTEGER");
+            tasks.add("alter table " + getLogTableName() + " add column refi INTEGER");
+            tasks.add("alter table " + getLogTableName() + " add column refd REAL");
+            tasks.add("alter table " + getLogTableName() + " add column refs TEXT");
+            tasks.add("create index " +
+                        getLogTableName() + "_idx on " +
+                        getLogTableName() + "(key, type, status)");
+            tasks.add("update " + getLogTableName() + " set type = 0 where value is null");
+            tasks.add("update " + getLogTableName() + " set type = 1 where value is not null");
+        }
+        return tasks;
+    }
+
 }

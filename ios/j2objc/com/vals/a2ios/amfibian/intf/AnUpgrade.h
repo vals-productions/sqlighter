@@ -19,11 +19,9 @@
 
 - (void)setRecoverKeyWithNSString:(NSString *)recoverKey;
 
-- (NSString *)getLastKey;
-
-- (void)setUpdateKeysWithJavaUtilList:(id<JavaUtilList>)updateKeys;
-
 - (id<JavaUtilList>)getUpdateKeys;
+
+- (void)setUpdateKeysWithJavaUtilList:(id<JavaUtilList>)updateKey;
 
 - (id<JavaUtilSet>)getAppliedUpdates;
 
@@ -35,6 +33,9 @@ J2OBJC_EMPTY_STATIC_INIT(AnUpgrade)
 
 FOUNDATION_EXPORT NSString *AnUpgrade_DB_RECOVER_KEY_;
 J2OBJC_STATIC_FIELD_GETTER(AnUpgrade, DB_RECOVER_KEY_, NSString *)
+
+FOUNDATION_EXPORT NSString *AnUpgrade_TABLE_NAME_;
+J2OBJC_STATIC_FIELD_GETTER(AnUpgrade, TABLE_NAME_, NSString *)
 
 J2OBJC_TYPE_LITERAL_HEADER(AnUpgrade)
 

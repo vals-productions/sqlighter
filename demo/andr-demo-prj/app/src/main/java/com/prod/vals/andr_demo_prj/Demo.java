@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class is being converted into iOS module. It represents some business
@@ -36,7 +37,7 @@ public class Demo extends DemoBase {
             /**
              * initial database structure
              *
-             * CREATE TABLE "user" (
+             * CREATE TABLE_NAME "user" (
              * `name`  TEXT,
              * `email` TEXT,
              * `id`    INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -539,12 +540,15 @@ public class Demo extends DemoBase {
                          */
                         l.add("create table db_drop_test(name text) ");
                         l.add("create table db_upg_test(name text) ");
+                        l.add(anAppointment); // this will create 'appointment' table
                         /*
                          * If your business objects are supported by
                          * Amfibian, then recreating DB structure
                          * may be simpler task.
                          */
                         l.add(anAppointmentObject);
+                    } else if ("2016-02-17".equals(key)) {
+                        l.add("insert into appointment(name) values ('post upgrade operation')");
                     }
                     return l;
                 }
@@ -626,6 +630,11 @@ public class Demo extends DemoBase {
                 upgradeCount = anUpgrade.attemptToRecover();
                 finishTest(upgradeCount == 1);
             }
+            // post recovery DB operations test
+            keys.add("2016-02-17");
+            upgradeCount = anUpgrade.applyUpdates();
+            Set<String> appliedKeys = anUpgrade.getAppliedUpdates();
+            checkTest("Post upgrade test", upgradeCount == 1 && appliedKeys.contains("2016-02-17"));
             /**
              * Verify that all opened statements were closed.
              */

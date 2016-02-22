@@ -31,6 +31,11 @@ public interface AnUpgrade {
     public static final String DB_RECOVER_KEY = "recoveryKey";
 
     /**
+     * Table name for db upgrade logging
+     */
+    public static final String TABLE_NAME = "app_db_maint";
+
+    /**
      * This method goes through available update
      * keys and applies statements associated with
      * them as needed.
@@ -69,24 +74,6 @@ public interface AnUpgrade {
     void setRecoverKey(String recoverKey);
 
     /**
-     * Gets you value of the last executed key.
-     * You might need this to know which key has
-     * failed.
-     *
-     * @return
-     */
-    String getLastKey();
-
-    /**
-     * Sets the global list of available updateKeys.
-     * The key is just a unique String constant that
-     * marks a group of SQL statements. 
-     *
-     * @param updateKeys  - sequential list of update keys.
-     */
-    void setUpdateKeys(List<String> updateKeys);
-
-    /**
      * Gets the global list of available keys. This method
      * is called by AnUpgrade in the process of database
      * upgrade application (applyUpdates ();). Updates are
@@ -105,6 +92,12 @@ public interface AnUpgrade {
     List<String> getUpdateKeys();
 
     /**
+     *
+     * @param updateKey
+     */
+    void setUpdateKeys(List<String> updateKey);
+
+    /**
      * Returns a set of updateKeys that had already
      * been applied to the database.
      *
@@ -114,6 +107,7 @@ public interface AnUpgrade {
     Set<String> getAppliedUpdates() throws Exception;
 
     /**
+     *
      * @param key
      * @return
      */

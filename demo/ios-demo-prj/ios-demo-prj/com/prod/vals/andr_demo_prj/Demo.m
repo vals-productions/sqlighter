@@ -33,6 +33,7 @@
 #include "java/util/Date.h"
 #include "java/util/LinkedList.h"
 #include "java/util/List.h"
+#include "java/util/Set.h"
 #include "org/json/JSONObject.h"
 
 static id<AnObject> Demo_anAppointmentObject_;
@@ -42,6 +43,7 @@ J2OBJC_STATIC_FIELD_SETTER(Demo, anAppointmentObject_, id<AnObject>)
 @interface Demo_$1 : AnUpgradeImpl {
  @public
   id<JavaUtilList> updateKeys_;
+  id<AnObject> val$anAppointment_;
 }
 
 - (id<JavaUtilList>)getTasksByKeyWithNSString:(NSString *)key;
@@ -50,17 +52,19 @@ J2OBJC_STATIC_FIELD_SETTER(Demo, anAppointmentObject_, id<AnObject>)
 
 - (void)setUpdateKeysWithJavaUtilList:(id<JavaUtilList>)updateKeys;
 
-- (instancetype)initWithSQLighterDb:(id<SQLighterDb>)arg$0;
+- (instancetype)initWithAnObject:(id<AnObject>)capture$0
+                 withSQLighterDb:(id<SQLighterDb>)arg$0;
 
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(Demo_$1)
 
 J2OBJC_FIELD_SETTER(Demo_$1, updateKeys_, id<JavaUtilList>)
+J2OBJC_FIELD_SETTER(Demo_$1, val$anAppointment_, id<AnObject>)
 
-__attribute__((unused)) static void Demo_$1_initWithSQLighterDb_(Demo_$1 *self, id<SQLighterDb> arg$0);
+__attribute__((unused)) static void Demo_$1_initWithAnObject_withSQLighterDb_(Demo_$1 *self, id<AnObject> capture$0, id<SQLighterDb> arg$0);
 
-__attribute__((unused)) static Demo_$1 *new_Demo_$1_initWithSQLighterDb_(id<SQLighterDb> arg$0) NS_RETURNS_RETAINED;
+__attribute__((unused)) static Demo_$1 *new_Demo_$1_initWithAnObject_withSQLighterDb_(id<AnObject> capture$0, id<SQLighterDb> arg$0) NS_RETURNS_RETAINED;
 
 J2OBJC_TYPE_LITERAL_HEADER(Demo_$1)
 
@@ -341,7 +345,7 @@ void Demo_anUpdateOperationsWithAnObject_(id<AnObject> anAppointment) {
   @try {
     Demo_anAppointmentObject_ = anAppointment;
     id<SQLighterDb> db = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
-    id<AnUpgrade> anUpgrade = new_Demo_$1_initWithSQLighterDb_(db);
+    id<AnUpgrade> anUpgrade = new_Demo_$1_initWithAnObject_withSQLighterDb_(anAppointment, db);
     id<JavaUtilList> keys = new_JavaUtilLinkedList_init();
     jint upgradeCount;
     [keys addWithId:@"2015-12-19"];
@@ -385,6 +389,10 @@ void Demo_anUpdateOperationsWithAnObject_(id<AnObject> anAppointment) {
       upgradeCount = [anUpgrade attemptToRecover];
       DemoBase_finishTestWithBoolean_(upgradeCount == 1);
     }
+    [keys addWithId:@"2016-02-17"];
+    upgradeCount = [anUpgrade applyUpdates];
+    id<JavaUtilSet> appliedKeys = [anUpgrade getAppliedUpdates];
+    DemoBase_checkTestWithNSString_withBoolean_(@"Post upgrade test", upgradeCount == 1 && [((id<JavaUtilSet>) nil_chk(appliedKeys)) containsWithId:@"2016-02-17"]);
     DemoBase_checkTestWithNSString_withBoolean_(@"Statement balance", [db getStatementBalance] == 0);
     [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:@"done with AnUpdate"];
   }
@@ -450,7 +458,11 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo)
   else if ([((NSString *) nil_chk(AnUpgrade_DB_RECOVER_KEY_)) isEqual:key]) {
     [l addWithId:@"create table db_drop_test(name text) "];
     [l addWithId:@"create table db_upg_test(name text) "];
+    [l addWithId:val$anAppointment_];
     [l addWithId:JreLoadStatic(Demo, anAppointmentObject_)];
+  }
+  else if ([@"2016-02-17" isEqual:key]) {
+    [l addWithId:@"insert into appointment(name) values ('post upgrade operation')"];
   }
   return l;
 }
@@ -463,21 +475,23 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo)
   self->updateKeys_ = updateKeys;
 }
 
-- (instancetype)initWithSQLighterDb:(id<SQLighterDb>)arg$0 {
-  Demo_$1_initWithSQLighterDb_(self, arg$0);
+- (instancetype)initWithAnObject:(id<AnObject>)capture$0
+                 withSQLighterDb:(id<SQLighterDb>)arg$0 {
+  Demo_$1_initWithAnObject_withSQLighterDb_(self, capture$0, arg$0);
   return self;
 }
 
 @end
 
-void Demo_$1_initWithSQLighterDb_(Demo_$1 *self, id<SQLighterDb> arg$0) {
+void Demo_$1_initWithAnObject_withSQLighterDb_(Demo_$1 *self, id<AnObject> capture$0, id<SQLighterDb> arg$0) {
+  self->val$anAppointment_ = capture$0;
   (void) AnUpgradeImpl_initWithSQLighterDb_(self, arg$0);
   self->updateKeys_ = new_JavaUtilLinkedList_init();
 }
 
-Demo_$1 *new_Demo_$1_initWithSQLighterDb_(id<SQLighterDb> arg$0) {
+Demo_$1 *new_Demo_$1_initWithAnObject_withSQLighterDb_(id<AnObject> capture$0, id<SQLighterDb> arg$0) {
   Demo_$1 *self = [Demo_$1 alloc];
-  Demo_$1_initWithSQLighterDb_(self, arg$0);
+  Demo_$1_initWithAnObject_withSQLighterDb_(self, capture$0, arg$0);
   return self;
 }
 

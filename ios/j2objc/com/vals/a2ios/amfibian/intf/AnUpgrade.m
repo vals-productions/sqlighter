@@ -11,5 +11,6 @@
 #include "java/util/Set.h"
 
 NSString *AnUpgrade_DB_RECOVER_KEY_ = @"recoveryKey";
+NSString *AnUpgrade_TABLE_NAME_ = @"app_db_maint";
 
 J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(AnUpgrade)
