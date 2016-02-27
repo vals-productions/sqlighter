@@ -207,10 +207,9 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
                     AnOrmImpl<?> createObjectTask = (AnOrmImpl<?>) task;
                     createObjectTask.setSqlighterDb(sqlighterDb);
                     createObjectTask.startSqlCreate();
-                    sqlStr = createObjectTask.getQueryString();
                     sqlighterDb.executeChange("drop table if exists " +
                             createObjectTask.getTableName());
-                    result = sqlighterDb.executeChange(sqlStr);
+                    result = createObjectTask.apply();
                 }
                 /**
                  * Log upgrade step
@@ -502,7 +501,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      * the latest state, ask app. user to log-in and accumulate\synchronize data 
      * as it goes.
      *
-     * In this case AnUpdrade will re-create its internal log audit structure first by 
+     * In this case AnUpgrade will re-create its internal log audit structure first by
      * executing private\internal recovery key tasks.
      *
      * Next, it will execute user recovery key.

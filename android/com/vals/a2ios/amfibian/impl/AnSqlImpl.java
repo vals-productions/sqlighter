@@ -23,20 +23,19 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     public static final int TYPE_CREATE = 4;
     public static final int TYPE_DELETE = 5;
 
-    private StringBuilder queryStr;
-    private List<Object> parameters = new ArrayList<Object>();
-    private int type;
-    private String columnClause;
     protected String tableName;
-    private String alias = "";
-    private StringBuilder whereClause;
-    private boolean isWhere = false;
-    private StringBuilder insertParamClause;
 
     private List<String> attribNameList = new LinkedList<String>();
-    
+    private List<Object> parameters = new ArrayList<Object>();
+    private StringBuilder whereClause;
+    private StringBuilder queryStr;
+    private boolean isWhere = false;
+    private StringBuilder insertParamClause;
     private Set<String> skipAttrNameList = new HashSet<String>();
     private Set<String> inclAttrNameList = new HashSet<String>();
+    private int type;
+    private String columnClause;
+    private String alias = "";
 
     public AnSqlImpl(String tableName, Class<T> anObjClass, AnAttrib[] attribList, AnObject<?> parentAnObject) {
         super(anObjClass, attribList, parentAnObject);

@@ -389,21 +389,24 @@
 }
 
 -(NSMutableArray*) parameterArray {
-    NSString *threadId = [self threadId];
-    NSMutableArray *arr = [self.parameterDictionary objectForKey: threadId];
-    if(arr == nil) {
-        arr = [NSMutableArray arrayWithCapacity:3];
-        [self.parameterDictionary setObject:arr forKey:threadId];
+    @synchronized(self) {
+        NSString *threadId = [self threadId];
+        NSMutableArray *arr = [self.parameterDictionary objectForKey: threadId];
+        if(arr == nil) {
+            arr = [NSMutableArray arrayWithCapacity:3];
+            [self.parameterDictionary setObject:arr forKey:threadId];
+        }
+        return arr;
     }
-    return arr;
 }
 
 - (void) clearParameterArray {
-    NSString *threadId = [self threadId];
-    NSMutableArray* pd = [parameterDictionary objectForKey: threadId];
-    if(pd != nil) {
-        // [pd removeAllObjects];
-        [self.parameterDictionary removeObjectForKey: threadId];
+    @synchronized(self) {
+        NSString *threadId = [self threadId];
+        NSMutableArray* pd = [parameterDictionary objectForKey: threadId];
+        if(pd != nil) {
+            [self.parameterDictionary removeObjectForKey: threadId];
+        }
     }
 }
 

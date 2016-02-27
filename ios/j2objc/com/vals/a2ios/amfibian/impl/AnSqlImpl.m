@@ -29,17 +29,17 @@
 
 @interface AnSqlImpl () {
  @public
-  JavaLangStringBuilder *queryStr_;
+  id<JavaUtilList> attribNameList_;
   id<JavaUtilList> parameters_;
+  JavaLangStringBuilder *whereClause_;
+  JavaLangStringBuilder *queryStr_;
+  jboolean isWhere_;
+  JavaLangStringBuilder *insertParamClause_;
+  id<JavaUtilSet> skipAttrNameList_;
+  id<JavaUtilSet> inclAttrNameList_;
   jint type_;
   NSString *columnClause_;
   NSString *alias_;
-  JavaLangStringBuilder *whereClause_;
-  jboolean isWhere_;
-  JavaLangStringBuilder *insertParamClause_;
-  id<JavaUtilList> attribNameList_;
-  id<JavaUtilSet> skipAttrNameList_;
-  id<JavaUtilSet> inclAttrNameList_;
 }
 
 - (void)reset;
@@ -50,15 +50,15 @@
 
 @end
 
-J2OBJC_FIELD_SETTER(AnSqlImpl, queryStr_, JavaLangStringBuilder *)
-J2OBJC_FIELD_SETTER(AnSqlImpl, parameters_, id<JavaUtilList>)
-J2OBJC_FIELD_SETTER(AnSqlImpl, columnClause_, NSString *)
-J2OBJC_FIELD_SETTER(AnSqlImpl, alias_, NSString *)
-J2OBJC_FIELD_SETTER(AnSqlImpl, whereClause_, JavaLangStringBuilder *)
-J2OBJC_FIELD_SETTER(AnSqlImpl, insertParamClause_, JavaLangStringBuilder *)
 J2OBJC_FIELD_SETTER(AnSqlImpl, attribNameList_, id<JavaUtilList>)
+J2OBJC_FIELD_SETTER(AnSqlImpl, parameters_, id<JavaUtilList>)
+J2OBJC_FIELD_SETTER(AnSqlImpl, whereClause_, JavaLangStringBuilder *)
+J2OBJC_FIELD_SETTER(AnSqlImpl, queryStr_, JavaLangStringBuilder *)
+J2OBJC_FIELD_SETTER(AnSqlImpl, insertParamClause_, JavaLangStringBuilder *)
 J2OBJC_FIELD_SETTER(AnSqlImpl, skipAttrNameList_, id<JavaUtilSet>)
 J2OBJC_FIELD_SETTER(AnSqlImpl, inclAttrNameList_, id<JavaUtilSet>)
+J2OBJC_FIELD_SETTER(AnSqlImpl, columnClause_, NSString *)
+J2OBJC_FIELD_SETTER(AnSqlImpl, alias_, NSString *)
 
 __attribute__((unused)) static void AnSqlImpl_reset(AnSqlImpl *self);
 
@@ -397,12 +397,12 @@ J2OBJC_IGNORE_DESIGNATED_END
 
 void AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnObject_(AnSqlImpl *self, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject) {
   (void) AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(self, anObjClass, attribList, parentAnObject);
-  self->parameters_ = new_JavaUtilArrayList_init();
-  self->alias_ = @"";
-  self->isWhere_ = false;
   self->attribNameList_ = new_JavaUtilLinkedList_init();
+  self->parameters_ = new_JavaUtilArrayList_init();
+  self->isWhere_ = false;
   self->skipAttrNameList_ = new_JavaUtilHashSet_init();
   self->inclAttrNameList_ = new_JavaUtilHashSet_init();
+  self->alias_ = @"";
   self->tableName_ = tableName;
 }
 
@@ -414,12 +414,12 @@ AnSqlImpl *new_AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnO
 
 void AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(AnSqlImpl *self, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject) {
   (void) AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(self, anObjClass, attribColumnList, parentAnObject);
-  self->parameters_ = new_JavaUtilArrayList_init();
-  self->alias_ = @"";
-  self->isWhere_ = false;
   self->attribNameList_ = new_JavaUtilLinkedList_init();
+  self->parameters_ = new_JavaUtilArrayList_init();
+  self->isWhere_ = false;
   self->skipAttrNameList_ = new_JavaUtilHashSet_init();
   self->inclAttrNameList_ = new_JavaUtilHashSet_init();
+  self->alias_ = @"";
   self->tableName_ = tableName;
 }
 
@@ -431,12 +431,12 @@ AnSqlImpl *new_AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnO
 
 void AnSqlImpl_initWithNSString_withAnObject_(AnSqlImpl *self, NSString *tableName, id<AnObject> anAllDefinedObject) {
   (void) AnObjectImpl_init(self);
-  self->parameters_ = new_JavaUtilArrayList_init();
-  self->alias_ = @"";
-  self->isWhere_ = false;
   self->attribNameList_ = new_JavaUtilLinkedList_init();
+  self->parameters_ = new_JavaUtilArrayList_init();
+  self->isWhere_ = false;
   self->skipAttrNameList_ = new_JavaUtilHashSet_init();
   self->inclAttrNameList_ = new_JavaUtilHashSet_init();
+  self->alias_ = @"";
   if ([((id<AnObject>) nil_chk(anAllDefinedObject)) getNativeObject] == nil) {
     [anAllDefinedObject resetNativeObject];
   }
@@ -452,12 +452,12 @@ AnSqlImpl *new_AnSqlImpl_initWithNSString_withAnObject_(NSString *tableName, id<
 
 void AnSqlImpl_init(AnSqlImpl *self) {
   (void) AnObjectImpl_init(self);
-  self->parameters_ = new_JavaUtilArrayList_init();
-  self->alias_ = @"";
-  self->isWhere_ = false;
   self->attribNameList_ = new_JavaUtilLinkedList_init();
+  self->parameters_ = new_JavaUtilArrayList_init();
+  self->isWhere_ = false;
   self->skipAttrNameList_ = new_JavaUtilHashSet_init();
   self->inclAttrNameList_ = new_JavaUtilHashSet_init();
+  self->alias_ = @"";
 }
 
 AnSqlImpl *new_AnSqlImpl_init() {

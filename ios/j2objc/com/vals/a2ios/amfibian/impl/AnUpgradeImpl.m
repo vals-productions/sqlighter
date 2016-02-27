@@ -55,8 +55,6 @@
 
 - (id<JavaUtilList>)getPrivateUpdateKeys;
 
-- (id<JavaUtilList>)getPrivateTasksByKeyWithNSString:(NSString *)key;
-
 @end
 
 J2OBJC_FIELD_SETTER(AnUpgradeImpl, map_, id<JavaUtilMap>)
@@ -86,8 +84,6 @@ __attribute__((unused)) static void AnUpgradeImpl_saveLogWithAnUpgradeImpl_Upgra
 __attribute__((unused)) static jboolean AnUpgradeImpl_findTableWithNSString_(AnUpgradeImpl *self, NSString *searchTableName);
 
 __attribute__((unused)) static id<JavaUtilList> AnUpgradeImpl_getPrivateUpdateKeys(AnUpgradeImpl *self);
-
-__attribute__((unused)) static id<JavaUtilList> AnUpgradeImpl_getPrivateTasksByKeyWithNSString_(AnUpgradeImpl *self, NSString *key);
 
 @interface AnUpgradeImpl_Upgrade () {
  @public
@@ -181,9 +177,8 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
         AnOrmImpl *createObjectTask = (AnOrmImpl *) check_class_cast(task, [AnOrmImpl class]);
         [((AnOrmImpl *) nil_chk(createObjectTask)) setSqlighterDbWithSQLighterDb:sqlighterDb_];
         (void) [createObjectTask startSqlCreate];
-        sqlStr = [createObjectTask getQueryString];
         (void) [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:JreStrcat("$$", @"drop table if exists ", [createObjectTask getTableName])];
-        result = [sqlighterDb_ executeChangeWithNSString:sqlStr];
+        result = [createObjectTask apply];
       }
       AnUpgradeImpl_logUpgradeStepWithNSString_withNSString_withJavaLangLong_(self, key, sqlStr, result);
     }
@@ -241,7 +236,21 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
 }
 
 - (id<JavaUtilList>)getPrivateTasksByKeyWithNSString:(NSString *)key {
-  return AnUpgradeImpl_getPrivateTasksByKeyWithNSString_(self, key);
+  id<JavaUtilList> tasks = new_JavaUtilLinkedList_init();
+  if ([((NSString *) nil_chk(AnUpgradeImpl_PRIVATE_REC_KEY_)) isEqual:key]) {
+    [tasks addWithId:anOrm_];
+    [tasks addWithId:JreStrcat("$$$$$", @"create index ", [self getLogTableName], @"_idx on ", [self getLogTableName], @"(key, type, status)")];
+  }
+  else if ([((NSString *) nil_chk(AnUpgradeImpl_PRIVATE_KEY1_)) isEqual:key]) {
+    [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column type INTEGER")];
+    [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column refi INTEGER")];
+    [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column refd REAL")];
+    [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column refs TEXT")];
+    [tasks addWithId:JreStrcat("$$$$$", @"create index ", [self getLogTableName], @"_idx on ", [self getLogTableName], @"(key, type, status)")];
+    [tasks addWithId:JreStrcat("$$$", @"update ", [self getLogTableName], @" set type = 0 where value is null")];
+    [tasks addWithId:JreStrcat("$$$", @"update ", [self getLogTableName], @" set type = 1 where value is not null")];
+  }
+  return tasks;
 }
 
 @end
@@ -270,7 +279,7 @@ jint AnUpgradeImpl_applyUpdatesWithInt_(AnUpgradeImpl *self, jint privatePublic)
       continue;
     }
     if (![((id<JavaUtilSet>) nil_chk(appliedKeys)) containsWithId:updKey]) {
-      id<JavaUtilList> tasks = (privatePublic == 0) ? AnUpgradeImpl_getPrivateTasksByKeyWithNSString_(self, updKey) : [self getTasksByKeyWithNSString:updKey];
+      id<JavaUtilList> tasks = (privatePublic == 0) ? [self getPrivateTasksByKeyWithNSString:updKey] : [self getTasksByKeyWithNSString:updKey];
       if (![self applyUpdateWithNSString:updKey withJavaUtilList:tasks]) {
         return -1;
       }
@@ -281,7 +290,7 @@ jint AnUpgradeImpl_applyUpdatesWithInt_(AnUpgradeImpl *self, jint privatePublic)
 }
 
 jint AnUpgradeImpl_attemptToRecoverWithInt_(AnUpgradeImpl *self, jint privatePublic) {
-  id<JavaUtilList> recoverTasks = (privatePublic == 0) ? AnUpgradeImpl_getPrivateTasksByKeyWithNSString_(self, AnUpgradeImpl_PRIVATE_REC_KEY_) : [self getTasksByKeyWithNSString:self->recoverKey_];
+  id<JavaUtilList> recoverTasks = (privatePublic == 0) ? [self getPrivateTasksByKeyWithNSString:AnUpgradeImpl_PRIVATE_REC_KEY_] : [self getTasksByKeyWithNSString:self->recoverKey_];
   jint rc = 0;
   if ([recoverTasks size] > 0) {
     id<JavaUtilList> keys = (privatePublic == 0) ? AnUpgradeImpl_getPrivateUpdateKeys(self) : [self getUpdateKeys];
@@ -353,24 +362,6 @@ jboolean AnUpgradeImpl_findTableWithNSString_(AnUpgradeImpl *self, NSString *sea
 
 id<JavaUtilList> AnUpgradeImpl_getPrivateUpdateKeys(AnUpgradeImpl *self) {
   return JavaUtilArrays_asListWithNSObjectArray_([IOSObjectArray newArrayWithObjects:(id[]){ AnUpgradeImpl_PRIVATE_KEY1_, AnUpgradeImpl_PRIVATE_REC_KEY_ } count:2 type:NSString_class_()]);
-}
-
-id<JavaUtilList> AnUpgradeImpl_getPrivateTasksByKeyWithNSString_(AnUpgradeImpl *self, NSString *key) {
-  id<JavaUtilList> tasks = new_JavaUtilLinkedList_init();
-  if ([((NSString *) nil_chk(AnUpgradeImpl_PRIVATE_REC_KEY_)) isEqual:key]) {
-    [tasks addWithId:self->anOrm_];
-    [tasks addWithId:JreStrcat("$$$$$", @"create index ", [self getLogTableName], @"_idx on ", [self getLogTableName], @"(key, type, status)")];
-  }
-  else if ([((NSString *) nil_chk(AnUpgradeImpl_PRIVATE_KEY1_)) isEqual:key]) {
-    [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column type INTEGER")];
-    [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column refi INTEGER")];
-    [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column refd REAL")];
-    [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column refs TEXT")];
-    [tasks addWithId:JreStrcat("$$$$$", @"create index ", [self getLogTableName], @"_idx on ", [self getLogTableName], @"(key, type, status)")];
-    [tasks addWithId:JreStrcat("$$$", @"update ", [self getLogTableName], @" set type = 0 where value is null")];
-    [tasks addWithId:JreStrcat("$$$", @"update ", [self getLogTableName], @" set type = 1 where value is not null")];
-  }
-  return tasks;
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnUpgradeImpl)

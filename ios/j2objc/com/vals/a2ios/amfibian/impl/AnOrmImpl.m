@@ -108,9 +108,14 @@ J2OBJC_IGNORE_DESIGNATED_END
 }
 
 - (JavaLangLong *)apply {
-  if ([self getType] == AnSqlImpl_TYPE_INSERT || [self getType] == AnSqlImpl_TYPE_UPDATE || [self getType] == AnSqlImpl_TYPE_DELETE || [self getType] == AnSqlImpl_TYPE_CREATE) {
+  if ([self getType] == AnSqlImpl_TYPE_INSERT || [self getType] == AnSqlImpl_TYPE_UPDATE || [self getType] == AnSqlImpl_TYPE_DELETE) {
     NSString *q = [self getQueryString];
     AnOrmImpl_applyParameters(self);
+    JavaLangLong *updateInfo = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:q];
+    return updateInfo;
+  }
+  else if ([self getType] == AnSqlImpl_TYPE_CREATE) {
+    NSString *q = [self getQueryString];
     JavaLangLong *updateInfo = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:q];
     return updateInfo;
   }

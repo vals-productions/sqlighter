@@ -96,10 +96,14 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
     public Long apply() throws Exception {
         if (this.getType() == AnSqlImpl.TYPE_INSERT ||
             this.getType() == AnSqlImpl.TYPE_UPDATE ||
-            this.getType() == AnSqlImpl.TYPE_DELETE ||
-            this.getType() == AnSqlImpl.TYPE_CREATE) {
+            this.getType() == AnSqlImpl.TYPE_DELETE
+            ) {
             String q = this.getQueryString();
             applyParameters();
+            Long updateInfo = sqlighterDb.executeChange(q);
+            return updateInfo;
+        } else if(this.getType() == AnSqlImpl.TYPE_CREATE) {
+            String q = this.getQueryString();
             Long updateInfo = sqlighterDb.executeChange(q);
             return updateInfo;
         }

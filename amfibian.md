@@ -100,11 +100,11 @@ Appointment appointment234 = anOrm.asNativeObject(
 Let's store our ```appointment234``` native object in the database. Since we do not have the table for this entity in our database yet, we can ask AmfibiaN to give us database create table statement for or object:
 
 ```java
-String createAppointmentTableSql =
-	anOrm.startSqlCreate().getQueryString();
+anOrm.startSqlCreate();
+anOrm.apply();
 ```
 
-the variable above will contain:
+statements above will execute the following SQL:
 
 ```
 create table appointment(
@@ -113,11 +113,7 @@ create table appointment(
   is_processed INTEGER )
 ```
 
-Note how database column names relate to object attributes. Lets execute the query:
-
-```java
-sqlighterDb.executeChange(createAppointmentTableSql);
-```
+Note how database column names relate to object attributes.
 
 Now, since the table for Appointment objects has been created, lets persist our object in there. The following two statements will prepare the query, (implicitly) bind parameters and execute the statement against the database:
 

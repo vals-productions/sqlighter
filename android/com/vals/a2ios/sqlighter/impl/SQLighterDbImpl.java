@@ -268,7 +268,7 @@ public class SQLighterDbImpl implements SQLighterDb {
         }
     }
 
-    private List<Object> getParameterList() {
+    private synchronized List<Object> getParameterList() {
         Long threadId = Thread.currentThread().getId();
         List<Object> parameterList = parameterMap.get(threadId);
         if(parameterList == null) {
@@ -278,7 +278,7 @@ public class SQLighterDbImpl implements SQLighterDb {
         return parameterList;
     }
 
-    private void clearParameterList () {
+    private synchronized void clearParameterList () {
         Long threadId = Thread.currentThread().getId();
         if(parameterMap.containsKey(threadId)) {
             parameterMap.remove(threadId);
