@@ -3,7 +3,7 @@
 SQLighter is Object Oriented SQLite implementation for Android and iOS mobile platforms. 
 
 * Provides basic SQL capabilities and flexibilty
-* ORM convenience
+* ORM features
 * Database schema versioning management 
 * JSON mappings
 * Portability of your implementation between Android and iOS platforms by being compliant with J2ObjC code translation standards.
@@ -48,7 +48,11 @@ platform specific implementations.
 # ORM
 
 [AmfibiaN](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md), part of this repository,
-is a "swiss army knife" toolkit that is integrated with SQLighter. AmfibiaN lets you transition your domain objects between their native state, JSON representation and SQL database persistent storage. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC translation process.
+is a "swiss army knife" toolkit that is integrated with SQLighter. 
+
+AmfibiaN lets you transition your domain objects between their native state, JSON representation and SQL database persistent storage. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC translation process.
+
+AmfibiaN's AnUpgrade privides DB schema versioning and upgrade management features.
 
 ```
       AmfibiaN

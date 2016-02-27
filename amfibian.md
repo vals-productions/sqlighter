@@ -11,24 +11,36 @@
 
 AmfibiaN is called after amphibians,- inhabitants that inhabit in a variety of habitats.
 
-Inhabitants of modern software systems have to be able to transition between their native state on different platforms, database persistent state and various text representations such as JSON format. AmfibiaN is here to help with these scenarios.
+Inhabitants of modern software systems have to be able to transition between their native
+state on different platforms, database persistent state and various text representations
+such as JSON format. AmfibiaN is here to help with these scenarios.
 
-AmfibiaN is a lightweight java framework that stands between native objects, their JSON repesentations, and CRUD database operations with elements of ORM. 
+AmfibiaN is a lightweight java framework that stands between native objects, their JSON
+repesentations (to communicate with the server if necessary), and CRUD database operations
+with elements of ORM. 
 
-AmfibiaN's code is J2ObjC compatible. You would be able to execute your code in Android and iOS. You can use it in conjunction with SQLighter to implement local database storage and relevant business logics based on SQLite database.
+AmfibiaN's code is J2ObjC compatible. You would be able to execute your code in Android
+and iOS. You can use it in conjunction with SQLighter to implement local database storage
+and relevant business logics based on SQLite database.
 
 AmfibiaN supports single inheritance.
 
-AnUpgrade is a utility that helps to manage schema changes with new application version deployments.
+AnUpgrade is a utility that helps to manage schema changes with new application version 
+deployments.
 
 *Dependencies:* `org.json` package. Currently `JSONObject` and `JSONArray` are being referenced directly.
+
+AmfibiaN objects are not thread safe, so instantiate an instance of what you need per thread.
 
 ## Going by example
 
 Detailed and up to date example with extensive comments can be found at [Demo.java] 
-(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) class' amfibianOperations() method.
+(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
+class' amfibianOperations() method.
 
-Let's assume the following scenario: we would like to send/receive business objects to/from our server in JSON representation, convert them into native objects, use as such, also, perform some CRUD database operations.
+Let's assume the following scenario: we would like to send/receive business objects to/from our server
+in JSON representation, convert them into native objects, use as such, also, perform some CRUD database
+operations.
 
 We are dealing with some sort of appointment setup system.
 
@@ -185,9 +197,24 @@ For the cases when you do need to do an outer join and retrieve hierarchical res
 
 ### AnUpdate
 
-***AnUpdate*** is helping you with applying changes to your database schema to update particular device's database structure to the most current version. It handles situations where your customer's mobile application is several versions behind. Also, it might happen that incremental upgrade fail due to unpredicted sequence of updates, and **AnUpgrade** lets you specify database recovery scenario to its most up to date state. See Demo.java for an example of such technique.
+***AnUpdate*** is helping you with applying changes to your database schema to update particular 
+device's database structure to the most current version. It handles situations where your customer's
+mobile application is several versions behind. 
 
-**AnUpdate** can work with low level SQL DDL statements, or, use some extended AmfibiaN features where instead of specifying ```CREATE TABLE ... ``` statements, you pass a list of ```AnObject <....>``` instances, and AmfibiaN will take care of the rest and will generate respective statements and execute them. Other than obvious convenience, there will be less chance to execute ```CREATE``` statement that are out of date with your latest object model. Less things to maintain.
+It might happen that incremental upgrade fails due to unpredicted sequence of updates, and 
+**AnUpgrade** lets you specify database recovery scenario to
+its most up to date state. See Demo.java for an example of such technique.
+
+**AnUpdate** can work with low level SQL DDL statements, or, use some extended AmfibiaN 
+features where instead of developing ```CREATE TABLE ... ``` statements, you pass a list 
+of ```AnObject <....>``` instances, and AmfibiaN will take care of the rest and will 
+generate respective statements and execute them. Other than just obvious convenience, there 
+will be less chance to execute ```CREATE``` statements that are out of date with your latest
+object model. Less things to maintain.
+
+Check out [Demo.java] 
+(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
+for AnUpgrade in action steps.
 
 ## Installation
 
