@@ -153,7 +153,7 @@ public interface AnSql<T> extends AnObject<T> {
      * @param columnJavaClass
      * @return
      */
-    // String getSqlTypeForClass(Class<?> columnJavaClass);
+    // String getSqlColumnDefinition(Class<?> columnJavaClass);
 
     /**
      * @param columnName

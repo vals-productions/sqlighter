@@ -66,8 +66,6 @@
 
 - (id<JavaUtilSet>)getSkipAttrNameList;
 
-- (NSString *)getSqlTypeForClassWithIOSClass:(IOSClass *)columnJavaClass;
-
 - (NSString *)getTableName;
 
 - (jint)getType;
@@ -91,6 +89,8 @@
 #pragma mark Protected
 
 - (instancetype)init;
+
+- (NSString *)getSqlColumnDefinitionWithAnAttrib:(id<AnAttrib>)attr;
 
 - (jboolean)isSkipAttrWithNSString:(NSString *)propertyName;
 

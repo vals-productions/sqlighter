@@ -209,8 +209,8 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
                 AnAttrib attr = cm.get(attribName);
                 String colName = getColumnName(attr);
                 queryStr.append(colName);
-                String columnType = getSqlTypeForClass(attr.getAttribClass());
-                queryStr.append(" " + columnType);
+                String columnDef = getSqlColumnDefinition(attr);
+                queryStr.append(" " + columnDef);
                 queryStr.append(',');
         }
         queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
@@ -218,7 +218,12 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         return this;
     }
     
-    public String getSqlTypeForClass(Class<?> columnJavaClass) {
+    protected String getSqlColumnDefinition(AnAttrib attr /*Class<?> columnJavaClass*/) {
+        String sqlColumnInfo = attr.getDbColumnDefinition();
+        if(sqlColumnInfo != null) {
+           return sqlColumnInfo;
+        }
+        Class<?> columnJavaClass = attr.getAttribClass();
         if (columnJavaClass != null) {
             String className = columnJavaClass.getCanonicalName();
             if (Long.class.getCanonicalName().equals(className)) {
@@ -236,7 +241,10 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
             } else if(Date.class.getCanonicalName().equals(className)) {
                     return "TEXT";
             }
-                // "BLOB"
+                // "BLOB" is heavy datatype and can abuse memory/CPU
+                // in conjunction with ORM. Consider retrieving
+                // BLOB values using SQLighterDb on as needed
+                // basis.
         }
         return "TEXT";
     }

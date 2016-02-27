@@ -237,8 +237,8 @@ J2OBJC_IGNORE_DESIGNATED_END
     id<AnAttrib> attr = [cm getWithId:attribName];
     NSString *colName = [self getColumnNameWithAnAttrib:attr];
     (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:colName];
-    NSString *columnType = [self getSqlTypeForClassWithIOSClass:[((id<AnAttrib>) nil_chk(attr)) getAttribClass]];
-    (void) [queryStr_ appendWithNSString:JreStrcat("C$", ' ', columnType)];
+    NSString *columnDef = [self getSqlColumnDefinitionWithAnAttrib:attr];
+    (void) [queryStr_ appendWithNSString:JreStrcat("C$", ' ', columnDef)];
     (void) [queryStr_ appendWithChar:','];
   }
   (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
@@ -246,7 +246,12 @@ J2OBJC_IGNORE_DESIGNATED_END
   return self;
 }
 
-- (NSString *)getSqlTypeForClassWithIOSClass:(IOSClass *)columnJavaClass {
+- (NSString *)getSqlColumnDefinitionWithAnAttrib:(id<AnAttrib>)attr {
+  NSString *sqlColumnInfo = [((id<AnAttrib>) nil_chk(attr)) getDbColumnDefinition];
+  if (sqlColumnInfo != nil) {
+    return sqlColumnInfo;
+  }
+  IOSClass *columnJavaClass = [attr getAttribClass];
   if (columnJavaClass != nil) {
     NSString *className_ = [columnJavaClass getCanonicalName];
     if ([((NSString *) nil_chk([JavaLangLong_class_() getCanonicalName])) isEqual:className_]) {

@@ -17,6 +17,7 @@ public class AnAttribImpl implements AnAttrib {
     private AnObject<?> parentAnObject;
     private String attribName;
     private String columnName;
+    private String dbColumnDefinition;
     private String jsonName;
 
     private List<String> conversionMessages = new LinkedList<String>();
@@ -54,6 +55,16 @@ public class AnAttribImpl implements AnAttrib {
         } else {
             this.attribName = attribColumnJsonName;
         }
+    }
+
+    @Override
+    public String getDbColumnDefinition() {
+        return dbColumnDefinition;
+    }
+
+    @Override
+    public void setDbColumnDefinition(String dbColumnDefinition) {
+        this.dbColumnDefinition = dbColumnDefinition;
     }
 
     @Override

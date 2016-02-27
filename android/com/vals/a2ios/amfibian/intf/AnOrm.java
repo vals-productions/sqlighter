@@ -62,9 +62,11 @@ public interface AnOrm<T> extends AnSql<T> {
      * Executes INSERT/UPDATE/DELETE/CREATE type of queries.
      *
      * @return Last inserted row id in case of "insert" statement,
-     * affected row count in
-     * case of update/delete statements. Check SQLite docs on row
-     * id information.
+     * affected row count in case of update/delete statements. Also
+     * depends on whether the table has INTEGER PRIMARY KEY column
+     * or not...
+     *
+     * Check SQLite docs on row id information.
      *
      * @throws Exception
      */

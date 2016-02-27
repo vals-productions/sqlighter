@@ -23,6 +23,7 @@
   id<AnObject> parentAnObject_;
   NSString *attribName_;
   NSString *columnName_;
+  NSString *dbColumnDefinition_;
   NSString *jsonName_;
   id<JavaUtilList> conversionMessages_;
   id<JavaUtilMap> converterMap_;
@@ -37,6 +38,7 @@
 J2OBJC_FIELD_SETTER(AnAttribImpl, parentAnObject_, id<AnObject>)
 J2OBJC_FIELD_SETTER(AnAttribImpl, attribName_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, columnName_, NSString *)
+J2OBJC_FIELD_SETTER(AnAttribImpl, dbColumnDefinition_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, jsonName_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, conversionMessages_, id<JavaUtilList>)
 J2OBJC_FIELD_SETTER(AnAttribImpl, converterMap_, id<JavaUtilMap>)
@@ -58,6 +60,14 @@ NSString *AnAttribImpl_NONAME_CONVERSION_KEY_ = @"nonameConverter";
 - (instancetype)initWithNSString:(NSString *)attribColumnJsonName {
   AnAttribImpl_initWithNSString_(self, attribColumnJsonName);
   return self;
+}
+
+- (NSString *)getDbColumnDefinition {
+  return dbColumnDefinition_;
+}
+
+- (void)setDbColumnDefinitionWithNSString:(NSString *)dbColumnDefinition {
+  self->dbColumnDefinition_ = dbColumnDefinition;
 }
 
 - (void)setCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter {

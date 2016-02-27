@@ -334,6 +334,10 @@ public class Demo extends DemoBase {
                 /* attribute names/definitions */
                 new String[]{"name", "isProcessed,is_processed"},
                 anEntity); // parent
+            /*
+             * Lets customize the name with NOT NULL constraint
+             */
+            anOrm.getAttrib("name").setDbColumnDefinition("TEXT NOT NULL");
             /**
              * Get native object from json object, so that we could manipulate
              * it with ease.
@@ -368,8 +372,8 @@ public class Demo extends DemoBase {
              * lets store our object in there.
              */
             anOrm.startSqlInsert(appointment234);
-            Long rowsAffected = anOrm.apply();
-            checkTest("orm insert", rowsAffected.equals(1l));
+            Long returnCode = anOrm.apply();
+            checkTest("orm insert", returnCode.equals(1l));
 
             printAppointments(anOrm); // Lets check what we've got in the table
             /**
@@ -397,8 +401,8 @@ public class Demo extends DemoBase {
              */
             anOrm.startSqlUpdate(appointment234);
             anOrm.addWhere("id = ?", appointment234.getId());
-            rowsAffected = anOrm.apply();
-            checkTest("orm update", rowsAffected.equals(1l));
+            returnCode = anOrm.apply();
+            checkTest("orm update", returnCode.equals(1l));
             /**
              * First two lines above generated SQL update statement,
              * bound our object's attributes, set the where clause

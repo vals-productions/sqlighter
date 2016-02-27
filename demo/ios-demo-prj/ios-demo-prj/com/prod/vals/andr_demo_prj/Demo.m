@@ -15,6 +15,7 @@
 #include "com/vals/a2ios/amfibian/impl/AnObjectImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnOrmImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnUpgradeImpl.h"
+#include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "com/vals/a2ios/amfibian/intf/AnOrm.h"
 #include "com/vals/a2ios/amfibian/intf/AnSql.h"
@@ -292,13 +293,14 @@ void Demo_amfibianOperations() {
     NSString *jsonAppointment234 = @"{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
     id<AnObject> anEntity = new_AnObjectImpl_initWithIOSClass_withNSStringArray_(Entity_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"id" } count:1 type:NSString_class_()]);
     id<AnOrm> anOrm = new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(sqlighterDb, @"appointment", Appointment_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"name", @"isProcessed,is_processed" } count:2 type:NSString_class_()], anEntity);
+    [((id<AnAttrib>) nil_chk([anOrm getAttribWithNSString:@"name"])) setDbColumnDefinitionWithNSString:@"TEXT NOT NULL"];
     Appointment *appointment234 = [anOrm asNativeObjectWithNSString:jsonAppointment234];
     DemoBase_checkTestWithNSString_withBoolean_(@"JSON 2 native mapping", [((JavaLangInteger *) nil_chk([((Appointment *) nil_chk(appointment234)) getId])) isEqual:JavaLangInteger_valueOfWithInt_(234)] && [((NSString *) nil_chk([appointment234 getName])) isEqual:@"Meet AmfibiaN!"] && [((JavaLangInteger *) nil_chk([appointment234 getIsProcessed])) isEqual:JavaLangInteger_valueOfWithInt_(0)]);
     NSString *createAppointmentTableSql = [((id<AnSql>) nil_chk([anOrm startSqlCreate])) getQueryString];
     (void) [((id<SQLighterDb>) nil_chk(sqlighterDb)) executeChangeWithNSString:createAppointmentTableSql];
     [anOrm startSqlInsertWithId:appointment234];
-    JavaLangLong *rowsAffected = [anOrm apply];
-    DemoBase_checkTestWithNSString_withBoolean_(@"orm insert", [((JavaLangLong *) nil_chk(rowsAffected)) isEqual:JavaLangLong_valueOfWithLong_(1l)]);
+    JavaLangLong *returnCode = [anOrm apply];
+    DemoBase_checkTestWithNSString_withBoolean_(@"orm insert", [((JavaLangLong *) nil_chk(returnCode)) isEqual:JavaLangLong_valueOfWithLong_(1l)]);
     DemoBase_printAppointmentsWithAnOrm_(anOrm);
     Appointment *appointment456 = new_Appointment_init();
     [appointment456 setNameWithNSString:@"Appointment #456"];
@@ -310,8 +312,8 @@ void Demo_amfibianOperations() {
     [appointment234 setIsProcessedWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(1)];
     [anOrm startSqlUpdateWithId:appointment234];
     [anOrm addWhereWithNSString:@"id = ?" withId:[appointment234 getId]];
-    rowsAffected = [anOrm apply];
-    DemoBase_checkTestWithNSString_withBoolean_(@"orm update", [((JavaLangLong *) nil_chk(rowsAffected)) isEqual:JavaLangLong_valueOfWithLong_(1l)]);
+    returnCode = [anOrm apply];
+    DemoBase_checkTestWithNSString_withBoolean_(@"orm update", [((JavaLangLong *) nil_chk(returnCode)) isEqual:JavaLangLong_valueOfWithLong_(1l)]);
     DemoBase_printAppointmentsWithAnOrm_(anOrm);
     [anOrm startSqlSelect];
     [anOrm addWhereWithNSString:@"id = ?" withId:JavaLangInteger_valueOfWithInt_(234)];

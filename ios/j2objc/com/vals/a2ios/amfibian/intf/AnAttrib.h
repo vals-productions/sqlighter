@@ -39,6 +39,10 @@
 
 - (NSString *)getColumnOrAttribName;
 
+- (void)setDbColumnDefinitionWithNSString:(NSString *)dbColumnDefinition;
+
+- (NSString *)getDbColumnDefinition;
+
 - (void)setCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
 
 - (void)setCustomSetConverterWithNSString:(NSString *)key

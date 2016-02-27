@@ -97,6 +97,20 @@ public interface AnAttrib {
     String getColumnOrAttribName();
 
     /**
+     * DbColumnDefinition will be supplied to database create
+     * statement as is next to the column name instead of auto
+     * assigned column type (TEXT, INTEGER...). If you
+     * specify it, supply column type and optionally constraints
+     * CREATE TABLE (
+     * ...
+     * [column name] ([auto assigned column type] OR [dbColumnDefinition if supplied]),
+     * ...
+     * );
+     */
+    void setDbColumnDefinition(String dbColumnDefinition);
+    String getDbColumnDefinition();
+
+    /**
      * Converter value may be used to implement customized
      * attribute value conversions for specific cases.
      */

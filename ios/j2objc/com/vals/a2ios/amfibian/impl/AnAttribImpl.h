@@ -47,6 +47,8 @@
 
 - (id<AnAttrib_CustomConverter>)getCustomSetConverterWithNSString:(NSString *)key;
 
+- (NSString *)getDbColumnDefinition;
+
 - (JavaLangReflectMethod *)getGetter;
 
 - (NSString *)getJsonOrAttribName;
@@ -70,6 +72,8 @@
 
 - (void)setCustomSetConverterWithNSString:(NSString *)key
              withAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
+
+- (void)setDbColumnDefinitionWithNSString:(NSString *)dbColumnDefinition;
 
 - (void)setDefaultGetConversionKeyWithNSString:(NSString *)key;
 
