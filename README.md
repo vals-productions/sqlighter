@@ -3,8 +3,8 @@
 SQLighter is Object Oriented SQLite implementation for Android and iOS mobile platforms. 
 
 * Provides basic SQL capabilities and flexibilty
-* ORM features
-* Database schema versioning management 
+* ORM features, auto generate tables for your objects
+* Database schema versioning management
 * JSON mappings
 * Portability of your implementation between Android and iOS platforms by being compliant with J2ObjC code translation standards.
 
