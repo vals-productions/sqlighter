@@ -166,7 +166,10 @@ public class AnAttribImpl implements AnAttrib {
      *
      * For example, sometimes json representation is different from object's expected
      * representation, like a Date could be represented by long (milli) seconds. 
+     *
+     *
      */
+     // TODO - move into AnObject. At that level *GetMethod* can be implemented as well
     private Object matchSetMethodParameterType(Method m, Object obj) throws Exception {
         if (obj != null) {
             Class<?>[] paramTypes = m.getParameterTypes();

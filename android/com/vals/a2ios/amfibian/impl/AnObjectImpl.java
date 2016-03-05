@@ -206,7 +206,8 @@ public class AnObjectImpl<T> implements AnObject<T> {
         }
         return jsonMap;
     }
-
+    
+    //TODO rename to asNativeMap 
     @Override
     public synchronized Map<String, Object> asMap(T nativeObject) throws Exception {
         setNativeObject(nativeObject);
