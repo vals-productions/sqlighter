@@ -10,10 +10,7 @@ import java.util.Set;
  * changes as needed. Every version update has
  * updateKey associated with it. Multiple update
  * statements may be associated with the
- * version update. AnUpgrade logs changes
- * that had been applied in a table named
- * "app_db_maint" by default. The table will
- * be automatically created if does not exists.
+ * version update.   AnUpdrade maintains your database schema ("user" changes) as well as its own ("private") changes to the table (s) that maintain change logs.  AnUpgrade logs changes that had been applied to a table named "app_db_maint" by default. The table will be automatically created if does not exists.
  *
  */
 public interface AnUpgrade {

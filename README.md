@@ -335,6 +335,8 @@ and *Impl.m files (see the diagram above). They implement, in essence, same inte
 that are result or SQLighterDb.java and SQLighterRs.java J2ObjC conversion into 
 corresponding Objective-C classes (actually, protocols).
 
+J2ObjC conversion generates extra files/stubs. To make it easier to understand and use SQLighter and AmfibiaN on iOS side number of classes and interfaces is kept to the minimum at Android end. Without this requirement things could be done differently from architectural point of view.
+
 Conversion should be done with the use of ``--prefixes <file with prefix configs>`` j2objc 
 switch to prevent adding java package prefix to class names. Sample file is below.
 ```
