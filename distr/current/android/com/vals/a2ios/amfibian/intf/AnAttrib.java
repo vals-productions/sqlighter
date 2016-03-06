@@ -16,6 +16,37 @@ import java.lang.reflect.Method;
  *
  */
 public interface AnAttrib {
+
+    /**
+     * Converter value may be used to implement customized
+     * attribute value conversions for specific cases.
+     *
+     * CustomConverters are used inside of getValue() and setValue(...)
+     * methods at the level of each individual attribute. This way you can  
+     * control value conversion on a case by case basis in case default conversions
+     * do not suit your needs.
+     *
+     * Custom conversion takes place before getValue() returns the value to the caller.
+     * Consumers of getValue() include database or JSON operations when they need to get 
+     * native object'  attribute value to, most likely, save it to the database, use in
+     * where clause, or set as JSON object property..
+     *
+     * Custom conversion takes place after the caller invokes setValue(,,,) but before
+     * the value gets assigned to the native object. Callers of setValue(...) include 
+     * database or JSON operations, typically, when the value gets retrieved from database
+     * or JSON and is being assigned to Native object.
+     *
+     * Custom converters are unaware who the consumer or caller is. They work uniformly for
+     * all the cases.
+     *
+     * It is possible to dynamically set or unset (set to null) the converters as your program flows,
+     * so you can inject custom behavior for a particular situation.
+     *
+     */
+    public static interface CustomConverter {
+        public Object convert(Object value);
+    }
+
     /**
      * Sets an object associated with native object.
      * @param anObject
@@ -97,12 +128,23 @@ public interface AnAttrib {
     String getColumnOrAttribName();
 
     /**
-     * Converter value may be used to implement customized
-     * attribute value conversions for specific cases.
+     * DbColumnDefinition will be supplied to database create
+     * statement as is next to the column name instead of auto
+     * assigned column type (TEXT, INTEGER...). If you
+     * specify it, supply column type and optionally constraints
+     * CREATE TABLE (
+     * ...
+     * [column name] ([auto assigned column type] OR [dbColumnDefinition if supplied]),
+     * ...
+     * );
      */
-    public static interface CustomConverter {
-        public Object convert(Object value);
-    }
+    void setDbColumnDefinition(String dbColumnDefinition);
+
+    /**
+     *
+     * @return
+     */
+    String getDbColumnDefinition();
 
     /**
      *
@@ -115,6 +157,7 @@ public interface AnAttrib {
      * @param key
      * @param converter
      */
+    @Deprecated
     void setCustomSetConverter(String key, CustomConverter converter);
 
     /**
@@ -122,6 +165,7 @@ public interface AnAttrib {
      * @param key
      * @return
      */
+    @Deprecated
     CustomConverter getCustomSetConverter(String key);
 
     /**
@@ -133,12 +177,14 @@ public interface AnAttrib {
     /**
      *
      */
+    @Deprecated
     void clearCustomSetConverters();
 
     /**
      *
      * @param key
      */
+    @Deprecated
     void setDefaultSetConversionKey(String key);
 
     /**
@@ -152,6 +198,7 @@ public interface AnAttrib {
      * @param key
      * @param converter
      */
+    @Deprecated
     void setCustomGetConverter(String key, CustomConverter converter);
 
     /**
@@ -159,6 +206,7 @@ public interface AnAttrib {
      * @param key
      * @return
      */
+    @Deprecated
     CustomConverter getCustomGetConverter(String key);
 
     /**
@@ -170,12 +218,14 @@ public interface AnAttrib {
     /**
      *
      */
+    @Deprecated
     void clearCustomGetConverters();
 
     /**
      *
      * @param key
      */
+    @Deprecated
     void setDefaultGetConversionKey(String key);
 
 }

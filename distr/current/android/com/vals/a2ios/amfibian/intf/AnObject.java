@@ -1,5 +1,6 @@
 package com.vals.a2ios.amfibian.intf;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Collection;
@@ -12,6 +13,17 @@ import java.util.Map;
  *
  */
 public interface AnObject<T> {
+
+    /**
+     *
+     *
+     *
+     *
+     */
+//    public static interface ObjectCustomConverter {
+//        public Object convert(AnAttrib attrib, Object value);
+//    }
+
     /**
      *
      * @throws Exception
@@ -52,7 +64,17 @@ public interface AnObject<T> {
      * @return
      * @throws Exception
      */
-    public Map<String, Object> asMap(T nativeObject) throws Exception;
+    public Map<String, Object> asNativeMap(T nativeObject) throws Exception;
+
+    /**
+     * Use asNativeMap
+     *
+     * @param nativeObject
+     * @return
+     * @throws Exception
+     */
+    @Deprecated
+    public Map<String, Object> getMap(T nativeObject) throws Exception;
 
     /**
      * Transfroms native object into a org.json.JSONObject
@@ -111,7 +133,7 @@ public interface AnObject<T> {
      * @return
      * @throws Exception
      */
-    public Map<String, Object> getJsonMap() throws Exception;
+    public Map<String, Object> asJsonMap() throws Exception;
 
     /**
      *
@@ -143,4 +165,49 @@ public interface AnObject<T> {
      * @return
      */
     AnAttrib[] getOwnAttribs();
+
+    /**
+     *
+     * @param objects
+     * @return
+     * @throws Exception
+     */
+    JSONArray asJSONArray(Collection<T> objects) throws Exception;
+
+    /**
+     *
+     * @param objects
+     * @return
+     * @throws Exception
+     */
+    String asJsonArrayString(Collection<T> objects) throws Exception;
+
+
+    public static interface CustomConverter {
+        public Object convert(AnAttrib attrib, Object value);
+    }
+
+    /**
+     *
+     * @return
+     */
+    CustomConverter getJsonCustomSetConverter();
+
+    /**
+     *
+     * @return
+     */
+    void setJsonCustomSetConverter(CustomConverter objectCustomSetConverter);
+
+    /**
+     *
+     * @return
+     */
+    public CustomConverter getJsonCustomGetConverter();
+
+    /**
+     *
+     * @return
+     */
+    public void setJsonCustomGetConverter(CustomConverter objectCustomGetConverter);
 }

@@ -52,6 +52,8 @@
 - (jboolean)applyUpdateWithNSString:(NSString *)key
                    withJavaUtilList:(id<JavaUtilList>)statementList;
 
+- (id<JavaUtilList>)getPrivateTasksByKeyWithNSString:(NSString *)key;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(AnUpgradeImpl)
