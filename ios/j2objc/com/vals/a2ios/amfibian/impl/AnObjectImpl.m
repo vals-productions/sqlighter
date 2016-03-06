@@ -11,7 +11,12 @@
 #include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "java/lang/Exception.h"
+#include "java/lang/Long.h"
+#include "java/lang/Throwable.h"
+#include "java/lang/reflect/Constructor.h"
+#include "java/lang/reflect/Method.h"
 #include "java/util/Collection.h"
+#include "java/util/Date.h"
 #include "java/util/HashMap.h"
 #include "java/util/LinkedHashMap.h"
 #include "java/util/LinkedList.h"
@@ -28,6 +33,8 @@
   id<JavaUtilMap> jsonMap_;
   id nativeObject_;
   id<JavaUtilMap> attribMap_;
+  id<AnObject_CustomConverter> jsonCustomGetConverter_;
+  id<AnObject_CustomConverter> jsonCustomSetConverter_;
 }
 
 - (IOSObjectArray *)stringsToAttribsWithNSStringArray:(IOSObjectArray *)propertyNames;
@@ -41,10 +48,29 @@ J2OBJC_FIELD_SETTER(AnObjectImpl, nativeObjectMap_, id<JavaUtilMap>)
 J2OBJC_FIELD_SETTER(AnObjectImpl, jsonMap_, id<JavaUtilMap>)
 J2OBJC_FIELD_SETTER(AnObjectImpl, nativeObject_, id)
 J2OBJC_FIELD_SETTER(AnObjectImpl, attribMap_, id<JavaUtilMap>)
+J2OBJC_FIELD_SETTER(AnObjectImpl, jsonCustomGetConverter_, id<AnObject_CustomConverter>)
+J2OBJC_FIELD_SETTER(AnObjectImpl, jsonCustomSetConverter_, id<AnObject_CustomConverter>)
+
+static id<AnObject_CustomConverter> AnObjectImpl_jsonCustomGetGlobalConverter_;
+J2OBJC_STATIC_FIELD_GETTER(AnObjectImpl, jsonCustomGetGlobalConverter_, id<AnObject_CustomConverter>)
+J2OBJC_STATIC_FIELD_SETTER(AnObjectImpl, jsonCustomGetGlobalConverter_, id<AnObject_CustomConverter>)
+
+static id<AnObject_CustomConverter> AnObjectImpl_jsonCustomSetGlobalConverter_;
+J2OBJC_STATIC_FIELD_GETTER(AnObjectImpl, jsonCustomSetGlobalConverter_, id<AnObject_CustomConverter>)
+J2OBJC_STATIC_FIELD_SETTER(AnObjectImpl, jsonCustomSetGlobalConverter_, id<AnObject_CustomConverter>)
 
 __attribute__((unused)) static IOSObjectArray *AnObjectImpl_stringsToAttribsWithNSStringArray_(AnObjectImpl *self, IOSObjectArray *propertyNames);
 
 __attribute__((unused)) static void AnObjectImpl_initAttribsWithAnAttribArray_(AnObjectImpl *self, IOSObjectArray *attribMappers);
+
+@interface AnObjectImpl_JsonSimpleSetConverter () {
+ @public
+  id<JavaUtilList> conversionWarnings_;
+}
+
+@end
+
+J2OBJC_FIELD_SETTER(AnObjectImpl_JsonSimpleSetConverter, conversionWarnings_, id<JavaUtilList>)
 
 @implementation AnObjectImpl
 
@@ -93,6 +119,12 @@ J2OBJC_IGNORE_DESIGNATED_END
 
 - (void)resetNativeObject {
   [self setNativeObjectWithId:[((IOSClass *) nil_chk(nativeClass_)) newInstance]];
+  if (jsonMap_ != nil) {
+    [jsonMap_ clear];
+  }
+  if (nativeObjectMap_ != nil) {
+    [nativeObjectMap_ clear];
+  }
 }
 
 - (void)setNativeObjectWithId:(id)o {
@@ -206,20 +238,20 @@ J2OBJC_IGNORE_DESIGNATED_END
   (void) [((id<JavaUtilMap>) nil_chk(attribMap_)) putWithId:[anAttribMapper getAttribName] withId:anAttribMapper];
 }
 
-- (id<JavaUtilMap>)getJsonMap {
+- (id<JavaUtilMap>)asJsonMap {
   if (jsonMap_ == nil) {
     jsonMap_ = new_JavaUtilHashMap_init();
     id<JavaUtilSet> p = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
     for (NSString * __strong attrName in nil_chk(p)) {
       id<AnAttrib> attr = [attribMap_ getWithId:attrName];
-      id value = [((id<AnAttrib>) nil_chk(attr)) getValue];
+      id value = [self getValueWithAnObject_CustomConverter:AnObjectImpl_getJsonCustomGetGlobalConverter() withAnObject_CustomConverter:jsonCustomGetConverter_ withAnAttrib:attr];
       if (value != nil) {
-        (void) [jsonMap_ putWithId:[attr getJsonOrAttribName] withId:[attr getValue]];
+        (void) [jsonMap_ putWithId:[((id<AnAttrib>) nil_chk(attr)) getJsonOrAttribName] withId:value];
       }
     }
   }
   if (parentAnObject_ != nil) {
-    id<JavaUtilMap> parentJsonMap = [parentAnObject_ getJsonMap];
+    id<JavaUtilMap> parentJsonMap = [parentAnObject_ asJsonMap];
     id<JavaUtilSet> keys = [((id<JavaUtilMap>) nil_chk(parentJsonMap)) keySet];
     for (NSString * __strong k in nil_chk(keys)) {
       (void) [((id<JavaUtilMap>) nil_chk(jsonMap_)) putWithId:k withId:[parentJsonMap getWithId:k]];
@@ -228,7 +260,13 @@ J2OBJC_IGNORE_DESIGNATED_END
   return jsonMap_;
 }
 
-- (id<JavaUtilMap>)asMapWithId:(id)nativeObject {
+- (id<JavaUtilMap>)getMapWithId:(id)nativeObject {
+  @synchronized(self) {
+    return [self asNativeMapWithId:nativeObject];
+  }
+}
+
+- (id<JavaUtilMap>)asNativeMapWithId:(id)nativeObject {
   @synchronized(self) {
     [self setNativeObjectWithId:nativeObject];
     if (nativeObjectMap_ == nil) {
@@ -243,7 +281,7 @@ J2OBJC_IGNORE_DESIGNATED_END
       }
     }
     if (parentAnObject_ != nil) {
-      id<JavaUtilMap> parentMap = [parentAnObject_ asMapWithId:nativeObject];
+      id<JavaUtilMap> parentMap = [parentAnObject_ asNativeMapWithId:nativeObject];
       id<JavaUtilSet> keys = [((id<JavaUtilMap>) nil_chk(parentMap)) keySet];
       for (NSString * __strong k in nil_chk(keys)) {
         (void) [((id<JavaUtilMap>) nil_chk(nativeObjectMap_)) putWithId:k withId:[parentMap getWithId:k]];
@@ -256,8 +294,8 @@ J2OBJC_IGNORE_DESIGNATED_END
 - (OrgJsonJSONObject *)asJSONObjectWithId:(id)nativeObject {
   @synchronized(self) {
     [self setNativeObjectWithId:nativeObject];
-    (void) [self asMapWithId:nativeObject];
-    return new_OrgJsonJSONObject_initWithJavaUtilMap_([self getJsonMap]);
+    (void) [self getMapWithId:nativeObject];
+    return new_OrgJsonJSONObject_initWithJavaUtilMap_([self asJsonMap]);
   }
 }
 
@@ -275,12 +313,29 @@ J2OBJC_IGNORE_DESIGNATED_END
       if (![((OrgJsonJSONObject *) nil_chk(jsonObject)) isNullWithNSString:[((id<AnAttrib>) nil_chk(attr)) getJsonOrAttribName]]) {
         id attrValue = [jsonObject getWithNSString:[attr getJsonOrAttribName]];
         if (attrValue != nil) {
-          [attr setValueWithId:attrValue];
+          [self setValueWithAnObject_CustomConverter:AnObjectImpl_getJsonCustomSetGlobalConverter() withAnObject_CustomConverter:jsonCustomSetConverter_ withAnAttrib:attr withId:attrValue];
         }
       }
     }
     return nativeObject_;
   }
+}
+
+- (void)setValueWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)globalConverter
+                withAnObject_CustomConverter:(id<AnObject_CustomConverter>)converter
+                                withAnAttrib:(id<AnAttrib>)attrib
+                                      withId:(id)value {
+  if ([((id<AnAttrib>) nil_chk(attrib)) getCustomSetConverter] == nil) {
+    if (converter != nil) {
+      [attrib setValueWithId:[converter convertWithAnAttrib:attrib withId:value]];
+      return;
+    }
+    else if (globalConverter != nil) {
+      [attrib setValueWithId:[globalConverter convertWithAnAttrib:attrib withId:value]];
+      return;
+    }
+  }
+  [attrib setValueWithId:value];
 }
 
 - (id)asNativeObjectWithNSString:(NSString *)jsonString {
@@ -308,6 +363,73 @@ J2OBJC_IGNORE_DESIGNATED_END
   @synchronized(self) {
     return [((OrgJsonJSONObject *) nil_chk([self asJSONObjectWithId:nativeObject])) description];
   }
+}
+
+- (OrgJsonJSONArray *)asJSONArrayWithJavaUtilCollection:(id<JavaUtilCollection>)objects {
+  @synchronized(self) {
+    OrgJsonJSONArray *ja = new_OrgJsonJSONArray_init();
+    jint idx = 0;
+    if (objects != nil) {
+      for (id __strong obj in objects) {
+        OrgJsonJSONObject *jo = [self asJSONObjectWithId:obj];
+        (void) [ja putWithInt:idx++ withId:jo];
+      }
+    }
+    return ja;
+  }
+}
+
+- (NSString *)asJsonArrayStringWithJavaUtilCollection:(id<JavaUtilCollection>)objects {
+  @synchronized(self) {
+    OrgJsonJSONArray *ja = [self asJSONArrayWithJavaUtilCollection:objects];
+    return [((OrgJsonJSONArray *) nil_chk(ja)) description];
+  }
+}
+
+- (id)getValueWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)globalConverter
+              withAnObject_CustomConverter:(id<AnObject_CustomConverter>)converter
+                              withAnAttrib:(id<AnAttrib>)attrb {
+  if ([((id<AnAttrib>) nil_chk(attrb)) getCustomGetConverter] == nil) {
+    if (converter != nil) {
+      return [converter convertWithAnAttrib:attrb withId:[attrb getValue]];
+    }
+    if (globalConverter != nil) {
+      return [globalConverter convertWithAnAttrib:attrb withId:[attrb getValue]];
+    }
+  }
+  return [attrb getValue];
+}
+
+- (id<AnObject_CustomConverter>)getJsonCustomSetConverter {
+  return jsonCustomSetConverter_;
+}
+
+- (void)setJsonCustomSetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)jsonCustomSetConverter {
+  self->jsonCustomSetConverter_ = jsonCustomSetConverter;
+}
+
+- (id<AnObject_CustomConverter>)getJsonCustomGetConverter {
+  return jsonCustomGetConverter_;
+}
+
+- (void)setJsonCustomGetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)jsonCustomGetConverter {
+  self->jsonCustomGetConverter_ = jsonCustomGetConverter;
+}
+
++ (id<AnObject_CustomConverter>)getJsonCustomGetGlobalConverter {
+  return AnObjectImpl_getJsonCustomGetGlobalConverter();
+}
+
++ (void)setJsonCustomGetGlobalConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)jsonCustomGetGlobalConverter {
+  AnObjectImpl_setJsonCustomGetGlobalConverterWithAnObject_CustomConverter_(jsonCustomGetGlobalConverter);
+}
+
++ (id<AnObject_CustomConverter>)getJsonCustomSetGlobalConverter {
+  return AnObjectImpl_getJsonCustomSetGlobalConverter();
+}
+
++ (void)setJsonCustomSetGlobalConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)jsonCustomSetGlobalConverter {
+  AnObjectImpl_setJsonCustomSetGlobalConverterWithAnObject_CustomConverter_(jsonCustomSetGlobalConverter);
 }
 
 @end
@@ -414,4 +536,127 @@ void AnObjectImpl_initAttribsWithAnAttribArray_(AnObjectImpl *self, IOSObjectArr
   }
 }
 
+id<AnObject_CustomConverter> AnObjectImpl_getJsonCustomGetGlobalConverter() {
+  AnObjectImpl_initialize();
+  return AnObjectImpl_jsonCustomGetGlobalConverter_;
+}
+
+void AnObjectImpl_setJsonCustomGetGlobalConverterWithAnObject_CustomConverter_(id<AnObject_CustomConverter> jsonCustomGetGlobalConverter) {
+  AnObjectImpl_initialize();
+  AnObjectImpl_jsonCustomGetGlobalConverter_ = jsonCustomGetGlobalConverter;
+}
+
+id<AnObject_CustomConverter> AnObjectImpl_getJsonCustomSetGlobalConverter() {
+  AnObjectImpl_initialize();
+  return AnObjectImpl_jsonCustomSetGlobalConverter_;
+}
+
+void AnObjectImpl_setJsonCustomSetGlobalConverterWithAnObject_CustomConverter_(id<AnObject_CustomConverter> jsonCustomSetGlobalConverter) {
+  AnObjectImpl_initialize();
+  AnObjectImpl_jsonCustomSetGlobalConverter_ = jsonCustomSetGlobalConverter;
+}
+
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnObjectImpl)
+
+@implementation AnObjectImpl_JsonSimpleGetConverter
+
+- (id)convertWithAnAttrib:(id<AnAttrib>)attrib
+                   withId:(id)value {
+  if (value != nil && [value isKindOfClass:[JavaUtilDate class]]) {
+    JavaUtilDate *d = (JavaUtilDate *) check_class_cast(value, [JavaUtilDate class]);
+    return new_JavaLangLong_initWithLong_([d getTime]);
+  }
+  return value;
+}
+
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  AnObjectImpl_JsonSimpleGetConverter_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
+
+@end
+
+void AnObjectImpl_JsonSimpleGetConverter_init(AnObjectImpl_JsonSimpleGetConverter *self) {
+  (void) NSObject_init(self);
+}
+
+AnObjectImpl_JsonSimpleGetConverter *new_AnObjectImpl_JsonSimpleGetConverter_init() {
+  AnObjectImpl_JsonSimpleGetConverter *self = [AnObjectImpl_JsonSimpleGetConverter alloc];
+  AnObjectImpl_JsonSimpleGetConverter_init(self);
+  return self;
+}
+
+J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnObjectImpl_JsonSimpleGetConverter)
+
+@implementation AnObjectImpl_JsonSimpleSetConverter
+
+- (id)convertWithAnAttrib:(id<AnAttrib>)attrib
+                   withId:(id)value {
+  if (value == nil) {
+    return nil;
+  }
+  IOSClass *objClass = [nil_chk(value) getClass];
+  JavaLangReflectMethod *m = [((id<AnAttrib>) nil_chk(attrib)) getSetter];
+  NSString *attribName = [attrib getAttribName];
+  IOSObjectArray *paramTypes = [((JavaLangReflectMethod *) nil_chk(m)) getParameterTypes];
+  IOSClass *p = IOSObjectArray_Get(nil_chk(paramTypes), 0);
+  if ([((IOSClass *) nil_chk(p)) isEqual:objClass]) {
+    return value;
+  }
+  IOSObjectArray *cs = [p getConstructors];
+  {
+    IOSObjectArray *a__ = cs;
+    JavaLangReflectConstructor * const *b__ = ((IOSObjectArray *) nil_chk(a__))->buffer_;
+    JavaLangReflectConstructor * const *e__ = b__ + a__->size_;
+    while (b__ < e__) {
+      JavaLangReflectConstructor *c = *b__++;
+      IOSObjectArray *cParamTypes = [((JavaLangReflectConstructor *) nil_chk(c)) getParameterTypes];
+      if (((IOSObjectArray *) nil_chk(cParamTypes))->size_ != 1) {
+        continue;
+      }
+      @try {
+        if ([((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) isEqual:objClass]) {
+          id newObject = [c newInstanceWithNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ value } count:1 type:NSObject_class_()]];
+          return newObject;
+        }
+        else if ([((NSString *) nil_chk([objClass getSimpleName])) equalsIgnoreCase:[((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) getSimpleName]]) {
+          id newObject = [c newInstanceWithNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ value } count:1 type:NSObject_class_()]];
+          return newObject;
+        }
+        else if ([((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) isEqual:NSString_class_()]) {
+          id newObject = [c newInstanceWithNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ [value description] } count:1 type:NSObject_class_()]];
+          return newObject;
+        }
+      }
+      @catch (JavaLangThrowable *t) {
+        [((id<JavaUtilList>) nil_chk(conversionWarnings_)) addWithId:JreStrcat("$$$$$$$$", @"Error setting: ", attribName, @" from: ", [objClass getName], @" constr. param: ", [((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) getName], @" simple name: ", [((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) getSimpleName])];
+      }
+    }
+  }
+  [((id<JavaUtilList>) nil_chk(conversionWarnings_)) addWithId:JreStrcat("$$$$", @"*** Final. Could not set: ", attribName, @" from: ", [objClass getName])];
+  return nil;
+}
+
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  AnObjectImpl_JsonSimpleSetConverter_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
+
+@end
+
+void AnObjectImpl_JsonSimpleSetConverter_init(AnObjectImpl_JsonSimpleSetConverter *self) {
+  (void) NSObject_init(self);
+  self->conversionWarnings_ = new_JavaUtilLinkedList_init();
+}
+
+AnObjectImpl_JsonSimpleSetConverter *new_AnObjectImpl_JsonSimpleSetConverter_init() {
+  AnObjectImpl_JsonSimpleSetConverter *self = [AnObjectImpl_JsonSimpleSetConverter alloc];
+  AnObjectImpl_JsonSimpleSetConverter_init(self);
+  return self;
+}
+
+J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnObjectImpl_JsonSimpleSetConverter)

@@ -20,22 +20,33 @@ public class AnAttribImpl implements AnAttrib {
     private String dbColumnDefinition;
     private String jsonName;
 
-    private List<String> conversionMessages = new LinkedList<String>();
-    
+    @Deprecated
     public static final String NONAME_CONVERSION_KEY = "nonameConverter";
-    
-    public String defaultConverterKey = NONAME_CONVERSION_KEY;
-    public String defaultGetConverterKey = NONAME_CONVERSION_KEY;
-    
-    private Map<String, CustomConverter> converterMap = new HashMap<String, CustomConverter>();   
-    private Map<String, CustomConverter> getConverterMap = new HashMap<String, CustomConverter>();
-    /**
-     
 
-      @parameter attribName
-      @parameter columnName
-      @parameter jsonName
-    */
+    /**
+     * TODO
+     * private CustomConverter customSetConverter;
+     * private CustomConverter customGetConverter;
+     */
+
+    @Deprecated
+    public String defaultConverterKey = NONAME_CONVERSION_KEY;
+
+    @Deprecated
+    public String defaultGetConverterKey = NONAME_CONVERSION_KEY;
+
+    @Deprecated
+    private Map<String, CustomConverter> converterMap = new HashMap<String, CustomConverter>();
+
+    @Deprecated
+    private Map<String, CustomConverter> getConverterMap = new HashMap<String, CustomConverter>();
+
+    /**
+     *
+     * @parameter attribName
+     * @parameter columnName
+     * @parameter jsonName
+     */
     public AnAttribImpl(String attribName, String columnName, String jsonName) {
         this(attribName);
         this.columnName = columnName;
@@ -145,92 +156,23 @@ public class AnAttribImpl implements AnAttrib {
     public void setValue(Object value) throws Exception {
         Method m = getSetter();
         if(m != null) {
-                Object convertedValue = null;
-               /**
-                * See if custom converter is supplied
-                */
-                CustomConverter cc = getCustomSetConverter();
-                if (cc != null) {
-                    convertedValue = cc.convert(value);
-                } else {
-                    convertedValue = matchSetMethodParameterType(m, value);
-                }
-                // System.out.println("before setting " + attribName + " curr value: " + getValue() + " to " + value);
-                m.invoke(parentAnObject.getNativeObject(), convertedValue);
-                // System.out.println("after setting " + attribName + " curr value: " + getValue());
+            Object convertedValue = null;
+           /**
+            * See if custom converter is supplied
+            */
+            CustomConverter cc = getCustomSetConverter();
+            if (cc != null) {
+                convertedValue = cc.convert(value);
+            } else {
+                convertedValue = value;
+            }
+            // System.out.println("before setting " + attribName + " curr value: " + getValue() + " to " + value);
+            m.invoke(parentAnObject.getNativeObject(), convertedValue);
+            // System.out.println("after setting " + attribName + " curr value: " + getValue());
         }
     }
     
-    /**
-     * (Auto) converts from source obj type to target if different.
-     *
-     * For example, sometimes json representation is different from object's expected
-     * representation, like a Date could be represented by long (milli) seconds. 
-     *
-     *
-     */
-     // TODO - move into AnObject. At that level *GetMethod* can be implemented as well
-    private Object matchSetMethodParameterType(Method m, Object obj) throws Exception {
-        if (obj != null) {
-            Class<?>[] paramTypes = m.getParameterTypes();
-            Class<?> p = paramTypes[0];
-            Class<?> objClass = obj.getClass();
-            if (!p.equals(objClass)) {
-                /**
-                * if not equivalent, try to autoconvert
-                */
-                Constructor<?>[] cs = p.getConstructors();
-//                System.out.println("Try to set " + attribName + ", " + cs.length + " possible constructors");
-                for (Constructor<?> c : cs) {
-                  Class<?>[] cParamTypes = c.getParameterTypes();
-//                    System.out.println(c.getName() + "Try to set " + attribName + ", constr. params " + cParamTypes.length);
-                    if (cParamTypes.length == 1) {
-                      try {
-//                          System.out.println("Try to set " + attribName + ", constr. param " + cParamTypes[0].getName() + " simple name" + cParamTypes[0].getSimpleName());
-                           /*
-                            * Work through single parameter constructors
-                            */
-                          if (cParamTypes[0].equals(objClass)) {
-                            /*
-                             * There's a constructor with source obj class as an input.
-                             */
-                              Object newObject = c.newInstance(obj);
-                              return newObject;
-                          } else if (objClass.getSimpleName().equalsIgnoreCase(cParamTypes[0].getSimpleName())) {
-                            /*
-                             * Try to instantiate through "similar" constructor
-                             * Example - source - Long (millisec)
-                             * target - Date
-                             * // java
-                             * Date d = new Date(Long.longValue());
-                             * iOS - JavaUtilDate will be used
-                             */
-                              Object newObject = c.newInstance(obj);
-                              return newObject;
-                          } else if (cParamTypes[0].equals(String.class)) {
-                            /*
-                             * Through string constructor...
-                             * Integer source;
-                             * Long target = new Long(source.toString());
-                             */
-                              Object newObject = c.newInstance(obj.toString());
-                              return newObject;
-                          }
-                      } catch (Throwable t) {
-                          conversionMessages.add("Error setting " + attribName + " from: " + objClass.getName() +
-                                  "Constr. param " + cParamTypes[0].getName() + 
-                                  " simple name" + cParamTypes[0].getSimpleName());
-                      }
-                  }
-                }
-                conversionMessages.add("*** Final. Could not set " + attribName + " from: " + objClass.getName());
-                return null;
-            }
-        }
-        return obj;
-    }
-
-    @Override
+     @Override
     public Object getValue() throws Exception {
         Object value = null;
         Method m = getGetter();

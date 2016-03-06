@@ -73,8 +73,8 @@ J2OBJC_IGNORE_DESIGNATED_END
       if (![self isSkipAttrWithNSString:attribName]) {
         id columnValue = [rs getObjectWithInt:columnIndex++];
         if (columnValue != nil) {
-          id<AnAttrib> ap = [self getAttribWithNSString:attribName];
-          [((id<AnAttrib>) nil_chk(ap)) setValueWithId:columnValue];
+          id<AnAttrib> attrib = [self getAttribWithNSString:attribName];
+          [self setValueWithAnObject_CustomConverter:AnObjectImpl_getJsonCustomSetGlobalConverter() withAnObject_CustomConverter:sqlCustomSetConverter_ withAnAttrib:attrib withId:columnValue];
         }
       }
     }

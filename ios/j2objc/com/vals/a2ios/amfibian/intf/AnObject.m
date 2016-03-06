@@ -11,6 +11,9 @@
 #include "java/lang/Exception.h"
 #include "java/util/Collection.h"
 #include "java/util/Map.h"
+#include "org/json/JSONArray.h"
 #include "org/json/JSONObject.h"
 
 J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(AnObject)
+
+J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(AnObject_CustomConverter)

@@ -139,6 +139,11 @@ public interface AnAttrib {
      * );
      */
     void setDbColumnDefinition(String dbColumnDefinition);
+
+    /**
+     *
+     * @return
+     */
     String getDbColumnDefinition();
 
     /**
@@ -152,6 +157,7 @@ public interface AnAttrib {
      * @param key
      * @param converter
      */
+    @Deprecated
     void setCustomSetConverter(String key, CustomConverter converter);
 
     /**
@@ -159,6 +165,7 @@ public interface AnAttrib {
      * @param key
      * @return
      */
+    @Deprecated
     CustomConverter getCustomSetConverter(String key);
 
     /**
@@ -170,12 +177,14 @@ public interface AnAttrib {
     /**
      *
      */
+    @Deprecated
     void clearCustomSetConverters();
 
     /**
      *
      * @param key
      */
+    @Deprecated
     void setDefaultSetConversionKey(String key);
 
     /**
@@ -189,6 +198,7 @@ public interface AnAttrib {
      * @param key
      * @param converter
      */
+    @Deprecated
     void setCustomGetConverter(String key, CustomConverter converter);
 
     /**
@@ -196,6 +206,7 @@ public interface AnAttrib {
      * @param key
      * @return
      */
+    @Deprecated
     CustomConverter getCustomGetConverter(String key);
 
     /**
@@ -207,12 +218,14 @@ public interface AnAttrib {
     /**
      *
      */
+    @Deprecated
     void clearCustomGetConverters();
 
     /**
      *
      * @param key
      */
+    @Deprecated
     void setDefaultGetConversionKey(String key);
 
 }

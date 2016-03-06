@@ -317,6 +317,15 @@ public class Demo extends DemoBase {
                 Entity.class,
                 /* attribute names/definitions */
                 new String[]{"id"});
+
+            /**
+             * Simple, initial built in converters between JSON and Native
+             * formats. YMMV, so you may want to implement yours once you get
+             * deep into your project's implementation.
+             */
+            AnObjectImpl.setJsonCustomSetGlobalConverter(new AnObjectImpl.JsonSimpleSetConverter());
+            AnObjectImpl.setJsonCustomGetGlobalConverter(new AnObjectImpl.JsonSimpleGetConverter());
+
             /**
              * An Appointment object extends the Entity and has appointment name property as
              * well as isProcessed property that is represented by is_processed database

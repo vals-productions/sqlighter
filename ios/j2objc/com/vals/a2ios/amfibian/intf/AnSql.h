@@ -48,6 +48,14 @@
 
 - (id<AnSql>)startSqlCreate;
 
+- (id<AnObject_CustomConverter>)getSqlCustomSetConverter;
+
+- (void)setSqlCustomSetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomSetConverter;
+
+- (id<AnObject_CustomConverter>)getSqlCustomGetConverter;
+
+- (void)setSqlCustomGetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomGetConverter;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(AnSql)

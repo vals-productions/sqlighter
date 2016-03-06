@@ -66,6 +66,9 @@ __attribute__((unused)) static NSString *AnSqlImpl_getAlias(AnSqlImpl *self);
 
 __attribute__((unused)) static NSString *AnSqlImpl_ensureFirstConditionWithNSString_(AnSqlImpl *self, NSString *condition);
 
+id<AnObject_CustomConverter> AnSqlImpl_sqlCustomSetGlobalConverter_;
+id<AnObject_CustomConverter> AnSqlImpl_sqlCustomGetGlobalConverter_;
+
 @implementation AnSqlImpl
 
 - (instancetype)initWithNSString:(NSString *)tableName
@@ -180,18 +183,18 @@ J2OBJC_IGNORE_DESIGNATED_END
   for (NSString * __strong attrName in nil_chk(attrNames)) {
     if (![self isSkipAttrWithNSString:attrName]) {
       id<AnAttrib> attr = [om getWithId:attrName];
-      id value = [((id<AnAttrib>) nil_chk(attr)) getValue];
+      id value = [self getValueWithAnObject_CustomConverter:AnSqlImpl_getSqlCustomGetGlobalConverter() withAnObject_CustomConverter:sqlCustomGetConverter_ withAnAttrib:attr];
       if (value != nil) {
         (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:[self getColumnNameWithAnAttrib:attr]];
         [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:value];
-        (void) [insertParamClause_ appendWithNSString:@"?"];
+        (void) [insertParamClause_ appendWithNSString:@"? "];
       }
       else {
         (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:[self getColumnNameWithAnAttrib:attr]];
-        (void) [insertParamClause_ appendWithNSString:@"NULL"];
+        (void) [insertParamClause_ appendWithNSString:@"NULL "];
       }
       [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
-      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:','];
+      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:@","];
       (void) [insertParamClause_ appendWithNSString:@","];
     }
   }
@@ -210,14 +213,14 @@ J2OBJC_IGNORE_DESIGNATED_END
     if (![self isSkipAttrWithNSString:attrName]) {
       id<AnAttrib> attrib = [om getWithId:attrName];
       if (attrib != nil) {
-        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [self getColumnNameWithAnAttrib:attrib], @" = ?")];
-        [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:[attrib getValue]];
+        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [self getColumnNameWithAnAttrib:attrib], @" = ? ")];
+        [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:[self getValueWithAnObject_CustomConverter:AnSqlImpl_getSqlCustomGetGlobalConverter() withAnObject_CustomConverter:sqlCustomGetConverter_ withAnAttrib:attrib]];
       }
       else {
-        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [self getColumnNameWithAnAttrib:attrib], @" = NULL")];
+        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [self getColumnNameWithAnAttrib:attrib], @" = NULL ")];
       }
       [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
-      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:','];
+      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:@","];
     }
   }
   (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
@@ -239,7 +242,7 @@ J2OBJC_IGNORE_DESIGNATED_END
     (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:colName];
     NSString *columnDef = [self getSqlColumnDefinitionWithAnAttrib:attr];
     (void) [queryStr_ appendWithNSString:JreStrcat("C$", ' ', columnDef)];
-    (void) [queryStr_ appendWithChar:','];
+    (void) [queryStr_ appendWithNSString:@","];
   }
   (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
   columnClause_ = [queryStr_ description];
@@ -398,6 +401,38 @@ J2OBJC_IGNORE_DESIGNATED_END
   return nil;
 }
 
+- (id<AnObject_CustomConverter>)getSqlCustomSetConverter {
+  return sqlCustomSetConverter_;
+}
+
+- (void)setSqlCustomSetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomSetConverter {
+  self->sqlCustomSetConverter_ = sqlCustomSetConverter;
+}
+
+- (id<AnObject_CustomConverter>)getSqlCustomGetConverter {
+  return sqlCustomGetConverter_;
+}
+
+- (void)setSqlCustomGetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomGetConverter {
+  self->sqlCustomGetConverter_ = sqlCustomGetConverter;
+}
+
++ (id<AnObject_CustomConverter>)getSqlCustomSetGlobalConverter {
+  return AnSqlImpl_getSqlCustomSetGlobalConverter();
+}
+
++ (void)setSqlCustomSetGlobalConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomSetGlobalConverter {
+  AnSqlImpl_setSqlCustomSetGlobalConverterWithAnObject_CustomConverter_(sqlCustomSetGlobalConverter);
+}
+
++ (id<AnObject_CustomConverter>)getSqlCustomGetGlobalConverter {
+  return AnSqlImpl_getSqlCustomGetGlobalConverter();
+}
+
++ (void)setSqlCustomGetGlobalConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomGetGlobalConverter {
+  AnSqlImpl_setSqlCustomGetGlobalConverterWithAnObject_CustomConverter_(sqlCustomGetGlobalConverter);
+}
+
 @end
 
 void AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnObject_(AnSqlImpl *self, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject) {
@@ -494,6 +529,26 @@ NSString *AnSqlImpl_ensureFirstConditionWithNSString_(AnSqlImpl *self, NSString 
     self->whereClause_ = new_JavaLangStringBuilder_init();
   }
   return condition;
+}
+
+id<AnObject_CustomConverter> AnSqlImpl_getSqlCustomSetGlobalConverter() {
+  AnSqlImpl_initialize();
+  return AnSqlImpl_sqlCustomSetGlobalConverter_;
+}
+
+void AnSqlImpl_setSqlCustomSetGlobalConverterWithAnObject_CustomConverter_(id<AnObject_CustomConverter> sqlCustomSetGlobalConverter) {
+  AnSqlImpl_initialize();
+  AnSqlImpl_sqlCustomSetGlobalConverter_ = sqlCustomSetGlobalConverter;
+}
+
+id<AnObject_CustomConverter> AnSqlImpl_getSqlCustomGetGlobalConverter() {
+  AnSqlImpl_initialize();
+  return AnSqlImpl_sqlCustomGetGlobalConverter_;
+}
+
+void AnSqlImpl_setSqlCustomGetGlobalConverterWithAnObject_CustomConverter_(id<AnObject_CustomConverter> sqlCustomGetGlobalConverter) {
+  AnSqlImpl_initialize();
+  AnSqlImpl_sqlCustomGetGlobalConverter_ = sqlCustomGetGlobalConverter;
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnSqlImpl)

@@ -15,6 +15,7 @@ import java.util.Collection;
  */
 
 public interface AnOrm<T> extends AnSql<T> {
+
     /**
      * Executes SQL select query and returns results.
      *

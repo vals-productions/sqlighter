@@ -36,6 +36,7 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
         return getRecords(null);
     }
 
+
     @Override
     public Collection<T> getRecords(Collection<T> collectionToUse) throws Exception {
         String queryStr = this.getQueryString();
@@ -52,8 +53,8 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
                 if(!isSkipAttr(attribName)) {
                     Object columnValue = rs.getObject(columnIndex++);
                     if (columnValue != null) {
-                        AnAttrib ap = getAttrib(attribName);
-                        ap.setValue(columnValue);
+                        AnAttrib attrib = getAttrib(attribName);
+                        setValue(AnSqlImpl.getJsonCustomSetGlobalConverter(), sqlCustomSetConverter, attrib, columnValue);
                     }
                 }
             }

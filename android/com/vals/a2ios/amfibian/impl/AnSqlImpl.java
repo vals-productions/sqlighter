@@ -37,6 +37,12 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     private String columnClause;
     private String alias = "";
 
+    protected CustomConverter sqlCustomSetConverter;
+    protected CustomConverter sqlCustomGetConverter;
+
+    protected static CustomConverter sqlCustomSetGlobalConverter;
+    protected static CustomConverter sqlCustomGetGlobalConverter;
+
     public AnSqlImpl(String tableName, Class<T> anObjClass, AnAttrib[] attribList, AnObject<?> parentAnObject) {
         super(anObjClass, attribList, parentAnObject);
         this.tableName = tableName;
@@ -48,12 +54,12 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     }
 
     public AnSqlImpl(String tableName, AnObject<T> anAllDefinedObject) throws Exception {
-        if(anAllDefinedObject.getNativeObject() == null) {
+        if (anAllDefinedObject.getNativeObject() == null) {
             anAllDefinedObject.resetNativeObject();
         }
         init(anAllDefinedObject.getNativeClass(),
-             anAllDefinedObject.getOwnAttribs(),
-             anAllDefinedObject.getParentAnObject());
+                anAllDefinedObject.getOwnAttribs(),
+                anAllDefinedObject.getParentAnObject());
         this.tableName = tableName;
     }
 
@@ -67,14 +73,14 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         skipAttrNameList.clear();
         inclAttrNameList.clear();
     }
-    
+
     @Override
     public void addInclAttribs(String[] names) {
         List<String> nms = Arrays.asList(names);
         inclAttrNameList.addAll(nms);
         skipAttrNameList.clear();
     }
-    
+
     @Override
     public void addSkipAttribs(String[] names) {
         List<String> nms = Arrays.asList(names);
@@ -83,15 +89,17 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
 
     @Override
     public String getTableName() {
-		return tableName;
-	}
-	@Override
-    public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
-	protected AnSqlImpl() {
+        return tableName;
     }
-    
+
+    @Override
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    protected AnSqlImpl() {
+    }
+
     @Override
     public List<Object> getParameters() {
         return parameters;
@@ -108,13 +116,13 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     public void setType(int type) {
         this.type = type;
     }
-    
+
     private void reset() {
-       queryStr = new StringBuilder();
-       isWhere = false;
-       whereClause = null;
-       parameters.clear();
-       attribNameList.clear();
+        queryStr = new StringBuilder();
+        isWhere = false;
+        whereClause = null;
+        parameters.clear();
+        attribNameList.clear();
     }
 
     protected boolean isSkipAttr(String propertyName) {
@@ -139,7 +147,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         reset();
         type = TYPE_DELETE;
     }
-    
+
     @Override
     public void startSqlInsert(T objectToInsert) throws Exception {
         reset();
@@ -148,22 +156,22 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         insertParamClause = new StringBuilder();
         Map<String, AnAttrib> om = getAllAttribMap();
         Set<String> attrNames = om.keySet();
-        for (String attrName: attrNames) {
+        for (String attrName : attrNames) {
             if (!isSkipAttr(attrName)) {
                 AnAttrib attr = om.get(attrName);
-                Object value = attr.getValue();
+                Object value = getValue(AnSqlImpl.getSqlCustomGetGlobalConverter(), sqlCustomGetConverter, attr);
                 if (value != null) {
                     queryStr.append(getColumnName(attr));
                     parameters.add(value);
-                    insertParamClause.append("?");
+                    insertParamClause.append("? ");
                 } else {
                     queryStr.append(getColumnName(attr));
-                    insertParamClause.append("NULL");
+                    insertParamClause.append("NULL ");
                 }
                 attribNameList.add(attrName);
-                queryStr.append(',');
+                queryStr.append(",");
                 insertParamClause.append(",");
-        }
+            }
         }
         queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
         insertParamClause.replace(insertParamClause.length() - 1, insertParamClause.length(), " ");
@@ -177,17 +185,17 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         type = TYPE_UPDATE;
         Map<String, AnAttrib> om = getAllAttribMap();
         Set<String> attrNames = om.keySet();
-        for (String attrName: attrNames) {
+        for (String attrName : attrNames) {
             if (!isSkipAttr(attrName)) {
                 AnAttrib attrib = om.get(attrName);
                 if (attrib != null) {
-                    queryStr.append(getColumnName(attrib) + " = ?");
-                    parameters.add(attrib.getValue());
+                    queryStr.append(getColumnName(attrib) + " = ? ");
+                    parameters.add(getValue(AnSqlImpl.getSqlCustomGetGlobalConverter(), sqlCustomGetConverter, attrib));
                 } else {
-                    queryStr.append(getColumnName(attrib) + " = NULL");
+                    queryStr.append(getColumnName(attrib) + " = NULL ");
                 }
                 attribNameList.add(attrName);
-                queryStr.append(',');
+                queryStr.append(",");
             }
         }
         queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
@@ -195,7 +203,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     }
 
     public String getColumnName(AnAttrib attrib) {
-    	return attrib.getColumnOrAttribName();
+        return attrib.getColumnOrAttribName();
     }
 
     @Override
@@ -203,48 +211,48 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         reset();
         type = TYPE_CREATE;
         Map<String, AnAttrib> cm =
-        getAllAttribMap();
+                getAllAttribMap();
         Set<String> attribNames = cm.keySet();
-        for (String attribName: attribNames) {
-                AnAttrib attr = cm.get(attribName);
-                String colName = getColumnName(attr);
-                queryStr.append(colName);
-                String columnDef = getSqlColumnDefinition(attr);
-                queryStr.append(" " + columnDef);
-                queryStr.append(',');
+        for (String attribName : attribNames) {
+            AnAttrib attr = cm.get(attribName);
+            String colName = getColumnName(attr);
+            queryStr.append(colName);
+            String columnDef = getSqlColumnDefinition(attr);
+            queryStr.append(" " + columnDef);
+            queryStr.append(",");
         }
         queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
         columnClause = queryStr.toString();
         return this;
     }
-    
+
     protected String getSqlColumnDefinition(AnAttrib attr /*Class<?> columnJavaClass*/) {
         String sqlColumnInfo = attr.getDbColumnDefinition();
-        if(sqlColumnInfo != null) {
-           return sqlColumnInfo;
+        if (sqlColumnInfo != null) {
+            return sqlColumnInfo;
         }
         Class<?> columnJavaClass = attr.getAttribClass();
         if (columnJavaClass != null) {
             String className = columnJavaClass.getCanonicalName();
             if (Long.class.getCanonicalName().equals(className)) {
-                    return "INTEGER";
-            } else if(Integer.class.getCanonicalName().equals(className)) {
-                    return "INTEGER";
-            } else if(Short.class.getCanonicalName().equals(className)) {
-                    return "INTEGER";
-            } else if(Float.class.getCanonicalName().equals(className)) {
-                    return "REAL";
-            } else if(Double.class.getCanonicalName().equals(className)) {
-                    return "REAL";
-            } else if(String.class.getCanonicalName().equals(className)) {
-                    return "TEXT";
-            } else if(Date.class.getCanonicalName().equals(className)) {
-                    return "TEXT";
+                return "INTEGER";
+            } else if (Integer.class.getCanonicalName().equals(className)) {
+                return "INTEGER";
+            } else if (Short.class.getCanonicalName().equals(className)) {
+                return "INTEGER";
+            } else if (Float.class.getCanonicalName().equals(className)) {
+                return "REAL";
+            } else if (Double.class.getCanonicalName().equals(className)) {
+                return "REAL";
+            } else if (String.class.getCanonicalName().equals(className)) {
+                return "TEXT";
+            } else if (Date.class.getCanonicalName().equals(className)) {
+                return "TEXT";
             }
-                // "BLOB" is heavy datatype and can abuse memory/CPU
-                // in conjunction with ORM. Consider retrieving
-                // BLOB values using SQLighterDb on as needed
-                // basis.
+            // "BLOB" is heavy datatype and can abuse memory/CPU
+            // in conjunction with ORM. Consider retrieving
+            // BLOB values using SQLighterDb directly on as needed
+            // basis.
         }
         return "TEXT";
     }
@@ -264,7 +272,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         alias = tableName + "0";
         Map<String, AnAttrib> cm = getAllAttribMap();
         Set<String> propertyNames = cm.keySet();
-        for (String pName: propertyNames) {
+        for (String pName : propertyNames) {
             if (!isSkipAttr(pName)) {
                 String colName = getColumnName(cm.get(pName));
                 queryStr.append(alias);
@@ -320,7 +328,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
 
     @Override
     public String getQueryString() {
-        if(type == TYPE_CREATE) {
+        if (type == TYPE_CREATE) {
             StringBuilder sb = new StringBuilder();
             sb.append("create table ");
             sb.append(tableName);
@@ -337,7 +345,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
             if (isWhere) {
                 sb.append(" where ");
             }
-            if(whereClause != null) {
+            if (whereClause != null) {
                 sb.append(whereClause);
             }
             String qString = sb.toString();
@@ -377,4 +385,39 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         return null;
     }
 
+    @Override
+    public CustomConverter getSqlCustomSetConverter() {
+        return sqlCustomSetConverter;
+    }
+
+    @Override
+    public void setSqlCustomSetConverter(CustomConverter sqlCustomSetConverter) {
+        this.sqlCustomSetConverter = sqlCustomSetConverter;
+    }
+
+    @Override
+    public CustomConverter getSqlCustomGetConverter() {
+        return sqlCustomGetConverter;
+    }
+
+    @Override
+    public void setSqlCustomGetConverter(CustomConverter sqlCustomGetConverter) {
+        this.sqlCustomGetConverter = sqlCustomGetConverter;
+    }
+
+    public static CustomConverter getSqlCustomSetGlobalConverter() {
+        return AnSqlImpl.sqlCustomSetGlobalConverter;
+    }
+
+    public static void setSqlCustomSetGlobalConverter(CustomConverter sqlCustomSetGlobalConverter) {
+        AnSqlImpl.sqlCustomSetGlobalConverter = sqlCustomSetGlobalConverter;
+    }
+
+    public static CustomConverter getSqlCustomGetGlobalConverter() {
+        return AnSqlImpl.sqlCustomGetGlobalConverter;
+    }
+
+    public static void setSqlCustomGetGlobalConverter(CustomConverter sqlCustomGetGlobalConverter) {
+        AnSqlImpl.sqlCustomGetGlobalConverter = sqlCustomGetGlobalConverter;
+    }
 }

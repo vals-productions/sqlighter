@@ -10,12 +10,8 @@
 #include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "java/lang/Exception.h"
-#include "java/lang/Throwable.h"
-#include "java/lang/reflect/Constructor.h"
 #include "java/lang/reflect/Method.h"
 #include "java/util/HashMap.h"
-#include "java/util/LinkedList.h"
-#include "java/util/List.h"
 #include "java/util/Map.h"
 
 @interface AnAttribImpl () {
@@ -25,13 +21,9 @@
   NSString *columnName_;
   NSString *dbColumnDefinition_;
   NSString *jsonName_;
-  id<JavaUtilList> conversionMessages_;
   id<JavaUtilMap> converterMap_;
   id<JavaUtilMap> getConverterMap_;
 }
-
-- (id)matchSetMethodParameterTypeWithJavaLangReflectMethod:(JavaLangReflectMethod *)m
-                                                    withId:(id)obj;
 
 @end
 
@@ -40,11 +32,8 @@ J2OBJC_FIELD_SETTER(AnAttribImpl, attribName_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, columnName_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, dbColumnDefinition_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, jsonName_, NSString *)
-J2OBJC_FIELD_SETTER(AnAttribImpl, conversionMessages_, id<JavaUtilList>)
 J2OBJC_FIELD_SETTER(AnAttribImpl, converterMap_, id<JavaUtilMap>)
 J2OBJC_FIELD_SETTER(AnAttribImpl, getConverterMap_, id<JavaUtilMap>)
-
-__attribute__((unused)) static id AnAttribImpl_matchSetMethodParameterTypeWithJavaLangReflectMethod_withId_(AnAttribImpl *self, JavaLangReflectMethod *m, id obj);
 
 NSString *AnAttribImpl_NONAME_CONVERSION_KEY_ = @"nonameConverter";
 
@@ -149,15 +138,10 @@ NSString *AnAttribImpl_NONAME_CONVERSION_KEY_ = @"nonameConverter";
       convertedValue = [cc convertWithId:value];
     }
     else {
-      convertedValue = AnAttribImpl_matchSetMethodParameterTypeWithJavaLangReflectMethod_withId_(self, m, value);
+      convertedValue = value;
     }
     (void) [m invokeWithId:[((id<AnObject>) nil_chk(parentAnObject_)) getNativeObject] withNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ convertedValue } count:1 type:NSObject_class_()]];
   }
-}
-
-- (id)matchSetMethodParameterTypeWithJavaLangReflectMethod:(JavaLangReflectMethod *)m
-                                                    withId:(id)obj {
-  return AnAttribImpl_matchSetMethodParameterTypeWithJavaLangReflectMethod_withId_(self, m, obj);
 }
 
 - (id)getValue {
@@ -245,7 +229,6 @@ AnAttribImpl *new_AnAttribImpl_initWithNSString_withNSString_withNSString_(NSStr
 
 void AnAttribImpl_initWithNSString_(AnAttribImpl *self, NSString *attribColumnJsonName) {
   (void) NSObject_init(self);
-  self->conversionMessages_ = new_JavaUtilLinkedList_init();
   self->defaultConverterKey_ = AnAttribImpl_NONAME_CONVERSION_KEY_;
   self->defaultGetConverterKey_ = AnAttribImpl_NONAME_CONVERSION_KEY_;
   self->converterMap_ = new_JavaUtilHashMap_init();
@@ -269,48 +252,6 @@ AnAttribImpl *new_AnAttribImpl_initWithNSString_(NSString *attribColumnJsonName)
   AnAttribImpl *self = [AnAttribImpl alloc];
   AnAttribImpl_initWithNSString_(self, attribColumnJsonName);
   return self;
-}
-
-id AnAttribImpl_matchSetMethodParameterTypeWithJavaLangReflectMethod_withId_(AnAttribImpl *self, JavaLangReflectMethod *m, id obj) {
-  if (obj != nil) {
-    IOSObjectArray *paramTypes = [((JavaLangReflectMethod *) nil_chk(m)) getParameterTypes];
-    IOSClass *p = IOSObjectArray_Get(nil_chk(paramTypes), 0);
-    IOSClass *objClass = [obj getClass];
-    if (![((IOSClass *) nil_chk(p)) isEqual:objClass]) {
-      IOSObjectArray *cs = [p getConstructors];
-      {
-        IOSObjectArray *a__ = cs;
-        JavaLangReflectConstructor * const *b__ = ((IOSObjectArray *) nil_chk(a__))->buffer_;
-        JavaLangReflectConstructor * const *e__ = b__ + a__->size_;
-        while (b__ < e__) {
-          JavaLangReflectConstructor *c = *b__++;
-          IOSObjectArray *cParamTypes = [((JavaLangReflectConstructor *) nil_chk(c)) getParameterTypes];
-          if (((IOSObjectArray *) nil_chk(cParamTypes))->size_ == 1) {
-            @try {
-              if ([((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) isEqual:objClass]) {
-                id newObject = [c newInstanceWithNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ obj } count:1 type:NSObject_class_()]];
-                return newObject;
-              }
-              else if ([((NSString *) nil_chk([objClass getSimpleName])) equalsIgnoreCase:[((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) getSimpleName]]) {
-                id newObject = [c newInstanceWithNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ obj } count:1 type:NSObject_class_()]];
-                return newObject;
-              }
-              else if ([((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) isEqual:NSString_class_()]) {
-                id newObject = [c newInstanceWithNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ [obj description] } count:1 type:NSObject_class_()]];
-                return newObject;
-              }
-            }
-            @catch (JavaLangThrowable *t) {
-              [((id<JavaUtilList>) nil_chk(self->conversionMessages_)) addWithId:JreStrcat("$$$$$$$$", @"Error setting ", self->attribName_, @" from: ", [objClass getName], @"Constr. param ", [((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) getName], @" simple name", [((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) getSimpleName])];
-            }
-          }
-        }
-      }
-      [((id<JavaUtilList>) nil_chk(self->conversionMessages_)) addWithId:JreStrcat("$$$$", @"*** Final. Could not set ", self->attribName_, @" from: ", [objClass getName])];
-      return nil;
-    }
-  }
-  return obj;
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnAttribImpl)

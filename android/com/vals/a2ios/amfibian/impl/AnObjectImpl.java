@@ -2,7 +2,10 @@ package com.vals.a2ios.amfibian.impl;
 
 import com.vals.a2ios.amfibian.intf.AnObject;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -27,6 +30,12 @@ public class AnObjectImpl<T> implements AnObject<T> {
     private T nativeObject;
     protected Class<T> nativeClass;
     private Map<String, AnAttrib> attribMap = new LinkedHashMap<String, AnAttrib>();
+
+    private CustomConverter jsonCustomGetConverter;
+    private CustomConverter jsonCustomSetConverter;
+
+    private static CustomConverter jsonCustomGetGlobalConverter;
+    private static CustomConverter jsonCustomSetGlobalConverter;
 
     public AnObjectImpl() {
     }
@@ -58,6 +67,12 @@ public class AnObjectImpl<T> implements AnObject<T> {
     @Override
     public void resetNativeObject() throws Exception {
         setNativeObject(nativeClass.newInstance());
+        if(jsonMap != null) {
+            jsonMap.clear();
+        }
+        if(nativeObjectMap != null) {
+            nativeObjectMap.clear();
+        }
     }
 
 	@SuppressWarnings("unchecked")
@@ -184,21 +199,24 @@ public class AnObjectImpl<T> implements AnObject<T> {
     }
 
     @Override
-    public Map<String, Object> getJsonMap() throws Exception {
+    public Map<String, Object> asJsonMap() throws Exception {
         if (jsonMap == null) {
         	jsonMap = new HashMap<String, Object>();
             Set<String> p = attribMap.keySet();
             for (String attrName : p) {
                 AnAttrib attr =  attribMap.get(attrName);
-                Object value = attr.getValue();
+                Object value = getValue(
+                        AnObjectImpl.getJsonCustomGetGlobalConverter(),
+                        jsonCustomGetConverter,
+                        attr);
                 if (value != null) {
-                	jsonMap.put(attr.getJsonOrAttribName(), attr.getValue());
+                	jsonMap.put(attr.getJsonOrAttribName(), value);
                 }
             }
         }
         if (parentAnObject != null) {
             @SuppressWarnings("unchecked")
-			Map<String, Object> parentJsonMap = parentAnObject.getJsonMap();
+			Map<String, Object> parentJsonMap = parentAnObject.asJsonMap();
             Set<String> keys = parentJsonMap.keySet();
             for (String k: keys) {
             	jsonMap.put(k, parentJsonMap.get(k));
@@ -206,10 +224,14 @@ public class AnObjectImpl<T> implements AnObject<T> {
         }
         return jsonMap;
     }
-    
-    //TODO rename to asNativeMap 
+
     @Override
-    public synchronized Map<String, Object> asMap(T nativeObject) throws Exception {
+    public synchronized Map<String, Object> getMap(T nativeObject) throws Exception {
+        return asNativeMap(nativeObject);
+    }
+
+    @Override
+    public synchronized Map<String, Object> asNativeMap(T nativeObject) throws Exception {
         setNativeObject(nativeObject);
         if (nativeObjectMap == null) {
             nativeObjectMap = new HashMap<String, Object>();
@@ -224,7 +246,7 @@ public class AnObjectImpl<T> implements AnObject<T> {
         }
         if (parentAnObject != null) {
             @SuppressWarnings("unchecked")
-			Map<String, Object> parentMap = parentAnObject.asMap(nativeObject);
+			Map<String, Object> parentMap = parentAnObject.asNativeMap(nativeObject);
             Set<String> keys = parentMap.keySet();
             for (String k: keys) {
                 nativeObjectMap.put(k, parentMap.get(k));
@@ -236,8 +258,8 @@ public class AnObjectImpl<T> implements AnObject<T> {
     @Override
     public synchronized JSONObject asJSONObject(T nativeObject) throws Exception {
         setNativeObject(nativeObject);
-        asMap(nativeObject);
-        return new JSONObject(getJsonMap());
+        getMap(nativeObject);
+        return new JSONObject(asJsonMap());
     }
 
     @Override
@@ -254,11 +276,25 @@ public class AnObjectImpl<T> implements AnObject<T> {
             if(!jsonObject.isNull(attr.getJsonOrAttribName())) {
                 Object attrValue = jsonObject.get(attr.getJsonOrAttribName());
                 if (attrValue != null) {
-                    attr.setValue(attrValue);
+                    setValue(AnObjectImpl.getJsonCustomSetGlobalConverter(), jsonCustomSetConverter, attr, attrValue);
                 }
             }
         }
         return nativeObject;
+    }
+
+    protected void setValue(CustomConverter globalConverter,
+            CustomConverter converter, AnAttrib attrib, Object value) throws Exception {
+        if(attrib.getCustomSetConverter() == null) {
+            if(converter != null) {
+                attrib.setValue(converter.convert(attrib, value));
+                return;
+            } else if(globalConverter != null) {
+                attrib.setValue(globalConverter.convert(attrib, value));
+                return;
+            }
+        }
+        attrib.setValue(value);
     }
 
     @Override
@@ -283,5 +319,179 @@ public class AnObjectImpl<T> implements AnObject<T> {
     @Override
     public synchronized String asJsonString(T nativeObject) throws Exception {
         return asJSONObject(nativeObject).toString();
+    }
+
+    @Override
+    public synchronized JSONArray asJSONArray(Collection<T> objects) throws Exception {
+        JSONArray ja = new JSONArray();
+        int idx = 0;
+        if(objects != null) {
+            for (T obj : objects) {
+                JSONObject jo = asJSONObject(obj);
+                ja.put(idx++, jo);
+            }
+        }
+        return ja;
+    }
+
+    @Override
+    public synchronized String asJsonArrayString(Collection<T> objects) throws Exception {
+        JSONArray ja = asJSONArray(objects);
+        return ja.toString();
+    }
+
+    protected Object getValue(
+            CustomConverter globalConverter,
+            CustomConverter converter,
+            AnAttrib attrb) throws Exception {
+        if(attrb.getCustomGetConverter() == null) {
+            if (converter != null) {
+                return converter.convert(attrb, attrb.getValue());
+            }
+            if (globalConverter != null) {
+                return globalConverter.convert(attrb, attrb.getValue());
+            }
+        }
+        return attrb.getValue();
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public CustomConverter getJsonCustomSetConverter() {
+        return jsonCustomSetConverter;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public void setJsonCustomSetConverter(CustomConverter jsonCustomSetConverter) {
+        this.jsonCustomSetConverter = jsonCustomSetConverter;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public CustomConverter getJsonCustomGetConverter() {
+        return jsonCustomGetConverter;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public void setJsonCustomGetConverter(CustomConverter jsonCustomGetConverter) {
+        this.jsonCustomGetConverter = jsonCustomGetConverter;
+    }
+
+    public static CustomConverter getJsonCustomGetGlobalConverter() {
+        return AnObjectImpl.jsonCustomGetGlobalConverter;
+    }
+
+    public static void setJsonCustomGetGlobalConverter(CustomConverter jsonCustomGetGlobalConverter) {
+        AnObjectImpl.jsonCustomGetGlobalConverter = jsonCustomGetGlobalConverter;
+    }
+
+    public static CustomConverter getJsonCustomSetGlobalConverter() {
+        return AnObjectImpl.jsonCustomSetGlobalConverter;
+    }
+
+    public static void setJsonCustomSetGlobalConverter(CustomConverter jsonCustomSetGlobalConverter) {
+        AnObjectImpl.jsonCustomSetGlobalConverter = jsonCustomSetGlobalConverter;
+    }
+
+    public static class JsonSimpleGetConverter implements CustomConverter {
+        @Override
+        public Object convert(AnAttrib attrib, Object value) {
+            if(value != null && value instanceof Date) {
+                Date d = (Date)value;
+                return new Long(d.getTime());
+            }
+            return value;
+        }
+    }
+
+    public static class JsonSimpleSetConverter implements CustomConverter {
+        private List<String> conversionWarnings = new LinkedList<String>();
+
+        /**
+         * (Auto) converts from source obj type to target if different.
+         *
+         * For example, sometimes json representation is different from object's expected
+         * representation, like a Date could be represented by long (milli) seconds value.
+         *
+         * @param value object to convert
+         * @param attrib
+         * @return object pre converted to target type, if possible.
+         */
+        @Override
+        public Object convert(AnAttrib attrib, Object value) {
+            if (value == null) {
+                return null;
+            }
+            Class<?> objClass = value.getClass();
+            Method m = attrib.getSetter();
+            String attribName = attrib.getAttribName();
+            Class<?>[] paramTypes = m.getParameterTypes();
+            Class<?> p = paramTypes[0];
+            if(p.equals(objClass)) {
+                return value;
+            }
+            /**
+             * if not equivalent, try to auto-convert
+             */
+            Constructor<?>[] cs = p.getConstructors();
+            for (Constructor<?> c : cs) {
+                Class<?>[] cParamTypes = c.getParameterTypes();
+                if(cParamTypes.length != 1) {
+                    continue;
+                }
+                try {
+               /*
+                * Work through single parameter constructors
+                */
+                    if (cParamTypes[0].equals(objClass)) {
+                    /*
+                     * There's a constructor with source obj class as an input.
+                     */
+                        Object newObject = c.newInstance(value);
+                        return newObject;
+                    } else if (objClass.getSimpleName().equalsIgnoreCase(cParamTypes[0].getSimpleName())) {
+                    /*
+                     * Try to instantiate through "similar" constructor
+                     * Example - source - Long (millisec)
+                     * target - Date
+                     * // java
+                     * Date d = new Date(Long.longValue());
+                     * iOS - JavaUtilDate will be used
+                     */
+                        Object newObject = c.newInstance(value);
+                        return newObject;
+                    } else if (cParamTypes[0].equals(String.class)) {
+                    /*
+                     * Through string constructor...
+                     * Integer source;
+                     * Long target = new Long(source.toString());
+                     */
+                        Object newObject = c.newInstance(value.toString());
+                        return newObject;
+                    }
+                } catch (Throwable t) {
+                    conversionWarnings.add("Error setting: " + attribName +
+                            " from: " + objClass.getName() +
+                            " constr. param: " + cParamTypes[0].getName() +
+                            " simple name: " + cParamTypes[0].getSimpleName());
+                }
+            } // end for
+            conversionWarnings.add("*** Final. Could not set: " + attribName + " from: " + objClass.getName());
+            return null;
+        }
     }
 }

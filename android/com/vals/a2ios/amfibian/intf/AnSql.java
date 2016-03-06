@@ -1,7 +1,5 @@
 package com.vals.a2ios.amfibian.intf;
 
-import com.vals.a2ios.amfibian.intf.AnAttrib;
-
 import java.util.List;
 import java.util.Set;
 
@@ -150,15 +148,27 @@ public interface AnSql<T> extends AnObject<T> {
     AnSql<?> startSqlCreate();
 
     /**
-     * @param columnJavaClass
+     *
      * @return
      */
-    // String getSqlColumnDefinition(Class<?> columnJavaClass);
+    CustomConverter getSqlCustomSetConverter();
 
     /**
-     * @param columnName
+     *
+     * @param sqlCustomSetConverter
+     */
+    void setSqlCustomSetConverter(CustomConverter sqlCustomSetConverter);
+
+    /**
+     *
      * @return
      */
-    // String getAliasedColumn(String columnName);
+    CustomConverter getSqlCustomGetConverter();
+
+    /**
+     *
+     * @param sqlCustomGetConverter
+     */
+    void setSqlCustomGetConverter(CustomConverter sqlCustomGetConverter);
 
 }
