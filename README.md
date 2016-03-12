@@ -352,21 +352,7 @@ functionality that is not matching your Android counterpart.
 
 ### Using provided libraries
 
-Check out the contend of sqlighter/distr directory. It contains versioned libraries. 
-
-For your Android project just include the sqlighter.jar file into your project. Consult
-with Android Studio how to do it.
-
-For your xCode project, add sqlighter/distr/<VERSION>/ios/libsqlighter-all-lib.a into 
-your project. Consult Xcode docs on how to do it. Add path to 
-sqlighter/distr/<VERSION>/ios directory to your project's Header Search path.
-
-This should make it.
-
-Note: library distribution version is specified by <VERSION> directory name. Source code
-reflecting the version is tagged with corresponding tag. Libarary version may not reflect
-the very latest cahges in the code as typically multiple changes would be grouped into
-the library build. If you need the very latest, use source code integration.
+Sorry, binary distribution at GitHub has been discontinued. Until another solution will be found binaries could be provided on a case by case basis.
 
 ### Using source files
 

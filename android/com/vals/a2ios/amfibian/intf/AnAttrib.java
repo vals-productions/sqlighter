@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * JSON and Database counterparts. Also, it might define
  * some custom converters between respective attribute
  * values in case default converters do not work for you.
- *
+ * Attributes of simple data types are supported. Also, Date is supported. BLOB columns are not supported. BLOBs should be retrieved using SQLighter functionality.
  */
 public interface AnAttrib {
 
