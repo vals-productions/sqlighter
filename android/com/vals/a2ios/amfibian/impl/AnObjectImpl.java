@@ -67,17 +67,28 @@ public class AnObjectImpl<T> implements AnObject<T> {
     @Override
     public void resetNativeObject() throws Exception {
         setNativeObject(nativeClass.newInstance());
-        if(jsonMap != null) {
-            jsonMap.clear();
+    }
+
+    private void clearMaps() {
+        jsonMap = null;
+        nativeObjectMap = null;
+    }
+
+    private boolean isEmpty(Map<?,?> map) {
+        return map == null || map.size() == 0;
+    }
+
+    private <K,V> Map<K, V> ensureMap(Map<K, V> map) {
+        if(map == null) {
+            return new HashMap<K, V>();
         }
-        if(nativeObjectMap != null) {
-            nativeObjectMap.clear();
-        }
+        return map;
     }
 
 	@SuppressWarnings("unchecked")
 	public void setNativeObject(T o) throws Exception {
         this.nativeObject = o;
+        clearMaps();
         if (parentAnObject != null) {
             parentAnObject.setNativeObject(o);
         }
@@ -200,8 +211,8 @@ public class AnObjectImpl<T> implements AnObject<T> {
 
     @Override
     public Map<String, Object> asJsonMap() throws Exception {
-        if (jsonMap == null) {
-        	jsonMap = new HashMap<String, Object>();
+        if (isEmpty(jsonMap)/*jsonMap == null*/) {
+        	jsonMap = ensureMap(jsonMap); // new HashMap<String, Object>();
             Set<String> p = attribMap.keySet();
             for (String attrName : p) {
                 AnAttrib attr =  attribMap.get(attrName);
@@ -233,8 +244,8 @@ public class AnObjectImpl<T> implements AnObject<T> {
     @Override
     public synchronized Map<String, Object> asNativeMap(T nativeObject) throws Exception {
         setNativeObject(nativeObject);
-        if (nativeObjectMap == null) {
-            nativeObjectMap = new HashMap<String, Object>();
+        if (isEmpty(nativeObjectMap)/*nativeObjectMap == null*/) {
+            nativeObjectMap = ensureMap(nativeObjectMap); //new HashMap<String, Object>();
             Set<String> p = attribMap.keySet();
             for (String pName : p) {
                 AnAttrib pm =  attribMap.get(pName);

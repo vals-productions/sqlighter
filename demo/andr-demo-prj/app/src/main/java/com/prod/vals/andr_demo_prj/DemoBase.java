@@ -7,6 +7,7 @@ import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,23 +58,6 @@ public abstract class DemoBase {
         return testList.size() == passedTestCount;
     }
 
-    protected static void extraAmfibianTests(AnOrm<Appointment> anOrm) throws Exception {
-        anOrm.addInclAttribs(new String[]{"id"});
-
-        anOrm.startSqlSelect();
-        String sql = anOrm.getQueryString();
-
-        checkTest("restricted select clause test 1",
-                sql.startsWith("select appointment0.id "));
-
-        anOrm.resetSkipInclAttrNameList();
-        anOrm.addSkipAttribs("id", "name");
-        anOrm.startSqlSelect();
-        sql = anOrm.getQueryString();
-
-        checkTest("restricted select clause test 2",
-                sql.startsWith("select appointment0.is_processed "));
-    }
 
     protected static void printAppointments(AnOrm<Appointment> anOrm) throws Exception {
         System.out.println("Appointment records");
@@ -158,5 +142,51 @@ public abstract class DemoBase {
                 h.doubleValue() == userHeight.doubleValue());
     }
 
+    protected static void extraAmfibianTests(AnOrm<Appointment> anOrm) throws Exception {
+        anOrm.addInclAttribs(new String[]{"id"});
 
+        anOrm.startSqlSelect();
+        String sql = anOrm.getQueryString();
+
+        checkTest("restricted select clause test 1",
+                sql.startsWith("select appointment0.id "));
+
+        anOrm.resetSkipInclAttrNameList();
+        anOrm.addSkipAttribs("id", "name");
+        anOrm.startSqlSelect();
+        sql = anOrm.getQueryString();
+
+        checkTest("restricted select clause test 2",
+                sql.startsWith("select appointment0.is_processed "));
+
+        String jsonArrayStr = "[";
+        /* to json array */
+        int nElem = 2;
+        for (int i = 0; i < nElem; i++) {
+            Appointment a = new Appointment();
+            a.setId(i);
+            a.setName("Appointemnt " + i);
+            a.setIsProcessed(i);
+            anOrm.setNativeObject(a);
+            String jsonObjectString = anOrm.asJsonString(a);
+            jsonArrayStr += jsonObjectString;
+            if(i < nElem - 1) {
+                jsonArrayStr += ",";
+            }
+        }
+        jsonArrayStr += "]";
+
+        Collection<Appointment> appointments = anOrm.asList(jsonArrayStr);
+        checkTest("2 and back from JSON", appointments.size() == nElem);
+        int i = 0;
+        Iterator<Appointment> it = appointments.iterator();
+        while (it.hasNext()) {
+            Appointment a = it.next();
+            checkTest("json array check #1",
+                    a.getId().equals(i) &&
+                            a.getName().equals("Appointemnt " + i) &&
+                            a.getIsProcessed().equals(i));
+            i++;
+        }
+    }
 }
