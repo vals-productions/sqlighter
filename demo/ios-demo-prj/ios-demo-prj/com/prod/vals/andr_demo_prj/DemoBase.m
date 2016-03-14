@@ -21,6 +21,7 @@
 #include "java/lang/Long.h"
 #include "java/lang/System.h"
 #include "java/util/Collection.h"
+#include "java/util/Iterator.h"
 #include "java/util/LinkedList.h"
 #include "java/util/List.h"
 
@@ -76,10 +77,6 @@ id<MobilAction> DemoBase_amfibianStartAction_;
   return DemoBase_testSummaryCheck();
 }
 
-+ (void)extraAmfibianTestsWithAnOrm:(id<AnOrm>)anOrm {
-  DemoBase_extraAmfibianTestsWithAnOrm_(anOrm);
-}
-
 + (void)printAppointmentsWithAnOrm:(id<AnOrm>)anOrm {
   DemoBase_printAppointmentsWithAnOrm_(anOrm);
 }
@@ -108,6 +105,10 @@ id<MobilAction> DemoBase_amfibianStartAction_;
                            withNSString:(NSString *)blobString
                        withJavaLangLong:(JavaLangLong *)id_ {
   return DemoBase_verifyRecordWithSQLighterRs_withNSString_withNSString_withJavaLangDouble_withNSString_withJavaLangLong_(rs, userName, userEmail, userHeight, blobString, id_);
+}
+
++ (void)extraAmfibianTestsWithAnOrm:(id<AnOrm>)anOrm {
+  DemoBase_extraAmfibianTestsWithAnOrm_(anOrm);
 }
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN
@@ -160,19 +161,6 @@ void DemoBase_makeTestsFail() {
 jboolean DemoBase_testSummaryCheck() {
   DemoBase_initialize();
   return [((id<JavaUtilList>) nil_chk(DemoBase_testList_)) size] == DemoBase_passedTestCount_;
-}
-
-void DemoBase_extraAmfibianTestsWithAnOrm_(id<AnOrm> anOrm) {
-  DemoBase_initialize();
-  [((id<AnOrm>) nil_chk(anOrm)) addInclAttribsWithNSStringArray:[IOSObjectArray newArrayWithObjects:(id[]){ @"id" } count:1 type:NSString_class_()]];
-  [anOrm startSqlSelect];
-  NSString *sql = [anOrm getQueryString];
-  DemoBase_checkTestWithNSString_withBoolean_(@"restricted select clause test 1", [((NSString *) nil_chk(sql)) hasPrefix:@"select appointment0.id "]);
-  [anOrm resetSkipInclAttrNameList];
-  [anOrm addSkipAttribsWithNSStringArray:[IOSObjectArray newArrayWithObjects:(id[]){ @"id", @"name" } count:2 type:NSString_class_()]];
-  [anOrm startSqlSelect];
-  sql = [anOrm getQueryString];
-  DemoBase_checkTestWithNSString_withBoolean_(@"restricted select clause test 2", [((NSString *) nil_chk(sql)) hasPrefix:@"select appointment0.is_processed "]);
 }
 
 void DemoBase_printAppointmentsWithAnOrm_(id<AnOrm> anOrm) {
@@ -231,6 +219,43 @@ jboolean DemoBase_verifyRecordWithSQLighterRs_withNSString_withNSString_withJava
   NSNumber *h = [rs getDoubleWithInt:4];
   [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
   return ([((JavaLangLong *) nil_chk(pk)) isEqual:id_] && [((NSString *) nil_chk(e)) isEqual:userEmail] && [((NSString *) nil_chk(n)) isEqual:userName] && [((NSString *) nil_chk(dataString)) isEqual:blobString] && [((NSNumber *) nil_chk(h)) doubleValue] == [((JavaLangDouble *) nil_chk(userHeight)) doubleValue]);
+}
+
+void DemoBase_extraAmfibianTestsWithAnOrm_(id<AnOrm> anOrm) {
+  DemoBase_initialize();
+  [((id<AnOrm>) nil_chk(anOrm)) addInclAttribsWithNSStringArray:[IOSObjectArray newArrayWithObjects:(id[]){ @"id" } count:1 type:NSString_class_()]];
+  [anOrm startSqlSelect];
+  NSString *sql = [anOrm getQueryString];
+  DemoBase_checkTestWithNSString_withBoolean_(@"restricted select clause test 1", [((NSString *) nil_chk(sql)) hasPrefix:@"select appointment0.id "]);
+  [anOrm resetSkipInclAttrNameList];
+  [anOrm addSkipAttribsWithNSStringArray:[IOSObjectArray newArrayWithObjects:(id[]){ @"id", @"name" } count:2 type:NSString_class_()]];
+  [anOrm startSqlSelect];
+  sql = [anOrm getQueryString];
+  DemoBase_checkTestWithNSString_withBoolean_(@"restricted select clause test 2", [((NSString *) nil_chk(sql)) hasPrefix:@"select appointment0.is_processed "]);
+  NSString *jsonArrayStr = @"[";
+  jint nElem = 2;
+  for (jint i = 0; i < nElem; i++) {
+    Appointment *a = new_Appointment_init();
+    [a setIdWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(i)];
+    [a setNameWithNSString:JreStrcat("$I", @"Appointemnt ", i)];
+    [a setIsProcessedWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(i)];
+    [anOrm setNativeObjectWithId:a];
+    NSString *jsonObjectString = [anOrm asJsonStringWithId:a];
+    (void) JreStrAppendStrong(&jsonArrayStr, "$", jsonObjectString);
+    if (i < nElem - 1) {
+      (void) JreStrAppendStrong(&jsonArrayStr, "$", @",");
+    }
+  }
+  (void) JreStrAppendStrong(&jsonArrayStr, "$", @"]");
+  id<JavaUtilCollection> appointments = [anOrm asListWithNSString:jsonArrayStr];
+  DemoBase_checkTestWithNSString_withBoolean_(@"2 and back from JSON", [((id<JavaUtilCollection>) nil_chk(appointments)) size] == nElem);
+  jint i = 0;
+  id<JavaUtilIterator> it = [appointments iterator];
+  while ([((id<JavaUtilIterator>) nil_chk(it)) hasNext]) {
+    Appointment *a = [it next];
+    DemoBase_checkTestWithNSString_withBoolean_(@"json array check #1", [((JavaLangInteger *) nil_chk([((Appointment *) nil_chk(a)) getId])) isEqual:JavaLangInteger_valueOfWithInt_(i)] && [((NSString *) nil_chk([a getName])) isEqual:JreStrcat("$I", @"Appointemnt ", i)] && [((JavaLangInteger *) nil_chk([a getIsProcessed])) isEqual:JavaLangInteger_valueOfWithInt_(i)]);
+    i++;
+  }
 }
 
 void DemoBase_init(DemoBase *self) {

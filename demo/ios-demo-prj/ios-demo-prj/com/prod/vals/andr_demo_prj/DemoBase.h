@@ -98,8 +98,6 @@ FOUNDATION_EXPORT void DemoBase_makeTestsFail();
 
 FOUNDATION_EXPORT jboolean DemoBase_testSummaryCheck();
 
-FOUNDATION_EXPORT void DemoBase_extraAmfibianTestsWithAnOrm_(id<AnOrm> anOrm);
-
 FOUNDATION_EXPORT void DemoBase_printAppointmentsWithAnOrm_(id<AnOrm> anOrm);
 
 FOUNDATION_EXPORT void DemoBase_printWithJavaUtilCollection_(id<JavaUtilCollection> appointments);
@@ -111,6 +109,8 @@ FOUNDATION_EXPORT void DemoBase_printWithSQLighterRs_(id<SQLighterRs> rs);
 FOUNDATION_EXPORT void DemoBase_printUserTableWithNSString_withSQLighterDb_(NSString *title, id<SQLighterDb> db);
 
 FOUNDATION_EXPORT jboolean DemoBase_verifyRecordWithSQLighterRs_withNSString_withNSString_withJavaLangDouble_withNSString_withJavaLangLong_(id<SQLighterRs> rs, NSString *userName, NSString *userEmail, JavaLangDouble *userHeight, NSString *blobString, JavaLangLong *id_);
+
+FOUNDATION_EXPORT void DemoBase_extraAmfibianTestsWithAnOrm_(id<AnOrm> anOrm);
 
 FOUNDATION_EXPORT void DemoBase_init(DemoBase *self);
 

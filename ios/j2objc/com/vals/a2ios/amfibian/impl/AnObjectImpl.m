@@ -37,6 +37,12 @@
   id<AnObject_CustomConverter> jsonCustomSetConverter_;
 }
 
+- (void)clearMaps;
+
+- (jboolean)isEmptyWithJavaUtilMap:(id<JavaUtilMap>)map;
+
+- (id<JavaUtilMap>)ensureMapWithJavaUtilMap:(id<JavaUtilMap>)map;
+
 - (IOSObjectArray *)stringsToAttribsWithNSStringArray:(IOSObjectArray *)propertyNames;
 
 - (void)initAttribsWithAnAttribArray:(IOSObjectArray *)attribMappers OBJC_METHOD_FAMILY_NONE;
@@ -58,6 +64,12 @@ J2OBJC_STATIC_FIELD_SETTER(AnObjectImpl, jsonCustomGetGlobalConverter_, id<AnObj
 static id<AnObject_CustomConverter> AnObjectImpl_jsonCustomSetGlobalConverter_;
 J2OBJC_STATIC_FIELD_GETTER(AnObjectImpl, jsonCustomSetGlobalConverter_, id<AnObject_CustomConverter>)
 J2OBJC_STATIC_FIELD_SETTER(AnObjectImpl, jsonCustomSetGlobalConverter_, id<AnObject_CustomConverter>)
+
+__attribute__((unused)) static void AnObjectImpl_clearMaps(AnObjectImpl *self);
+
+__attribute__((unused)) static jboolean AnObjectImpl_isEmptyWithJavaUtilMap_(AnObjectImpl *self, id<JavaUtilMap> map);
+
+__attribute__((unused)) static id<JavaUtilMap> AnObjectImpl_ensureMapWithJavaUtilMap_(AnObjectImpl *self, id<JavaUtilMap> map);
 
 __attribute__((unused)) static IOSObjectArray *AnObjectImpl_stringsToAttribsWithNSStringArray_(AnObjectImpl *self, IOSObjectArray *propertyNames);
 
@@ -119,16 +131,23 @@ J2OBJC_IGNORE_DESIGNATED_END
 
 - (void)resetNativeObject {
   [self setNativeObjectWithId:[((IOSClass *) nil_chk(nativeClass_)) newInstance]];
-  if (jsonMap_ != nil) {
-    [jsonMap_ clear];
-  }
-  if (nativeObjectMap_ != nil) {
-    [nativeObjectMap_ clear];
-  }
+}
+
+- (void)clearMaps {
+  AnObjectImpl_clearMaps(self);
+}
+
+- (jboolean)isEmptyWithJavaUtilMap:(id<JavaUtilMap>)map {
+  return AnObjectImpl_isEmptyWithJavaUtilMap_(self, map);
+}
+
+- (id<JavaUtilMap>)ensureMapWithJavaUtilMap:(id<JavaUtilMap>)map {
+  return AnObjectImpl_ensureMapWithJavaUtilMap_(self, map);
 }
 
 - (void)setNativeObjectWithId:(id)o {
   self->nativeObject_ = o;
+  AnObjectImpl_clearMaps(self);
   if (parentAnObject_ != nil) {
     [parentAnObject_ setNativeObjectWithId:o];
   }
@@ -239,14 +258,14 @@ J2OBJC_IGNORE_DESIGNATED_END
 }
 
 - (id<JavaUtilMap>)asJsonMap {
-  if (jsonMap_ == nil) {
-    jsonMap_ = new_JavaUtilHashMap_init();
+  if (AnObjectImpl_isEmptyWithJavaUtilMap_(self, jsonMap_)) {
+    jsonMap_ = AnObjectImpl_ensureMapWithJavaUtilMap_(self, jsonMap_);
     id<JavaUtilSet> p = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
     for (NSString * __strong attrName in nil_chk(p)) {
       id<AnAttrib> attr = [attribMap_ getWithId:attrName];
       id value = [self getValueWithAnObject_CustomConverter:AnObjectImpl_getJsonCustomGetGlobalConverter() withAnObject_CustomConverter:jsonCustomGetConverter_ withAnAttrib:attr];
       if (value != nil) {
-        (void) [jsonMap_ putWithId:[((id<AnAttrib>) nil_chk(attr)) getJsonOrAttribName] withId:value];
+        (void) [((id<JavaUtilMap>) nil_chk(jsonMap_)) putWithId:[((id<AnAttrib>) nil_chk(attr)) getJsonOrAttribName] withId:value];
       }
     }
   }
@@ -269,14 +288,14 @@ J2OBJC_IGNORE_DESIGNATED_END
 - (id<JavaUtilMap>)asNativeMapWithId:(id)nativeObject {
   @synchronized(self) {
     [self setNativeObjectWithId:nativeObject];
-    if (nativeObjectMap_ == nil) {
-      nativeObjectMap_ = new_JavaUtilHashMap_init();
+    if (AnObjectImpl_isEmptyWithJavaUtilMap_(self, nativeObjectMap_)) {
+      nativeObjectMap_ = AnObjectImpl_ensureMapWithJavaUtilMap_(self, nativeObjectMap_);
       id<JavaUtilSet> p = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
       for (NSString * __strong pName in nil_chk(p)) {
         id<AnAttrib> pm = [attribMap_ getWithId:pName];
         id value = [((id<AnAttrib>) nil_chk(pm)) getValue];
         if (value != nil) {
-          (void) [nativeObjectMap_ putWithId:pName withId:[pm getValue]];
+          (void) [((id<JavaUtilMap>) nil_chk(nativeObjectMap_)) putWithId:pName withId:[pm getValue]];
         }
       }
     }
@@ -503,6 +522,22 @@ AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_(IOSClass *anO
   AnObjectImpl *self = [AnObjectImpl alloc];
   AnObjectImpl_initWithIOSClass_withAnAttribArray_(self, anObjClass, propertyMappers);
   return self;
+}
+
+void AnObjectImpl_clearMaps(AnObjectImpl *self) {
+  self->jsonMap_ = nil;
+  self->nativeObjectMap_ = nil;
+}
+
+jboolean AnObjectImpl_isEmptyWithJavaUtilMap_(AnObjectImpl *self, id<JavaUtilMap> map) {
+  return map == nil || [map size] == 0;
+}
+
+id<JavaUtilMap> AnObjectImpl_ensureMapWithJavaUtilMap_(AnObjectImpl *self, id<JavaUtilMap> map) {
+  if (map == nil) {
+    return new_JavaUtilHashMap_init();
+  }
+  return map;
 }
 
 IOSObjectArray *AnObjectImpl_stringsToAttribsWithNSStringArray_(AnObjectImpl *self, IOSObjectArray *propertyNames) {
