@@ -16,6 +16,8 @@ You can also use SQLighter independently on either of the platforms.
 
 SQLite database is your best choice for mobile platform development since it is part of both iOS and Android SDKs.
 
+Enjoy reading the guide. And every time the project will be starred, contributers might go get a cup of starbucks coffee. So keep us awake if you liked it.
+
 # Table of content
 * [Overview] (https://github.com/vals-productions/sqlighter#overview)
 * [ORM] (https://github.com/vals-productions/sqlighter/blob/master/README.md#orm)
@@ -44,6 +46,10 @@ This library does not attempt to replicate Android's implementation completely. 
 goal is to provide ability to execute pretty much any SQL statements at either of 
 the platforms with single and simple interface without dependencies on existing
 platform specific implementations.
+
+Sqlighter design reminds JDBC  implementation. Anyone familiar with JDBC should pick it up really easy.
+
+Sqlighter supports all SQLite datatypes and adds its own implementation of Date type.
 
 # ORM
 
