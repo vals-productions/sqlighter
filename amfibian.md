@@ -32,6 +32,8 @@ deployments.
 
 AmfibiaN objects are not thread safe, so instantiate an instance of what you need per thread.
 
+AmfibiaN does not introduce yet another query language. It generates SQLs and maps object properties to SQL statements. If you need to specify WHERE clause conditions, you do this in SQL.
+
 ## Going by example
 
 Detailed and up to date example with extensive comments can be found at [Demo.java] 
