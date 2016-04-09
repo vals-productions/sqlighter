@@ -16,7 +16,7 @@ You can also use SQLighter independently on either of the platforms.
 
 SQLite database is your best choice for mobile platform development since it is part of both iOS and Android SDKs.
 
-Enjoy reading the guide. And every time the project will be starred, contributers might go get a cup of starbucks coffee. So keep us awake if you liked it.
+Enjoy reading the guide. And every time the project is starred, contributors might go get a cup of starbucks coffee. So keep us awake if you like the project.
 
 # Table of content
 * [Overview] (https://github.com/vals-productions/sqlighter#overview)
