@@ -1,9 +1,42 @@
 # SQLighter
 
+### SQL ORM JSON Android iOS
+
+### Quick bite
+
+```java
+/* This is Java */
+AnOrm<Announcement> anOrm = Bootstrap.getInstance().getOrm(Announcement.class);
+String jsonAppointment234 =  "{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
+// get as native object
+Appointment appointment234 = anOrm.asNativeObject(jsonAppointment234);
+anOrm.startSqlInsert(appointment234);
+anOrm.apply(); // insert into SQLite database
+// DB retrieval
+anOrm.startSqlSelect(); 
+anOrm.addWhere("id = ?", 234);
+Appointment appointment234 = anOrm.getSingleResult();
+// And back to JSON
+JSONObject jsonObject = anOrm.asJSONObject(appointment234);
+```
+``` 
+/* This is Objective C (J2ObjC compatible)*/
+// ...
+NSString *jsonAppointment234 = @"{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
+Appointment *appointment234 = [anOrm asNativeObjectWithNSString:jsonAppointment234];
+[anOrm startSqlInsertWithId:appointment234];
+[anOrm apply];
+[anOrm startSqlSelect]; 
+[anOrm addWhereWithNSString:@"id = ?" withId:JavaLangInteger_valueOfWithInt_(234)];
+Appointment *appointment234 = [anOrm getSingleResult];
+OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId: appointment234];
+
+```
+### What is it?
 SQLighter is Object Oriented SQLite implementation for Android and iOS mobile platforms. 
 
-* Provides basic SQL capabilities and flexibilty
-* ORM features, auto generate tables for your objects
+* Provides basic SQL capabilities and flexibilty (SQLighter)
+* ORM features, auto generate tables for your objects (AmfibiaN)
 * Database schema versioning management
 * JSON mappings
 * Portability of your implementation between Android and iOS platforms by being compliant with J2ObjC code translation standards.
