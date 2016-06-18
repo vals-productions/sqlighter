@@ -27,23 +27,8 @@
 @property sqlite3_stmt *lastPreparedStmt;
 @property NSDateFormatter *dateFormatter;
 
-/*
-- (void) copyDbOnce;
-- (void) setContextWithId:(id)context;
-- (void) addParamWithNSString:(NSString *)s;
-- (void) addParamWithDouble:(double)s;
-- (void) addParamWithLong:(long)s;
-- (void) addParamWithInt:(int)s;
-- (id<SQLighterRs>)executeSelectWithNSString:(NSString *)selectQuery;
- */
-
-//- (void) executeChangeWithNSString:(NSString *) makeCmangeQuery;
-
-/*
-
-*/
 
 -(void) analyzeReturnCodeForErrors: (int) code;
 -(void) closeStmt: (sqlite3_stmt *) statement;
-
+-(int)  threadsafe;
 @end

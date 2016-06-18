@@ -30,6 +30,10 @@
     return self;
 }
 
+-(int) threadsafe {
+    return sqlite3_threadsafe();
+}
+
 -(void) analyzeReturnCodeForErrors: (int) returnCode {
     if (returnCode == SQLITE_OK ||
         returnCode == SQLITE_DONE ||
@@ -85,7 +89,6 @@
             SQLighterRsImpl *rs = [[SQLighterRsImpl alloc] init];
             rs.stmt = statement;
             rs.db = self;
-            // [[self parameterArray] removeAllObjects];
             [self clearParameterArray];
             return rs;
         } @catch (JavaLangException *exception) {
@@ -270,6 +273,10 @@
 }
 
 - (void)addParamWithJavaUtilDate:(JavaUtilDate *)date {
+    if(date == nil) {
+        [self addParamWithNull];
+        return;
+    }
     [[self parameterArray] addObject: date];
 }
 
@@ -281,10 +288,18 @@
 }
 
 - (void)addParamObjWithId:(id)o {
+    if(o == nil) {
+        [self addParamWithNull];
+        return;
+    }
     [[self parameterArray] addObject: o];
 }
 
 -(void) addParamWithNSString: (NSString*) str {
+    if(str == nil) {
+        [self addParamWithNull];
+        return;
+    }
     [[self parameterArray] addObject: str];
 }
 
@@ -313,10 +328,18 @@
 //}
 
 -(void) addParamWithBlob: (NSData*) data {
+    if(data == nil) {
+        [self addParamWithNull];
+        return;
+    }
     [[self parameterArray] addObject: data];
 }
 
 - (void)addParamWithByteArray:(IOSByteArray *)blob {
+    if(blob == nil) {
+        [self addParamWithNull];
+        return;
+    }
     NSData *d = [NSData dataWithBytes:[blob buffer] length:[blob length]];
     [self addParamWithBlob: d];
 }
