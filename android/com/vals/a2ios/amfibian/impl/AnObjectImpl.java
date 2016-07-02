@@ -34,8 +34,13 @@ public class AnObjectImpl<T> implements AnObject<T> {
     private CustomConverter jsonCustomGetConverter;
     private CustomConverter jsonCustomSetConverter;
 
-    private static CustomConverter jsonCustomGetGlobalConverter;
-    private static CustomConverter jsonCustomSetGlobalConverter;
+    /**
+     * Simple, initial built in converters between JSON and Native
+     * formats. YMMV, so you may want to implement yours once you get
+     * deep into your project's implementation.
+     */
+    private static CustomConverter jsonCustomGetGlobalConverter= new JsonSimpleGetConverter();
+    private static CustomConverter jsonCustomSetGlobalConverter = new JsonSimpleSetConverter();
 
     public AnObjectImpl() {
     }

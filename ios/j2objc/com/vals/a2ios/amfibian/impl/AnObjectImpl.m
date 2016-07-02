@@ -84,6 +84,8 @@ __attribute__((unused)) static void AnObjectImpl_initAttribsWithAnAttribArray_(A
 
 J2OBJC_FIELD_SETTER(AnObjectImpl_JsonSimpleSetConverter, conversionWarnings_, id<JavaUtilList>)
 
+J2OBJC_INITIALIZED_DEFN(AnObjectImpl)
+
 @implementation AnObjectImpl
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN
@@ -449,6 +451,14 @@ J2OBJC_IGNORE_DESIGNATED_END
 
 + (void)setJsonCustomSetGlobalConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)jsonCustomSetGlobalConverter {
   AnObjectImpl_setJsonCustomSetGlobalConverterWithAnObject_CustomConverter_(jsonCustomSetGlobalConverter);
+}
+
++ (void)initialize {
+  if (self == [AnObjectImpl class]) {
+    AnObjectImpl_jsonCustomGetGlobalConverter_ = new_AnObjectImpl_JsonSimpleGetConverter_init();
+    AnObjectImpl_jsonCustomSetGlobalConverter_ = new_AnObjectImpl_JsonSimpleSetConverter_init();
+    J2OBJC_SET_INITIALIZED(AnObjectImpl)
+  }
 }
 
 @end

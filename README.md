@@ -1,7 +1,5 @@
 # SQLighter
 
-### SQL ORM JSON Android iOS
-
 ### Quick bite
 
 ```java
@@ -36,7 +34,7 @@ OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId: appointment234];
 SQLighter is Object Oriented SQLite implementation for Android and iOS mobile platforms. 
 
 * Provides basic SQL capabilities and flexibilty (SQLighter)
-* ORM features, auto generate tables for your objects (AmfibiaN)
+* ORM features, auto generate tables for your objects (AmfibiaN sub-project)
 * Database schema versioning management
 * JSON mappings
 * Portability of your implementation between Android and iOS platforms by being compliant with J2ObjC code translation standards.

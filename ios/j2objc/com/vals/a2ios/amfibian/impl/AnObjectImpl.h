@@ -131,7 +131,7 @@
 
 @end
 
-J2OBJC_EMPTY_STATIC_INIT(AnObjectImpl)
+J2OBJC_STATIC_INIT(AnObjectImpl)
 
 J2OBJC_FIELD_SETTER(AnObjectImpl, nativeClass_, IOSClass *)
 

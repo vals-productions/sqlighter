@@ -292,8 +292,6 @@ void Demo_amfibianOperations() {
     id<SQLighterDb> sqlighterDb = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
     NSString *jsonAppointment234 = @"{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
     id<AnObject> anEntity = new_AnObjectImpl_initWithIOSClass_withNSStringArray_(Entity_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"id" } count:1 type:NSString_class_()]);
-    AnObjectImpl_setJsonCustomSetGlobalConverterWithAnObject_CustomConverter_(new_AnObjectImpl_JsonSimpleSetConverter_init());
-    AnObjectImpl_setJsonCustomGetGlobalConverterWithAnObject_CustomConverter_(new_AnObjectImpl_JsonSimpleGetConverter_init());
     id<AnOrm> anOrm = new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(sqlighterDb, @"appointment", Appointment_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"name", @"isProcessed,is_processed" } count:2 type:NSString_class_()], anEntity);
     [((id<AnAttrib>) nil_chk([anOrm getAttribWithNSString:@"name"])) setDbColumnDefinitionWithNSString:@"TEXT NOT NULL"];
     Appointment *appointment234 = [anOrm asNativeObjectWithNSString:jsonAppointment234];
