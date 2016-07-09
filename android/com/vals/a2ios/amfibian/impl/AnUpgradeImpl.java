@@ -207,8 +207,9 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
                     AnOrmImpl<?> createObjectTask = (AnOrmImpl<?>) task;
                     createObjectTask.setSqlighterDb(sqlighterDb);
                     createObjectTask.startSqlCreate();
-                    sqlighterDb.executeChange("drop table if exists " +
-                            createObjectTask.getTableName());
+                    sqlStr = createObjectTask.getQueryString();
+                    String dropTableQuery = "drop table if exists " + createObjectTask.getTableName();
+                    sqlighterDb.executeChange(dropTableQuery);
                     result = createObjectTask.apply();
                 }
                 /**
@@ -220,7 +221,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
             /**
              * Mark key as success
              */
-            logKey(key, 1);
+            logKey(key, null, 1);
 
             /*
                 Success
@@ -231,10 +232,12 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
                 /**
                  * Log the key as failure if possible
                  */
-                logKey(key, 0);
+                logKey(key, t.getMessage(), 0);
             } catch (Throwable failureMarkExcp) {
                 // it's not ok, but lets continue
+                failureMarkExcp.printStackTrace();
             }
+//            t.printStackTrace();
             /**
              * Something failed
              */
@@ -295,7 +298,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
                      * enter non recovery key so that we
                      * do not apply it again
                      */
-                    logKey(key, 0);
+                    logKey(key, null, 0);
                 }
             }
         }
@@ -326,12 +329,15 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      * Logs upgrade key.
      * @throws Exception
      */
-    private void logKey(String key, Integer status) throws Exception {
+    private void logKey(String key, String message, Integer status) throws Exception {
         Upgrade appUpdateMark = new Upgrade();
         appUpdateMark.setKey(key);
         appUpdateMark.setStatus(status);
         appUpdateMark.setCreateDate(new Date());
         appUpdateMark.setType(0);
+        if(message != null) {
+            appUpdateMark.setValue(message);
+        }
         saveLog(appUpdateMark);
     }
 
