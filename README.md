@@ -8,6 +8,7 @@ AnOrm<Announcement> anOrm = Bootstrap.getInstance().getOrm(Announcement.class);
 String jsonAppointment234 =  "{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
 // get as native object
 Appointment appointment234 = anOrm.asNativeObject(jsonAppointment234);
+appointment234.setIsProcessed(1); // some native usage
 anOrm.startSqlInsert(appointment234);
 anOrm.apply(); // insert into SQLite database
 // DB retrieval
