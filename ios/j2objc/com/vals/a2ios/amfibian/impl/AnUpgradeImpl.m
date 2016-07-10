@@ -47,6 +47,7 @@
                   withJavaLangLong:(JavaLangLong *)result;
 
 - (void)logKeyWithNSString:(NSString *)key
+              withNSString:(NSString *)message
        withJavaLangInteger:(JavaLangInteger *)status;
 
 - (void)saveLogWithAnUpgradeImpl_Upgrade:(AnUpgradeImpl_Upgrade *)appUpdateEntry;
@@ -77,7 +78,7 @@ __attribute__((unused)) static jint AnUpgradeImpl_attemptToRecoverWithInt_(AnUpg
 
 __attribute__((unused)) static void AnUpgradeImpl_logUpgradeStepWithNSString_withNSString_withJavaLangLong_(AnUpgradeImpl *self, NSString *key, NSString *sqlStr, JavaLangLong *result);
 
-__attribute__((unused)) static void AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(AnUpgradeImpl *self, NSString *key, JavaLangInteger *status);
+__attribute__((unused)) static void AnUpgradeImpl_logKeyWithNSString_withNSString_withJavaLangInteger_(AnUpgradeImpl *self, NSString *key, NSString *message, JavaLangInteger *status);
 
 __attribute__((unused)) static void AnUpgradeImpl_saveLogWithAnUpgradeImpl_Upgrade_(AnUpgradeImpl *self, AnUpgradeImpl_Upgrade *appUpdateEntry);
 
@@ -177,19 +178,22 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
         AnOrmImpl *createObjectTask = (AnOrmImpl *) check_class_cast(task, [AnOrmImpl class]);
         [((AnOrmImpl *) nil_chk(createObjectTask)) setSqlighterDbWithSQLighterDb:sqlighterDb_];
         (void) [createObjectTask startSqlCreate];
-        (void) [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:JreStrcat("$$", @"drop table if exists ", [createObjectTask getTableName])];
+        sqlStr = [createObjectTask getQueryString];
+        NSString *dropTableQuery = JreStrcat("$$", @"drop table if exists ", [createObjectTask getTableName]);
+        (void) [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:dropTableQuery];
         result = [createObjectTask apply];
       }
       AnUpgradeImpl_logUpgradeStepWithNSString_withNSString_withJavaLangLong_(self, key, sqlStr, result);
     }
-    AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, JavaLangInteger_valueOfWithInt_(1));
+    AnUpgradeImpl_logKeyWithNSString_withNSString_withJavaLangInteger_(self, key, nil, JavaLangInteger_valueOfWithInt_(1));
     return true;
   }
   @catch (JavaLangThrowable *t) {
     @try {
-      AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, JavaLangInteger_valueOfWithInt_(0));
+      AnUpgradeImpl_logKeyWithNSString_withNSString_withJavaLangInteger_(self, key, [((JavaLangThrowable *) nil_chk(t)) getMessage], JavaLangInteger_valueOfWithInt_(0));
     }
     @catch (JavaLangThrowable *failureMarkExcp) {
+      [((JavaLangThrowable *) nil_chk(failureMarkExcp)) printStackTrace];
     }
     return false;
   }
@@ -219,8 +223,9 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
 }
 
 - (void)logKeyWithNSString:(NSString *)key
+              withNSString:(NSString *)message
        withJavaLangInteger:(JavaLangInteger *)status {
-  AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, status);
+  AnUpgradeImpl_logKeyWithNSString_withNSString_withJavaLangInteger_(self, key, message, status);
 }
 
 - (void)saveLogWithAnUpgradeImpl_Upgrade:(AnUpgradeImpl_Upgrade *)appUpdateEntry {
@@ -304,7 +309,7 @@ jint AnUpgradeImpl_attemptToRecoverWithInt_(AnUpgradeImpl *self, jint privatePub
         rc++;
       }
       if (![key isEqual:self->recoverKey_]) {
-        AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(self, key, JavaLangInteger_valueOfWithInt_(0));
+        AnUpgradeImpl_logKeyWithNSString_withNSString_withJavaLangInteger_(self, key, nil, JavaLangInteger_valueOfWithInt_(0));
       }
     }
   }
@@ -322,12 +327,15 @@ void AnUpgradeImpl_logUpgradeStepWithNSString_withNSString_withJavaLangLong_(AnU
   AnUpgradeImpl_saveLogWithAnUpgradeImpl_Upgrade_(self, appUpdate);
 }
 
-void AnUpgradeImpl_logKeyWithNSString_withJavaLangInteger_(AnUpgradeImpl *self, NSString *key, JavaLangInteger *status) {
+void AnUpgradeImpl_logKeyWithNSString_withNSString_withJavaLangInteger_(AnUpgradeImpl *self, NSString *key, NSString *message, JavaLangInteger *status) {
   AnUpgradeImpl_Upgrade *appUpdateMark = new_AnUpgradeImpl_Upgrade_init();
   [appUpdateMark setKeyWithNSString:key];
   [appUpdateMark setStatusWithJavaLangInteger:status];
   [appUpdateMark setCreateDateWithJavaUtilDate:new_JavaUtilDate_init()];
   [appUpdateMark setTypeWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(0)];
+  if (message != nil) {
+    [appUpdateMark setValueWithNSString:message];
+  }
   AnUpgradeImpl_saveLogWithAnUpgradeImpl_Upgrade_(self, appUpdateMark);
 }
 
