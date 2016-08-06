@@ -14,9 +14,9 @@ anOrm.apply(); // insert into SQLite database
 // DB retrieval
 anOrm.startSqlSelect(); 
 anOrm.addWhere("id = ?", 234);
-Appointment appointment234 = anOrm.getSingleResult();
+Appointment appointment234Processed = anOrm.getSingleResult();
 // And back to JSON
-JSONObject jsonObject = anOrm.asJSONObject(appointment234);
+JSONObject jsonObject = anOrm.asJSONObject(appointment234Processed);
 ```
 ``` 
 /* This is Objective C (J2ObjC compatible)*/
@@ -27,8 +27,8 @@ Appointment *appointment234 = [anOrm asNativeObjectWithNSString:jsonAppointment2
 [anOrm apply];
 [anOrm startSqlSelect]; 
 [anOrm addWhereWithNSString:@"id = ?" withId:JavaLangInteger_valueOfWithInt_(234)];
-Appointment *appointment234 = [anOrm getSingleResult];
-OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId: appointment234];
+Appointment *appointment234Processed = [anOrm getSingleResult];
+OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId: appointment234Processed];
 
 ```
 ### What is it?
