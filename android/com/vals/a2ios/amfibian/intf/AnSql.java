@@ -171,4 +171,12 @@ public interface AnSql<T> extends AnObject<T> {
      */
     void setSqlCustomGetConverter(CustomConverter sqlCustomGetConverter);
 
+    /**
+     * Limits and offsets the result set
+     *
+     * @param limit
+     * @param offset
+     */
+    public void addLimitOffset(Integer limit, Integer offset);
+
 }

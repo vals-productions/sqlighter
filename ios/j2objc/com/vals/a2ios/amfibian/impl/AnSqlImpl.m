@@ -328,6 +328,16 @@ J2OBJC_IGNORE_DESIGNATED_END
   [self addSqlWithNSString:condition];
 }
 
+- (void)addLimitOffsetWithJavaLangInteger:(JavaLangInteger *)limit
+                      withJavaLangInteger:(JavaLangInteger *)offset {
+  if (limit != nil) {
+    [self addSqlWithNSString:JreStrcat("$@C", @" LIMIT ", limit, ' ')];
+  }
+  if (offset != nil) {
+    [self addSqlWithNSString:JreStrcat("$@C", @" OFFSET ", offset, ' ')];
+  }
+}
+
 - (void)addSqlWithNSString:(NSString *)sql {
   if (whereClause_ == nil) {
     whereClause_ = new_JavaLangStringBuilder_init();

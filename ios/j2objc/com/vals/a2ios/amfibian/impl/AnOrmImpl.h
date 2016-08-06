@@ -40,6 +40,10 @@
 
 - (id)getFirstResultOrNull;
 
+- (id<JavaUtilCollection>)getJSONObjectRecords;
+
+- (id<JavaUtilCollection>)getJSONObjectRecordsWithJavaUtilCollection:(id<JavaUtilCollection>)collectionToUse;
+
 - (id<JavaUtilCollection>)getRecords;
 
 - (id<JavaUtilCollection>)getRecordsWithJavaUtilCollection:(id<JavaUtilCollection>)collectionToUse;

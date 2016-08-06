@@ -19,6 +19,8 @@
 
 - (void)setDbNameWithNSString:(NSString *)name;
 
+- (void)setDbPathWithNSString:(NSString *)path;
+
 - (void)setContextWithId:(id)context;
 
 - (void)setOverwriteDbWithBoolean:(jboolean)isOverwrite;

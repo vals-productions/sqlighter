@@ -10,6 +10,7 @@
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 
 @class IOSObjectArray;
+@class JavaLangInteger;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
 
@@ -55,6 +56,9 @@
 - (id<AnObject_CustomConverter>)getSqlCustomGetConverter;
 
 - (void)setSqlCustomGetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomGetConverter;
+
+- (void)addLimitOffsetWithJavaLangInteger:(JavaLangInteger *)limit
+                      withJavaLangInteger:(JavaLangInteger *)offset;
 
 @end
 

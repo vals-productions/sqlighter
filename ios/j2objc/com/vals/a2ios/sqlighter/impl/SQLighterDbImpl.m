@@ -446,4 +446,8 @@
     return stmtOpenCnt - stmtCloseCnt;
 }
 
+- (void)setDbPathWithNSString:(NSString *)path {
+}
+
+
 @end

@@ -315,6 +315,16 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     }
 
     @Override
+    public void addLimitOffset(Integer limit, Integer offset) {
+        if(limit != null) {
+            addSql(" LIMIT " + limit + " ");
+        }
+        if(offset != null) {
+            addSql(" OFFSET " + offset + " ");
+        }
+    }
+
+    @Override
     public void addSql(String sql) {
         if (whereClause == null) {
             whereClause = new StringBuilder();

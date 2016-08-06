@@ -12,6 +12,7 @@
 
 @class IOSClass;
 @class IOSObjectArray;
+@class JavaLangInteger;
 @protocol AnAttrib;
 @protocol AnObject;
 @protocol AnObject_CustomConverter;
@@ -47,6 +48,9 @@
                     withAnObject:(id<AnObject>)parentAnObject;
 
 - (void)addInclAttribsWithNSStringArray:(IOSObjectArray *)names;
+
+- (void)addLimitOffsetWithJavaLangInteger:(JavaLangInteger *)limit
+                      withJavaLangInteger:(JavaLangInteger *)offset;
 
 - (void)addSkipAttribsWithNSStringArray:(IOSObjectArray *)names;
 

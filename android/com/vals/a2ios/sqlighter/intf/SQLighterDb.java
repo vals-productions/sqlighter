@@ -23,6 +23,14 @@ public interface SQLighterDb {
     public void setDbName(String name);
 
     /**
+     * Android sepcific, iOS impementation is not
+     * doing anything.
+     *
+     * @param path
+     */
+    public void setDbPath(String path);
+
+    /**
      * Specifies path to
      * @param path - path to source sqlite database file on the device
      * <pre>
@@ -37,6 +45,7 @@ public interface SQLighterDb {
      * <pre>
      *    context.openOrCreateDatabase(dbName, Context.MODE_PRIVATE, null);
      * </pre>
+     *
      * @param context - Context object
      */
     public void setContext(Object context);

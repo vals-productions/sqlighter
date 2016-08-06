@@ -19,6 +19,10 @@
 
 - (id<JavaUtilCollection>)getRecordsWithJavaUtilCollection:(id<JavaUtilCollection>)collectionToUse;
 
+- (id<JavaUtilCollection>)getJSONObjectRecordsWithJavaUtilCollection:(id<JavaUtilCollection>)collectionToUse;
+
+- (id<JavaUtilCollection>)getJSONObjectRecords;
+
 - (id)getSingleResult;
 
 - (id)getFirstResultOrNull;

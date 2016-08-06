@@ -181,6 +181,7 @@ public class SQLighterDbImpl implements SQLighterDb {
      * Android specific method
      * @param path - location of db file
      */
+    @Override
     public void setDbPath(String path) {
         if (!path.endsWith("/")) {
             path += "/";

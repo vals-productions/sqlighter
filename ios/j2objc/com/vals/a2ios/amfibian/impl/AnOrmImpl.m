@@ -19,6 +19,7 @@
 #include "java/util/Iterator.h"
 #include "java/util/LinkedList.h"
 #include "java/util/List.h"
+#include "org/json/JSONObject.h"
 
 @interface AnOrmImpl ()
 
@@ -84,6 +85,19 @@ J2OBJC_IGNORE_DESIGNATED_END
   }
   [rs close];
   return collectionToUse;
+}
+
+- (id<JavaUtilCollection>)getJSONObjectRecords {
+  return [self getJSONObjectRecordsWithJavaUtilCollection:nil];
+}
+
+- (id<JavaUtilCollection>)getJSONObjectRecordsWithJavaUtilCollection:(id<JavaUtilCollection>)collectionToUse {
+  id<JavaUtilCollection> rc = [self getRecordsWithJavaUtilCollection:collectionToUse];
+  id<JavaUtilCollection> joc = new_JavaUtilLinkedList_init();
+  for (id __strong c in nil_chk(rc)) {
+    [joc addWithId:[self asJSONObjectWithId:c]];
+  }
+  return joc;
 }
 
 - (id)getSingleResult {

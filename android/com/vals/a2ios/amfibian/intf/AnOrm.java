@@ -2,6 +2,8 @@ package com.vals.a2ios.amfibian.intf;
 
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 
+import org.json.JSONObject;
+
 import java.util.Collection;
 
 /**
@@ -34,6 +36,10 @@ public interface AnOrm<T> extends AnSql<T> {
      * @throws Exception
      */
     Collection<T> getRecords(Collection<T> collectionToUse) throws Exception;
+
+    Collection<JSONObject> getJSONObjectRecords(Collection<T> collectionToUse) throws Exception;
+
+    Collection<JSONObject> getJSONObjectRecords() throws Exception;
 
     /**
      * Executes SQL select query and returns a single result

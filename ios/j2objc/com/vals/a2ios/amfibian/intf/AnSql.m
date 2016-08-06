@@ -9,6 +9,7 @@
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "com/vals/a2ios/amfibian/intf/AnSql.h"
 #include "java/lang/Exception.h"
+#include "java/lang/Integer.h"
 #include "java/util/List.h"
 #include "java/util/Set.h"
 

@@ -6,10 +6,13 @@ import com.vals.a2ios.amfibian.intf.AnOrm;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
+import org.json.JSONObject;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Created by vsayenko on 9/30/15.
@@ -65,6 +68,21 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
         }
         rs.close();
         return collectionToUse;
+    }
+
+    @Override
+    public Collection<JSONObject> getJSONObjectRecords() throws Exception {
+        return getJSONObjectRecords(null);
+    }
+
+    @Override
+    public Collection<JSONObject> getJSONObjectRecords(Collection<T> collectionToUse) throws Exception {
+        Collection<T> rc = getRecords(collectionToUse);
+        Collection<JSONObject> joc = new LinkedList<>();
+        for (T c: rc) {
+            joc.add(asJSONObject(c));
+        }
+        return joc;
     }
 
     @Override
