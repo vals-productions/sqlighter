@@ -12,6 +12,7 @@
 @class AnOrmImpl;
 @class JavaLangDouble;
 @class JavaLangInteger;
+@class JavaLangThrowable;
 @class JavaUtilDate;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
@@ -42,6 +43,11 @@
 - (id<JavaUtilList>)getTasksByKeyWithNSString:(NSString *)key;
 
 - (id<JavaUtilList>)getUpdateKeys;
+
+- (void)onTaskFailWithId:(id)task
+   withJavaLangThrowable:(JavaLangThrowable *)exception;
+
+- (void)onTaskSuccessWithId:(id)task;
 
 - (void)setLogTableNameWithNSString:(NSString *)logTableName;
 

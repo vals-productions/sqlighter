@@ -14,7 +14,7 @@
 
 @implementation SQLighterDbImpl
 
-@synthesize dbName, replaceDatabase, database, parameterDictionary, isDateNamedColumn;
+@synthesize dbName, replaceDatabase, database, parameterDictionary, isDateNamedColumn, dateColumnHint;
 
 -(id) init {
     if( self = [super init]) {
@@ -26,6 +26,7 @@
         self.isDateNamedColumn = YES;
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setDateFormat:SQLighterDb_DATE_FORMAT_];
+        self.dateColumnHint = SQLighterDb_DATE_HINT_;
     }
     return self;
 }
@@ -447,6 +448,10 @@
 }
 
 - (void)setDbPathWithNSString:(NSString *)path {
+}
+
+- (void)setDateColumnNameHintWithNSString:(NSString *)hint {
+    self.dateColumnHint = hint;
 }
 
 

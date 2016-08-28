@@ -8,12 +8,18 @@
 
 #include "J2ObjC_header.h"
 
+@class JavaLangThrowable;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
 
 @protocol AnUpgrade < NSObject, JavaObject >
 
 - (jint)applyUpdates;
+
+- (void)onTaskSuccessWithId:(id)task;
+
+- (void)onTaskFailWithId:(id)task
+   withJavaLangThrowable:(JavaLangThrowable *)exception;
 
 - (jint)attemptToRecover;
 

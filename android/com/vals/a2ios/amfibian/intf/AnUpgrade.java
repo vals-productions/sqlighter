@@ -48,6 +48,20 @@ public interface AnUpgrade {
     int applyUpdates() throws Exception;
 
     /**
+     * DB upgrade task succeeded
+     *
+     * @param task
+     */
+    void onTaskSuccess(Object task);
+
+    /**
+     * DB upgrade task failed
+     *
+     * @param task
+     */
+    void onTaskFail(Object task, Throwable exception);
+
+    /**
      * This method goes through available update
      * keys and searches for DB RECOVER KEY.
      *

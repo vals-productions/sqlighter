@@ -194,4 +194,16 @@ public interface SQLighterDb {
      */
     public long getStatementBalance();
 
+    /**
+     * Override default date column hint.
+     *
+     * This is mostly needed when invoking
+     * SQLighterRs.getObject(...) on the column.
+     *
+     * Column names containing the hint (case insens.)
+     * will be considered date columns, and the method
+     * above would return Date instead of the String.
+     */
+    public void setDateColumnNameHint(String hint);
+
 }

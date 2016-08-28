@@ -16,16 +16,6 @@ public interface AnObject<T> {
 
     /**
      *
-     *
-     *
-     *
-     */
-//    public static interface ObjectCustomConverter {
-//        public Object convert(AnAttrib attrib, Object value);
-//    }
-
-    /**
-     *
      * @throws Exception
      */
     public void resetNativeObject() throws Exception;

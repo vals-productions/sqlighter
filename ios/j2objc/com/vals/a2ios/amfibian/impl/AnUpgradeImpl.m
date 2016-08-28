@@ -166,15 +166,17 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
 
 - (jboolean)applyUpdateWithNSString:(NSString *)key
                    withJavaUtilList:(id<JavaUtilList>)statementList {
+  id taskObject = nil;
   @try {
     for (id __strong task in nil_chk(statementList)) {
+      taskObject = task;
       NSString *sqlStr = nil;
       JavaLangLong *result = nil;
       if ([task isKindOfClass:[NSString class]]) {
         sqlStr = (NSString *) check_class_cast(task, [NSString class]);
         result = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:sqlStr];
       }
-      else if ([AnSql_class_() isInstance:task]) {
+      else if ([task isKindOfClass:[AnOrmImpl class]]) {
         AnOrmImpl *createObjectTask = (AnOrmImpl *) check_class_cast(task, [AnOrmImpl class]);
         [((AnOrmImpl *) nil_chk(createObjectTask)) setSqlighterDbWithSQLighterDb:sqlighterDb_];
         (void) [createObjectTask startSqlCreate];
@@ -183,12 +185,14 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
         (void) [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:dropTableQuery];
         result = [createObjectTask apply];
       }
+      [self onTaskSuccessWithId:task];
       AnUpgradeImpl_logUpgradeStepWithNSString_withNSString_withJavaLangLong_(self, key, sqlStr, result);
     }
     AnUpgradeImpl_logKeyWithNSString_withNSString_withJavaLangInteger_(self, key, nil, JavaLangInteger_valueOfWithInt_(1));
     return true;
   }
   @catch (JavaLangThrowable *t) {
+    [self onTaskFailWithId:taskObject withJavaLangThrowable:t];
     @try {
       AnUpgradeImpl_logKeyWithNSString_withNSString_withJavaLangInteger_(self, key, [((JavaLangThrowable *) nil_chk(t)) getMessage], JavaLangInteger_valueOfWithInt_(0));
     }
@@ -234,6 +238,13 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
 
 - (jboolean)findTableWithNSString:(NSString *)searchTableName {
   return AnUpgradeImpl_findTableWithNSString_(self, searchTableName);
+}
+
+- (void)onTaskSuccessWithId:(id)task {
+}
+
+- (void)onTaskFailWithId:(id)task
+   withJavaLangThrowable:(JavaLangThrowable *)exception {
 }
 
 - (id<JavaUtilList>)getPrivateUpdateKeys {

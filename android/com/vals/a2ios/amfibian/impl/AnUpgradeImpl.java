@@ -1,6 +1,5 @@
 package com.vals.a2ios.amfibian.impl;
 
-import com.vals.a2ios.amfibian.intf.AnSql;
 import com.vals.a2ios.amfibian.intf.AnUpgrade;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
@@ -190,8 +189,10 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
      * @return true if no errors, false if failed
      */
     protected boolean applyUpdate(String key, List<Object> statementList) {
+        Object taskObject = null;
         try {
             for (Object task : statementList) {
+                taskObject = task;
                 String sqlStr = null;
                 Long result = null;
                 if (task instanceof String) {
@@ -200,7 +201,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
                      */
                     sqlStr = (String) task;
                     result = sqlighterDb.executeChange(sqlStr);
-                } else if (task instanceof AnSql<?>) {
+                } else if (task instanceof AnOrmImpl<?>) {
                     /**
                      * Auto create AnObject
                      */
@@ -212,12 +213,12 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
                     sqlighterDb.executeChange(dropTableQuery);
                     result = createObjectTask.apply();
                 }
+                onTaskSuccess(task);
                 /**
                  * Log upgrade step
                  */
                 logUpgradeStep(key, sqlStr, result);
             } // end for
-
             /**
              * Mark key as success
              */
@@ -228,6 +229,7 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
              */
             return true;
         } catch (Throwable t) {
+            onTaskFail(taskObject, t);
             try {
                 /**
                  * Log the key as failure if possible
@@ -378,6 +380,14 @@ public abstract class AnUpgradeImpl implements AnUpgrade {
         }
         rs.close();
         return isFound;
+    }
+
+    @Override
+    public void onTaskSuccess(Object task) {
+    }
+
+    @Override
+    public void onTaskFail(Object task, Throwable exception) {
     }
 
     /** 

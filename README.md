@@ -18,7 +18,7 @@ Appointment appointment234Processed = anOrm.getSingleResult();
 // And back to JSON
 JSONObject jsonObject = anOrm.asJSONObject(appointment234Processed);
 ```
-``` 
+``` objc
 /* This is Objective C (J2ObjC compatible)*/
 // ...
 NSString *jsonAppointment234 = @"{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";

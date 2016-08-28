@@ -107,7 +107,7 @@
         NSString *colName = [self getColumnNameWithInt:index];
         if (db.isDateNamedColumn == YES &&
             colName != nil &&
-            [[colName lowercaseString] containsString:SQLighterDb_DATE_HINT_]) {
+            [[colName lowercaseString] containsString:db.dateColumnHint]) {
             return [self getDateWithInt:index];
         }
         return [self getStringWithInt: index];

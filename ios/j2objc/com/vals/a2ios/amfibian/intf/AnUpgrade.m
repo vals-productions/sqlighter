@@ -7,6 +7,7 @@
 #include "J2ObjC_source.h"
 #include "com/vals/a2ios/amfibian/intf/AnUpgrade.h"
 #include "java/lang/Exception.h"
+#include "java/lang/Throwable.h"
 #include "java/util/List.h"
 #include "java/util/Set.h"
 

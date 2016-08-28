@@ -28,6 +28,7 @@ import java.util.Map;
  */
 public class SQLighterDbImpl implements SQLighterDb {
     private String dbName, dbPath;
+    private String dateColumnHint = DATE_HINT;
     private boolean isOverwrite = false;
     private Context context;
     private SQLiteDatabase db;
@@ -146,8 +147,9 @@ public class SQLighterDbImpl implements SQLighterDb {
             } else if (columnType == Cursor.FIELD_TYPE_BLOB) {
                 return getBlob(index);
             } else if (columnType == Cursor.FIELD_TYPE_STRING) {
-                if (isDateNamedColumn && getColumnName(index) != null &&
-                        getColumnName(index).toLowerCase().indexOf(SQLighterDb.DATE_HINT) != -1) {
+                String columnName = getColumnName(index);
+                if (isDateNamedColumn && columnName != null &&
+                        columnName.toLowerCase().indexOf(dateColumnHint) != -1) {
                     return getDate(index);
                 }
                 return getString(index);
@@ -453,5 +455,10 @@ public class SQLighterDbImpl implements SQLighterDb {
 
     public long getStatementBalance() {
         return stmtOpenCnt - stmtCloseCnt;
+    }
+
+    @Override
+    public void setDateColumnNameHint(String hint) {
+        this.dateColumnHint = hint;
     }
 }

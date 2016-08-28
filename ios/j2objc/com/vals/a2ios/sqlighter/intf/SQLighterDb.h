@@ -65,6 +65,8 @@
 
 - (jlong)getStatementBalance;
 
+- (void)setDateColumnNameHintWithNSString:(NSString *)hint;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(SQLighterDb)

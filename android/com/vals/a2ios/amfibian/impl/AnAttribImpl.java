@@ -221,14 +221,14 @@ public class AnAttribImpl implements AnAttrib {
     
     @Override
     public String getJsonOrAttribName() {
-    	if(jsonName != null) {
+    	if(jsonName != null && !"".equals(jsonName.trim())) {
     		return jsonName;
     	}
     	return attribName;
     }
     @Override
     public String getColumnOrAttribName() {
-    	if(columnName != null) {
+    	if(columnName != null && !"".equals(columnName.trim())) {
     		return columnName;
     	}
     	return attribName;

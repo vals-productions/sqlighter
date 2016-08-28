@@ -200,14 +200,14 @@ NSString *AnAttribImpl_NONAME_CONVERSION_KEY_ = @"nonameConverter";
 }
 
 - (NSString *)getJsonOrAttribName {
-  if (jsonName_ != nil) {
+  if (jsonName_ != nil && ![@"" isEqual:[jsonName_ trim]]) {
     return jsonName_;
   }
   return attribName_;
 }
 
 - (NSString *)getColumnOrAttribName {
-  if (columnName_ != nil) {
+  if (columnName_ != nil && ![@"" isEqual:[columnName_ trim]]) {
     return columnName_;
   }
   return attribName_;
