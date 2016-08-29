@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * General interface for managing SQLite database
- *
+ * SQLite does not have dedicated Date type. NOTE: Sqlighter provides Date implementation based on TEXT data column type by saving/retrieving date formatted strings. This implementation is optional and you may use your own date type implementation by storing time as number,  your own string format or whatever.
  */
 public interface SQLighterDb {
     public static final String DATE_HINT = "_date";
