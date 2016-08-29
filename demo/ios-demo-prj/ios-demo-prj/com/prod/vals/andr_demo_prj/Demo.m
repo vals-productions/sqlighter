@@ -31,10 +31,12 @@
 #include "java/lang/Long.h"
 #include "java/lang/System.h"
 #include "java/lang/Throwable.h"
+#include "java/text/SimpleDateFormat.h"
 #include "java/util/Date.h"
 #include "java/util/LinkedList.h"
 #include "java/util/List.h"
 #include "java/util/Set.h"
+#include "java/util/TimeZone.h"
 #include "org/json/JSONObject.h"
 
 static id<AnObject> Demo_anAppointmentObject_;
@@ -240,6 +242,23 @@ void Demo_sqlighterOperations() {
       dateNow = [db getDateWithoutMillisWithJavaUtilDate:dateNow];
       DemoBase_checkTestWithNSString_withBoolean_(@"date handling test", [((JavaUtilDate *) nil_chk(date)) isEqual:dateNow]);
       [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @" update_date: ", [rs getObjectWithInt:6])];
+    }
+    [rs close];
+    DemoBase_startTestWithNSString_(@"Optional Date implementation test");
+    [db addParamWithNSString:@"456 main str, walnut creek, ca"];
+    [db addParamWithLong:178];
+    JavaUtilDate *dateNowTestDeviceTzDate = [db getDateWithoutMillisWithJavaUtilDate:new_JavaUtilDate_init()];
+    JavaTextSimpleDateFormat *dateFormatPdt = new_JavaTextSimpleDateFormat_initWithNSString_(@"yyyy-MM-dd HH:mm:ss z");
+    [dateFormatPdt setTimeZoneWithJavaUtilTimeZone:JavaUtilTimeZone_getTimeZoneWithNSString_(@"PDT")];
+    [db setTimeZoneWithNSString:@"UTC"];
+    [db setDateFormatStringWithNSString:@"yyyy-MM-dd HH:mm:ss z"];
+    [db addParamWithJavaUtilDate:dateNowTestDeviceTzDate];
+    (void) [db executeChangeWithNSString:@"insert into address(name, user_id, update_date) values(?, ?, ?)"];
+    [db addParamWithLong:178];
+    rs = [db executeSelectWithNSString:@"select a.update_date from address a where a.user_id = ?"];
+    while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
+      JavaUtilDate *dateRetrievedFromUTCDateString = [rs getDateWithInt:0];
+      DemoBase_finishTestWithBoolean_([((JavaUtilDate *) nil_chk(dateRetrievedFromUTCDateString)) isEqual:dateNowTestDeviceTzDate]);
     }
     [rs close];
     DemoBase_startTestWithNSString_(@"transaction/exception handling");

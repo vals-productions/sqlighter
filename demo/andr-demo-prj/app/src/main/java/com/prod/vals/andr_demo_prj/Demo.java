@@ -13,10 +13,13 @@ import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 /**
  * This class is being converted into iOS module. It represents some business
@@ -192,6 +195,35 @@ public class Demo extends DemoBase {
                 its name.
                  */
                 System.out.println(" update_date: " + rs.getObject(6));
+            }
+            rs.close();
+
+            /**
+             * Optional Date implementation test with time zone
+             */
+            startTest("Optional Date implementation test");
+
+            db.addParam("456 main str, walnut creek, ca");
+            db.addParam(178);
+
+            Date dateNowTestDeviceTzDate = db.getDateWithoutMillis(new Date());
+            SimpleDateFormat dateFormatPdt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+            dateFormatPdt.setTimeZone(TimeZone.getTimeZone("PDT"));
+
+            // will save the date in UTC
+            db.setTimeZone("UTC");
+            db.setDateFormatString("yyyy-MM-dd HH:mm:ss z");
+            db.addParam(dateNowTestDeviceTzDate);
+            db.executeChange("insert into address(name, user_id, update_date) values(?, ?, ?)");
+
+            // retrieve what we've just saved
+            db.addParam(178);
+            rs = db.executeSelect("select a.update_date from address a where a.user_id = ?");
+            while (rs.hasNext()) {
+                Date dateRetrievedFromUTCDateString = rs.getDate(0);
+                finishTest(
+                        dateRetrievedFromUTCDateString.equals(dateNowTestDeviceTzDate)
+                );
             }
             rs.close();
 

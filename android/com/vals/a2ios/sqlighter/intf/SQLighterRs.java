@@ -48,9 +48,10 @@ public interface SQLighterRs {
      * @return Number object or null
      */
     public Integer getInt(int index);
+
     /**
-     *
-     * @param index
+     * OPTIONAL Date implementation
+     * @param index - 0 based index
      * @return
      */
     public Date getDate(int index);

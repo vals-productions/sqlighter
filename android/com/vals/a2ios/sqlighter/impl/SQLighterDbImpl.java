@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Android implementation of SQLighter interfaces.
@@ -29,6 +30,8 @@ import java.util.Map;
 public class SQLighterDbImpl implements SQLighterDb {
     private String dbName, dbPath;
     private String dateColumnHint = DATE_HINT;
+    private String timeZoneName = null;
+    private String dateFormatString = null;
     private boolean isOverwrite = false;
     private Context context;
     private SQLiteDatabase db;
@@ -57,6 +60,11 @@ public class SQLighterDbImpl implements SQLighterDb {
             return cursor.moveToNext();
         }
 
+        /**
+         * OPTIONAL Date implementation
+         * @param index
+         * @return
+         */
         @Override
         public Date getDate(int index) {
             if(cursor.isNull(index)) {
@@ -150,6 +158,7 @@ public class SQLighterDbImpl implements SQLighterDb {
                 String columnName = getColumnName(index);
                 if (isDateNamedColumn && columnName != null &&
                         columnName.toLowerCase().indexOf(dateColumnHint) != -1) {
+                    // OPTIONAL Date implementation
                     return getDate(index);
                 }
                 return getString(index);
@@ -411,6 +420,7 @@ public class SQLighterDbImpl implements SQLighterDb {
             } else if  (o instanceof byte[]) {
                 stmt.bindBlob(i, (byte[])o);
             } else if (o instanceof Date) {
+                // OPTIONAL Date implementation
                 Date d = (Date)o;
                 StringBuilder sb = new StringBuilder(dateFormat.format(d));
                 stmt.bindString(i, sb.toString());
@@ -460,5 +470,18 @@ public class SQLighterDbImpl implements SQLighterDb {
     @Override
     public void setDateColumnNameHint(String hint) {
         this.dateColumnHint = hint;
+    }
+
+    @Override
+    public void setTimeZone(String timeZoneName) {
+        this.timeZoneName = timeZoneName;
+        TimeZone timeZone = TimeZone.getTimeZone(timeZoneName);
+        dateFormat.setTimeZone(timeZone);
+    }
+
+    @Override
+    public void setDateFormatString(String dateFormatString) {
+        this.dateFormatString = dateFormatString;
+        dateFormat.applyPattern(dateFormatString);
     }
 }

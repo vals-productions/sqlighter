@@ -454,5 +454,12 @@
     self.dateColumnHint = hint;
 }
 
+- (void)setTimeZoneWithNSString:(NSString *)timeZoneName {
+    self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName: timeZoneName];
+}
+
+- (void)setDateFormatStringWithNSString:(NSString *)dateFormatString {
+    self.dateFormatter.dateFormat = dateFormatString;
+}
 
 @end

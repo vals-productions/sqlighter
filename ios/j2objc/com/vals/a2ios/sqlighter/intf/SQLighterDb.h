@@ -67,6 +67,10 @@
 
 - (void)setDateColumnNameHintWithNSString:(NSString *)hint;
 
+- (void)setTimeZoneWithNSString:(NSString *)timeZone;
+
+- (void)setDateFormatStringWithNSString:(NSString *)dateFormatString;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(SQLighterDb)

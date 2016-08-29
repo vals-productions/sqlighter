@@ -4,7 +4,14 @@ import java.util.Date;
 
 /**
  * General interface for managing SQLite database
- * SQLite does not have dedicated Date type. NOTE: Sqlighter provides Date implementation based on TEXT data column type by saving/retrieving date formatted strings. This implementation is optional and you may use your own date type implementation by storing time as number,  your own string format or whatever.
+ *
+ * NOTE: SQLite does not have dedicated Date type.
+ * Sqlighter provides Date implementation based on
+ * TEXT data column type by saving/retrieving
+ * date formatted strings. This implementation is optional
+ * and you may use your own date type implementation by
+ * storing time as number, your own string format or whatever.
+ *
  */
 public interface SQLighterDb {
     public static final String DATE_HINT = "_date";
@@ -195,6 +202,8 @@ public interface SQLighterDb {
     public long getStatementBalance();
 
     /**
+     * OPTIONAL Date implementation
+     *
      * Override default date column hint.
      *
      * This is mostly needed when invoking
@@ -205,5 +214,40 @@ public interface SQLighterDb {
      * above would return Date instead of the String.
      */
     public void setDateColumnNameHint(String hint);
+
+    /**
+     * OPTIONAL Date implementation
+     *
+     * Be sure to check the timeZone name/id is
+     * supported on both - Android and iOS.
+     *
+     * Timezone specification through this setter in
+     * conjunction with TimeZone inclusion in Date Format
+     * String for database storage lets you manipulate
+     * data objects created in different timezones. Sqlighter
+     * will convert date's string representation to reflect
+     * time zone specified in this method when persisting the date
+     * as string into the database. Assuming dateFormatString also
+     * containd timezone information, will let sqlighter evaluate
+     * date's string representation and initialize Date object
+     * correctly.
+     *
+     * Typically it is suggested to persist all dates in
+     * UTC.
+     *
+     * @param timeZone i.e. UTC
+     */
+    public void setTimeZone(String timeZone);
+
+    /**
+     *
+     * OPTIONAL Date implementation
+     *
+     * Make sure the date format will be equivalently
+     * supported at iOS side as well.
+     *
+     * @param dateFormatString
+     */
+    void setDateFormatString(String dateFormatString);
 
 }
