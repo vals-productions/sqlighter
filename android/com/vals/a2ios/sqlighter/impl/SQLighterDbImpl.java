@@ -149,7 +149,11 @@ public class SQLighterDbImpl implements SQLighterDb {
             if (columnType == Cursor.FIELD_TYPE_NULL) {
                 return null;
             } else if (columnType == Cursor.FIELD_TYPE_INTEGER) {
-                return getInt(index);
+                Long testLong = getLong(index);
+                if(testLong >= Integer.MIN_VALUE && testLong <= Integer.MAX_VALUE) {
+                    return getInt(index);
+                }
+                return testLong;
             } else if (columnType == Cursor.FIELD_TYPE_FLOAT) {
                 return getDouble(index);
             } else if (columnType == Cursor.FIELD_TYPE_BLOB) {
