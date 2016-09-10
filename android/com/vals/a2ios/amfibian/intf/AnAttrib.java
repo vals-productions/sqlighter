@@ -44,7 +44,10 @@ public interface AnAttrib {
      *
      */
     public static interface CustomConverter {
-        public Object convert(Object value);
+
+        public Object convert(AnAttrib attrib, Object value);
+
+        void onWarning(Class cluss, String attribName, Object value);
     }
 
     /**
@@ -147,26 +150,12 @@ public interface AnAttrib {
     String getDbColumnDefinition();
 
     /**
+     * "Set" is for setting the value of the attribute
+     * from external source. It is JSON for now.
      *
      * @param converter
      */
     void setCustomSetConverter(CustomConverter converter);
-
-    /**
-     *
-     * @param key
-     * @param converter
-     */
-    @Deprecated
-    void setCustomSetConverter(String key, CustomConverter converter);
-
-    /**
-     *
-     * @param key
-     * @return
-     */
-    @Deprecated
-    CustomConverter getCustomSetConverter(String key);
 
     /**
      *
@@ -175,57 +164,16 @@ public interface AnAttrib {
     CustomConverter getCustomSetConverter();
 
     /**
-     *
-     */
-    @Deprecated
-    void clearCustomSetConverters();
-
-    /**
-     *
-     * @param key
-     */
-    @Deprecated
-    void setDefaultSetConversionKey(String key);
-
-    /**
-     *
+     * "Get" is for getting the value of the attribute
+     * for passing to external source.
      * @param converter
      */
     void setCustomGetConverter(CustomConverter converter);
 
     /**
      *
-     * @param key
-     * @param converter
-     */
-    @Deprecated
-    void setCustomGetConverter(String key, CustomConverter converter);
-
-    /**
-     *
-     * @param key
-     * @return
-     */
-    @Deprecated
-    CustomConverter getCustomGetConverter(String key);
-
-    /**
-     *
      * @return
      */
     CustomConverter getCustomGetConverter();
-
-    /**
-     *
-     */
-    @Deprecated
-    void clearCustomGetConverters();
-
-    /**
-     *
-     * @param key
-     */
-    @Deprecated
-    void setDefaultGetConversionKey(String key);
 
 }

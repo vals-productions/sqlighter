@@ -24,6 +24,8 @@
 
 #pragma mark Public
 
+- (instancetype)init;
+
 - (instancetype)initWithSQLighterDb:(id<SQLighterDb>)sqLighterDb
                        withNSString:(NSString *)tableName
                        withIOSClass:(IOSClass *)anObjClass
@@ -53,10 +55,6 @@
 - (id<SQLighterDb>)getSqlighterDb;
 
 - (void)setSqlighterDbWithSQLighterDb:(id<SQLighterDb>)sqlighterDb;
-
-#pragma mark Protected
-
-- (instancetype)init;
 
 @end
 

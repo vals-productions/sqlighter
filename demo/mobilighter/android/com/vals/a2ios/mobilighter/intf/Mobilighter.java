@@ -14,6 +14,8 @@ public interface Mobilighter {
      */
     public void setContext(Object context);
 
+    public Object getContext();
+
     /**
      *
      * @param title
@@ -73,6 +75,27 @@ public interface Mobilighter {
 
     /**
      *
+     * @param isEnabled
+     * @param widget
+     */
+    void setEnabled(Object widget, boolean isEnabled);
+
+    /**
+     *
+     * @param toggleButton
+     * @return
+     */
+    public boolean isOn(Object toggleButton);
+
+    /**
+     *
+     * @param toggleButton
+     * @param isOn
+     */
+    void setOn(Object toggleButton, boolean isOn);
+
+    /**
+     *
      * @param widget
      * @param action
      */
@@ -87,6 +110,26 @@ public interface Mobilighter {
     public String dateToString(Object date, String pattern);
 
     /**
+     *
+     * @param title
+     * @param message
+     */
+    public void showWaitPopup(String title, String message);
+
+    /**
+     *
+     */
+    public void hideWaitPopup();
+
+    /**
+     *
+     * @param action
+     */
+    public void runOnUiThread(final MobilAction action);
+
+    public String readFile(String fileName);
+
+    /**
      * Created by vsayenko on 8/20/15.
      */
     public static interface Navigator {
@@ -95,7 +138,9 @@ public interface Mobilighter {
         public void setString(String name, String param);
         public String getString(String name);
         public void setObject(String name, Object param);
+        public void setNumber(String name, Number param);
         public Object getObject(String name);
+        public Number getNumber(String name);
         public void setObject(Object param);
         public Object getObject();
     }

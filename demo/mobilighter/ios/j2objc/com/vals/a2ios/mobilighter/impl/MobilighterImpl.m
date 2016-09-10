@@ -23,18 +23,15 @@
     self = [super init];
     if ( self ) {
         self.dateFormatter = [[NSDateFormatter alloc] init];
+        // [self.dateFormatter setDateFormat: Mobilighter_DATE_FORMAT_STR_];
     }
     return self;
 }
 
-- (void)notifyTableDataRefreshWithBaseListCtrl:(id) ctrl withId:(id)tableObject {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([tableObject isKindOfClass: [UITableView class]]) {
-            UITableView *tv = (UITableView*)tableObject;
-            [tv reloadData];
-        }
-    });
+void MobilighterImpl_init(MobilighterImpl *self) {
+    (void) NSObject_init(self);
 }
+
 
 - (NSString *)dateToStringWithId:(id)date withNSString: (NSString*) pattern {
     if (date != nil && [date isKindOfClass: [NSDate class]]) {
@@ -136,6 +133,9 @@
     } else if ([textWidget isKindOfClass: [UITextView class]]) {
         UITextView *l = (UITextView*) textWidget;
         [l setText: text];
+    } else if([textWidget isKindOfClass: [UIBarButtonItem class]]) {
+        UIBarButtonItem *l = (UIBarButtonItem*) textWidget;
+        [l setTitle:text];
     }
 }
 
@@ -177,6 +177,50 @@
         UIView *o = (UIView*)widget;
         o.hidden = FALSE;
     }
+}
+
+- (id)getContext {
+    return nil;
+}
+
+- (jboolean)isOnWithId:(id)toggleButton {
+    if ([toggleButton isKindOfClass: [UISwitch class]]) {
+        UISwitch *o = (UISwitch*)toggleButton;
+        return o.isOn;
+    }
+    return NO;
+}
+
+- (void)setOnWithId:(id)toggleButton
+        withBoolean:(jboolean)isOn {
+    if ([toggleButton isKindOfClass: [UISwitch class]]) {
+        UISwitch *o = (UISwitch*)toggleButton;
+        [o setOn:isOn animated: YES];
+    }
+}
+
+- (NSString *)readFileWithNSString:(NSString *)fileName {
+    NSString *jsonFileName = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: fileName];
+    NSError* error = nil;
+    NSString *jsonString = [NSString stringWithContentsOfFile:jsonFileName encoding:NSUTF8StringEncoding error:&error];
+    if (!error) {
+        return jsonString;
+    }
+    return nil;
+}
+
+- (void)showWaitPopupWithNSString:(NSString *)title
+                     withNSString:(NSString *)message {
+}
+
+- (void)hideWaitPopup {
+}
+
+- (void)runOnUiThreadWithMobilAction:(id<MobilAction>)action {
+}
+
+- (void)setEnabledWithId:(id)widget
+             withBoolean:(jboolean)isEnabled {
 }
 
 @end

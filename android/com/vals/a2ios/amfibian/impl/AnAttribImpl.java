@@ -3,12 +3,7 @@ package com.vals.a2ios.amfibian.impl;
 import com.vals.a2ios.amfibian.intf.AnAttrib;
 import com.vals.a2ios.amfibian.intf.AnObject;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by vsayenko on 9/26/15.
@@ -17,29 +12,11 @@ public class AnAttribImpl implements AnAttrib {
     private AnObject<?> parentAnObject;
     private String attribName;
     private String columnName;
-    private String dbColumnDefinition;
     private String jsonName;
+    private String dbColumnDefinition;
 
-    @Deprecated
-    public static final String NONAME_CONVERSION_KEY = "nonameConverter";
-
-    /**
-     * TODO
-     * private CustomConverter customSetConverter;
-     * private CustomConverter customGetConverter;
-     */
-
-    @Deprecated
-    public String defaultConverterKey = NONAME_CONVERSION_KEY;
-
-    @Deprecated
-    public String defaultGetConverterKey = NONAME_CONVERSION_KEY;
-
-    @Deprecated
-    private Map<String, CustomConverter> converterMap = new HashMap<String, CustomConverter>();
-
-    @Deprecated
-    private Map<String, CustomConverter> getConverterMap = new HashMap<String, CustomConverter>();
+    private CustomConverter customSetConverter;
+    private CustomConverter customGetConverter;
 
     /**
      *
@@ -80,53 +57,24 @@ public class AnAttribImpl implements AnAttrib {
 
     @Override
     public void setCustomSetConverter(CustomConverter converter) {
-        setCustomSetConverter(NONAME_CONVERSION_KEY, converter);
+        this.customSetConverter = converter;
     }
-    @Override
-    public void setCustomSetConverter(String key, CustomConverter converter) {
-        converterMap.put(key, converter);
-    }
-    @Override
-    public CustomConverter getCustomSetConverter(String key) {
-        return converterMap.get(key);
-    }
+
     @Override
     public CustomConverter getCustomSetConverter() {
-        return converterMap.get(defaultConverterKey);
-    }
-    @Override
-    public void clearCustomSetConverters() {
-        converterMap.clear();
-    }
-    @Override
-    public void setDefaultSetConversionKey(String key) {
-    	defaultConverterKey = key;
+        return customSetConverter;
     }
 
     @Override
     public void setCustomGetConverter(CustomConverter converter) {
-        setCustomGetConverter(NONAME_CONVERSION_KEY, converter);
+        this.customGetConverter = converter;
     }
-    @Override
-    public void setCustomGetConverter(String key, CustomConverter converter) {
-        getConverterMap.put(key, converter);
-    }
-    @Override
-    public CustomConverter getCustomGetConverter(String key) {
-        return getConverterMap.get(key);
-    }
+
     @Override
     public CustomConverter getCustomGetConverter() {
-        return getConverterMap.get(defaultGetConverterKey);
+        return this.customGetConverter;
     }
-    @Override
-    public void clearCustomGetConverters() {
-        getConverterMap.clear();
-    }
-    @Override
-    public void setDefaultGetConversionKey(String key) {
-    	defaultGetConverterKey = key;
-    }
+
     @Override
     public void setAnObject(AnObject<?> anObject) {
         this.parentAnObject = anObject;
@@ -162,7 +110,7 @@ public class AnAttribImpl implements AnAttrib {
             */
             CustomConverter cc = getCustomSetConverter();
             if (cc != null) {
-                convertedValue = cc.convert(value);
+                convertedValue = cc.convert(this, value);
             } else {
                 convertedValue = value;
             }
@@ -180,7 +128,7 @@ public class AnAttribImpl implements AnAttrib {
             value = m.invoke(parentAnObject.getNativeObject());
             CustomConverter cc = getCustomGetConverter();
             if (cc != null) {
-                value = cc.convert(value);
+                value = cc.convert(this, value);
                 return value;
             }
         }

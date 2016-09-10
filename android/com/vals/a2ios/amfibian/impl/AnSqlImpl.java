@@ -23,6 +23,14 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     public static final int TYPE_CREATE = 4;
     public static final int TYPE_DELETE = 5;
 
+    @Deprecated
+    private static AnAttrib.CustomConverter sqlCustomSetGlobalConverter; // = new SampleSetConverter();
+    @Deprecated
+    private static AnAttrib.CustomConverter sqlCustomGetGlobalConverter;
+
+    private AnAttrib.CustomConverter dbCustomSetConverter;
+    private AnAttrib.CustomConverter dbCustomGetConverter;
+
     protected String tableName;
 
     private List<String> attribNameList = new LinkedList<String>();
@@ -36,12 +44,6 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     private int type;
     private String columnClause;
     private String alias = "";
-
-    protected CustomConverter sqlCustomSetConverter;
-    protected CustomConverter sqlCustomGetConverter;
-
-    protected static CustomConverter sqlCustomSetGlobalConverter;
-    protected static CustomConverter sqlCustomGetGlobalConverter;
 
     public AnSqlImpl(String tableName, Class<T> anObjClass, AnAttrib[] attribList, AnObject<?> parentAnObject) {
         super(anObjClass, attribList, parentAnObject);
@@ -159,7 +161,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         for (String attrName : attrNames) {
             if (!isSkipAttr(attrName)) {
                 AnAttrib attr = om.get(attrName);
-                Object value = getValue(AnSqlImpl.getSqlCustomGetGlobalConverter(), sqlCustomGetConverter, attr);
+                Object value = getValue(dbCustomGetConverter, attr);
                 if (value != null) {
                     queryStr.append(getColumnName(attr));
                     parameters.add(value);
@@ -190,7 +192,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
                 AnAttrib attrib = om.get(attrName);
                 if (attrib != null) {
                     queryStr.append(getColumnName(attrib) + " = ? ");
-                    parameters.add(getValue(AnSqlImpl.getSqlCustomGetGlobalConverter(), sqlCustomGetConverter, attrib));
+                    parameters.add(getValue(dbCustomGetConverter, attrib));
                 } else {
                     queryStr.append(getColumnName(attrib) + " = NULL ");
                 }
@@ -395,39 +397,19 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         return null;
     }
 
-    @Override
-    public CustomConverter getSqlCustomSetConverter() {
-        return sqlCustomSetConverter;
+    public AnAttrib.CustomConverter getDbCustomSetConverter() {
+        return dbCustomSetConverter;
     }
 
-    @Override
-    public void setSqlCustomSetConverter(CustomConverter sqlCustomSetConverter) {
-        this.sqlCustomSetConverter = sqlCustomSetConverter;
+    public void setDbCustomSetConverter(AnAttrib.CustomConverter dbCustomSetConverter) {
+        this.dbCustomSetConverter = dbCustomSetConverter;
     }
 
-    @Override
-    public CustomConverter getSqlCustomGetConverter() {
-        return sqlCustomGetConverter;
+    public AnAttrib.CustomConverter getDbCustomGetConverter() {
+        return dbCustomGetConverter;
     }
 
-    @Override
-    public void setSqlCustomGetConverter(CustomConverter sqlCustomGetConverter) {
-        this.sqlCustomGetConverter = sqlCustomGetConverter;
-    }
-
-    public static CustomConverter getSqlCustomSetGlobalConverter() {
-        return AnSqlImpl.sqlCustomSetGlobalConverter;
-    }
-
-    public static void setSqlCustomSetGlobalConverter(CustomConverter sqlCustomSetGlobalConverter) {
-        AnSqlImpl.sqlCustomSetGlobalConverter = sqlCustomSetGlobalConverter;
-    }
-
-    public static CustomConverter getSqlCustomGetGlobalConverter() {
-        return AnSqlImpl.sqlCustomGetGlobalConverter;
-    }
-
-    public static void setSqlCustomGetGlobalConverter(CustomConverter sqlCustomGetGlobalConverter) {
-        AnSqlImpl.sqlCustomGetGlobalConverter = sqlCustomGetGlobalConverter;
+    public void setDbCustomGetConverter(AnAttrib.CustomConverter dbCustomGetConverter) {
+        this.dbCustomGetConverter = dbCustomGetConverter;
     }
 }

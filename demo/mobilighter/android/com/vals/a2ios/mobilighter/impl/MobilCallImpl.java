@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class MobilCallImpl implements MobilCall {
     protected String relativeUrl = "";
     protected String urlParamString;
     protected String method = "GET";
-
+    protected String name = "default";
     protected HttpURLConnection connection;
     protected StringBuilder stringBuilder;
     protected Map<String, Object> paramMap = new HashMap<>();
@@ -40,7 +41,7 @@ public class MobilCallImpl implements MobilCall {
     protected MobilCallBack<?> callBack;
     protected OutputStream outputStream;
     protected Map<String, String> httpHeaders = new HashMap<>();
-    protected Exception lastException;
+    protected List<Throwable> throwableList;
 
     @Override
     public void setBaseUrl(String baseUrl) {
@@ -60,6 +61,11 @@ public class MobilCallImpl implements MobilCall {
     @Override
     public void addHeader(String name, String value) {
         httpHeaders.put(name, value);
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     protected void setHeader(String name, String value) {
@@ -116,12 +122,7 @@ public class MobilCallImpl implements MobilCall {
         connection.connect();
     }
 
-    @Override
-    public void remoteCallMakeOnThread() throws Exception {
-        MobilCallThreadImpl at = new MobilCallThreadImpl(callBack, this);
-        at.start();
-    }
-    
+
     protected boolean isError(int responseStatus) {
         return responseStatus >= 400 && responseStatus < 600;
     }
@@ -137,7 +138,9 @@ public class MobilCallImpl implements MobilCall {
             }
             readResponseCookie(connection);
         } catch (Throwable t) {
-            t.printStackTrace();
+//            t.printStackTrace(); // TODO
+            throwableList.add(t);
+//            lastException = t;
         }
     }
 
@@ -307,11 +310,28 @@ public class MobilCallImpl implements MobilCall {
         }
     }
 
-    protected void remoteCallMake() throws Exception {
+    @Override
+    public void remoteCallMake(boolean isBlocking) throws Exception {
+        if(isBlocking) {
+            remoteCallMakeAndWait();
+        } else {
+            remoteCallMakeOnNewThread();
+        }
+    }
+
+    @Override
+    public void remoteCallMakeAndWait() throws Exception {
         prepareAndConnect();
         consumeResponse();
         processServerResponse(true);
     }
+
+    @Override
+    public void remoteCallMakeOnNewThread() throws Exception {
+        MobilCallThreadImpl at = new MobilCallThreadImpl(callBack, this);
+        at.start();
+    }
+
 
 //    @Override
 //    public boolean remoteCallMakeWithRetry() {
@@ -323,7 +343,7 @@ public class MobilCallImpl implements MobilCall {
 //                    Thread.sleep(retryDelay);
 //                }
 //                tryCount++;
-//                remoteCallMake();
+//                remoteCallMakeAndWait();
 //                processResult = processServerResponse(tryCount < tryCountMax);
 //            } while(tryCount < tryCountMax && processResult == false);
 //            return processResult;
@@ -352,12 +372,21 @@ public class MobilCallImpl implements MobilCall {
         @Override
         public void run() {
             try {
-                netCall.remoteCallMake();
+                netCall.remoteCallMakeAndWait();
             } catch (Throwable t) {
+                t.printStackTrace(); // TODO -
                 if(callback != null) {
                     callback.onError(t, null, null);
                 }
             }
         }
+    }
+
+    public List<Throwable> getThrowableList() {
+        return throwableList;
+    }
+
+    public void clearThrowableList() {
+        throwableList.clear();
     }
 }

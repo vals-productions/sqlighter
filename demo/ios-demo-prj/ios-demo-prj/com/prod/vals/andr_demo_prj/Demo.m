@@ -3,19 +3,14 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java
 //
 
-#include "IOSClass.h"
-#include "IOSObjectArray.h"
 #include "IOSPrimitiveArray.h"
 #include "J2ObjC_source.h"
 #include "com/prod/vals/andr_demo_prj/Appointment.h"
 #include "com/prod/vals/andr_demo_prj/Bootstrap.h"
 #include "com/prod/vals/andr_demo_prj/Demo.h"
 #include "com/prod/vals/andr_demo_prj/DemoBase.h"
-#include "com/prod/vals/andr_demo_prj/Entity.h"
-#include "com/vals/a2ios/amfibian/impl/AnObjectImpl.h"
-#include "com/vals/a2ios/amfibian/impl/AnOrmImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnUpgradeImpl.h"
-#include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
+#include "com/vals/a2ios/amfibian/intf/AnIncubator.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "com/vals/a2ios/amfibian/intf/AnOrm.h"
 #include "com/vals/a2ios/amfibian/intf/AnSql.h"
@@ -307,14 +302,13 @@ void Demo_sqlighterOperations() {
 void Demo_amfibianOperations() {
   Demo_initialize();
   @try {
+    [((id<AnIncubator>) nil_chk(JreLoadStatic(DemoBase, anIncubator_))) load__WithNSString:JreLoadStatic(DemoBase, jsonStringWithObjectDefinitions_)];
     DemoBase_resetTestCounters();
     id<SQLighterDb> sqlighterDb = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
-    NSString *jsonAppointment234 = @"{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
-    id<AnObject> anEntity = new_AnObjectImpl_initWithIOSClass_withNSStringArray_(Entity_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"id" } count:1 type:NSString_class_()]);
-    id<AnOrm> anOrm = new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(sqlighterDb, @"appointment", Appointment_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"name", @"isProcessed,is_processed" } count:2 type:NSString_class_()], anEntity);
-    [((id<AnAttrib>) nil_chk([anOrm getAttribWithNSString:@"name"])) setDbColumnDefinitionWithNSString:@"TEXT NOT NULL"];
-    Appointment *appointment234 = [anOrm asNativeObjectWithNSString:jsonAppointment234];
-    DemoBase_checkTestWithNSString_withBoolean_(@"JSON 2 native mapping", [((JavaLangInteger *) nil_chk([((Appointment *) nil_chk(appointment234)) getId])) isEqual:JavaLangInteger_valueOfWithInt_(234)] && [((NSString *) nil_chk([appointment234 getName])) isEqual:@"Meet AmfibiaN!"] && [((JavaLangInteger *) nil_chk([appointment234 getIsProcessed])) isEqual:JavaLangInteger_valueOfWithInt_(0)]);
+    NSString *jsonAppointment234 = @"{id: \"234\", name: \"Meet AmfibiaN!\", processed: \"0\", \"createDate\": 1473528675000 }";
+    id<AnOrm> anOrm = DemoBase_getOrmAppointentWithSQLighterDb_(sqlighterDb);
+    Appointment *appointment234 = [((id<AnOrm>) nil_chk(anOrm)) asNativeObjectWithNSString:jsonAppointment234];
+    DemoBase_checkTestWithNSString_withBoolean_(@"JSON 2 native mapping", [((JavaLangInteger *) nil_chk([((Appointment *) nil_chk(appointment234)) getId])) isEqual:JavaLangInteger_valueOfWithInt_(234)] && [((NSString *) nil_chk([appointment234 getName])) isEqual:@"Meet AmfibiaN!"] && [((JavaLangInteger *) nil_chk([appointment234 getIsProcessed])) isEqual:JavaLangInteger_valueOfWithInt_(0)] && [((JavaUtilDate *) nil_chk([appointment234 getCreateDate])) getTime] == 1473528675000l);
     NSString *createAppointmentTableSql = [((id<AnSql>) nil_chk([anOrm startSqlCreate])) getQueryString];
     (void) [((id<SQLighterDb>) nil_chk(sqlighterDb)) executeChangeWithNSString:createAppointmentTableSql];
     [anOrm startSqlInsertWithId:appointment234];
@@ -429,6 +423,7 @@ void Demo_bindUiWithId_withId_withId_withId_withId_withId_withId_withId_(id titl
   *JreLoadStaticRef(DemoBase, sqlighterDetailsLabel_) = sqlighterDetailsLabel;
   *JreLoadStaticRef(DemoBase, amfibianHelloLabel_) = amfibianHelloLabel;
   *JreLoadStaticRef(DemoBase, amfibianDetailsLabel_) = amfibianDetailsLabel;
+  *JreLoadStaticRef(DemoBase, jsonStringWithObjectDefinitions_) = [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) readFileWithNSString:@"an_objects.json"];
   id<Mobilighter> mobilighter = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter];
   [((id<Mobilighter>) nil_chk(mobilighter)) setTextWithId:title withNSString:@"Welcome to SQLighter demo."];
   [mobilighter setTextWithId:mobilighterCredit withNSString:@"UI controled by Mobilighter."];

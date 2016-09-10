@@ -7,6 +7,7 @@
 #define _ComValsA2iosAmfibianImplAnObjectImpl_H_
 
 #include "J2ObjC_header.h"
+#include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 
 @class IOSClass;
@@ -14,6 +15,7 @@
 @class OrgJsonJSONArray;
 @class OrgJsonJSONObject;
 @protocol AnAttrib;
+@protocol AnAttrib_CustomConverter;
 @protocol JavaUtilCollection;
 @protocol JavaUtilMap;
 
@@ -69,13 +71,9 @@
 
 - (id<AnAttrib>)getAttribWithNSString:(NSString *)propertyName;
 
-- (id<AnObject_CustomConverter>)getJsonCustomGetConverter;
+- (id<AnAttrib_CustomConverter>)getJsonCustomGetConverter;
 
-+ (id<AnObject_CustomConverter>)getJsonCustomGetGlobalConverter;
-
-- (id<AnObject_CustomConverter>)getJsonCustomSetConverter;
-
-+ (id<AnObject_CustomConverter>)getJsonCustomSetGlobalConverter;
+- (id<AnAttrib_CustomConverter>)getJsonCustomSetConverter;
 
 - (id<JavaUtilMap>)getMapWithId:(id)nativeObject;
 
@@ -87,24 +85,25 @@
 
 - (id<AnObject>)getParentAnObject;
 
+- (void)initConverters OBJC_METHOD_FAMILY_NONE;
+
 - (void)resetNativeObject;
 
-- (void)setJsonCustomGetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)jsonCustomGetConverter;
+- (void)setJsonCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)jsonCustomGetConverter;
 
-+ (void)setJsonCustomGetGlobalConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)jsonCustomGetGlobalConverter;
-
-- (void)setJsonCustomSetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)jsonCustomSetConverter;
-
-+ (void)setJsonCustomSetGlobalConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)jsonCustomSetGlobalConverter;
+- (void)setJsonCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)jsonCustomSetConverter;
 
 - (void)setNativeClassWithIOSClass:(IOSClass *)anObjClass;
 
 - (void)setNativeObjectWithId:(id)o;
 
+- (void)setOwnAttribsWithAnAttribArray:(IOSObjectArray *)attribs;
+
+- (void)setParentAnObjectWithAnObject:(id<AnObject>)parentObject;
+
 #pragma mark Protected
 
-- (id)getValueWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)globalConverter
-              withAnObject_CustomConverter:(id<AnObject_CustomConverter>)converter
+- (id)getValueWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter
                               withAnAttrib:(id<AnAttrib>)attrb;
 
 - (void)init__WithIOSClass:(IOSClass *)anObjClass
@@ -124,14 +123,13 @@
          withNSStringArray:(IOSObjectArray *)propertyNames
               withAnObject:(id<AnObject>)parentMapper OBJC_METHOD_FAMILY_NONE;
 
-- (void)setValueWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)globalConverter
-                withAnObject_CustomConverter:(id<AnObject_CustomConverter>)converter
+- (void)setValueWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter
                                 withAnAttrib:(id<AnAttrib>)attrib
                                       withId:(id)value;
 
 @end
 
-J2OBJC_STATIC_INIT(AnObjectImpl)
+J2OBJC_EMPTY_STATIC_INIT(AnObjectImpl)
 
 J2OBJC_FIELD_SETTER(AnObjectImpl, nativeClass_, IOSClass *)
 
@@ -159,19 +157,11 @@ FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withAnAttribArray_(AnObject
 
 FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_(IOSClass *anObjClass, IOSObjectArray *propertyMappers) NS_RETURNS_RETAINED;
 
-FOUNDATION_EXPORT id<AnObject_CustomConverter> AnObjectImpl_getJsonCustomGetGlobalConverter();
-
-FOUNDATION_EXPORT void AnObjectImpl_setJsonCustomGetGlobalConverterWithAnObject_CustomConverter_(id<AnObject_CustomConverter> jsonCustomGetGlobalConverter);
-
-FOUNDATION_EXPORT id<AnObject_CustomConverter> AnObjectImpl_getJsonCustomSetGlobalConverter();
-
-FOUNDATION_EXPORT void AnObjectImpl_setJsonCustomSetGlobalConverterWithAnObject_CustomConverter_(id<AnObject_CustomConverter> jsonCustomSetGlobalConverter);
-
 J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl)
 
 @compatibility_alias ComValsA2iosAmfibianImplAnObjectImpl AnObjectImpl;
 
-@interface AnObjectImpl_JsonSimpleGetConverter : NSObject < AnObject_CustomConverter >
+@interface AnObjectImpl_SampleGetConverter : NSObject < AnAttrib_CustomConverter >
 
 #pragma mark Public
 
@@ -180,17 +170,21 @@ J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl)
 - (id)convertWithAnAttrib:(id<AnAttrib>)attrib
                    withId:(id)value;
 
+- (void)onWarningWithIOSClass:(IOSClass *)cluss
+                 withNSString:(NSString *)attribName
+                       withId:(id)value;
+
 @end
 
-J2OBJC_EMPTY_STATIC_INIT(AnObjectImpl_JsonSimpleGetConverter)
+J2OBJC_EMPTY_STATIC_INIT(AnObjectImpl_SampleGetConverter)
 
-FOUNDATION_EXPORT void AnObjectImpl_JsonSimpleGetConverter_init(AnObjectImpl_JsonSimpleGetConverter *self);
+FOUNDATION_EXPORT void AnObjectImpl_SampleGetConverter_init(AnObjectImpl_SampleGetConverter *self);
 
-FOUNDATION_EXPORT AnObjectImpl_JsonSimpleGetConverter *new_AnObjectImpl_JsonSimpleGetConverter_init() NS_RETURNS_RETAINED;
+FOUNDATION_EXPORT AnObjectImpl_SampleGetConverter *new_AnObjectImpl_SampleGetConverter_init() NS_RETURNS_RETAINED;
 
-J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl_JsonSimpleGetConverter)
+J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl_SampleGetConverter)
 
-@interface AnObjectImpl_JsonSimpleSetConverter : NSObject < AnObject_CustomConverter >
+@interface AnObjectImpl_SampleSetConverter : NSObject < AnAttrib_CustomConverter >
 
 #pragma mark Public
 
@@ -199,14 +193,18 @@ J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl_JsonSimpleGetConverter)
 - (id)convertWithAnAttrib:(id<AnAttrib>)attrib
                    withId:(id)value;
 
+- (void)onWarningWithIOSClass:(IOSClass *)cluss
+                 withNSString:(NSString *)attribName
+                       withId:(id)value;
+
 @end
 
-J2OBJC_EMPTY_STATIC_INIT(AnObjectImpl_JsonSimpleSetConverter)
+J2OBJC_EMPTY_STATIC_INIT(AnObjectImpl_SampleSetConverter)
 
-FOUNDATION_EXPORT void AnObjectImpl_JsonSimpleSetConverter_init(AnObjectImpl_JsonSimpleSetConverter *self);
+FOUNDATION_EXPORT void AnObjectImpl_SampleSetConverter_init(AnObjectImpl_SampleSetConverter *self);
 
-FOUNDATION_EXPORT AnObjectImpl_JsonSimpleSetConverter *new_AnObjectImpl_JsonSimpleSetConverter_init() NS_RETURNS_RETAINED;
+FOUNDATION_EXPORT AnObjectImpl_SampleSetConverter *new_AnObjectImpl_SampleSetConverter_init() NS_RETURNS_RETAINED;
 
-J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl_JsonSimpleSetConverter)
+J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl_SampleSetConverter)
 
 #endif // _ComValsA2iosAmfibianImplAnObjectImpl_H_

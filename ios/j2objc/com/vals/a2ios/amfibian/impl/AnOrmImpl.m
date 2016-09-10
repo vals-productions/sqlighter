@@ -75,7 +75,7 @@ J2OBJC_IGNORE_DESIGNATED_END
         id columnValue = [rs getObjectWithInt:columnIndex++];
         if (columnValue != nil) {
           id<AnAttrib> attrib = [self getAttribWithNSString:attribName];
-          [self setValueWithAnObject_CustomConverter:AnObjectImpl_getJsonCustomSetGlobalConverter() withAnObject_CustomConverter:sqlCustomSetConverter_ withAnAttrib:attrib withId:columnValue];
+          [self setValueWithAnAttrib_CustomConverter:[self getDbCustomSetConverter] withAnAttrib:attrib withId:columnValue];
         }
       }
     }

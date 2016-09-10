@@ -1,5 +1,9 @@
 package com.prod.vals.andr_demo_prj;
 
+import com.vals.a2ios.amfibian.impl.AnIncubatorImpl;
+import com.vals.a2ios.amfibian.impl.AnObjectImpl;
+import com.vals.a2ios.amfibian.impl.AnOrmImpl;
+import com.vals.a2ios.amfibian.intf.AnIncubator;
 import com.vals.a2ios.amfibian.intf.AnOrm;
 import com.vals.a2ios.mobilighter.intf.MobilAction;
 import com.vals.a2ios.mobilighter.intf.Mobilighter;
@@ -74,7 +78,10 @@ public abstract class DemoBase {
     protected static void print(Appointment appointment) {
         System.out.println(
                 "Appointment object. id: " + appointment.getId() +
-                        ", name: " + appointment.getName());
+                        ", name: " + appointment.getName() +
+                        ", isProcessed:" + appointment.getIsProcessed() +
+                        ", createDate:" + appointment.getCreateDate()
+        );
     }
 
     /**
@@ -152,7 +159,7 @@ public abstract class DemoBase {
                 sql.startsWith("select appointment0.id "));
 
         anOrm.resetSkipInclAttrNameList();
-        anOrm.addSkipAttribs("id", "name");
+        anOrm.addSkipAttribs("id", "name", "createDate");
         anOrm.startSqlSelect();
         sql = anOrm.getQueryString();
 
@@ -187,6 +194,68 @@ public abstract class DemoBase {
                             a.getName().equals("Appointemnt " + i) &&
                             a.getIsProcessed().equals(i));
             i++;
+        }
+    }
+
+    protected static String jsonStringWithObjectDefinitions;
+
+    protected static boolean isUseJsonFile = true;
+
+    protected static AnIncubator anIncubator = new AnIncubatorImpl() {
+        @Override
+        public Class<?> getClassByName(String name) {
+            if (name.equals(Entity.class.getName())) return Entity.class;
+            else if (name.equals(Appointment.class.getName())) return Appointment.class;
+            return null;
+        }
+    };
+
+    /**
+     * The Entity class is a base class for our imaginable project's business objects.
+     * It makes sure all our business objects have the id property.
+     */
+    public static AnOrm<Entity> getOrmEntity() throws Exception {
+        if(!isUseJsonFile) {
+            return new AnOrmImpl(
+                    null,
+                    "",
+                    Entity.class,
+                    /* attribute names/definitions */
+                    new String[]{"id"},
+                    null);
+        } else {
+            return anIncubator.make(Entity.class);
+        }
+    }
+
+    /**
+     * An Appointment object extends the Entity and has appointment name property as
+     * well as isProcessed property that is represented by is_processed database
+     * column. Each attribute may contain a comma delimited mapping names.
+     * <pre>
+     *     <li>native object mapping (required)</li>
+     *     <li>db column mapping (optional)</li>
+     *     <li>JSON object mapping (optional)</li>
+     * </pre>
+     */
+    public static AnOrm<Appointment> getOrmAppointent(SQLighterDb sqLighterDb) throws Exception {
+        if(!isUseJsonFile) {
+            AnOrm<Appointment> anOrm = new AnOrmImpl<Appointment>(
+                    sqLighterDb, // reference to sqlighter database management object
+                    "appointment", // table name
+                    Appointment.class, // will
+                    /* attribute names/definitions */
+                    new String[]{"name", "isProcessed,is_processed,processed"},
+                    getOrmEntity());
+             /*
+             * Lets customize the name with NOT NULL constraint
+             */
+            anOrm.getAttrib("name").setDbColumnDefinition("TEXT NOT NULL");
+            return anOrm;
+        } else {
+            AnOrm<Appointment> anOrm = anIncubator.make(Appointment.class);
+            anOrm.setSqlighterDb(sqLighterDb);
+            return anOrm;
         }
     }
 }

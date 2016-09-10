@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * Created by vsayenko on 9/30/15.
@@ -20,7 +19,7 @@ import java.util.concurrent.Callable;
 public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
     protected SQLighterDb sqlighterDb;
 
-    protected AnOrmImpl() {
+    public AnOrmImpl() {
         super();
     }
 
@@ -57,7 +56,7 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
                     Object columnValue = rs.getObject(columnIndex++);
                     if (columnValue != null) {
                         AnAttrib attrib = getAttrib(attribName);
-                        setValue(AnSqlImpl.getJsonCustomSetGlobalConverter(), sqlCustomSetConverter, attrib, columnValue);
+                        setValue(getDbCustomSetConverter(), attrib, columnValue);
                     }
                 }
             }

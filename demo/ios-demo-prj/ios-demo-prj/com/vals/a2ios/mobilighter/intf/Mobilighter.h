@@ -14,6 +14,8 @@
 
 - (void)setContextWithId:(id)context;
 
+- (id)getContext;
+
 - (void)showOkDialogWithNSString:(NSString *)title
                     withNSString:(NSString *)message;
 
@@ -38,11 +40,28 @@
 
 - (void)showWithId:(id)widget;
 
+- (void)setEnabledWithId:(id)widget
+             withBoolean:(jboolean)isEnabled;
+
+- (jboolean)isOnWithId:(id)toggleButton;
+
+- (void)setOnWithId:(id)toggleButton
+        withBoolean:(jboolean)isOn;
+
 - (void)addActionListenerWithId:(id)widget
                 withMobilAction:(id<MobilAction>)action;
 
 - (NSString *)dateToStringWithId:(id)date
                     withNSString:(NSString *)pattern;
+
+- (void)showWaitPopupWithNSString:(NSString *)title
+                     withNSString:(NSString *)message;
+
+- (void)hideWaitPopup;
+
+- (void)runOnUiThreadWithMobilAction:(id<MobilAction>)action;
+
+- (NSString *)readFileWithNSString:(NSString *)fileName;
 
 @end
 
@@ -67,7 +86,12 @@ J2OBJC_TYPE_LITERAL_HEADER(Mobilighter)
 - (void)setObjectWithNSString:(NSString *)name
                        withId:(id)param;
 
+- (void)setNumberWithNSString:(NSString *)name
+                 withNSNumber:(NSNumber *)param;
+
 - (id)getObjectWithNSString:(NSString *)name;
+
+- (NSNumber *)getNumberWithNSString:(NSString *)name;
 
 - (void)setObjectWithId:(id)param;
 

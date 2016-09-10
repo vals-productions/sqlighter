@@ -14,8 +14,8 @@
 @class IOSObjectArray;
 @class JavaLangInteger;
 @protocol AnAttrib;
+@protocol AnAttrib_CustomConverter;
 @protocol AnObject;
-@protocol AnObject_CustomConverter;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
 
@@ -28,8 +28,6 @@
 @interface AnSqlImpl : AnObjectImpl < AnSql > {
  @public
   NSString *tableName_;
-  id<AnObject_CustomConverter> sqlCustomSetConverter_;
-  id<AnObject_CustomConverter> sqlCustomGetConverter_;
 }
 
 #pragma mark Public
@@ -67,19 +65,15 @@
 
 - (NSString *)getColumnNameWithAnAttrib:(id<AnAttrib>)attrib;
 
+- (id<AnAttrib_CustomConverter>)getDbCustomGetConverter;
+
+- (id<AnAttrib_CustomConverter>)getDbCustomSetConverter;
+
 - (id<JavaUtilList>)getParameters;
 
 - (NSString *)getQueryString;
 
 - (id<JavaUtilSet>)getSkipAttrNameList;
-
-- (id<AnObject_CustomConverter>)getSqlCustomGetConverter;
-
-+ (id<AnObject_CustomConverter>)getSqlCustomGetGlobalConverter;
-
-- (id<AnObject_CustomConverter>)getSqlCustomSetConverter;
-
-+ (id<AnObject_CustomConverter>)getSqlCustomSetGlobalConverter;
 
 - (NSString *)getTableName;
 
@@ -87,13 +81,9 @@
 
 - (void)resetSkipInclAttrNameList;
 
-- (void)setSqlCustomGetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomGetConverter;
+- (void)setDbCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)dbCustomGetConverter;
 
-+ (void)setSqlCustomGetGlobalConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomGetGlobalConverter;
-
-- (void)setSqlCustomSetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomSetConverter;
-
-+ (void)setSqlCustomSetGlobalConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)sqlCustomSetGlobalConverter;
+- (void)setDbCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)dbCustomSetConverter;
 
 - (void)setTableNameWithNSString:(NSString *)tableName;
 
@@ -122,8 +112,6 @@
 J2OBJC_EMPTY_STATIC_INIT(AnSqlImpl)
 
 J2OBJC_FIELD_SETTER(AnSqlImpl, tableName_, NSString *)
-J2OBJC_FIELD_SETTER(AnSqlImpl, sqlCustomSetConverter_, id<AnObject_CustomConverter>)
-J2OBJC_FIELD_SETTER(AnSqlImpl, sqlCustomGetConverter_, id<AnObject_CustomConverter>)
 
 J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, TYPE_SELECT, jint)
 
@@ -134,14 +122,6 @@ J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, TYPE_INSERT, jint)
 J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, TYPE_CREATE, jint)
 
 J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, TYPE_DELETE, jint)
-
-FOUNDATION_EXPORT id<AnObject_CustomConverter> AnSqlImpl_sqlCustomSetGlobalConverter_;
-J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, sqlCustomSetGlobalConverter_, id<AnObject_CustomConverter>)
-J2OBJC_STATIC_FIELD_SETTER(AnSqlImpl, sqlCustomSetGlobalConverter_, id<AnObject_CustomConverter>)
-
-FOUNDATION_EXPORT id<AnObject_CustomConverter> AnSqlImpl_sqlCustomGetGlobalConverter_;
-J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, sqlCustomGetGlobalConverter_, id<AnObject_CustomConverter>)
-J2OBJC_STATIC_FIELD_SETTER(AnSqlImpl, sqlCustomGetGlobalConverter_, id<AnObject_CustomConverter>)
 
 FOUNDATION_EXPORT void AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnObject_(AnSqlImpl *self, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject);
 
@@ -158,14 +138,6 @@ FOUNDATION_EXPORT AnSqlImpl *new_AnSqlImpl_initWithNSString_withAnObject_(NSStri
 FOUNDATION_EXPORT void AnSqlImpl_init(AnSqlImpl *self);
 
 FOUNDATION_EXPORT AnSqlImpl *new_AnSqlImpl_init() NS_RETURNS_RETAINED;
-
-FOUNDATION_EXPORT id<AnObject_CustomConverter> AnSqlImpl_getSqlCustomSetGlobalConverter();
-
-FOUNDATION_EXPORT void AnSqlImpl_setSqlCustomSetGlobalConverterWithAnObject_CustomConverter_(id<AnObject_CustomConverter> sqlCustomSetGlobalConverter);
-
-FOUNDATION_EXPORT id<AnObject_CustomConverter> AnSqlImpl_getSqlCustomGetGlobalConverter();
-
-FOUNDATION_EXPORT void AnSqlImpl_setSqlCustomGetGlobalConverterWithAnObject_CustomConverter_(id<AnObject_CustomConverter> sqlCustomGetGlobalConverter);
 
 J2OBJC_TYPE_LITERAL_HEADER(AnSqlImpl)
 

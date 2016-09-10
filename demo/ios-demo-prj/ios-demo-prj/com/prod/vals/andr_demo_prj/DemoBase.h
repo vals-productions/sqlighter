@@ -11,6 +11,7 @@
 @class Appointment;
 @class JavaLangDouble;
 @class JavaLangLong;
+@protocol AnIncubator;
 @protocol AnOrm;
 @protocol JavaUtilCollection;
 @protocol MobilAction;
@@ -22,6 +23,10 @@
 #pragma mark Public
 
 - (instancetype)init;
+
++ (id<AnOrm>)getOrmAppointentWithSQLighterDb:(id<SQLighterDb>)sqLighterDb;
+
++ (id<AnOrm>)getOrmEntity;
 
 #pragma mark Protected
 
@@ -86,6 +91,17 @@ FOUNDATION_EXPORT id<MobilAction> DemoBase_amfibianStartAction_;
 J2OBJC_STATIC_FIELD_GETTER(DemoBase, amfibianStartAction_, id<MobilAction>)
 J2OBJC_STATIC_FIELD_SETTER(DemoBase, amfibianStartAction_, id<MobilAction>)
 
+FOUNDATION_EXPORT NSString *DemoBase_jsonStringWithObjectDefinitions_;
+J2OBJC_STATIC_FIELD_GETTER(DemoBase, jsonStringWithObjectDefinitions_, NSString *)
+J2OBJC_STATIC_FIELD_SETTER(DemoBase, jsonStringWithObjectDefinitions_, NSString *)
+
+FOUNDATION_EXPORT jboolean DemoBase_isUseJsonFile_;
+J2OBJC_STATIC_FIELD_GETTER(DemoBase, isUseJsonFile_, jboolean)
+J2OBJC_STATIC_FIELD_REF_GETTER(DemoBase, isUseJsonFile_, jboolean)
+FOUNDATION_EXPORT id<AnIncubator> DemoBase_anIncubator_;
+J2OBJC_STATIC_FIELD_GETTER(DemoBase, anIncubator_, id<AnIncubator>)
+J2OBJC_STATIC_FIELD_SETTER(DemoBase, anIncubator_, id<AnIncubator>)
+
 FOUNDATION_EXPORT void DemoBase_resetTestCounters();
 
 FOUNDATION_EXPORT void DemoBase_checkTestWithNSString_withBoolean_(NSString *name, jboolean isPassed);
@@ -111,6 +127,10 @@ FOUNDATION_EXPORT void DemoBase_printUserTableWithNSString_withSQLighterDb_(NSSt
 FOUNDATION_EXPORT jboolean DemoBase_verifyRecordWithSQLighterRs_withNSString_withNSString_withJavaLangDouble_withNSString_withJavaLangLong_(id<SQLighterRs> rs, NSString *userName, NSString *userEmail, JavaLangDouble *userHeight, NSString *blobString, JavaLangLong *id_);
 
 FOUNDATION_EXPORT void DemoBase_extraAmfibianTestsWithAnOrm_(id<AnOrm> anOrm);
+
+FOUNDATION_EXPORT id<AnOrm> DemoBase_getOrmEntity();
+
+FOUNDATION_EXPORT id<AnOrm> DemoBase_getOrmAppointentWithSQLighterDb_(id<SQLighterDb> sqLighterDb);
 
 FOUNDATION_EXPORT void DemoBase_init(DemoBase *self);
 

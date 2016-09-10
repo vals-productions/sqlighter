@@ -13,7 +13,7 @@
 @class OrgJsonJSONArray;
 @class OrgJsonJSONObject;
 @protocol AnAttrib;
-@protocol AnObject_CustomConverter;
+@protocol AnAttrib_CustomConverter;
 @protocol JavaUtilCollection;
 @protocol JavaUtilMap;
 
@@ -55,19 +55,23 @@
 
 - (id<AnObject>)getParentAnObject;
 
+- (void)setParentAnObjectWithAnObject:(id<AnObject>)parentObject;
+
 - (IOSObjectArray *)getOwnAttribs;
+
+- (void)setOwnAttribsWithAnAttribArray:(IOSObjectArray *)attribs;
 
 - (OrgJsonJSONArray *)asJSONArrayWithJavaUtilCollection:(id<JavaUtilCollection>)objects;
 
 - (NSString *)asJsonArrayStringWithJavaUtilCollection:(id<JavaUtilCollection>)objects;
 
-- (id<AnObject_CustomConverter>)getJsonCustomSetConverter;
+- (id<AnAttrib_CustomConverter>)getJsonCustomSetConverter;
 
-- (void)setJsonCustomSetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)objectCustomSetConverter;
+- (void)setJsonCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)objectCustomSetConverter;
 
-- (id<AnObject_CustomConverter>)getJsonCustomGetConverter;
+- (id<AnAttrib_CustomConverter>)getJsonCustomGetConverter;
 
-- (void)setJsonCustomGetConverterWithAnObject_CustomConverter:(id<AnObject_CustomConverter>)objectCustomGetConverter;
+- (void)setJsonCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)objectCustomGetConverter;
 
 @end
 
@@ -76,16 +80,5 @@ J2OBJC_EMPTY_STATIC_INIT(AnObject)
 J2OBJC_TYPE_LITERAL_HEADER(AnObject)
 
 #define ComValsA2iosAmfibianIntfAnObject AnObject
-
-@protocol AnObject_CustomConverter < NSObject, JavaObject >
-
-- (id)convertWithAnAttrib:(id<AnAttrib>)attrib
-                   withId:(id)value;
-
-@end
-
-J2OBJC_EMPTY_STATIC_INIT(AnObject_CustomConverter)
-
-J2OBJC_TYPE_LITERAL_HEADER(AnObject_CustomConverter)
 
 #endif // _ComValsA2iosAmfibianIntfAnObject_H_

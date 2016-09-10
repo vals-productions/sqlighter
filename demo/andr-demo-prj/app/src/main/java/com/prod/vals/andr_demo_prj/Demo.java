@@ -1,7 +1,5 @@
 package com.prod.vals.andr_demo_prj;
 
-import com.vals.a2ios.amfibian.impl.AnObjectImpl;
-import com.vals.a2ios.amfibian.impl.AnOrmImpl;
 import com.vals.a2ios.amfibian.impl.AnUpgradeImpl;
 import com.vals.a2ios.amfibian.intf.AnObject;
 import com.vals.a2ios.amfibian.intf.AnOrm;
@@ -18,7 +16,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 /**
@@ -323,7 +320,13 @@ public class Demo extends DemoBase {
      */
     public static void amfibianOperations() {
         try {
+            /**
+             *
+             */
+            anIncubator.load(DemoBase.jsonStringWithObjectDefinitions);
+
             resetTestCounters();
+
             SQLighterDb sqlighterDb = Bootstrap.getInstance().getSqLighterDb();
             /**
              * We might've received the following JSON string as a result of our mobile
@@ -336,50 +339,23 @@ public class Demo extends DemoBase {
              * Server implementation is out of scope of the demo.
              */
             String jsonAppointment234 =
-                    "{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
+                    "{id: \"234\", name: \"Meet AmfibiaN!\", processed: \"0\", \"createDate\": 1473528675000 }"; // date: 2016-09-10 10:31:15 PDT
             /**
-             * First, let's tell AmfibiaN about our business entities and their properties we
-             * would like to manage. We do not have to manage all of them, just those we care
-             * of.
-             *
-             * The Entity class is a base class for our imaginable project's business objects.
-             * It makes sure all our business objects have the id property.
+             * First, let's instantiate AmfibiaN object management entity
              */
-            AnObject<Entity> anEntity = new AnObjectImpl(
-                Entity.class,
-                /* attribute names/definitions */
-                new String[]{"id"});
-
-            /**
-             * An Appointment object extends the Entity and has appointment name property as
-             * well as isProcessed property that is represented by is_processed database
-             * column. Each attribute may contain a comma delimited mapping names.
-             * <pre>
-             *     <li>native object mapping (required)</li>
-             *     <li>db column mapping (optional)</li>
-             *     <li>JSON object mapping (optional)</li>
-             * </pre>
-             */
-            AnOrm<Appointment> anOrm = new AnOrmImpl<Appointment>(
-                sqlighterDb, // reference to sqlighter database management object
-                "appointment", // table name
-                Appointment.class, // will
-                /* attribute names/definitions */
-                new String[]{"name", "isProcessed,is_processed"},
-                anEntity); // parent
-            /*
-             * Lets customize the name with NOT NULL constraint
-             */
-            anOrm.getAttrib("name").setDbColumnDefinition("TEXT NOT NULL");
+            AnOrm<Appointment> anOrm = getOrmAppointent(sqlighterDb);
             /**
              * Get native object from json object, so that we could manipulate
              * it with ease.
              */
             Appointment appointment234 = anOrm.asNativeObject(jsonAppointment234);
+
             checkTest("JSON 2 native mapping",
-                    appointment234.getId().equals(234) &&
-                            appointment234.getName().equals("Meet AmfibiaN!") &&
-                            appointment234.getIsProcessed().equals(0));
+                appointment234.getId().equals(234) &&
+                appointment234.getName().equals("Meet AmfibiaN!") &&
+                appointment234.getIsProcessed().equals(0) &&
+                appointment234.getCreateDate().getTime() == 1473528675000l
+            );
             /**
              * Let's decide to store our appointment234 in the database. Since we do not have the
              * table for this entity in our database yet, we can ask AmfibiaN to give us database
@@ -390,9 +366,10 @@ public class Demo extends DemoBase {
              * The SQL query contained in the variable above is:
              * <pre>
              * create table appointment(
-             *  name TEXT,
+             *  name TEXT NOT NULL,
              *  id INTEGER,
-             *  is_processed INTEGER )
+             *  is_processed INTEGER,
+             *  create_date TEXT)
              * </pre>
              *
              * Note how column names relate with database column and object attributes.
@@ -694,6 +671,8 @@ public class Demo extends DemoBase {
         Demo.sqlighterDetailsLabel = sqlighterDetailsLabel;
         Demo.amfibianHelloLabel = amfibianHelloLabel;
         Demo.amfibianDetailsLabel = amfibianDetailsLabel;
+
+        DemoBase.jsonStringWithObjectDefinitions = Bootstrap.getInstance().getMobilighter().readFile("an_objects.json");
 
         final Mobilighter mobilighter = Bootstrap.getInstance().getMobilighter();
 

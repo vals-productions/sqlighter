@@ -11,18 +11,16 @@
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "java/lang/Exception.h"
 #include "java/lang/reflect/Method.h"
-#include "java/util/HashMap.h"
-#include "java/util/Map.h"
 
 @interface AnAttribImpl () {
  @public
   id<AnObject> parentAnObject_;
   NSString *attribName_;
   NSString *columnName_;
-  NSString *dbColumnDefinition_;
   NSString *jsonName_;
-  id<JavaUtilMap> converterMap_;
-  id<JavaUtilMap> getConverterMap_;
+  NSString *dbColumnDefinition_;
+  id<AnAttrib_CustomConverter> customSetConverter_;
+  id<AnAttrib_CustomConverter> customGetConverter_;
 }
 
 @end
@@ -30,12 +28,10 @@
 J2OBJC_FIELD_SETTER(AnAttribImpl, parentAnObject_, id<AnObject>)
 J2OBJC_FIELD_SETTER(AnAttribImpl, attribName_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, columnName_, NSString *)
-J2OBJC_FIELD_SETTER(AnAttribImpl, dbColumnDefinition_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, jsonName_, NSString *)
-J2OBJC_FIELD_SETTER(AnAttribImpl, converterMap_, id<JavaUtilMap>)
-J2OBJC_FIELD_SETTER(AnAttribImpl, getConverterMap_, id<JavaUtilMap>)
-
-NSString *AnAttribImpl_NONAME_CONVERSION_KEY_ = @"nonameConverter";
+J2OBJC_FIELD_SETTER(AnAttribImpl, dbColumnDefinition_, NSString *)
+J2OBJC_FIELD_SETTER(AnAttribImpl, customSetConverter_, id<AnAttrib_CustomConverter>)
+J2OBJC_FIELD_SETTER(AnAttribImpl, customGetConverter_, id<AnAttrib_CustomConverter>)
 
 @implementation AnAttribImpl
 
@@ -60,53 +56,19 @@ NSString *AnAttribImpl_NONAME_CONVERSION_KEY_ = @"nonameConverter";
 }
 
 - (void)setCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter {
-  [self setCustomSetConverterWithNSString:AnAttribImpl_NONAME_CONVERSION_KEY_ withAnAttrib_CustomConverter:converter];
-}
-
-- (void)setCustomSetConverterWithNSString:(NSString *)key
-             withAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter {
-  (void) [((id<JavaUtilMap>) nil_chk(converterMap_)) putWithId:key withId:converter];
-}
-
-- (id<AnAttrib_CustomConverter>)getCustomSetConverterWithNSString:(NSString *)key {
-  return [((id<JavaUtilMap>) nil_chk(converterMap_)) getWithId:key];
+  self->customSetConverter_ = converter;
 }
 
 - (id<AnAttrib_CustomConverter>)getCustomSetConverter {
-  return [((id<JavaUtilMap>) nil_chk(converterMap_)) getWithId:defaultConverterKey_];
-}
-
-- (void)clearCustomSetConverters {
-  [((id<JavaUtilMap>) nil_chk(converterMap_)) clear];
-}
-
-- (void)setDefaultSetConversionKeyWithNSString:(NSString *)key {
-  defaultConverterKey_ = key;
+  return customSetConverter_;
 }
 
 - (void)setCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter {
-  [self setCustomGetConverterWithNSString:AnAttribImpl_NONAME_CONVERSION_KEY_ withAnAttrib_CustomConverter:converter];
-}
-
-- (void)setCustomGetConverterWithNSString:(NSString *)key
-             withAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter {
-  (void) [((id<JavaUtilMap>) nil_chk(getConverterMap_)) putWithId:key withId:converter];
-}
-
-- (id<AnAttrib_CustomConverter>)getCustomGetConverterWithNSString:(NSString *)key {
-  return [((id<JavaUtilMap>) nil_chk(getConverterMap_)) getWithId:key];
+  self->customGetConverter_ = converter;
 }
 
 - (id<AnAttrib_CustomConverter>)getCustomGetConverter {
-  return [((id<JavaUtilMap>) nil_chk(getConverterMap_)) getWithId:defaultGetConverterKey_];
-}
-
-- (void)clearCustomGetConverters {
-  [((id<JavaUtilMap>) nil_chk(getConverterMap_)) clear];
-}
-
-- (void)setDefaultGetConversionKeyWithNSString:(NSString *)key {
-  defaultGetConverterKey_ = key;
+  return self->customGetConverter_;
 }
 
 - (void)setAnObjectWithAnObject:(id<AnObject>)anObject {
@@ -135,7 +97,7 @@ NSString *AnAttribImpl_NONAME_CONVERSION_KEY_ = @"nonameConverter";
     id convertedValue = nil;
     id<AnAttrib_CustomConverter> cc = [self getCustomSetConverter];
     if (cc != nil) {
-      convertedValue = [cc convertWithId:value];
+      convertedValue = [cc convertWithAnAttrib:self withId:value];
     }
     else {
       convertedValue = value;
@@ -151,7 +113,7 @@ NSString *AnAttribImpl_NONAME_CONVERSION_KEY_ = @"nonameConverter";
     value = [m invokeWithId:[((id<AnObject>) nil_chk(parentAnObject_)) getNativeObject] withNSObjectArray:[IOSObjectArray newArrayWithLength:0 type:NSObject_class_()]];
     id<AnAttrib_CustomConverter> cc = [self getCustomGetConverter];
     if (cc != nil) {
-      value = [cc convertWithId:value];
+      value = [cc convertWithAnAttrib:self withId:value];
       return value;
     }
   }
@@ -229,10 +191,6 @@ AnAttribImpl *new_AnAttribImpl_initWithNSString_withNSString_withNSString_(NSStr
 
 void AnAttribImpl_initWithNSString_(AnAttribImpl *self, NSString *attribColumnJsonName) {
   (void) NSObject_init(self);
-  self->defaultConverterKey_ = AnAttribImpl_NONAME_CONVERSION_KEY_;
-  self->defaultGetConverterKey_ = AnAttribImpl_NONAME_CONVERSION_KEY_;
-  self->converterMap_ = new_JavaUtilHashMap_init();
-  self->getConverterMap_ = new_JavaUtilHashMap_init();
   if ([((NSString *) nil_chk(attribColumnJsonName)) indexOfString:@","] != -1) {
     IOSObjectArray *propColumn = [attribColumnJsonName split:@","];
     self->attribName_ = [((NSString *) nil_chk(IOSObjectArray_Get(nil_chk(propColumn), 0))) trim];

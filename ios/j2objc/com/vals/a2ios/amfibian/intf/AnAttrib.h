@@ -45,29 +45,11 @@
 
 - (void)setCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
 
-- (void)setCustomSetConverterWithNSString:(NSString *)key
-             withAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
-
-- (id<AnAttrib_CustomConverter>)getCustomSetConverterWithNSString:(NSString *)key;
-
 - (id<AnAttrib_CustomConverter>)getCustomSetConverter;
-
-- (void)clearCustomSetConverters;
-
-- (void)setDefaultSetConversionKeyWithNSString:(NSString *)key;
 
 - (void)setCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
 
-- (void)setCustomGetConverterWithNSString:(NSString *)key
-             withAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
-
-- (id<AnAttrib_CustomConverter>)getCustomGetConverterWithNSString:(NSString *)key;
-
 - (id<AnAttrib_CustomConverter>)getCustomGetConverter;
-
-- (void)clearCustomGetConverters;
-
-- (void)setDefaultGetConversionKeyWithNSString:(NSString *)key;
 
 @end
 
@@ -79,7 +61,12 @@ J2OBJC_TYPE_LITERAL_HEADER(AnAttrib)
 
 @protocol AnAttrib_CustomConverter < NSObject, JavaObject >
 
-- (id)convertWithId:(id)value;
+- (id)convertWithAnAttrib:(id<AnAttrib>)attrib
+                   withId:(id)value;
+
+- (void)onWarningWithIOSClass:(IOSClass *)cluss
+                 withNSString:(NSString *)attribName
+                       withId:(id)value;
 
 @end
 

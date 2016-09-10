@@ -1,0 +1,30 @@
+{
+  /* Comments are allowed in this
+     format ONLY. */
+  "name": "AmfibiaN",
+  "version": "1.0",
+  "objects":
+          [
+
+            {
+              "className": "com.prod.vals.andr_demo_prj.Appointment",
+              "tableName": "appointment",
+              "extends":"com.prod.vals.andr_demo_prj.Entity",
+              "attributes":
+              [
+                {"attribName": "name", "dbColumnDefinition": "TEXT NOT NULL"},
+                {"attribName": "isProcessed", "columnName": "is_processed", "jsonName":"processed"} /*long notation for names*/
+              ]
+            },
+
+            {
+              "className":"com.prod.vals.andr_demo_prj.Entity",
+              "attributes":
+              [
+                {"attribName": "id"},
+                {"attribName": "createDate,create_date,createDate"} /* short notation for names */
+              ]
+            }
+
+          ]
+}

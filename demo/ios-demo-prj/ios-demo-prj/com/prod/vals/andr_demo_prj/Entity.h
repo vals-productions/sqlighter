@@ -9,17 +9,23 @@
 #include "J2ObjC_header.h"
 
 @class JavaLangInteger;
+@class JavaUtilDate;
 
 @interface Entity : NSObject {
  @public
   JavaLangInteger *id__;
+  JavaUtilDate *createDate_;
 }
 
 #pragma mark Public
 
 - (instancetype)init;
 
+- (JavaUtilDate *)getCreateDate;
+
 - (JavaLangInteger *)getId;
+
+- (void)setCreateDateWithJavaUtilDate:(JavaUtilDate *)createDate;
 
 - (void)setIdWithJavaLangInteger:(JavaLangInteger *)id_;
 
@@ -28,6 +34,7 @@
 J2OBJC_EMPTY_STATIC_INIT(Entity)
 
 J2OBJC_FIELD_SETTER(Entity, id__, JavaLangInteger *)
+J2OBJC_FIELD_SETTER(Entity, createDate_, JavaUtilDate *)
 
 FOUNDATION_EXPORT void Entity_init(Entity *self);
 

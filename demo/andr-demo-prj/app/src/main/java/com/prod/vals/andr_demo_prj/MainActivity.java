@@ -11,6 +11,10 @@ import com.vals.a2ios.mobilighter.impl.MobilighterImpl;
 import com.vals.a2ios.mobilighter.intf.Mobilighter;
 import com.vals.a2ios.sqlighter.impl.SQLighterDbImpl;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class MainActivity extends ActionBarActivity {
 
     @Override
@@ -99,5 +103,24 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private String readJsonFile() {
+        try {
+            InputStream schemaIs = getAssets().open("an_objects.json");
+            StringBuilder sb = new StringBuilder();
+            InputStreamReader isr = new InputStreamReader(schemaIs);
+            BufferedReader br = new BufferedReader(isr);
+            String fileLine = "";
+            do {
+                fileLine = br.readLine();
+                if (fileLine != null) {
+                    sb.append(fileLine + "\n");
+                }
+            } while (fileLine != null);
+            return sb.toString();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

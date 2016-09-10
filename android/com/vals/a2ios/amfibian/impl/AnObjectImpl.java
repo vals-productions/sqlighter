@@ -31,18 +31,11 @@ public class AnObjectImpl<T> implements AnObject<T> {
     protected Class<T> nativeClass;
     private Map<String, AnAttrib> attribMap = new LinkedHashMap<String, AnAttrib>();
 
-    private CustomConverter jsonCustomGetConverter;
-    private CustomConverter jsonCustomSetConverter;
-
-    /**
-     * Simple, initial built in converters between JSON and Native
-     * formats. YMMV, so you may want to implement yours once you get
-     * deep into your project's implementation.
-     */
-    private static CustomConverter jsonCustomGetGlobalConverter= new JsonSimpleGetConverter();
-    private static CustomConverter jsonCustomSetGlobalConverter = new JsonSimpleSetConverter();
+    private AnAttrib.CustomConverter jsonCustomGetConverter;
+    private AnAttrib.CustomConverter jsonCustomSetConverter;
 
     public AnObjectImpl() {
+        initConverters();
     }
 
     public AnObjectImpl(Class<T> anObjClass, AnObject<?> parentAnObject) {
@@ -65,8 +58,45 @@ public class AnObjectImpl<T> implements AnObject<T> {
         init(anObjClass, propertyMappers);
     }
 
+    protected void init(Class<T> anObjClass, AnObject<?> parentMapper) {
+        this.parentAnObject = parentMapper;
+        setNativeClass(anObjClass);
+        initConverters();
+    }
+
+    protected void init(Class<T> anObjClass, AnAttrib[] propertyMappers , AnObject<?> parentMapper) {
+        init(anObjClass, parentMapper);
+        initAttribs(propertyMappers);
+    }
+
+    protected void init(Class<T> anObjClass, AnAttrib[] propertyMappers) {
+        initAttribs(propertyMappers);
+        setNativeClass(anObjClass);
+        initConverters();
+    }
+
+    protected void init(Class<T> anObjClass, String[] propertyNames, AnObject<?> parentMapper) {
+        this.parentAnObject = parentMapper;
+        init(anObjClass, propertyNames);
+    }
+
+    protected void init(Class<T> anObjClass, String[] propertyNames) {
+        AnAttrib[] list = stringsToAttribs(propertyNames);
+        init(anObjClass, list);
+    }
+
+    public void initConverters() {
+        jsonCustomGetConverter = new SampleGetConverter();
+        jsonCustomSetConverter = new SampleSetConverter();
+    }
+
     public AnObject getParentAnObject() {
         return parentAnObject;
+    }
+
+    @Override
+    public void setParentAnObject(AnObject parentObject) {
+        this.parentAnObject = parentObject;
     }
 
     @Override
@@ -164,31 +194,6 @@ public class AnObjectImpl<T> implements AnObject<T> {
         }
     }
 
-    protected void init(Class<T> anObjClass, AnObject<?> parentMapper) {
-        this.parentAnObject = parentMapper;
-        setNativeClass(anObjClass);
-    }
-    
-    protected void init(Class<T> anObjClass, AnAttrib[] propertyMappers , AnObject<?> parentMapper) {
-        init(anObjClass, parentMapper);
-        initAttribs(propertyMappers);
-    }
-    
-    protected void init(Class<T> anObjClass, AnAttrib[] propertyMappers) {
-        initAttribs(propertyMappers);
-        setNativeClass(anObjClass);
-    }
-
-    protected void init(Class<T> anObjClass, String[] propertyNames, AnObject<?> parentMapper) {
-    		this.parentAnObject = parentMapper;
-    		init(anObjClass, propertyNames);
-    }
-
-    protected void init(Class<T> anObjClass, String[] propertyNames) {    
-        AnAttrib[] list = stringsToAttribs(propertyNames);
-        init(anObjClass, list);
-    }
-    
     private AnAttrib[] stringsToAttribs(String[] propertyNames) {
         AnAttrib[] list = null;
         if (propertyNames != null) {
@@ -207,7 +212,12 @@ public class AnObjectImpl<T> implements AnObject<T> {
             addAttrib(pm);
         }
     }
-    
+
+    @Override
+    public void setOwnAttribs(AnAttrib[] attribs) {
+        initAttribs(attribs);
+    }
+
     @Override
     public void addAttrib(AnAttrib anAttribMapper) {
         anAttribMapper.setAnObject(this);
@@ -222,7 +232,6 @@ public class AnObjectImpl<T> implements AnObject<T> {
             for (String attrName : p) {
                 AnAttrib attr =  attribMap.get(attrName);
                 Object value = getValue(
-                        AnObjectImpl.getJsonCustomGetGlobalConverter(),
                         jsonCustomGetConverter,
                         attr);
                 if (value != null) {
@@ -292,21 +301,19 @@ public class AnObjectImpl<T> implements AnObject<T> {
             if(!jsonObject.isNull(attr.getJsonOrAttribName())) {
                 Object attrValue = jsonObject.get(attr.getJsonOrAttribName());
                 if (attrValue != null) {
-                    setValue(AnObjectImpl.getJsonCustomSetGlobalConverter(), jsonCustomSetConverter, attr, attrValue);
+                    setValue(jsonCustomSetConverter, attr, attrValue);
                 }
             }
         }
         return nativeObject;
     }
 
-    protected void setValue(CustomConverter globalConverter,
-            CustomConverter converter, AnAttrib attrib, Object value) throws Exception {
+    protected void setValue(AnAttrib.CustomConverter converter,
+                            AnAttrib attrib,
+                            Object value) throws Exception {
         if(attrib.getCustomSetConverter() == null) {
             if(converter != null) {
                 attrib.setValue(converter.convert(attrib, value));
-                return;
-            } else if(globalConverter != null) {
-                attrib.setValue(globalConverter.convert(attrib, value));
                 return;
             }
         }
@@ -357,15 +364,11 @@ public class AnObjectImpl<T> implements AnObject<T> {
     }
 
     protected Object getValue(
-            CustomConverter globalConverter,
-            CustomConverter converter,
+            AnAttrib.CustomConverter converter,
             AnAttrib attrb) throws Exception {
         if(attrb.getCustomGetConverter() == null) {
             if (converter != null) {
                 return converter.convert(attrb, attrb.getValue());
-            }
-            if (globalConverter != null) {
-                return globalConverter.convert(attrb, attrb.getValue());
             }
         }
         return attrb.getValue();
@@ -376,7 +379,7 @@ public class AnObjectImpl<T> implements AnObject<T> {
      * @return
      */
     @Override
-    public CustomConverter getJsonCustomSetConverter() {
+    public AnAttrib.CustomConverter getJsonCustomSetConverter() {
         return jsonCustomSetConverter;
     }
 
@@ -385,7 +388,7 @@ public class AnObjectImpl<T> implements AnObject<T> {
      * @return
      */
     @Override
-    public void setJsonCustomSetConverter(CustomConverter jsonCustomSetConverter) {
+    public void setJsonCustomSetConverter(AnAttrib.CustomConverter jsonCustomSetConverter) {
         this.jsonCustomSetConverter = jsonCustomSetConverter;
     }
 
@@ -394,36 +397,24 @@ public class AnObjectImpl<T> implements AnObject<T> {
      * @return
      */
     @Override
-    public CustomConverter getJsonCustomGetConverter() {
+    public AnAttrib.CustomConverter getJsonCustomGetConverter() {
         return jsonCustomGetConverter;
     }
 
     /**
      *
-     * @return
      */
     @Override
-    public void setJsonCustomGetConverter(CustomConverter jsonCustomGetConverter) {
+    public void setJsonCustomGetConverter(AnAttrib.CustomConverter jsonCustomGetConverter) {
         this.jsonCustomGetConverter = jsonCustomGetConverter;
     }
 
-    public static CustomConverter getJsonCustomGetGlobalConverter() {
-        return AnObjectImpl.jsonCustomGetGlobalConverter;
-    }
-
-    public static void setJsonCustomGetGlobalConverter(CustomConverter jsonCustomGetGlobalConverter) {
-        AnObjectImpl.jsonCustomGetGlobalConverter = jsonCustomGetGlobalConverter;
-    }
-
-    public static CustomConverter getJsonCustomSetGlobalConverter() {
-        return AnObjectImpl.jsonCustomSetGlobalConverter;
-    }
-
-    public static void setJsonCustomSetGlobalConverter(CustomConverter jsonCustomSetGlobalConverter) {
-        AnObjectImpl.jsonCustomSetGlobalConverter = jsonCustomSetGlobalConverter;
-    }
-
-    public static class JsonSimpleGetConverter implements CustomConverter {
+    /**
+     * Sample built in converter. YMMV, so you may want to implement
+     * yours once you get
+     * deep into your project's implementation.
+     */
+    public static class SampleGetConverter implements AnAttrib.CustomConverter {
         @Override
         public Object convert(AnAttrib attrib, Object value) {
             if(value != null && value instanceof Date) {
@@ -432,11 +423,18 @@ public class AnObjectImpl<T> implements AnObject<T> {
             }
             return value;
         }
+
+        @Override
+        public void onWarning(Class cluss, String attribName, Object value) {
+        }
     }
 
-    public static class JsonSimpleSetConverter implements CustomConverter {
-        private List<String> conversionWarnings = new LinkedList<String>();
-
+    /**
+     * Sample built in converter. YMMV, so you may want to implement
+     * yours once you get
+     * deep into your project's implementation.
+     */
+    public static class SampleSetConverter implements AnAttrib.CustomConverter {
         /**
          * (Auto) converts from source obj type to target if different.
          *
@@ -470,9 +468,9 @@ public class AnObjectImpl<T> implements AnObject<T> {
                     continue;
                 }
                 try {
-               /*
-                * Work through single parameter constructors
-                */
+                   /*
+                    * Work through single parameter constructors
+                    */
                     if (cParamTypes[0].equals(objClass)) {
                     /*
                      * There's a constructor with source obj class as an input.
@@ -500,14 +498,15 @@ public class AnObjectImpl<T> implements AnObject<T> {
                         return newObject;
                     }
                 } catch (Throwable t) {
-                    conversionWarnings.add("Error setting: " + attribName +
-                            " from: " + objClass.getName() +
-                            " constr. param: " + cParamTypes[0].getName() +
-                            " simple name: " + cParamTypes[0].getSimpleName());
+                    onWarning(objClass, attribName, value);
                 }
             } // end for
-            conversionWarnings.add("*** Final. Could not set: " + attribName + " from: " + objClass.getName());
+            onWarning(objClass, attribName, value);
             return null;
+        }
+
+        @Override
+        public void onWarning(Class cluss, String attribName, Object value) {
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.vals.a2ios.mobilighter.intf;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,6 +9,9 @@ import java.util.Map;
  * Created by vsayenko on 1/8/16.
  */
 public interface MobilCall {
+
+    public static final String METHOD_POST = "POST";
+    public static final String METHOD_GET = "GET";
 
     /**
      *
@@ -33,6 +37,12 @@ public interface MobilCall {
      * @param value
      */
     void addHeader(String name, String value);
+
+    /**
+     *
+     * @param name
+     */
+    void setName(String name);
 
     /**
      *
@@ -62,8 +72,11 @@ public interface MobilCall {
      *
      * @throws Exception
      */
-    void remoteCallMakeOnThread() throws Exception;
+    void remoteCallMakeOnNewThread() throws Exception;
 
+    void remoteCallMake(boolean isBlocking) throws Exception;
+
+    void remoteCallMakeAndWait() throws Exception;
     /**
      *
      * @param name
@@ -97,5 +110,16 @@ public interface MobilCall {
      * @param paramMap
      */
     void setParamMap(Map<String, Object> paramMap);
+
+    /**
+     *
+     * @return
+     */
+    public List<Throwable> getThrowableList();
+
+    /**
+     *
+     */
+    public void clearThrowableList();
 
 }

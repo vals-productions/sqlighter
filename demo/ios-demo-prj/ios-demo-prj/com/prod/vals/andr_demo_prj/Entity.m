@@ -6,6 +6,7 @@
 #include "J2ObjC_source.h"
 #include "com/prod/vals/andr_demo_prj/Entity.h"
 #include "java/lang/Integer.h"
+#include "java/util/Date.h"
 
 @implementation Entity
 
@@ -15,6 +16,14 @@
 
 - (void)setIdWithJavaLangInteger:(JavaLangInteger *)id_ {
   self->id__ = id_;
+}
+
+- (JavaUtilDate *)getCreateDate {
+  return createDate_;
+}
+
+- (void)setCreateDateWithJavaUtilDate:(JavaUtilDate *)createDate {
+  self->createDate_ = createDate;
 }
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN
@@ -28,12 +37,15 @@ J2OBJC_IGNORE_DESIGNATED_END
   static const J2ObjcMethodInfo methods[] = {
     { "getId", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
     { "setIdWithJavaLangInteger:", "setId", "V", 0x1, NULL, NULL },
+    { "getCreateDate", NULL, "Ljava.util.Date;", 0x1, NULL, NULL },
+    { "setCreateDateWithJavaUtilDate:", "setCreateDate", "V", 0x1, NULL, NULL },
     { "init", NULL, NULL, 0x1, NULL, NULL },
   };
   static const J2ObjcFieldInfo fields[] = {
     { "id__", "id", 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
+    { "createDate_", NULL, 0x1, "Ljava.util.Date;", NULL, NULL, .constantValue.asLong = 0 },
   };
-  static const J2ObjcClassInfo _Entity = { 2, "Entity", "com.prod.vals.andr_demo_prj", NULL, 0x1, 3, methods, 1, fields, 0, NULL, 0, NULL, NULL, NULL };
+  static const J2ObjcClassInfo _Entity = { 2, "Entity", "com.prod.vals.andr_demo_prj", NULL, 0x1, 5, methods, 2, fields, 0, NULL, 0, NULL, NULL, NULL };
   return &_Entity;
 }
 

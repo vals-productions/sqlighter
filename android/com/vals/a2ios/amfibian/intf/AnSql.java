@@ -151,25 +151,25 @@ public interface AnSql<T> extends AnObject<T> {
      *
      * @return
      */
-    CustomConverter getSqlCustomSetConverter();
+    AnAttrib.CustomConverter getDbCustomSetConverter();
 
     /**
      *
      * @param sqlCustomSetConverter
      */
-    void setSqlCustomSetConverter(CustomConverter sqlCustomSetConverter);
+    void setDbCustomSetConverter(AnAttrib.CustomConverter sqlCustomSetConverter);
 
     /**
      *
      * @return
      */
-    CustomConverter getSqlCustomGetConverter();
+    AnAttrib.CustomConverter getDbCustomGetConverter();
 
     /**
      *
      * @param sqlCustomGetConverter
      */
-    void setSqlCustomGetConverter(CustomConverter sqlCustomGetConverter);
+    void setDbCustomGetConverter(AnAttrib.CustomConverter sqlCustomGetConverter);
 
     /**
      * Limits and offsets the result set

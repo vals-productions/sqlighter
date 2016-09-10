@@ -13,11 +13,7 @@
 @class JavaLangReflectMethod;
 @protocol AnObject;
 
-@interface AnAttribImpl : NSObject < AnAttrib > {
- @public
-  NSString *defaultConverterKey_;
-  NSString *defaultGetConverterKey_;
-}
+@interface AnAttribImpl : NSObject < AnAttrib >
 
 #pragma mark Public
 
@@ -26,10 +22,6 @@
 - (instancetype)initWithNSString:(NSString *)attribName
                     withNSString:(NSString *)columnName
                     withNSString:(NSString *)jsonName;
-
-- (void)clearCustomGetConverters;
-
-- (void)clearCustomSetConverters;
 
 - (IOSClass *)getAttribClass;
 
@@ -41,11 +33,7 @@
 
 - (id<AnAttrib_CustomConverter>)getCustomGetConverter;
 
-- (id<AnAttrib_CustomConverter>)getCustomGetConverterWithNSString:(NSString *)key;
-
 - (id<AnAttrib_CustomConverter>)getCustomSetConverter;
-
-- (id<AnAttrib_CustomConverter>)getCustomSetConverterWithNSString:(NSString *)key;
 
 - (NSString *)getDbColumnDefinition;
 
@@ -65,31 +53,15 @@
 
 - (void)setCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
 
-- (void)setCustomGetConverterWithNSString:(NSString *)key
-             withAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
-
 - (void)setCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
 
-- (void)setCustomSetConverterWithNSString:(NSString *)key
-             withAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
-
 - (void)setDbColumnDefinitionWithNSString:(NSString *)dbColumnDefinition;
-
-- (void)setDefaultGetConversionKeyWithNSString:(NSString *)key;
-
-- (void)setDefaultSetConversionKeyWithNSString:(NSString *)key;
 
 - (void)setValueWithId:(id)value;
 
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(AnAttribImpl)
-
-J2OBJC_FIELD_SETTER(AnAttribImpl, defaultConverterKey_, NSString *)
-J2OBJC_FIELD_SETTER(AnAttribImpl, defaultGetConverterKey_, NSString *)
-
-FOUNDATION_EXPORT NSString *AnAttribImpl_NONAME_CONVERSION_KEY_;
-J2OBJC_STATIC_FIELD_GETTER(AnAttribImpl, NONAME_CONVERSION_KEY_, NSString *)
 
 FOUNDATION_EXPORT void AnAttribImpl_initWithNSString_withNSString_withNSString_(AnAttribImpl *self, NSString *attribName, NSString *columnName, NSString *jsonName);
 

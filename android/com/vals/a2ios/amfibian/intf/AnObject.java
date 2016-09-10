@@ -154,7 +154,15 @@ public interface AnObject<T> {
      *
      * @return
      */
+    void setParentAnObject(AnObject parentObject);
+    /**
+     *
+     * @return
+     */
     AnAttrib[] getOwnAttribs();
+
+
+    void setOwnAttribs(AnAttrib[] attribs);
 
     /**
      *
@@ -172,32 +180,49 @@ public interface AnObject<T> {
      */
     String asJsonArrayString(Collection<T> objects) throws Exception;
 
-
-    public static interface CustomConverter {
-        public Object convert(AnAttrib attrib, Object value);
-    }
-
-    /**
-     *
-     * @return
-     */
-    CustomConverter getJsonCustomSetConverter();
-
-    /**
-     *
-     * @return
-     */
-    void setJsonCustomSetConverter(CustomConverter objectCustomSetConverter);
-
-    /**
-     *
-     * @return
-     */
-    public CustomConverter getJsonCustomGetConverter();
+//    /**
+//     * Converters help to convert object properties
+//     * of different types. For example, JSON Date representation
+//     * might be long milliseconds value, but you'd want it to be
+//     * a string in your native object.
+//     */
+//    public static interface CustomConverter {
+//
+//        Object convert(AnAttrib attrib, Object value);
+//
+//        /**
+//         * Get notified on errors while processing
+//         * values. Implement if you care.
+//         * @param cluss
+//         * @param attribName
+//         * @param value
+//         */
+//        void onWarning(Class cluss, String attribName, Object value);
+//    }
 
     /**
      *
      * @return
      */
-    public void setJsonCustomGetConverter(CustomConverter objectCustomGetConverter);
+    AnAttrib.CustomConverter getJsonCustomSetConverter();
+
+    /**
+     * "Set" is for setting the value of the attribute
+     * from external source. It is JSON for now at this level.
+     * @return
+     */
+    void setJsonCustomSetConverter(AnAttrib.CustomConverter objectCustomSetConverter);
+
+    /**
+     *
+     * @return
+     */
+    public AnAttrib.CustomConverter getJsonCustomGetConverter();
+
+    /**
+     * "Get" is for getting the value of the attribute
+     * for passing to external source, like JSON.
+     * @return
+     */
+    public void setJsonCustomGetConverter(AnAttrib.CustomConverter objectCustomGetConverter);
 }

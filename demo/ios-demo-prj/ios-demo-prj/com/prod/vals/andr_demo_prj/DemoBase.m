@@ -10,6 +10,11 @@
 #include "com/prod/vals/andr_demo_prj/Appointment.h"
 #include "com/prod/vals/andr_demo_prj/Bootstrap.h"
 #include "com/prod/vals/andr_demo_prj/DemoBase.h"
+#include "com/prod/vals/andr_demo_prj/Entity.h"
+#include "com/vals/a2ios/amfibian/impl/AnIncubatorImpl.h"
+#include "com/vals/a2ios/amfibian/impl/AnOrmImpl.h"
+#include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
+#include "com/vals/a2ios/amfibian/intf/AnIncubator.h"
 #include "com/vals/a2ios/amfibian/intf/AnOrm.h"
 #include "com/vals/a2ios/mobilighter/intf/MobilAction.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
@@ -21,6 +26,7 @@
 #include "java/lang/Long.h"
 #include "java/lang/System.h"
 #include "java/util/Collection.h"
+#include "java/util/Date.h"
 #include "java/util/Iterator.h"
 #include "java/util/LinkedList.h"
 #include "java/util/List.h"
@@ -41,6 +47,22 @@ static id<JavaUtilList> DemoBase_testList_;
 J2OBJC_STATIC_FIELD_GETTER(DemoBase, testList_, id<JavaUtilList>)
 J2OBJC_STATIC_FIELD_SETTER(DemoBase, testList_, id<JavaUtilList>)
 
+@interface DemoBase_$1 : AnIncubatorImpl
+
+- (IOSClass *)getClassByNameWithNSString:(NSString *)name;
+
+- (instancetype)init;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(DemoBase_$1)
+
+__attribute__((unused)) static void DemoBase_$1_init(DemoBase_$1 *self);
+
+__attribute__((unused)) static DemoBase_$1 *new_DemoBase_$1_init() NS_RETURNS_RETAINED;
+
+J2OBJC_TYPE_LITERAL_HEADER(DemoBase_$1)
+
 J2OBJC_INITIALIZED_DEFN(DemoBase)
 
 id DemoBase_sqlighterHelloLabel_;
@@ -49,6 +71,9 @@ id DemoBase_amfibianHelloLabel_;
 id DemoBase_amfibianDetailsLabel_;
 id<MobilAction> DemoBase_sqlighterStartAction_;
 id<MobilAction> DemoBase_amfibianStartAction_;
+NSString *DemoBase_jsonStringWithObjectDefinitions_;
+jboolean DemoBase_isUseJsonFile_ = true;
+id<AnIncubator> DemoBase_anIncubator_;
 
 @implementation DemoBase
 
@@ -111,6 +136,14 @@ id<MobilAction> DemoBase_amfibianStartAction_;
   DemoBase_extraAmfibianTestsWithAnOrm_(anOrm);
 }
 
++ (id<AnOrm>)getOrmEntity {
+  return DemoBase_getOrmEntity();
+}
+
++ (id<AnOrm>)getOrmAppointentWithSQLighterDb:(id<SQLighterDb>)sqLighterDb {
+  return DemoBase_getOrmAppointentWithSQLighterDb_(sqLighterDb);
+}
+
 J2OBJC_IGNORE_DESIGNATED_BEGIN
 - (instancetype)init {
   DemoBase_init(self);
@@ -121,6 +154,7 @@ J2OBJC_IGNORE_DESIGNATED_END
 + (void)initialize {
   if (self == [DemoBase class]) {
     DemoBase_testList_ = new_JavaUtilLinkedList_init();
+    DemoBase_anIncubator_ = new_DemoBase_$1_init();
     J2OBJC_SET_INITIALIZED(DemoBase)
   }
 }
@@ -179,7 +213,7 @@ void DemoBase_printWithJavaUtilCollection_(id<JavaUtilCollection> appointments) 
 
 void DemoBase_printWithAppointment_(Appointment *appointment) {
   DemoBase_initialize();
-  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$", @"Appointment object. id: ", [((Appointment *) nil_chk(appointment)) getId], @", name: ", [appointment getName])];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$@$@", @"Appointment object. id: ", [((Appointment *) nil_chk(appointment)) getId], @", name: ", [appointment getName], @", isProcessed:", [appointment getIsProcessed], @", createDate:", [appointment getCreateDate])];
 }
 
 void DemoBase_printWithSQLighterRs_(id<SQLighterRs> rs) {
@@ -228,7 +262,7 @@ void DemoBase_extraAmfibianTestsWithAnOrm_(id<AnOrm> anOrm) {
   NSString *sql = [anOrm getQueryString];
   DemoBase_checkTestWithNSString_withBoolean_(@"restricted select clause test 1", [((NSString *) nil_chk(sql)) hasPrefix:@"select appointment0.id "]);
   [anOrm resetSkipInclAttrNameList];
-  [anOrm addSkipAttribsWithNSStringArray:[IOSObjectArray newArrayWithObjects:(id[]){ @"id", @"name" } count:2 type:NSString_class_()]];
+  [anOrm addSkipAttribsWithNSStringArray:[IOSObjectArray newArrayWithObjects:(id[]){ @"id", @"name", @"createDate" } count:3 type:NSString_class_()]];
   [anOrm startSqlSelect];
   sql = [anOrm getQueryString];
   DemoBase_checkTestWithNSString_withBoolean_(@"restricted select clause test 2", [((NSString *) nil_chk(sql)) hasPrefix:@"select appointment0.is_processed "]);
@@ -258,9 +292,62 @@ void DemoBase_extraAmfibianTestsWithAnOrm_(id<AnOrm> anOrm) {
   }
 }
 
+id<AnOrm> DemoBase_getOrmEntity() {
+  DemoBase_initialize();
+  if (!DemoBase_isUseJsonFile_) {
+    return new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(nil, @"", Entity_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"id" } count:1 type:NSString_class_()], nil);
+  }
+  else {
+    return [((id<AnIncubator>) nil_chk(DemoBase_anIncubator_)) makeWithIOSClass:Entity_class_()];
+  }
+}
+
+id<AnOrm> DemoBase_getOrmAppointentWithSQLighterDb_(id<SQLighterDb> sqLighterDb) {
+  DemoBase_initialize();
+  if (!DemoBase_isUseJsonFile_) {
+    id<AnOrm> anOrm = new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(sqLighterDb, @"appointment", Appointment_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"name", @"isProcessed,is_processed,processed" } count:2 type:NSString_class_()], DemoBase_getOrmEntity());
+    [((id<AnAttrib>) nil_chk([anOrm getAttribWithNSString:@"name"])) setDbColumnDefinitionWithNSString:@"TEXT NOT NULL"];
+    return anOrm;
+  }
+  else {
+    id<AnOrm> anOrm = [((id<AnIncubator>) nil_chk(DemoBase_anIncubator_)) makeWithIOSClass:Appointment_class_()];
+    [((id<AnOrm>) nil_chk(anOrm)) setSqlighterDbWithSQLighterDb:sqLighterDb];
+    return anOrm;
+  }
+}
+
 void DemoBase_init(DemoBase *self) {
   (void) NSObject_init(self);
   self->sqLighterDb_ = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(DemoBase)
+
+@implementation DemoBase_$1
+
+- (IOSClass *)getClassByNameWithNSString:(NSString *)name {
+  if ([((NSString *) nil_chk(name)) isEqual:[Entity_class_() getName]]) return Entity_class_();
+  else if ([name isEqual:[Appointment_class_() getName]]) return Appointment_class_();
+  return nil;
+}
+
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  DemoBase_$1_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
+
+@end
+
+void DemoBase_$1_init(DemoBase_$1 *self) {
+  (void) AnIncubatorImpl_init(self);
+}
+
+DemoBase_$1 *new_DemoBase_$1_init() {
+  DemoBase_$1 *self = [DemoBase_$1 alloc];
+  DemoBase_$1_init(self);
+  return self;
+}
+
+J2OBJC_CLASS_TYPE_LITERAL_SOURCE(DemoBase_$1)
