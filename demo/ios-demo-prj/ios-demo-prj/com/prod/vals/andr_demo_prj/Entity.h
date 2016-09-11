@@ -15,6 +15,8 @@
  @public
   JavaLangInteger *id__;
   JavaUtilDate *createDate_;
+  JavaLangInteger *status_;
+  JavaLangInteger *type_;
 }
 
 #pragma mark Public
@@ -25,9 +27,17 @@
 
 - (JavaLangInteger *)getId;
 
+- (JavaLangInteger *)getStatus;
+
+- (JavaLangInteger *)getType;
+
 - (void)setCreateDateWithJavaUtilDate:(JavaUtilDate *)createDate;
 
 - (void)setIdWithJavaLangInteger:(JavaLangInteger *)id_;
+
+- (void)setStatusWithJavaLangInteger:(JavaLangInteger *)status;
+
+- (void)setTypeWithJavaLangInteger:(JavaLangInteger *)type;
 
 @end
 
@@ -35,6 +45,8 @@ J2OBJC_EMPTY_STATIC_INIT(Entity)
 
 J2OBJC_FIELD_SETTER(Entity, id__, JavaLangInteger *)
 J2OBJC_FIELD_SETTER(Entity, createDate_, JavaUtilDate *)
+J2OBJC_FIELD_SETTER(Entity, status_, JavaLangInteger *)
+J2OBJC_FIELD_SETTER(Entity, type_, JavaLangInteger *)
 
 FOUNDATION_EXPORT void Entity_init(Entity *self);
 

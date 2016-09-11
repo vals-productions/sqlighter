@@ -192,19 +192,21 @@ J2OBJC_IGNORE_DESIGNATED_END
   for (NSString * __strong attrName in nil_chk(attrNames)) {
     if (![self isSkipAttrWithNSString:attrName]) {
       id<AnAttrib> attr = [om getWithId:attrName];
-      id value = [self getValueWithAnAttrib_CustomConverter:dbCustomGetConverter_ withAnAttrib:attr];
-      if (value != nil) {
-        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:[self getColumnNameWithAnAttrib:attr]];
-        [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:value];
-        (void) [insertParamClause_ appendWithNSString:@"? "];
+      if ([((id<AnAttrib>) nil_chk(attr)) getColumnName] != nil) {
+        id value = [self getValueWithAnAttrib_CustomConverter:dbCustomGetConverter_ withAnAttrib:attr];
+        if (value != nil) {
+          (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:[attr getColumnName]];
+          [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:value];
+          (void) [insertParamClause_ appendWithNSString:@"? "];
+        }
+        else {
+          (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:[attr getColumnName]];
+          (void) [insertParamClause_ appendWithNSString:@"NULL "];
+        }
+        [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
+        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:@","];
+        (void) [insertParamClause_ appendWithNSString:@","];
       }
-      else {
-        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:[self getColumnNameWithAnAttrib:attr]];
-        (void) [insertParamClause_ appendWithNSString:@"NULL "];
-      }
-      [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
-      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:@","];
-      (void) [insertParamClause_ appendWithNSString:@","];
     }
   }
   (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
@@ -221,23 +223,22 @@ J2OBJC_IGNORE_DESIGNATED_END
   for (NSString * __strong attrName in nil_chk(attrNames)) {
     if (![self isSkipAttrWithNSString:attrName]) {
       id<AnAttrib> attrib = [om getWithId:attrName];
-      if (attrib != nil) {
-        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [self getColumnNameWithAnAttrib:attrib], @" = ? ")];
-        [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:[self getValueWithAnAttrib_CustomConverter:dbCustomGetConverter_ withAnAttrib:attrib]];
+      if ([((id<AnAttrib>) nil_chk(attrib)) getColumnName] != nil) {
+        id value = [self getValueWithAnAttrib_CustomConverter:dbCustomGetConverter_ withAnAttrib:attrib];
+        if (value != nil) {
+          (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [attrib getColumnName], @" = ? ")];
+          [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:value];
+        }
+        else {
+          (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [attrib getColumnName], @" = NULL ")];
+        }
+        [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
+        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:@","];
       }
-      else {
-        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [self getColumnNameWithAnAttrib:attrib], @" = NULL ")];
-      }
-      [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
-      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:@","];
     }
   }
   (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
   columnClause_ = [queryStr_ description];
-}
-
-- (NSString *)getColumnNameWithAnAttrib:(id<AnAttrib>)attrib {
-  return [((id<AnAttrib>) nil_chk(attrib)) getColumnOrAttribName];
 }
 
 - (id<AnSql>)startSqlCreate {
@@ -247,11 +248,13 @@ J2OBJC_IGNORE_DESIGNATED_END
   id<JavaUtilSet> attribNames = [((id<JavaUtilMap>) nil_chk(cm)) keySet];
   for (NSString * __strong attribName in nil_chk(attribNames)) {
     id<AnAttrib> attr = [cm getWithId:attribName];
-    NSString *colName = [self getColumnNameWithAnAttrib:attr];
-    (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:colName];
-    NSString *columnDef = [self getSqlColumnDefinitionWithAnAttrib:attr];
-    (void) [queryStr_ appendWithNSString:JreStrcat("C$", ' ', columnDef)];
-    (void) [queryStr_ appendWithNSString:@","];
+    if ([((id<AnAttrib>) nil_chk(attr)) getColumnName] != nil) {
+      NSString *colName = [attr getColumnName];
+      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:colName];
+      NSString *columnDef = [self getSqlColumnDefinitionWithAnAttrib:attr];
+      (void) [queryStr_ appendWithNSString:JreStrcat("C$", ' ', columnDef)];
+      (void) [queryStr_ appendWithNSString:@","];
+    }
   }
   (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
   columnClause_ = [queryStr_ description];
@@ -307,12 +310,15 @@ J2OBJC_IGNORE_DESIGNATED_END
   id<JavaUtilSet> propertyNames = [((id<JavaUtilMap>) nil_chk(cm)) keySet];
   for (NSString * __strong pName in nil_chk(propertyNames)) {
     if (![self isSkipAttrWithNSString:pName]) {
-      NSString *colName = [self getColumnNameWithAnAttrib:[cm getWithId:pName]];
-      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:alias_];
-      (void) [queryStr_ appendWithChar:'.'];
-      (void) [queryStr_ appendWithNSString:colName];
-      [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:pName];
-      (void) [queryStr_ appendWithChar:','];
+      id<AnAttrib> attr = [cm getWithId:pName];
+      if ([((id<AnAttrib>) nil_chk(attr)) getColumnName] != nil) {
+        NSString *colName = [attr getColumnName];
+        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:alias_];
+        (void) [queryStr_ appendWithChar:'.'];
+        (void) [queryStr_ appendWithNSString:colName];
+        [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:pName];
+        (void) [queryStr_ appendWithChar:','];
+      }
     }
   }
   (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];

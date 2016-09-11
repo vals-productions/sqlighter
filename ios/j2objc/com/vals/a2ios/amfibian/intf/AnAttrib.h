@@ -21,6 +21,8 @@
 
 - (void)setAttribNameWithNSString:(NSString *)attribName;
 
+- (NSString *)getJsonName;
+
 - (NSString *)getColumnName;
 
 - (void)setColumnNameWithNSString:(NSString *)columnName;
@@ -34,10 +36,6 @@
 - (JavaLangReflectMethod *)getSetter;
 
 - (IOSClass *)getAttribClass;
-
-- (NSString *)getJsonOrAttribName;
-
-- (NSString *)getColumnOrAttribName;
 
 - (void)setDbColumnDefinitionWithNSString:(NSString *)dbColumnDefinition;
 

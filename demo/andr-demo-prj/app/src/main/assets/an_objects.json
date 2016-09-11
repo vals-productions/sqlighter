@@ -5,14 +5,14 @@
   "version": "1.0",
   "objects":
           [
-
             {
               "className": "com.prod.vals.andr_demo_prj.Appointment",
               "tableName": "appointment",
               "extends":"com.prod.vals.andr_demo_prj.Entity",
               "attributes":
-              [
+              [  /* "name" will be used as nativeObject attribute name, database column and json names */
                 {"attribName": "name", "dbColumnDefinition": "TEXT NOT NULL"},
+                /* explicitly setting distinct names for native object, db column and json */
                 {"attribName": "isProcessed", "columnName": "is_processed", "jsonName":"processed"} /*long notation for names*/
               ]
             },
@@ -21,10 +21,16 @@
               "className":"com.prod.vals.andr_demo_prj.Entity",
               "attributes":
               [
+                /* "null" in this situation means that this object does not persist "status" attribute in the database */
+                {"attribName": "status,null,status"},
+                /* type should not be mapped to database table column */
+                {"attribName": "type", "columnName": "null", "jsonName": "entity_type"},
+                /* "id" will be used as nativeObject attribute, database and json names*/
                 {"attribName": "id"},
-                {"attribName": "createDate,create_date,createDate"} /* short notation for names */
+                /* short notation for name specification - comma delimited
+                  attribName, columnName, jsonName */
+                {"attribName": "createDate,create_date,createDate"}
               ]
             }
-
           ]
 }

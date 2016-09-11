@@ -63,8 +63,6 @@
 
 - (id<JavaUtilList>)getAttribNameList;
 
-- (NSString *)getColumnNameWithAnAttrib:(id<AnAttrib>)attrib;
-
 - (id<AnAttrib_CustomConverter>)getDbCustomGetConverter;
 
 - (id<AnAttrib_CustomConverter>)getDbCustomSetConverter;

@@ -261,9 +261,11 @@ J2OBJC_IGNORE_DESIGNATED_END
     id<JavaUtilSet> p = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
     for (NSString * __strong attrName in nil_chk(p)) {
       id<AnAttrib> attr = [attribMap_ getWithId:attrName];
-      id value = [self getValueWithAnAttrib_CustomConverter:jsonCustomGetConverter_ withAnAttrib:attr];
-      if (value != nil) {
-        (void) [((id<JavaUtilMap>) nil_chk(jsonMap_)) putWithId:[((id<AnAttrib>) nil_chk(attr)) getJsonOrAttribName] withId:value];
+      if ([((id<AnAttrib>) nil_chk(attr)) getJsonName] != nil) {
+        id value = [self getValueWithAnAttrib_CustomConverter:jsonCustomGetConverter_ withAnAttrib:attr];
+        if (value != nil) {
+          (void) [((id<JavaUtilMap>) nil_chk(jsonMap_)) putWithId:[attr getJsonName] withId:value];
+        }
       }
     }
   }
@@ -327,10 +329,12 @@ J2OBJC_IGNORE_DESIGNATED_END
     id<JavaUtilSet> attrObjsKeys = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
     for (NSString * __strong attribName in nil_chk(attrObjsKeys)) {
       id<AnAttrib> attr = [attribMap_ getWithId:attribName];
-      if (![((OrgJsonJSONObject *) nil_chk(jsonObject)) isNullWithNSString:[((id<AnAttrib>) nil_chk(attr)) getJsonOrAttribName]]) {
-        id attrValue = [jsonObject getWithNSString:[attr getJsonOrAttribName]];
-        if (attrValue != nil) {
-          [self setValueWithAnAttrib_CustomConverter:jsonCustomSetConverter_ withAnAttrib:attr withId:attrValue];
+      if ([((id<AnAttrib>) nil_chk(attr)) getJsonName] != nil) {
+        if (![((OrgJsonJSONObject *) nil_chk(jsonObject)) isNullWithNSString:[attr getJsonName]]) {
+          id attrValue = [jsonObject getWithNSString:[attr getJsonName]];
+          if (attrValue != nil) {
+            [self setValueWithAnAttrib_CustomConverter:jsonCustomSetConverter_ withAnAttrib:attr withId:attrValue];
+          }
         }
       }
     }

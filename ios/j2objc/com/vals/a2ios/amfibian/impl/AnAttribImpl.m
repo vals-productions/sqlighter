@@ -23,6 +23,10 @@
   id<AnAttrib_CustomConverter> customGetConverter_;
 }
 
+- (void)init__WithNSString:(NSString *)attribName
+              withNSString:(NSString *)columnName
+              withNSString:(NSString *)jsonName OBJC_METHOD_FAMILY_NONE;
+
 @end
 
 J2OBJC_FIELD_SETTER(AnAttribImpl, parentAnObject_, id<AnObject>)
@@ -33,6 +37,8 @@ J2OBJC_FIELD_SETTER(AnAttribImpl, dbColumnDefinition_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, customSetConverter_, id<AnAttrib_CustomConverter>)
 J2OBJC_FIELD_SETTER(AnAttribImpl, customGetConverter_, id<AnAttrib_CustomConverter>)
 
+__attribute__((unused)) static void AnAttribImpl_init__WithNSString_withNSString_withNSString_(AnAttribImpl *self, NSString *attribName, NSString *columnName, NSString *jsonName);
+
 @implementation AnAttribImpl
 
 - (instancetype)initWithNSString:(NSString *)attribName
@@ -40,6 +46,12 @@ J2OBJC_FIELD_SETTER(AnAttribImpl, customGetConverter_, id<AnAttrib_CustomConvert
                     withNSString:(NSString *)jsonName {
   AnAttribImpl_initWithNSString_withNSString_withNSString_(self, attribName, columnName, jsonName);
   return self;
+}
+
+- (void)init__WithNSString:(NSString *)attribName
+              withNSString:(NSString *)columnName
+              withNSString:(NSString *)jsonName {
+  AnAttribImpl_init__WithNSString_withNSString_withNSString_(self, attribName, columnName, jsonName);
 }
 
 - (instancetype)initWithNSString:(NSString *)attribColumnJsonName {
@@ -81,6 +93,10 @@ J2OBJC_FIELD_SETTER(AnAttribImpl, customGetConverter_, id<AnAttrib_CustomConvert
 
 - (void)setAttribNameWithNSString:(NSString *)attribName {
   self->attribName_ = attribName;
+}
+
+- (NSString *)getJsonName {
+  return jsonName_;
 }
 
 - (NSString *)getColumnName {
@@ -161,26 +177,11 @@ J2OBJC_FIELD_SETTER(AnAttribImpl, customGetConverter_, id<AnAttrib_CustomConvert
   return nil;
 }
 
-- (NSString *)getJsonOrAttribName {
-  if (jsonName_ != nil && ![@"" isEqual:[jsonName_ trim]]) {
-    return jsonName_;
-  }
-  return attribName_;
-}
-
-- (NSString *)getColumnOrAttribName {
-  if (columnName_ != nil && ![@"" isEqual:[columnName_ trim]]) {
-    return columnName_;
-  }
-  return attribName_;
-}
-
 @end
 
 void AnAttribImpl_initWithNSString_withNSString_withNSString_(AnAttribImpl *self, NSString *attribName, NSString *columnName, NSString *jsonName) {
-  (void) AnAttribImpl_initWithNSString_(self, attribName);
-  self->columnName_ = columnName;
-  self->jsonName_ = jsonName;
+  (void) NSObject_init(self);
+  AnAttribImpl_init__WithNSString_withNSString_withNSString_(self, attribName, columnName, jsonName);
 }
 
 AnAttribImpl *new_AnAttribImpl_initWithNSString_withNSString_withNSString_(NSString *attribName, NSString *columnName, NSString *jsonName) {
@@ -189,20 +190,44 @@ AnAttribImpl *new_AnAttribImpl_initWithNSString_withNSString_withNSString_(NSStr
   return self;
 }
 
+void AnAttribImpl_init__WithNSString_withNSString_withNSString_(AnAttribImpl *self, NSString *attribName, NSString *columnName, NSString *jsonName) {
+  self->attribName_ = attribName;
+  if (columnName == nil || [@"" isEqual:[columnName trim]]) {
+    self->columnName_ = attribName;
+  }
+  else if ([@"null" isEqual:[columnName trim]]) {
+    self->columnName_ = nil;
+  }
+  else {
+    self->columnName_ = columnName;
+  }
+  if (jsonName == nil || [@"" isEqual:[jsonName trim]]) {
+    self->jsonName_ = attribName;
+  }
+  else if ([@"null" isEqual:[jsonName trim]]) {
+    self->jsonName_ = nil;
+  }
+  else {
+    self->jsonName_ = jsonName;
+  }
+}
+
 void AnAttribImpl_initWithNSString_(AnAttribImpl *self, NSString *attribColumnJsonName) {
   (void) NSObject_init(self);
   if ([((NSString *) nil_chk(attribColumnJsonName)) indexOfString:@","] != -1) {
+    NSString *an = nil, *cn = nil, *jn = nil;
     IOSObjectArray *propColumn = [attribColumnJsonName split:@","];
-    self->attribName_ = [((NSString *) nil_chk(IOSObjectArray_Get(nil_chk(propColumn), 0))) trim];
+    an = [((NSString *) nil_chk(IOSObjectArray_Get(nil_chk(propColumn), 0))) trim];
     if (propColumn->size_ > 1 && IOSObjectArray_Get(propColumn, 1) != nil) {
-      self->columnName_ = [((NSString *) nil_chk(IOSObjectArray_Get(propColumn, 1))) trim];
+      cn = [((NSString *) nil_chk(IOSObjectArray_Get(propColumn, 1))) trim];
     }
     if (propColumn->size_ > 2 && IOSObjectArray_Get(propColumn, 2) != nil) {
-      self->jsonName_ = [((NSString *) nil_chk(IOSObjectArray_Get(propColumn, 2))) trim];
+      jn = [((NSString *) nil_chk(IOSObjectArray_Get(propColumn, 2))) trim];
     }
+    AnAttribImpl_init__WithNSString_withNSString_withNSString_(self, an, cn, jn);
   }
   else {
-    self->attribName_ = attribColumnJsonName;
+    AnAttribImpl_init__WithNSString_withNSString_withNSString_(self, attribColumnJsonName, nil, nil);
   }
 }
 

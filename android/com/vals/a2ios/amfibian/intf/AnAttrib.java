@@ -69,6 +69,12 @@ public interface AnAttrib {
     void setAttribName(String attribName);
 
     /**
+     * Json object attribute name, or null if undefined
+     * @return
+     */
+    String getJsonName();
+
+    /**
      * 
      * @return DB column name, or null if undefined.
      */
@@ -114,21 +120,23 @@ public interface AnAttrib {
      */
     Class<?> getAttribClass();
 
-    /**
-     * Gives JSON attribute name, if different from
-     * attribute name. Otherwise return attribute name.
-     *
-     * @return
-     */
-    String getJsonOrAttribName();
-
-    /**
-     * Gives DB column name, if different from attribute name.
-     * Otherwise return attribute name.
-     *
-     * @return
-     */
-    String getColumnOrAttribName();
+//    /**
+//     * Gives JSON attribute name, if different from
+//     * attribute name. Otherwise return attribute name.
+//     *
+//     * @return
+//     */
+//    @Deprecated
+//    String getJsonOrAttribName();
+//
+//    /**
+//     * Gives DB column name, if different from attribute name.
+//     * Otherwise return attribute name.
+//     *
+//     * @return
+//     */
+//    @Deprecated
+//    String getColumnOrAttribName();
 
     /**
      * DbColumnDefinition will be supplied to database create

@@ -26,6 +26,22 @@
   self->createDate_ = createDate;
 }
 
+- (JavaLangInteger *)getStatus {
+  return status_;
+}
+
+- (void)setStatusWithJavaLangInteger:(JavaLangInteger *)status {
+  self->status_ = status;
+}
+
+- (JavaLangInteger *)getType {
+  return type_;
+}
+
+- (void)setTypeWithJavaLangInteger:(JavaLangInteger *)type {
+  self->type_ = type;
+}
+
 J2OBJC_IGNORE_DESIGNATED_BEGIN
 - (instancetype)init {
   Entity_init(self);
@@ -39,13 +55,19 @@ J2OBJC_IGNORE_DESIGNATED_END
     { "setIdWithJavaLangInteger:", "setId", "V", 0x1, NULL, NULL },
     { "getCreateDate", NULL, "Ljava.util.Date;", 0x1, NULL, NULL },
     { "setCreateDateWithJavaUtilDate:", "setCreateDate", "V", 0x1, NULL, NULL },
+    { "getStatus", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
+    { "setStatusWithJavaLangInteger:", "setStatus", "V", 0x1, NULL, NULL },
+    { "getType", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
+    { "setTypeWithJavaLangInteger:", "setType", "V", 0x1, NULL, NULL },
     { "init", NULL, NULL, 0x1, NULL, NULL },
   };
   static const J2ObjcFieldInfo fields[] = {
     { "id__", "id", 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
     { "createDate_", NULL, 0x1, "Ljava.util.Date;", NULL, NULL, .constantValue.asLong = 0 },
+    { "status_", NULL, 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
+    { "type_", NULL, 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
   };
-  static const J2ObjcClassInfo _Entity = { 2, "Entity", "com.prod.vals.andr_demo_prj", NULL, 0x1, 5, methods, 2, fields, 0, NULL, 0, NULL, NULL, NULL };
+  static const J2ObjcClassInfo _Entity = { 2, "Entity", "com.prod.vals.andr_demo_prj", NULL, 0x1, 9, methods, 4, fields, 0, NULL, 0, NULL, NULL, NULL };
   return &_Entity;
 }
 

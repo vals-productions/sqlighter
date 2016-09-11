@@ -20,28 +20,57 @@ public class AnAttribImpl implements AnAttrib {
 
     /**
      *
-     * @parameter attribName
-     * @parameter columnName
-     * @parameter jsonName
+     * @parameter attribName - native object's attribute name
+     * @parameter columnName - database table's column name, if null - the same as
+     * attribName, if string literal "null" - no mapping will be provided
+     * @parameter jsonName - json attribute's name, if null - the same as
+     * attribName, if string literal "null" - no mapping will be provided
      */
     public AnAttribImpl(String attribName, String columnName, String jsonName) {
-        this(attribName);
-        this.columnName = columnName;
-        this.jsonName = jsonName;
+        init(attribName, columnName, jsonName);
     }
 
+    private void init(String attribName, String columnName, String jsonName) {
+        this.attribName = attribName;
+        if(columnName == null || "".equals(columnName.trim())) {
+            this.columnName = attribName;
+        } else if("null".equals(columnName.trim())) {
+            this.columnName = null;
+        } else {
+            this.columnName = columnName;
+        }
+        if(jsonName == null || "".equals(jsonName.trim())) {
+            this.jsonName = attribName;
+        } else if("null".equals(jsonName.trim())) {
+            this.jsonName = null;
+        } else {
+            this.jsonName = jsonName;
+        }
+    }
+
+    /**
+     *
+     * @param attribColumnJsonName - may be comma delimited list
+     *                             of attribName, columnName, jsonName names,
+     *                             or just attribName. In the latter case
+     *                             columnName and jsonName will be set as attribName.
+     *                             json or db mappings will not be provided if
+     *                             either equals to string literal "null"
+     */
     public AnAttribImpl(String attribColumnJsonName) {
         if (attribColumnJsonName.indexOf(",") != -1) {
+            String an = null, cn = null, jn = null;
             String[] propColumn = attribColumnJsonName.split(",");
-            this.attribName = propColumn[0].trim();
+            an = propColumn[0].trim();
             if (propColumn.length > 1 && propColumn[1] != null) {
-                this.columnName = propColumn[1].trim();
+                cn = propColumn[1].trim();
             }
             if (propColumn.length > 2 && propColumn[2] != null) {
-                this.jsonName = propColumn[2].trim();
+                jn = propColumn[2].trim();
             }
+            init(an, cn, jn);
         } else {
-            this.attribName = attribColumnJsonName;
+            init(attribColumnJsonName, null, null);
         }
     }
 
@@ -88,6 +117,11 @@ public class AnAttribImpl implements AnAttrib {
     @Override
     public void setAttribName(String attribName) {
         this.attribName = attribName;
+    }
+
+    @Override
+    public String getJsonName() {
+        return jsonName;
     }
 
     @Override
@@ -167,19 +201,22 @@ public class AnAttribImpl implements AnAttrib {
         return null;
     }
     
-    @Override
-    public String getJsonOrAttribName() {
-    	if(jsonName != null && !"".equals(jsonName.trim())) {
-    		return jsonName;
-    	}
-    	return attribName;
-    }
-    @Override
-    public String getColumnOrAttribName() {
-    	if(columnName != null && !"".equals(columnName.trim())) {
-    		return columnName;
-    	}
-    	return attribName;
-    }
+//    @Override
+//    @Deprecated
+//    public String getJsonOrAttribName() {
+//        if("null".equals(jsonName)) { //
+//            return null;
+//        }
+//        return columnName;
+//    }
+//
+//    @Override
+//    @Deprecated
+//    public String getColumnOrAttribName() {
+//        if("null".equals(columnName)) {
+//            return null;
+//        }
+//        return columnName;
+//    }
     
 }

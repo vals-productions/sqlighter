@@ -231,11 +231,13 @@ public class AnObjectImpl<T> implements AnObject<T> {
             Set<String> p = attribMap.keySet();
             for (String attrName : p) {
                 AnAttrib attr =  attribMap.get(attrName);
-                Object value = getValue(
-                        jsonCustomGetConverter,
-                        attr);
-                if (value != null) {
-                	jsonMap.put(attr.getJsonOrAttribName(), value);
+                if(attr.getJsonName() != null) {
+                    Object value = getValue(
+                            jsonCustomGetConverter,
+                            attr);
+                    if (value != null) {
+                        jsonMap.put(attr.getJsonName(), value);
+                    }
                 }
             }
         }
@@ -298,10 +300,12 @@ public class AnObjectImpl<T> implements AnObject<T> {
         Set<String> attrObjsKeys = attribMap.keySet();
         for (String attribName: attrObjsKeys) {
             AnAttrib attr = attribMap.get(attribName);
-            if(!jsonObject.isNull(attr.getJsonOrAttribName())) {
-                Object attrValue = jsonObject.get(attr.getJsonOrAttribName());
-                if (attrValue != null) {
-                    setValue(jsonCustomSetConverter, attr, attrValue);
+            if(attr.getJsonName() != null) {
+                if (!jsonObject.isNull(attr.getJsonName())) {
+                    Object attrValue = jsonObject.get(attr.getJsonName());
+                    if (attrValue != null) {
+                        setValue(jsonCustomSetConverter, attr, attrValue);
+                    }
                 }
             }
         }

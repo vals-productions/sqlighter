@@ -239,30 +239,18 @@ id<AnOrm> AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(AnIncubatorImpl *sel
   }
   id<JavaUtilCollection> mipColl = new_JavaUtilArrayList_init();
   for (id<JavaUtilMap> __strong m in nil_chk(anObjRec->propertiesMap_)) {
-    NSString *propertyName = [((id<JavaUtilMap>) nil_chk(m)) getWithId:AnIncubatorImpl_ATTRIB_NAME_];
-    NSString *columnName = nil;
-    NSString *jsonName = nil;
-    if ([((NSString *) nil_chk(propertyName)) indexOf:','] != -1) {
-      IOSObjectArray *attrNames = [propertyName split:@","];
-      propertyName = IOSObjectArray_Get(nil_chk(attrNames), 0);
-      columnName = IOSObjectArray_Get(attrNames, 1);
-      if (attrNames->size_ > 2) {
-        jsonName = IOSObjectArray_Get(attrNames, 2);
-      }
+    NSString *attribName = [((id<JavaUtilMap>) nil_chk(m)) getWithId:AnIncubatorImpl_ATTRIB_NAME_];
+    NSString *columnName = [m getWithId:AnIncubatorImpl_COLUMN_NAME_];
+    NSString *jsonName = [m getWithId:AnIncubatorImpl_JSON_NAME_];
+    NSString *columnDef = [m getWithId:AnIncubatorImpl_DB_COLUMN_DEFINITION_];
+    id<AnAttrib> anAttrib = nil;
+    if ([((NSString *) nil_chk(attribName)) indexOf:','] != -1) {
+      anAttrib = new_AnAttribImpl_initWithNSString_(attribName);
     }
     else {
-      columnName = [m getWithId:AnIncubatorImpl_COLUMN_NAME_];
-      jsonName = [m getWithId:AnIncubatorImpl_JSON_NAME_];
+      anAttrib = new_AnAttribImpl_initWithNSString_withNSString_withNSString_(attribName, columnName, jsonName);
     }
-    if (columnName == nil || [@"" isEqual:[columnName trim]]) {
-      columnName = propertyName;
-    }
-    if (jsonName == nil || [@"" isEqual:[jsonName trim]]) {
-      jsonName = propertyName;
-    }
-    NSString *columnDef = [m getWithId:AnIncubatorImpl_DB_COLUMN_DEFINITION_];
-    id<AnAttrib> anAttrib = new_AnAttribImpl_initWithNSString_withNSString_withNSString_(propertyName, columnName, jsonName);
-    [anAttrib setDbColumnDefinitionWithNSString:columnDef];
+    [((id<AnAttrib>) nil_chk(anAttrib)) setDbColumnDefinitionWithNSString:columnDef];
     [mipColl addWithId:anAttrib];
   }
   [anOrm setOwnAttribsWithAnAttribArray:[mipColl toArrayWithNSObjectArray:[IOSObjectArray newArrayWithLength:[mipColl size] type:AnAttrib_class_()]]];

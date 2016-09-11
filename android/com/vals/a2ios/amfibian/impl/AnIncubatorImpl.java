@@ -100,28 +100,16 @@ public abstract class AnIncubatorImpl implements AnIncubator {
         }
         Collection<AnAttrib> mipColl = new ArrayList<>();
         for (Map<String, String> m: anObjRec.propertiesMap) {
-            String propertyName = m.get(ATTRIB_NAME);
-            String columnName = null;
-            String jsonName = null;
-            if(propertyName.indexOf(',') != -1) {
-                String[] attrNames = propertyName.split(",");
-                propertyName = attrNames[0];
-                columnName = attrNames[1];
-                if(attrNames.length > 2) {
-                    jsonName = attrNames[2];
-                }
-            } else {
-                columnName = m.get(COLUMN_NAME);
-                jsonName = m.get(JSON_NAME);
-            }
-            if(columnName == null || "".equals(columnName.trim())) {
-                columnName = propertyName;
-            }
-            if(jsonName == null || "".equals(jsonName.trim())) {
-                jsonName = propertyName;
-            }
+            String attribName = m.get(ATTRIB_NAME);
+            String columnName = m.get(COLUMN_NAME);
+            String jsonName = m.get(JSON_NAME);
             String columnDef = m.get(DB_COLUMN_DEFINITION);
-            AnAttrib anAttrib = new AnAttribImpl(propertyName, columnName, jsonName);
+            AnAttrib anAttrib = null;
+            if (attribName.indexOf(',') != -1) {
+                anAttrib = new AnAttribImpl(attribName);
+            } else {
+                anAttrib = new AnAttribImpl(attribName, columnName, jsonName);
+            }
             anAttrib.setDbColumnDefinition(columnDef);
             mipColl.add(anAttrib);
         }

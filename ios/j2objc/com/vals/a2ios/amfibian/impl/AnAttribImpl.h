@@ -29,8 +29,6 @@
 
 - (NSString *)getColumnName;
 
-- (NSString *)getColumnOrAttribName;
-
 - (id<AnAttrib_CustomConverter>)getCustomGetConverter;
 
 - (id<AnAttrib_CustomConverter>)getCustomSetConverter;
@@ -39,7 +37,7 @@
 
 - (JavaLangReflectMethod *)getGetter;
 
-- (NSString *)getJsonOrAttribName;
+- (NSString *)getJsonName;
 
 - (JavaLangReflectMethod *)getSetter;
 

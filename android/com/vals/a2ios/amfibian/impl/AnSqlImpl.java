@@ -161,18 +161,20 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         for (String attrName : attrNames) {
             if (!isSkipAttr(attrName)) {
                 AnAttrib attr = om.get(attrName);
-                Object value = getValue(dbCustomGetConverter, attr);
-                if (value != null) {
-                    queryStr.append(getColumnName(attr));
-                    parameters.add(value);
-                    insertParamClause.append("? ");
-                } else {
-                    queryStr.append(getColumnName(attr));
-                    insertParamClause.append("NULL ");
+                if(attr.getColumnName() != null) {
+                    Object value = getValue(dbCustomGetConverter, attr);
+                    if (value != null) {
+                        queryStr.append(attr.getColumnName());
+                        parameters.add(value);
+                        insertParamClause.append("? ");
+                    } else {
+                        queryStr.append(attr.getColumnName());
+                        insertParamClause.append("NULL ");
+                    }
+                    attribNameList.add(attrName);
+                    queryStr.append(",");
+                    insertParamClause.append(",");
                 }
-                attribNameList.add(attrName);
-                queryStr.append(",");
-                insertParamClause.append(",");
             }
         }
         queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
@@ -190,22 +192,21 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         for (String attrName : attrNames) {
             if (!isSkipAttr(attrName)) {
                 AnAttrib attrib = om.get(attrName);
-                if (attrib != null) {
-                    queryStr.append(getColumnName(attrib) + " = ? ");
-                    parameters.add(getValue(dbCustomGetConverter, attrib));
-                } else {
-                    queryStr.append(getColumnName(attrib) + " = NULL ");
+                if(attrib.getColumnName() != null) {
+                    Object value = getValue(dbCustomGetConverter, attrib);
+                    if (value != null) {
+                        queryStr.append(attrib.getColumnName()+ " = ? ");
+                        parameters.add(value);
+                    } else {
+                        queryStr.append(attrib.getColumnName() + " = NULL ");
+                    }
+                    attribNameList.add(attrName);
+                    queryStr.append(",");
                 }
-                attribNameList.add(attrName);
-                queryStr.append(",");
             }
         }
         queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
         columnClause = queryStr.toString();
-    }
-
-    public String getColumnName(AnAttrib attrib) {
-        return attrib.getColumnOrAttribName();
     }
 
     @Override
@@ -217,11 +218,13 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         Set<String> attribNames = cm.keySet();
         for (String attribName : attribNames) {
             AnAttrib attr = cm.get(attribName);
-            String colName = getColumnName(attr);
-            queryStr.append(colName);
-            String columnDef = getSqlColumnDefinition(attr);
-            queryStr.append(" " + columnDef);
-            queryStr.append(",");
+            if(attr.getColumnName() != null) {
+                String colName = attr.getColumnName();
+                queryStr.append(colName);
+                String columnDef = getSqlColumnDefinition(attr);
+                queryStr.append(" " + columnDef);
+                queryStr.append(",");
+            }
         }
         queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
         columnClause = queryStr.toString();
@@ -276,12 +279,15 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         Set<String> propertyNames = cm.keySet();
         for (String pName : propertyNames) {
             if (!isSkipAttr(pName)) {
-                String colName = getColumnName(cm.get(pName));
-                queryStr.append(alias);
-                queryStr.append('.');
-                queryStr.append(colName);
-                attribNameList.add(pName);
-                queryStr.append(',');
+                AnAttrib attr = cm.get(pName);
+                if (attr.getColumnName() != null) {
+                    String colName = attr.getColumnName();
+                    queryStr.append(alias);
+                    queryStr.append('.');
+                    queryStr.append(colName);
+                    attribNameList.add(pName);
+                    queryStr.append(',');
+                }
             }
         }
         queryStr.replace(queryStr.length() - 1, queryStr.length(), " ");
