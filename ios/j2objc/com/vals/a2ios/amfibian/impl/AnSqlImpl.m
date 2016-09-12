@@ -307,16 +307,16 @@ J2OBJC_IGNORE_DESIGNATED_END
   type_ = AnSqlImpl_TYPE_SELECT;
   alias_ = JreStrcat("$C", tableName_, '0');
   id<JavaUtilMap> cm = [self getAllAttribMap];
-  id<JavaUtilSet> propertyNames = [((id<JavaUtilMap>) nil_chk(cm)) keySet];
-  for (NSString * __strong pName in nil_chk(propertyNames)) {
-    if (![self isSkipAttrWithNSString:pName]) {
-      id<AnAttrib> attr = [cm getWithId:pName];
+  id<JavaUtilSet> attributeNames = [((id<JavaUtilMap>) nil_chk(cm)) keySet];
+  for (NSString * __strong attrName in nil_chk(attributeNames)) {
+    if (![self isSkipAttrWithNSString:attrName]) {
+      id<AnAttrib> attr = [cm getWithId:attrName];
       if ([((id<AnAttrib>) nil_chk(attr)) getColumnName] != nil) {
         NSString *colName = [attr getColumnName];
         (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:alias_];
         (void) [queryStr_ appendWithChar:'.'];
         (void) [queryStr_ appendWithNSString:colName];
-        [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:pName];
+        [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
         (void) [queryStr_ appendWithChar:','];
       }
     }
