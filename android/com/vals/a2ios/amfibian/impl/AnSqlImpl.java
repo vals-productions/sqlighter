@@ -213,8 +213,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     public AnSql<?> startSqlCreate() {
         reset();
         type = TYPE_CREATE;
-        Map<String, AnAttrib> cm =
-                getAllAttribMap();
+        Map<String, AnAttrib> cm = getAllAttribMap();
         Set<String> attribNames = cm.keySet();
         for (String attribName : attribNames) {
             AnAttrib attr = cm.get(attribName);
@@ -276,16 +275,16 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         type = TYPE_SELECT;
         alias = tableName + "0";
         Map<String, AnAttrib> cm = getAllAttribMap();
-        Set<String> propertyNames = cm.keySet();
-        for (String pName : propertyNames) {
-            if (!isSkipAttr(pName)) {
-                AnAttrib attr = cm.get(pName);
+        Set<String> attributeNames = cm.keySet();
+        for (String attrName : attributeNames) {
+            if (!isSkipAttr(attrName)) {
+                AnAttrib attr = cm.get(attrName);
                 if (attr.getColumnName() != null) {
                     String colName = attr.getColumnName();
                     queryStr.append(alias);
                     queryStr.append('.');
                     queryStr.append(colName);
-                    attribNameList.add(pName);
+                    attribNameList.add(attrName);
                     queryStr.append(',');
                 }
             }

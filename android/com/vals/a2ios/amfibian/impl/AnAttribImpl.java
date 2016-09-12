@@ -184,6 +184,7 @@ public class AnAttribImpl implements AnAttrib {
     public Method getSetter() {
         Method[] methods = parentAnObject.getNativeClass().getMethods();
         for (Method m: methods) {
+            String methodName = m.getName();
             if (m.getName().equalsIgnoreCase("set" + attribName)) {
                 return m;
             }
