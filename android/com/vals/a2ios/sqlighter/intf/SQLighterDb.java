@@ -211,7 +211,8 @@ public interface SQLighterDb {
      *
      * Column names containing the hint (case insens.)
      * will be considered date columns, and the method
-     * above would return Date instead of the String.
+     * SQLighterRs.getObject(...)
+     * would return Date instead of the String.
      */
     public void setDateColumnNameHint(String hint);
 
