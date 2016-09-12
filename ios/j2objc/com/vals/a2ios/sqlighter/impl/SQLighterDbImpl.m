@@ -169,15 +169,12 @@
                 }
             } else if ([o isKindOfClass: [JavaUtilDate class]]) {
                 [self bindJavaUtilDate:o atIndex: par];
-    //        } else if ([o isKindOfClass: [NSDate class]]) {
-    //            [self bindDate:o atIndex: par];
             } else if ([o isKindOfClass: [NSData class]]) {
                 [self bindBlob: o atIndex: par];
             } else {
                 [self bindNullAtIndex: par];
             }
         }
-        // [parameters removeAllObjects];
         [self clearParameterArray];
     }
 }
@@ -319,14 +316,6 @@
 -(void) addParamWithLong: (jlong) par {
     [[self parameterArray] addObject: [NSNumber numberWithLong: (long)par]];
 }
-
-//-(void) addParamWithDate: (NSDate*) date atIndex: (int) idx {
-//    [self addParamWithDouble: [date timeIntervalSince1970]];
-//}
-
-//-(void) bindDate: (NSDate*) date atIndex: (int) idx {
-//        [self bindDouble: [date timeIntervalSince1970] atIndex: idx];
-//}
 
 -(void) addParamWithBlob: (NSData*) data {
     if(data == nil) {

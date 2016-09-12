@@ -105,9 +105,8 @@
         return [self getBlobAtIndex: index];
     } else if (type == SQLITE_TEXT) {
         NSString *colName = [self getColumnNameWithInt:index];
-        if (db.isDateNamedColumn == YES &&
-            colName != nil &&
-            [[colName lowercaseString] containsString:db.dateColumnHint]) {
+        if (db.isDateNamedColumn == YES && colName != nil && db.dateColumnHint != nil &&
+            [[colName lowercaseString] containsString: [db.dateColumnHint lowercaseString]]) {
             return [self getDateWithInt:index];
         }
         return [self getStringWithInt: index];
@@ -132,8 +131,7 @@
 }
 
 - (NSString *)getColumnNameWithInt:(jint)index {
-    const char *buffer = // (char*)sqlite3_column_database_name(stmt, index);
-        (char*)sqlite3_column_name(stmt, index);
+    const char *buffer = (char*)sqlite3_column_name(stmt, index);
     NSString *str = [NSString stringWithUTF8String: buffer];
     return str;
 }
