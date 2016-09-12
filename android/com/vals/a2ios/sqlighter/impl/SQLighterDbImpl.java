@@ -156,8 +156,8 @@ public class SQLighterDbImpl implements SQLighterDb {
                 return getBlob(index);
             } else if (columnType == Cursor.FIELD_TYPE_STRING) {
                 String columnName = getColumnName(index);
-                if (isDateNamedColumn && columnName != null &&
-                        columnName.toLowerCase().indexOf(dateColumnHint) != -1) {
+                if (isDateNamedColumn && columnName != null && dateColumnHint != null &&
+                        columnName.toLowerCase().indexOf(dateColumnHint.toLowerCase()) != -1) {
                     // OPTIONAL Date implementation
                     return getDate(index);
                 }
