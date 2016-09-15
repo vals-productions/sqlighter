@@ -9,7 +9,12 @@
 #include "J2ObjC_source.h"
 #include "com/prod/vals/andr_demo_prj/Appointment.h"
 #include "com/prod/vals/andr_demo_prj/Bootstrap.h"
+#include "com/prod/vals/andr_demo_prj/DemoAppointmentGetAdapter.h"
 #include "com/prod/vals/andr_demo_prj/DemoBase.h"
+#include "com/prod/vals/andr_demo_prj/DemoDefaultGetAdapter.h"
+#include "com/prod/vals/andr_demo_prj/DemoDefaultSetAdapter.h"
+#include "com/prod/vals/andr_demo_prj/DemoIntGetAdapter.h"
+#include "com/prod/vals/andr_demo_prj/DemoIntSetAdapter.h"
 #include "com/prod/vals/andr_demo_prj/Entity.h"
 #include "com/vals/a2ios/amfibian/impl/AnIncubatorImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnOrmImpl.h"
@@ -262,7 +267,7 @@ void DemoBase_extraAmfibianTestsWithAnOrm_(id<AnOrm> anOrm) {
   NSString *sql = [anOrm getQueryString];
   DemoBase_checkTestWithNSString_withBoolean_(@"restricted select clause test 1", [((NSString *) nil_chk(sql)) hasPrefix:@"select appointment0.id "]);
   [anOrm resetSkipInclAttrNameList];
-  [anOrm addSkipAttribsWithNSStringArray:[IOSObjectArray newArrayWithObjects:(id[]){ @"id", @"name", @"createDate" } count:3 type:NSString_class_()]];
+  [anOrm addSkipAttribsWithNSStringArray:[IOSObjectArray newArrayWithObjects:(id[]){ @"id", @"name", @"createDate", @"status" } count:4 type:NSString_class_()]];
   [anOrm startSqlSelect];
   sql = [anOrm getQueryString];
   DemoBase_checkTestWithNSString_withBoolean_(@"restricted select clause test 2", [((NSString *) nil_chk(sql)) hasPrefix:@"select appointment0.is_processed "]);
@@ -327,7 +332,12 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(DemoBase)
 
 - (IOSClass *)getClassByNameWithNSString:(NSString *)name {
   if ([((NSString *) nil_chk(name)) isEqual:[Entity_class_() getName]]) return Entity_class_();
-  else if ([name isEqual:[Appointment_class_() getName]]) return Appointment_class_();
+  if ([name isEqual:[Appointment_class_() getName]]) return Appointment_class_();
+  if ([name isEqual:[DemoDefaultGetAdapter_class_() getName]]) return DemoDefaultGetAdapter_class_();
+  if ([name isEqual:[DemoDefaultSetAdapter_class_() getName]]) return DemoDefaultSetAdapter_class_();
+  if ([name isEqual:[DemoIntGetAdapter_class_() getName]]) return DemoIntGetAdapter_class_();
+  if ([name isEqual:[DemoIntSetAdapter_class_() getName]]) return DemoIntSetAdapter_class_();
+  if ([name isEqual:[DemoAppointmentGetAdapter_class_() getName]]) return DemoAppointmentGetAdapter_class_();
   return nil;
 }
 

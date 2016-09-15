@@ -369,7 +369,7 @@ public class Demo extends DemoBase {
              *  name TEXT NOT NULL,
              *  id INTEGER,
              *  is_processed INTEGER,
-             *  create_date TEXT)
+             *  create_date TEXT, status INTEGER)
              * </pre>
              *
              * Note how column names relate with database column and object attributes.
@@ -405,7 +405,7 @@ public class Demo extends DemoBase {
              * Next, lets specify that we've processed
              * an appointment.
              */
-            appointment234.setIsProcessed(1);
+            appointment234.setIsProcessed(10);
             /**
              * Then, lets update our "Meet Amfibian" object in the database
              */
@@ -440,6 +440,10 @@ public class Demo extends DemoBase {
              */
             Appointment meetAmfibianAppointment = anOrm.getSingleResult();
             if (meetAmfibianAppointment != null) { // just making sure we've got the result
+
+                checkTest("attrib level adapter", meetAmfibianAppointment.getStatus() == 1);
+                checkTest("object level adapter", meetAmfibianAppointment.getIsProcessed() == 1);
+
                 System.out.println(
                     "Back to JSON string\nbecause we " +
                     "might want to send it\nback to the " +

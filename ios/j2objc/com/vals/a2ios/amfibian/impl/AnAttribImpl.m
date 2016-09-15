@@ -7,7 +7,7 @@
 #include "IOSObjectArray.h"
 #include "J2ObjC_source.h"
 #include "com/vals/a2ios/amfibian/impl/AnAttribImpl.h"
-#include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
+#include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "java/lang/Exception.h"
 #include "java/lang/reflect/Method.h"
@@ -19,8 +19,10 @@
   NSString *columnName_;
   NSString *jsonName_;
   NSString *dbColumnDefinition_;
-  id<AnAttrib_CustomConverter> customSetConverter_;
-  id<AnAttrib_CustomConverter> customGetConverter_;
+  id<AnAdapter> jsonSetAdapter_;
+  id<AnAdapter> jsonGetAdapter_;
+  id<AnAdapter> dbSetAdapter_;
+  id<AnAdapter> dbGetAdapter_;
 }
 
 - (void)init__WithNSString:(NSString *)attribName
@@ -34,12 +36,21 @@ J2OBJC_FIELD_SETTER(AnAttribImpl, attribName_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, columnName_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, jsonName_, NSString *)
 J2OBJC_FIELD_SETTER(AnAttribImpl, dbColumnDefinition_, NSString *)
-J2OBJC_FIELD_SETTER(AnAttribImpl, customSetConverter_, id<AnAttrib_CustomConverter>)
-J2OBJC_FIELD_SETTER(AnAttribImpl, customGetConverter_, id<AnAttrib_CustomConverter>)
+J2OBJC_FIELD_SETTER(AnAttribImpl, jsonSetAdapter_, id<AnAdapter>)
+J2OBJC_FIELD_SETTER(AnAttribImpl, jsonGetAdapter_, id<AnAdapter>)
+J2OBJC_FIELD_SETTER(AnAttribImpl, dbSetAdapter_, id<AnAdapter>)
+J2OBJC_FIELD_SETTER(AnAttribImpl, dbGetAdapter_, id<AnAdapter>)
 
 __attribute__((unused)) static void AnAttribImpl_init__WithNSString_withNSString_withNSString_(AnAttribImpl *self, NSString *attribName, NSString *columnName, NSString *jsonName);
 
 @implementation AnAttribImpl
+
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  AnAttribImpl_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
 
 - (instancetype)initWithNSString:(NSString *)attribName
                     withNSString:(NSString *)columnName
@@ -67,20 +78,36 @@ __attribute__((unused)) static void AnAttribImpl_init__WithNSString_withNSString
   self->dbColumnDefinition_ = dbColumnDefinition;
 }
 
-- (void)setCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter {
-  self->customSetConverter_ = converter;
+- (void)setJsonSetAdapterWithAnAdapter:(id<AnAdapter>)converter {
+  self->jsonSetAdapter_ = converter;
 }
 
-- (id<AnAttrib_CustomConverter>)getCustomSetConverter {
-  return customSetConverter_;
+- (id<AnAdapter>)getJsonSetAdapter {
+  return jsonSetAdapter_;
 }
 
-- (void)setCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter {
-  self->customGetConverter_ = converter;
+- (void)setJsonGetAdapterWithAnAdapter:(id<AnAdapter>)converter {
+  self->jsonGetAdapter_ = converter;
 }
 
-- (id<AnAttrib_CustomConverter>)getCustomGetConverter {
-  return self->customGetConverter_;
+- (id<AnAdapter>)getJsonGetAdapter {
+  return self->jsonGetAdapter_;
+}
+
+- (void)setDbSetAdapterWithAnAdapter:(id<AnAdapter>)converter {
+  self->dbSetAdapter_ = converter;
+}
+
+- (id<AnAdapter>)getDbSetAdapter {
+  return dbSetAdapter_;
+}
+
+- (void)setDbGetAdapterWithAnAdapter:(id<AnAdapter>)converter {
+  self->dbGetAdapter_ = converter;
+}
+
+- (id<AnAdapter>)getDbGetAdapter {
+  return self->dbGetAdapter_;
 }
 
 - (void)setAnObjectWithAnObject:(id<AnObject>)anObject {
@@ -109,27 +136,20 @@ __attribute__((unused)) static void AnAttribImpl_init__WithNSString_withNSString
 
 - (void)setValueWithId:(id)value {
   JavaLangReflectMethod *m = [self getSetter];
-  if (m != nil) {
-    id convertedValue = nil;
-    id<AnAttrib_CustomConverter> cc = [self getCustomSetConverter];
-    if (cc != nil) {
-      convertedValue = [cc convertWithAnAttrib:self withId:value];
-    }
-    else {
-      convertedValue = value;
-    }
-    (void) [m invokeWithId:[((id<AnObject>) nil_chk(parentAnObject_)) getNativeObject] withNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ convertedValue } count:1 type:NSObject_class_()]];
-  }
+  (void) [((JavaLangReflectMethod *) nil_chk(m)) invokeWithId:[((id<AnObject>) nil_chk(parentAnObject_)) getNativeObject] withNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ value } count:1 type:NSObject_class_()]];
 }
 
 - (id)getValue {
+  return [self getValueWithAnAdapter:nil];
+}
+
+- (id)getValueWithAnAdapter:(id<AnAdapter>)converter {
   id value = nil;
   JavaLangReflectMethod *m = [self getGetter];
   if (m != nil) {
     value = [m invokeWithId:[((id<AnObject>) nil_chk(parentAnObject_)) getNativeObject] withNSObjectArray:[IOSObjectArray newArrayWithLength:0 type:NSObject_class_()]];
-    id<AnAttrib_CustomConverter> cc = [self getCustomGetConverter];
-    if (cc != nil) {
-      value = [cc convertWithAnAttrib:self withId:value];
+    if (converter != nil) {
+      value = [converter convertWithAnAttrib:self withId:value];
       return value;
     }
   }
@@ -177,7 +197,21 @@ __attribute__((unused)) static void AnAttribImpl_init__WithNSString_withNSString
   return nil;
 }
 
+- (void)setJsonNameWithNSString:(NSString *)jsonName {
+  self->jsonName_ = jsonName;
+}
+
 @end
+
+void AnAttribImpl_init(AnAttribImpl *self) {
+  (void) NSObject_init(self);
+}
+
+AnAttribImpl *new_AnAttribImpl_init() {
+  AnAttribImpl *self = [AnAttribImpl alloc];
+  AnAttribImpl_init(self);
+  return self;
+}
 
 void AnAttribImpl_initWithNSString_withNSString_withNSString_(AnAttribImpl *self, NSString *attribName, NSString *columnName, NSString *jsonName) {
   (void) NSObject_init(self);

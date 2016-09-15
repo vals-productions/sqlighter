@@ -8,6 +8,7 @@
 #include "J2ObjC_source.h"
 #include "com/vals/a2ios/amfibian/impl/AnObjectImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnSqlImpl.h"
+#include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 #include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "com/vals/a2ios/amfibian/intf/AnSql.h"
@@ -29,8 +30,8 @@
 
 @interface AnSqlImpl () {
  @public
-  id<AnAttrib_CustomConverter> dbCustomSetConverter_;
-  id<AnAttrib_CustomConverter> dbCustomGetConverter_;
+  id<AnAdapter> dbSetAdapter_;
+  id<AnAdapter> dbGetAdapter_;
   id<JavaUtilList> attribNameList_;
   id<JavaUtilList> parameters_;
   JavaLangStringBuilder *whereClause_;
@@ -52,8 +53,8 @@
 
 @end
 
-J2OBJC_FIELD_SETTER(AnSqlImpl, dbCustomSetConverter_, id<AnAttrib_CustomConverter>)
-J2OBJC_FIELD_SETTER(AnSqlImpl, dbCustomGetConverter_, id<AnAttrib_CustomConverter>)
+J2OBJC_FIELD_SETTER(AnSqlImpl, dbSetAdapter_, id<AnAdapter>)
+J2OBJC_FIELD_SETTER(AnSqlImpl, dbGetAdapter_, id<AnAdapter>)
 J2OBJC_FIELD_SETTER(AnSqlImpl, attribNameList_, id<JavaUtilList>)
 J2OBJC_FIELD_SETTER(AnSqlImpl, parameters_, id<JavaUtilList>)
 J2OBJC_FIELD_SETTER(AnSqlImpl, whereClause_, JavaLangStringBuilder *)
@@ -64,13 +65,13 @@ J2OBJC_FIELD_SETTER(AnSqlImpl, inclAttrNameList_, id<JavaUtilSet>)
 J2OBJC_FIELD_SETTER(AnSqlImpl, columnClause_, NSString *)
 J2OBJC_FIELD_SETTER(AnSqlImpl, alias_, NSString *)
 
-static id<AnAttrib_CustomConverter> AnSqlImpl_sqlCustomSetGlobalConverter_;
-J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, sqlCustomSetGlobalConverter_, id<AnAttrib_CustomConverter>)
-J2OBJC_STATIC_FIELD_SETTER(AnSqlImpl, sqlCustomSetGlobalConverter_, id<AnAttrib_CustomConverter>)
+static id<AnAdapter> AnSqlImpl_sqlCustomSetGlobalConverter_;
+J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, sqlCustomSetGlobalConverter_, id<AnAdapter>)
+J2OBJC_STATIC_FIELD_SETTER(AnSqlImpl, sqlCustomSetGlobalConverter_, id<AnAdapter>)
 
-static id<AnAttrib_CustomConverter> AnSqlImpl_sqlCustomGetGlobalConverter_;
-J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, sqlCustomGetGlobalConverter_, id<AnAttrib_CustomConverter>)
-J2OBJC_STATIC_FIELD_SETTER(AnSqlImpl, sqlCustomGetGlobalConverter_, id<AnAttrib_CustomConverter>)
+static id<AnAdapter> AnSqlImpl_sqlCustomGetGlobalConverter_;
+J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, sqlCustomGetGlobalConverter_, id<AnAdapter>)
+J2OBJC_STATIC_FIELD_SETTER(AnSqlImpl, sqlCustomGetGlobalConverter_, id<AnAdapter>)
 
 __attribute__((unused)) static void AnSqlImpl_reset(AnSqlImpl *self);
 
@@ -193,7 +194,7 @@ J2OBJC_IGNORE_DESIGNATED_END
     if (![self isSkipAttrWithNSString:attrName]) {
       id<AnAttrib> attr = [om getWithId:attrName];
       if ([((id<AnAttrib>) nil_chk(attr)) getColumnName] != nil) {
-        id value = [self getValueWithAnAttrib_CustomConverter:dbCustomGetConverter_ withAnAttrib:attr];
+        id value = [self getValueWithAnAdapter:[attr getDbGetAdapter] withAnAdapter:dbGetAdapter_ withAnAttrib:attr];
         if (value != nil) {
           (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:[attr getColumnName]];
           [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:value];
@@ -224,7 +225,7 @@ J2OBJC_IGNORE_DESIGNATED_END
     if (![self isSkipAttrWithNSString:attrName]) {
       id<AnAttrib> attrib = [om getWithId:attrName];
       if ([((id<AnAttrib>) nil_chk(attrib)) getColumnName] != nil) {
-        id value = [self getValueWithAnAttrib_CustomConverter:dbCustomGetConverter_ withAnAttrib:attrib];
+        id value = [self getValueWithAnAdapter:[attrib getDbGetAdapter] withAnAdapter:dbGetAdapter_ withAnAttrib:attrib];
         if (value != nil) {
           (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("$$", [attrib getColumnName], @" = ? ")];
           [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:value];
@@ -426,20 +427,20 @@ J2OBJC_IGNORE_DESIGNATED_END
   return nil;
 }
 
-- (id<AnAttrib_CustomConverter>)getDbCustomSetConverter {
-  return dbCustomSetConverter_;
+- (id<AnAdapter>)getDbSetAdapter {
+  return dbSetAdapter_;
 }
 
-- (void)setDbCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)dbCustomSetConverter {
-  self->dbCustomSetConverter_ = dbCustomSetConverter;
+- (void)setDbSetAdapterWithAnAdapter:(id<AnAdapter>)dbSetAdapter {
+  self->dbSetAdapter_ = dbSetAdapter;
 }
 
-- (id<AnAttrib_CustomConverter>)getDbCustomGetConverter {
-  return dbCustomGetConverter_;
+- (id<AnAdapter>)getDbGetAdapter {
+  return dbGetAdapter_;
 }
 
-- (void)setDbCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)dbCustomGetConverter {
-  self->dbCustomGetConverter_ = dbCustomGetConverter;
+- (void)setDbGetAdapterWithAnAdapter:(id<AnAdapter>)dbGetAdapter {
+  self->dbGetAdapter_ = dbGetAdapter;
 }
 
 @end

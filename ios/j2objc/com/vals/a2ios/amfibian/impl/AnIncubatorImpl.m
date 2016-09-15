@@ -9,19 +9,17 @@
 #include "com/vals/a2ios/amfibian/impl/AnAttribImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnIncubatorImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnOrmImpl.h"
+#include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 #include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/intf/AnOrm.h"
-#include "java/lang/ClassNotFoundException.h"
 #include "java/lang/Exception.h"
 #include "java/lang/StringBuilder.h"
-#include "java/util/ArrayList.h"
-#include "java/util/Collection.h"
 #include "java/util/HashMap.h"
 #include "java/util/Map.h"
 #include "org/json/JSONArray.h"
-#include "org/json/JSONException.h"
 #include "org/json/JSONObject.h"
 
+@class AnIncubatorImpl_AnJsonSchema;
 @class AnIncubatorImpl_AnObjectRecord;
 
 #pragma clang diagnostic ignored "-Wprotocol"
@@ -29,11 +27,10 @@
 
 @interface AnIncubatorImpl () {
  @public
-  id<JavaUtilMap> entityRecordMap_;
+  AnIncubatorImpl_AnJsonSchema *anSchema_;
 }
 
-- (id<AnOrm>)makeWithNSString:(NSString *)name
-              withJavaUtilMap:(id<JavaUtilMap>)records;
+- (void)loadSchemaAdaptersWithOrgJsonJSONObject:(OrgJsonJSONObject *)jo;
 
 - (id<JavaUtilMap>)loadObjectsWithOrgJsonJSONArray:(OrgJsonJSONArray *)jsonArray;
 
@@ -43,15 +40,35 @@
                    withOrgJsonJSONObject:(OrgJsonJSONObject *)jo
                          withJavaUtilMap:(id<JavaUtilMap>)propertiesMap;
 
-- (id<JavaUtilCollection>)ensureAttributesWithOrgJsonJSONObject:(OrgJsonJSONObject *)jo;
+- (void)ensureAttributesWithAnOrm:(id<AnOrm>)orm
+            withOrgJsonJSONObject:(OrgJsonJSONObject *)jo
+withAnIncubatorImpl_AnObjectRecord:(AnIncubatorImpl_AnObjectRecord *)rec;
+
+- (void)ensureAnObjectAdaptersWithAnOrm:(id<AnOrm>)orm
+                  withOrgJsonJSONObject:(OrgJsonJSONObject *)jo
+                        withJavaUtilMap:(id<JavaUtilMap>)converterByNameMap;
+
+- (IOSClass *)getAdapterClassWithNSString:(NSString *)adapterName;
+
+- (id<AnAdapter>)getAdapterInstanceWithNSString:(NSString *)adapterName;
+
+- (void)ensureAnAttribAdaptersWithAnOrm:(id<AnOrm>)orm
+                           withAnAttrib:(id<AnAttrib>)attrib
+                  withOrgJsonJSONObject:(OrgJsonJSONObject *)jo;
 
 - (NSString *)removeCommentsWithNSString:(NSString *)string
                             withNSString:(NSString *)begComm
                             withNSString:(NSString *)endComm;
 
+- (void)loadAdapterMapWithOrgJsonJSONObject:(OrgJsonJSONObject *)jo
+                            withJavaUtilMap:(id<JavaUtilMap>)converterByNameMap;
+
+- (id<AnOrm>)makeWithNSString:(NSString *)name
+              withJavaUtilMap:(id<JavaUtilMap>)records;
+
 @end
 
-J2OBJC_FIELD_SETTER(AnIncubatorImpl, entityRecordMap_, id<JavaUtilMap>)
+J2OBJC_FIELD_SETTER(AnIncubatorImpl, anSchema_, AnIncubatorImpl_AnJsonSchema *)
 
 static NSString *AnIncubatorImpl_VERSION_ = @"version";
 J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, VERSION_, NSString *)
@@ -83,22 +100,25 @@ J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, JSON_NAME_, NSString *)
 static NSString *AnIncubatorImpl_DB_COLUMN_DEFINITION_ = @"dbColumnDefinition";
 J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, DB_COLUMN_DEFINITION_, NSString *)
 
-static NSString *AnIncubatorImpl_DEPENDS_ = @"extends";
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, DEPENDS_, NSString *)
+static NSString *AnIncubatorImpl_EXTENDS_ = @"extends";
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, EXTENDS_, NSString *)
 
-static NSString *AnIncubatorImpl_JSON_SET_CONVERTER_ = @"jsonSetConverter";
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, JSON_SET_CONVERTER_, NSString *)
+static NSString *AnIncubatorImpl_JSON_SET_ADAPTER_ = @"jsonSet";
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, JSON_SET_ADAPTER_, NSString *)
 
-static NSString *AnIncubatorImpl_JSON_GET_CONVERTER_ = @"jsonGetConverter";
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, JSON_GET_CONVERTER_, NSString *)
+static NSString *AnIncubatorImpl_JSON_GET_ADAPTER_ = @"jsonGet";
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, JSON_GET_ADAPTER_, NSString *)
 
-static NSString *AnIncubatorImpl_DB_SET_CONVERTER_ = @"dbSetConverter";
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, DB_SET_CONVERTER_, NSString *)
+static NSString *AnIncubatorImpl_DB_SET_ADAPTER_ = @"dbSet";
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, DB_SET_ADAPTER_, NSString *)
 
-static NSString *AnIncubatorImpl_DB_GET_CONVERTER_ = @"dbGetConverter";
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, DB_GET_CONVERTER_, NSString *)
+static NSString *AnIncubatorImpl_DB_GET_ADAPTER_ = @"dbGet";
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, DB_GET_ADAPTER_, NSString *)
 
-__attribute__((unused)) static id<AnOrm> AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(AnIncubatorImpl *self, NSString *name, id<JavaUtilMap> records);
+static NSString *AnIncubatorImpl_NULL_STRING_ = @"null";
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, NULL_STRING_, NSString *)
+
+__attribute__((unused)) static void AnIncubatorImpl_loadSchemaAdaptersWithOrgJsonJSONObject_(AnIncubatorImpl *self, OrgJsonJSONObject *jo);
 
 __attribute__((unused)) static id<JavaUtilMap> AnIncubatorImpl_loadObjectsWithOrgJsonJSONArray_(AnIncubatorImpl *self, OrgJsonJSONArray *jsonArray);
 
@@ -106,16 +126,29 @@ __attribute__((unused)) static AnIncubatorImpl_AnObjectRecord *AnIncubatorImpl_l
 
 __attribute__((unused)) static NSString *AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(AnIncubatorImpl *self, NSString *name, OrgJsonJSONObject *jo, id<JavaUtilMap> propertiesMap);
 
-__attribute__((unused)) static id<JavaUtilCollection> AnIncubatorImpl_ensureAttributesWithOrgJsonJSONObject_(AnIncubatorImpl *self, OrgJsonJSONObject *jo);
+__attribute__((unused)) static void AnIncubatorImpl_ensureAttributesWithAnOrm_withOrgJsonJSONObject_withAnIncubatorImpl_AnObjectRecord_(AnIncubatorImpl *self, id<AnOrm> orm, OrgJsonJSONObject *jo, AnIncubatorImpl_AnObjectRecord *rec);
+
+__attribute__((unused)) static void AnIncubatorImpl_ensureAnObjectAdaptersWithAnOrm_withOrgJsonJSONObject_withJavaUtilMap_(AnIncubatorImpl *self, id<AnOrm> orm, OrgJsonJSONObject *jo, id<JavaUtilMap> converterByNameMap);
+
+__attribute__((unused)) static IOSClass *AnIncubatorImpl_getAdapterClassWithNSString_(AnIncubatorImpl *self, NSString *adapterName);
+
+__attribute__((unused)) static id<AnAdapter> AnIncubatorImpl_getAdapterInstanceWithNSString_(AnIncubatorImpl *self, NSString *adapterName);
+
+__attribute__((unused)) static void AnIncubatorImpl_ensureAnAttribAdaptersWithAnOrm_withAnAttrib_withOrgJsonJSONObject_(AnIncubatorImpl *self, id<AnOrm> orm, id<AnAttrib> attrib, OrgJsonJSONObject *jo);
 
 __attribute__((unused)) static NSString *AnIncubatorImpl_removeCommentsWithNSString_withNSString_withNSString_(AnIncubatorImpl *self, NSString *string, NSString *begComm, NSString *endComm);
+
+__attribute__((unused)) static void AnIncubatorImpl_loadAdapterMapWithOrgJsonJSONObject_withJavaUtilMap_(AnIncubatorImpl *self, OrgJsonJSONObject *jo, id<JavaUtilMap> converterByNameMap);
+
+__attribute__((unused)) static id<AnOrm> AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(AnIncubatorImpl *self, NSString *name, id<JavaUtilMap> records);
 
 @interface AnIncubatorImpl_AnJsonSchema : NSObject {
  @public
   NSString *name_;
   NSString *version__;
-  IOSClass *entityClass_;
-  id<JavaUtilMap> directPropertiesMap_;
+  id<JavaUtilMap> entityRecordMap_;
+  id<JavaUtilMap> adapterByNameMap_;
+  id<JavaUtilMap> adapters_;
 }
 
 - (instancetype)initWithAnIncubatorImpl:(AnIncubatorImpl *)outer$;
@@ -126,8 +159,9 @@ J2OBJC_EMPTY_STATIC_INIT(AnIncubatorImpl_AnJsonSchema)
 
 J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnJsonSchema, name_, NSString *)
 J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnJsonSchema, version__, NSString *)
-J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnJsonSchema, entityClass_, IOSClass *)
-J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnJsonSchema, directPropertiesMap_, id<JavaUtilMap>)
+J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnJsonSchema, entityRecordMap_, id<JavaUtilMap>)
+J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnJsonSchema, adapterByNameMap_, id<JavaUtilMap>)
+J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnJsonSchema, adapters_, id<JavaUtilMap>)
 
 __attribute__((unused)) static void AnIncubatorImpl_AnJsonSchema_initWithAnIncubatorImpl_(AnIncubatorImpl_AnJsonSchema *self, AnIncubatorImpl *outer$);
 
@@ -137,10 +171,9 @@ J2OBJC_TYPE_LITERAL_HEADER(AnIncubatorImpl_AnJsonSchema)
 
 @interface AnIncubatorImpl_AnObjectRecord : NSObject {
  @public
-  id<JavaUtilMap> directPropertiesMap_;
-  id<JavaUtilCollection> propertiesMap_;
-  id<JavaUtilCollection> extraProperties_;
-  AnIncubatorImpl_AnObjectRecord *parent_;
+  id<AnOrm> orm_;
+  NSString *className__;
+  NSString *extendObject_;
 }
 
 - (instancetype)initWithAnIncubatorImpl:(AnIncubatorImpl *)outer$;
@@ -149,10 +182,9 @@ J2OBJC_TYPE_LITERAL_HEADER(AnIncubatorImpl_AnJsonSchema)
 
 J2OBJC_EMPTY_STATIC_INIT(AnIncubatorImpl_AnObjectRecord)
 
-J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnObjectRecord, directPropertiesMap_, id<JavaUtilMap>)
-J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnObjectRecord, propertiesMap_, id<JavaUtilCollection>)
-J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnObjectRecord, extraProperties_, id<JavaUtilCollection>)
-J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnObjectRecord, parent_, AnIncubatorImpl_AnObjectRecord *)
+J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnObjectRecord, orm_, id<AnOrm>)
+J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnObjectRecord, className__, NSString *)
+J2OBJC_FIELD_SETTER(AnIncubatorImpl_AnObjectRecord, extendObject_, NSString *)
 
 __attribute__((unused)) static void AnIncubatorImpl_AnObjectRecord_initWithAnIncubatorImpl_(AnIncubatorImpl_AnObjectRecord *self, AnIncubatorImpl *outer$);
 
@@ -160,31 +192,28 @@ __attribute__((unused)) static AnIncubatorImpl_AnObjectRecord *new_AnIncubatorIm
 
 J2OBJC_TYPE_LITERAL_HEADER(AnIncubatorImpl_AnObjectRecord)
 
+NSString *AnIncubatorImpl_ADAPTERS_ = @"adapters";
+NSString *AnIncubatorImpl_ADAPTER_MAP_ = @"adapterMap";
+NSString *AnIncubatorImpl_CLASS_ = @"class";
+
 @implementation AnIncubatorImpl
 
 - (void)load__WithNSString:(NSString *)jsonString {
   jsonString = AnIncubatorImpl_removeCommentsWithNSString_withNSString_withNSString_(self, jsonString, @"/*", @"*/");
   OrgJsonJSONObject *jo = new_OrgJsonJSONObject_initWithNSString_(jsonString);
-  AnIncubatorImpl_AnJsonSchema *anSchema = new_AnIncubatorImpl_AnJsonSchema_initWithAnIncubatorImpl_(self);
-  anSchema->name_ = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_NAME_, jo, nil);
-  anSchema->version__ = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_VERSION_, jo, nil);
+  anSchema_ = new_AnIncubatorImpl_AnJsonSchema_initWithAnIncubatorImpl_(self);
+  anSchema_->name_ = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_NAME_, jo, nil);
+  anSchema_->version__ = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_VERSION_, jo, nil);
+  AnIncubatorImpl_loadSchemaAdaptersWithOrgJsonJSONObject_(self, jo);
+  AnIncubatorImpl_loadAdapterMapWithOrgJsonJSONObject_withJavaUtilMap_(self, jo, anSchema_->adapterByNameMap_);
   if ([jo hasWithNSString:AnIncubatorImpl_OBJECTS_]) {
     OrgJsonJSONArray *ja = [jo getJSONArrayWithNSString:AnIncubatorImpl_OBJECTS_];
-    entityRecordMap_ = AnIncubatorImpl_loadObjectsWithOrgJsonJSONArray_(self, ja);
+    anSchema_->entityRecordMap_ = AnIncubatorImpl_loadObjectsWithOrgJsonJSONArray_(self, ja);
   }
 }
 
-- (id<AnOrm>)makeWithNSString:(NSString *)name {
-  return AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(self, name, entityRecordMap_);
-}
-
-- (id<AnOrm>)makeWithIOSClass:(IOSClass *)cluss {
-  return AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(self, [((IOSClass *) nil_chk(cluss)) getName], entityRecordMap_);
-}
-
-- (id<AnOrm>)makeWithNSString:(NSString *)name
-              withJavaUtilMap:(id<JavaUtilMap>)records {
-  return AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(self, name, records);
+- (void)loadSchemaAdaptersWithOrgJsonJSONObject:(OrgJsonJSONObject *)jo {
+  AnIncubatorImpl_loadSchemaAdaptersWithOrgJsonJSONObject_(self, jo);
 }
 
 - (id<JavaUtilMap>)loadObjectsWithOrgJsonJSONArray:(OrgJsonJSONArray *)jsonArray {
@@ -201,14 +230,54 @@ J2OBJC_TYPE_LITERAL_HEADER(AnIncubatorImpl_AnObjectRecord)
   return AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, name, jo, propertiesMap);
 }
 
-- (id<JavaUtilCollection>)ensureAttributesWithOrgJsonJSONObject:(OrgJsonJSONObject *)jo {
-  return AnIncubatorImpl_ensureAttributesWithOrgJsonJSONObject_(self, jo);
+- (void)ensureAttributesWithAnOrm:(id<AnOrm>)orm
+            withOrgJsonJSONObject:(OrgJsonJSONObject *)jo
+withAnIncubatorImpl_AnObjectRecord:(AnIncubatorImpl_AnObjectRecord *)rec {
+  AnIncubatorImpl_ensureAttributesWithAnOrm_withOrgJsonJSONObject_withAnIncubatorImpl_AnObjectRecord_(self, orm, jo, rec);
+}
+
+- (void)ensureAnObjectAdaptersWithAnOrm:(id<AnOrm>)orm
+                  withOrgJsonJSONObject:(OrgJsonJSONObject *)jo
+                        withJavaUtilMap:(id<JavaUtilMap>)converterByNameMap {
+  AnIncubatorImpl_ensureAnObjectAdaptersWithAnOrm_withOrgJsonJSONObject_withJavaUtilMap_(self, orm, jo, converterByNameMap);
+}
+
+- (IOSClass *)getAdapterClassWithNSString:(NSString *)adapterName {
+  return AnIncubatorImpl_getAdapterClassWithNSString_(self, adapterName);
+}
+
+- (id<AnAdapter>)getAdapterInstanceWithNSString:(NSString *)adapterName {
+  return AnIncubatorImpl_getAdapterInstanceWithNSString_(self, adapterName);
+}
+
+- (void)ensureAnAttribAdaptersWithAnOrm:(id<AnOrm>)orm
+                           withAnAttrib:(id<AnAttrib>)attrib
+                  withOrgJsonJSONObject:(OrgJsonJSONObject *)jo {
+  AnIncubatorImpl_ensureAnAttribAdaptersWithAnOrm_withAnAttrib_withOrgJsonJSONObject_(self, orm, attrib, jo);
 }
 
 - (NSString *)removeCommentsWithNSString:(NSString *)string
                             withNSString:(NSString *)begComm
                             withNSString:(NSString *)endComm {
   return AnIncubatorImpl_removeCommentsWithNSString_withNSString_withNSString_(self, string, begComm, endComm);
+}
+
+- (void)loadAdapterMapWithOrgJsonJSONObject:(OrgJsonJSONObject *)jo
+                            withJavaUtilMap:(id<JavaUtilMap>)converterByNameMap {
+  AnIncubatorImpl_loadAdapterMapWithOrgJsonJSONObject_withJavaUtilMap_(self, jo, converterByNameMap);
+}
+
+- (id<AnOrm>)makeWithNSString:(NSString *)name
+              withJavaUtilMap:(id<JavaUtilMap>)records {
+  return AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(self, name, records);
+}
+
+- (id<AnOrm>)makeWithNSString:(NSString *)name {
+  return AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(self, name, ((AnIncubatorImpl_AnJsonSchema *) nil_chk(anSchema_))->entityRecordMap_);
+}
+
+- (id<AnOrm>)makeWithIOSClass:(IOSClass *)cluss {
+  return (id<AnOrm>) check_protocol_cast(AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(self, [((IOSClass *) nil_chk(cluss)) getName], ((AnIncubatorImpl_AnJsonSchema *) nil_chk(anSchema_))->entityRecordMap_), AnOrm_class_());
 }
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN
@@ -220,67 +289,54 @@ J2OBJC_IGNORE_DESIGNATED_END
 
 @end
 
-id<AnOrm> AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(AnIncubatorImpl *self, NSString *name, id<JavaUtilMap> records) {
-  AnIncubatorImpl_AnObjectRecord *anObjRec = [((id<JavaUtilMap>) nil_chk(records)) getWithId:name];
-  NSString *deps = [((id<JavaUtilMap>) nil_chk(((AnIncubatorImpl_AnObjectRecord *) nil_chk(anObjRec))->directPropertiesMap_)) getWithId:AnIncubatorImpl_DEPENDS_];
-  anObjRec->parent_ = [records getWithId:deps];
-  id<AnOrm> anOrm = new_AnOrmImpl_init();
-  if (anObjRec->parent_ != nil) {
-    id<AnOrm> dependsOn = AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(self, [anObjRec->parent_->directPropertiesMap_ getWithId:AnIncubatorImpl_CLASS_NAME_], records);
-    [anOrm setParentAnObjectWithAnObject:dependsOn];
-  }
-  [anOrm setNativeClassWithIOSClass:[self getClassByNameWithNSString:[anObjRec->directPropertiesMap_ getWithId:AnIncubatorImpl_CLASS_NAME_]]];
-  NSString *assignedTableName = [anObjRec->directPropertiesMap_ getWithId:AnIncubatorImpl_TABLE_NAME_];
-  if (assignedTableName == nil) {
-    [anOrm setTableNameWithNSString:[((IOSClass *) nil_chk([anOrm getNativeClass])) getSimpleName]];
-  }
-  else {
-    [anOrm setTableNameWithNSString:assignedTableName];
-  }
-  id<JavaUtilCollection> mipColl = new_JavaUtilArrayList_init();
-  for (id<JavaUtilMap> __strong m in nil_chk(anObjRec->propertiesMap_)) {
-    NSString *attribName = [((id<JavaUtilMap>) nil_chk(m)) getWithId:AnIncubatorImpl_ATTRIB_NAME_];
-    NSString *columnName = [m getWithId:AnIncubatorImpl_COLUMN_NAME_];
-    NSString *jsonName = [m getWithId:AnIncubatorImpl_JSON_NAME_];
-    NSString *columnDef = [m getWithId:AnIncubatorImpl_DB_COLUMN_DEFINITION_];
-    id<AnAttrib> anAttrib = nil;
-    if ([((NSString *) nil_chk(attribName)) indexOf:','] != -1) {
-      anAttrib = new_AnAttribImpl_initWithNSString_(attribName);
-    }
-    else {
-      anAttrib = new_AnAttribImpl_initWithNSString_withNSString_withNSString_(attribName, columnName, jsonName);
-    }
-    [((id<AnAttrib>) nil_chk(anAttrib)) setDbColumnDefinitionWithNSString:columnDef];
-    [mipColl addWithId:anAttrib];
-  }
-  [anOrm setOwnAttribsWithAnAttribArray:[mipColl toArrayWithNSObjectArray:[IOSObjectArray newArrayWithLength:[mipColl size] type:AnAttrib_class_()]]];
-  id<JavaUtilCollection> xpColl = new_JavaUtilArrayList_init();
-  if (anObjRec->extraProperties_ != nil) {
-    for (NSString * __strong s in anObjRec->extraProperties_) {
-      [xpColl addWithId:s];
+void AnIncubatorImpl_loadSchemaAdaptersWithOrgJsonJSONObject_(AnIncubatorImpl *self, OrgJsonJSONObject *jo) {
+  if ([((OrgJsonJSONObject *) nil_chk(jo)) hasWithNSString:AnIncubatorImpl_ADAPTERS_]) {
+    OrgJsonJSONArray *ja = [jo getJSONArrayWithNSString:AnIncubatorImpl_ADAPTERS_];
+    jint count = [((OrgJsonJSONArray *) nil_chk(ja)) length];
+    for (jint i = 0; i < count; i++) {
+      OrgJsonJSONObject *adaptJo = [ja getJSONObjectWithInt:i];
+      if ([((OrgJsonJSONObject *) nil_chk(adaptJo)) hasWithNSString:AnIncubatorImpl_JSON_SET_ADAPTER_]) {
+        (void) [((id<JavaUtilMap>) nil_chk(((AnIncubatorImpl_AnJsonSchema *) nil_chk(self->anSchema_))->adapters_)) putWithId:AnIncubatorImpl_JSON_SET_ADAPTER_ withId:[adaptJo getStringWithNSString:AnIncubatorImpl_JSON_SET_ADAPTER_]];
+      }
+      else if ([adaptJo hasWithNSString:AnIncubatorImpl_JSON_GET_ADAPTER_]) {
+        (void) [((id<JavaUtilMap>) nil_chk(((AnIncubatorImpl_AnJsonSchema *) nil_chk(self->anSchema_))->adapters_)) putWithId:AnIncubatorImpl_JSON_GET_ADAPTER_ withId:[adaptJo getStringWithNSString:AnIncubatorImpl_JSON_GET_ADAPTER_]];
+      }
+      else if ([adaptJo hasWithNSString:AnIncubatorImpl_DB_SET_ADAPTER_]) {
+        (void) [((id<JavaUtilMap>) nil_chk(((AnIncubatorImpl_AnJsonSchema *) nil_chk(self->anSchema_))->adapters_)) putWithId:AnIncubatorImpl_DB_SET_ADAPTER_ withId:[adaptJo getStringWithNSString:AnIncubatorImpl_DB_SET_ADAPTER_]];
+      }
+      else if ([adaptJo hasWithNSString:AnIncubatorImpl_DB_GET_ADAPTER_]) {
+        (void) [((id<JavaUtilMap>) nil_chk(((AnIncubatorImpl_AnJsonSchema *) nil_chk(self->anSchema_))->adapters_)) putWithId:AnIncubatorImpl_DB_GET_ADAPTER_ withId:[adaptJo getStringWithNSString:AnIncubatorImpl_DB_GET_ADAPTER_]];
+      }
     }
   }
-  return anOrm;
 }
 
 id<JavaUtilMap> AnIncubatorImpl_loadObjectsWithOrgJsonJSONArray_(AnIncubatorImpl *self, OrgJsonJSONArray *jsonArray) {
-  id<JavaUtilMap> mil = new_JavaUtilHashMap_init();
+  id<JavaUtilMap> objRecMap = new_JavaUtilHashMap_init();
   jint itemCount = [((OrgJsonJSONArray *) nil_chk(jsonArray)) length];
   for (jint i = 0; i < itemCount; i++) {
     OrgJsonJSONObject *jo = [jsonArray getJSONObjectWithInt:i];
-    AnIncubatorImpl_AnObjectRecord *mi = AnIncubatorImpl_loadAnObjectRecordWithOrgJsonJSONObject_(self, jo);
-    (void) [mil putWithId:[((id<JavaUtilMap>) nil_chk(((AnIncubatorImpl_AnObjectRecord *) nil_chk(mi))->directPropertiesMap_)) getWithId:AnIncubatorImpl_CLASS_NAME_] withId:mi];
+    AnIncubatorImpl_AnObjectRecord *objectRecord = AnIncubatorImpl_loadAnObjectRecordWithOrgJsonJSONObject_(self, jo);
+    (void) [objRecMap putWithId:((AnIncubatorImpl_AnObjectRecord *) nil_chk(objectRecord))->className__ withId:objectRecord];
   }
-  return mil;
+  return objRecMap;
 }
 
 AnIncubatorImpl_AnObjectRecord *AnIncubatorImpl_loadAnObjectRecordWithOrgJsonJSONObject_(AnIncubatorImpl *self, OrgJsonJSONObject *jo) {
   AnIncubatorImpl_AnObjectRecord *rec = new_AnIncubatorImpl_AnObjectRecord_initWithAnIncubatorImpl_(self);
-  rec->directPropertiesMap_ = new_JavaUtilHashMap_init();
-  (void) AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_CLASS_NAME_, jo, rec->directPropertiesMap_);
-  (void) AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_TABLE_NAME_, jo, rec->directPropertiesMap_);
-  (void) AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_DEPENDS_, jo, rec->directPropertiesMap_);
-  rec->propertiesMap_ = AnIncubatorImpl_ensureAttributesWithOrgJsonJSONObject_(self, jo);
+  rec->orm_ = new_AnOrmImpl_init();
+  rec->extendObject_ = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_EXTENDS_, jo, nil);
+  rec->className__ = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_CLASS_NAME_, jo, nil);
+  [rec->orm_ setNativeClassWithIOSClass:[self getClassByNameWithNSString:rec->className__]];
+  AnIncubatorImpl_ensureAnObjectAdaptersWithAnOrm_withOrgJsonJSONObject_withJavaUtilMap_(self, rec->orm_, jo, ((AnIncubatorImpl_AnJsonSchema *) nil_chk(self->anSchema_))->adapterByNameMap_);
+  NSString *assignedTableName = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_TABLE_NAME_, jo, nil);
+  if (assignedTableName == nil) {
+    [rec->orm_ setTableNameWithNSString:[((IOSClass *) nil_chk([rec->orm_ getNativeClass])) getSimpleName]];
+  }
+  else {
+    [rec->orm_ setTableNameWithNSString:assignedTableName];
+  }
+  AnIncubatorImpl_ensureAttributesWithAnOrm_withOrgJsonJSONObject_withAnIncubatorImpl_AnObjectRecord_(self, rec->orm_, jo, rec);
   return rec;
 }
 
@@ -295,22 +351,161 @@ NSString *AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJ
   return nil;
 }
 
-id<JavaUtilCollection> AnIncubatorImpl_ensureAttributesWithOrgJsonJSONObject_(AnIncubatorImpl *self, OrgJsonJSONObject *jo) {
+void AnIncubatorImpl_ensureAttributesWithAnOrm_withOrgJsonJSONObject_withAnIncubatorImpl_AnObjectRecord_(AnIncubatorImpl *self, id<AnOrm> orm, OrgJsonJSONObject *jo, AnIncubatorImpl_AnObjectRecord *rec) {
   if ([((OrgJsonJSONObject *) nil_chk(jo)) hasWithNSString:AnIncubatorImpl_ATTRIBUTES_]) {
-    id<JavaUtilCollection> propColl = new_JavaUtilArrayList_init();
     OrgJsonJSONArray *detailsArray = [jo getJSONArrayWithNSString:AnIncubatorImpl_ATTRIBUTES_];
     for (jint i = 0; i < [((OrgJsonJSONArray *) nil_chk(detailsArray)) length]; i++) {
-      OrgJsonJSONObject *propertyObject = [detailsArray getJSONObjectWithInt:i];
-      id<JavaUtilMap> map = new_JavaUtilHashMap_init();
-      (void) AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_ATTRIB_NAME_, propertyObject, map);
-      (void) AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_COLUMN_NAME_, propertyObject, map);
-      (void) AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_JSON_NAME_, propertyObject, map);
-      (void) AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_DB_COLUMN_DEFINITION_, propertyObject, map);
-      [propColl addWithId:map];
+      OrgJsonJSONObject *objectDefinition = [detailsArray getJSONObjectWithInt:i];
+      NSString *attribName = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_ATTRIB_NAME_, objectDefinition, nil);
+      NSString *columnName = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_COLUMN_NAME_, objectDefinition, nil);
+      NSString *jsonName = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_JSON_NAME_, objectDefinition, nil);
+      NSString *columnDef = AnIncubatorImpl_ensurePropertyWithNSString_withOrgJsonJSONObject_withJavaUtilMap_(self, AnIncubatorImpl_DB_COLUMN_DEFINITION_, objectDefinition, nil);
+      id<AnAttrib> anAttrib = nil;
+      if ([((NSString *) nil_chk(attribName)) indexOf:','] != -1) {
+        anAttrib = new_AnAttribImpl_initWithNSString_(attribName);
+      }
+      else {
+        anAttrib = new_AnAttribImpl_initWithNSString_withNSString_withNSString_(attribName, columnName, jsonName);
+      }
+      [((id<AnAttrib>) nil_chk(anAttrib)) setDbColumnDefinitionWithNSString:columnDef];
+      AnIncubatorImpl_ensureAnAttribAdaptersWithAnOrm_withAnAttrib_withOrgJsonJSONObject_(self, orm, anAttrib, objectDefinition);
+      [((id<AnOrm>) nil_chk(orm)) addAttribWithAnAttrib:anAttrib];
     }
-    return propColl;
+  }
+}
+
+void AnIncubatorImpl_ensureAnObjectAdaptersWithAnOrm_withOrgJsonJSONObject_withJavaUtilMap_(AnIncubatorImpl *self, id<AnOrm> orm, OrgJsonJSONObject *jo, id<JavaUtilMap> converterByNameMap) {
+  IOSClass *clussjs = AnIncubatorImpl_getAdapterClassWithNSString_(self, AnIncubatorImpl_JSON_SET_ADAPTER_);
+  if (clussjs != nil) {
+    [((id<AnOrm>) nil_chk(orm)) setJsonSetAdapterWithAnAdapter:(id<AnAdapter>) check_protocol_cast([clussjs newInstance], AnAdapter_class_())];
+  }
+  IOSClass *clussjg = AnIncubatorImpl_getAdapterClassWithNSString_(self, AnIncubatorImpl_JSON_GET_ADAPTER_);
+  if (clussjg != nil) {
+    [((id<AnOrm>) nil_chk(orm)) setJsonGetAdapterWithAnAdapter:(id<AnAdapter>) check_protocol_cast([clussjg newInstance], AnAdapter_class_())];
+  }
+  IOSClass *clussds = AnIncubatorImpl_getAdapterClassWithNSString_(self, AnIncubatorImpl_DB_SET_ADAPTER_);
+  if (clussds != nil) {
+    [((id<AnOrm>) nil_chk(orm)) setDbSetAdapterWithAnAdapter:(id<AnAdapter>) check_protocol_cast([clussds newInstance], AnAdapter_class_())];
+  }
+  IOSClass *clussdg = AnIncubatorImpl_getAdapterClassWithNSString_(self, AnIncubatorImpl_DB_GET_ADAPTER_);
+  if (clussdg != nil) {
+    [((id<AnOrm>) nil_chk(orm)) setDbGetAdapterWithAnAdapter:(id<AnAdapter>) check_protocol_cast([clussdg newInstance], AnAdapter_class_())];
+  }
+  if ([((OrgJsonJSONObject *) nil_chk(jo)) hasWithNSString:AnIncubatorImpl_ADAPTERS_]) {
+    OrgJsonJSONArray *ja = [jo getJSONArrayWithNSString:AnIncubatorImpl_ADAPTERS_];
+    jint count = [((OrgJsonJSONArray *) nil_chk(ja)) length];
+    for (jint i = 0; i < count; i++) {
+      OrgJsonJSONObject *converterJo = [ja getJSONObjectWithInt:i];
+      if ([((OrgJsonJSONObject *) nil_chk(converterJo)) hasWithNSString:AnIncubatorImpl_JSON_SET_ADAPTER_]) {
+        NSString *adapterName = [converterJo getStringWithNSString:AnIncubatorImpl_JSON_SET_ADAPTER_];
+        if (adapterName != nil && ![((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          id<AnAdapter> converter = AnIncubatorImpl_getAdapterInstanceWithNSString_(self, adapterName);
+          [((id<AnOrm>) nil_chk(orm)) setJsonSetAdapterWithAnAdapter:converter];
+        }
+        else if ([((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          [((id<AnOrm>) nil_chk(orm)) setJsonSetAdapterWithAnAdapter:nil];
+        }
+      }
+      if ([converterJo hasWithNSString:AnIncubatorImpl_JSON_GET_ADAPTER_]) {
+        NSString *adapterName = [converterJo getStringWithNSString:AnIncubatorImpl_JSON_GET_ADAPTER_];
+        if (adapterName != nil && ![((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          id<AnAdapter> converter = AnIncubatorImpl_getAdapterInstanceWithNSString_(self, adapterName);
+          [((id<AnOrm>) nil_chk(orm)) setJsonGetAdapterWithAnAdapter:converter];
+        }
+        else if ([((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          [((id<AnOrm>) nil_chk(orm)) setJsonGetAdapterWithAnAdapter:nil];
+        }
+      }
+      if ([converterJo hasWithNSString:AnIncubatorImpl_DB_SET_ADAPTER_]) {
+        NSString *adapterName = [converterJo getStringWithNSString:AnIncubatorImpl_DB_SET_ADAPTER_];
+        if (adapterName != nil && ![((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          id<AnAdapter> converter = AnIncubatorImpl_getAdapterInstanceWithNSString_(self, adapterName);
+          [((id<AnOrm>) nil_chk(orm)) setDbSetAdapterWithAnAdapter:converter];
+        }
+        else if ([((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          [((id<AnOrm>) nil_chk(orm)) setDbSetAdapterWithAnAdapter:nil];
+        }
+      }
+      if ([converterJo hasWithNSString:AnIncubatorImpl_DB_GET_ADAPTER_]) {
+        NSString *adapterName = [converterJo getStringWithNSString:AnIncubatorImpl_DB_GET_ADAPTER_];
+        if (adapterName != nil && ![((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          id<AnAdapter> converter = AnIncubatorImpl_getAdapterInstanceWithNSString_(self, adapterName);
+          [((id<AnOrm>) nil_chk(orm)) setDbGetAdapterWithAnAdapter:converter];
+        }
+        else if ([((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          [((id<AnOrm>) nil_chk(orm)) setDbGetAdapterWithAnAdapter:nil];
+        }
+      }
+    }
+  }
+}
+
+IOSClass *AnIncubatorImpl_getAdapterClassWithNSString_(AnIncubatorImpl *self, NSString *adapterName) {
+  NSString *name = [((id<JavaUtilMap>) nil_chk(((AnIncubatorImpl_AnJsonSchema *) nil_chk(self->anSchema_))->adapters_)) getWithId:adapterName];
+  IOSClass *cluss = [((id<JavaUtilMap>) nil_chk(self->anSchema_->adapterByNameMap_)) getWithId:name];
+  return cluss;
+}
+
+id<AnAdapter> AnIncubatorImpl_getAdapterInstanceWithNSString_(AnIncubatorImpl *self, NSString *adapterName) {
+  IOSClass *cluss = [((id<JavaUtilMap>) nil_chk(((AnIncubatorImpl_AnJsonSchema *) nil_chk(self->anSchema_))->adapterByNameMap_)) getWithId:adapterName];
+  if (cluss != nil) {
+    return (id<AnAdapter>) check_protocol_cast([cluss newInstance], AnAdapter_class_());
   }
   return nil;
+}
+
+void AnIncubatorImpl_ensureAnAttribAdaptersWithAnOrm_withAnAttrib_withOrgJsonJSONObject_(AnIncubatorImpl *self, id<AnOrm> orm, id<AnAttrib> attrib, OrgJsonJSONObject *jo) {
+  [((id<AnAttrib>) nil_chk(attrib)) setJsonSetAdapterWithAnAdapter:[((id<AnOrm>) nil_chk(orm)) getJsonSetAdapter]];
+  [attrib setJsonGetAdapterWithAnAdapter:[orm getJsonGetAdapter]];
+  [attrib setDbSetAdapterWithAnAdapter:[orm getDbSetAdapter]];
+  [attrib setDbGetAdapterWithAnAdapter:[orm getDbGetAdapter]];
+  if ([((OrgJsonJSONObject *) nil_chk(jo)) hasWithNSString:AnIncubatorImpl_ADAPTERS_]) {
+    OrgJsonJSONArray *ja = [jo getJSONArrayWithNSString:AnIncubatorImpl_ADAPTERS_];
+    jint count = [((OrgJsonJSONArray *) nil_chk(ja)) length];
+    for (jint i = 0; i < count; i++) {
+      OrgJsonJSONObject *adapterJo = [ja getJSONObjectWithInt:i];
+      if ([((OrgJsonJSONObject *) nil_chk(adapterJo)) hasWithNSString:AnIncubatorImpl_JSON_SET_ADAPTER_]) {
+        NSString *adapterName = [adapterJo getStringWithNSString:AnIncubatorImpl_JSON_SET_ADAPTER_];
+        if (adapterName != nil && ![((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          id<AnAdapter> converter = AnIncubatorImpl_getAdapterInstanceWithNSString_(self, adapterName);
+          [attrib setJsonSetAdapterWithAnAdapter:converter];
+        }
+        else if ([((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          [attrib setJsonSetAdapterWithAnAdapter:nil];
+        }
+      }
+      if ([adapterJo hasWithNSString:AnIncubatorImpl_JSON_GET_ADAPTER_]) {
+        NSString *adapterName = [adapterJo getStringWithNSString:AnIncubatorImpl_JSON_GET_ADAPTER_];
+        if (adapterName != nil && ![((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          id<AnAdapter> converter = AnIncubatorImpl_getAdapterInstanceWithNSString_(self, adapterName);
+          [attrib setJsonGetAdapterWithAnAdapter:converter];
+        }
+        else if ([((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          [attrib setJsonGetAdapterWithAnAdapter:nil];
+        }
+      }
+      if ([adapterJo hasWithNSString:AnIncubatorImpl_DB_SET_ADAPTER_]) {
+        NSString *adapterName = [adapterJo getStringWithNSString:AnIncubatorImpl_DB_SET_ADAPTER_];
+        if (adapterName != nil && ![((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          id<AnAdapter> converter = AnIncubatorImpl_getAdapterInstanceWithNSString_(self, adapterName);
+          [attrib setDbSetAdapterWithAnAdapter:converter];
+        }
+        else if ([((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          [attrib setDbSetAdapterWithAnAdapter:nil];
+        }
+      }
+      if ([adapterJo hasWithNSString:AnIncubatorImpl_DB_GET_ADAPTER_]) {
+        NSString *adapterName = [adapterJo getStringWithNSString:AnIncubatorImpl_DB_GET_ADAPTER_];
+        if (adapterName != nil && ![((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          id<AnAdapter> converter = AnIncubatorImpl_getAdapterInstanceWithNSString_(self, adapterName);
+          [attrib setDbGetAdapterWithAnAdapter:converter];
+        }
+        else if ([((NSString *) nil_chk(AnIncubatorImpl_NULL_STRING_)) isEqual:adapterName]) {
+          [attrib setDbGetAdapterWithAnAdapter:nil];
+        }
+      }
+    }
+  }
 }
 
 NSString *AnIncubatorImpl_removeCommentsWithNSString_withNSString_withNSString_(AnIncubatorImpl *self, NSString *string, NSString *begComm, NSString *endComm) {
@@ -334,6 +529,56 @@ NSString *AnIncubatorImpl_removeCommentsWithNSString_withNSString_withNSString_(
   return [sb description];
 }
 
+void AnIncubatorImpl_loadAdapterMapWithOrgJsonJSONObject_withJavaUtilMap_(AnIncubatorImpl *self, OrgJsonJSONObject *jo, id<JavaUtilMap> converterByNameMap) {
+  if ([((OrgJsonJSONObject *) nil_chk(jo)) hasWithNSString:AnIncubatorImpl_ADAPTER_MAP_]) {
+    OrgJsonJSONArray *ja = [jo getJSONArrayWithNSString:AnIncubatorImpl_ADAPTER_MAP_];
+    jint count = [((OrgJsonJSONArray *) nil_chk(ja)) length];
+    for (jint i = 0; i < count; i++) {
+      OrgJsonJSONObject *convertedJo = [ja getJSONObjectWithInt:i];
+      if ([((OrgJsonJSONObject *) nil_chk(convertedJo)) hasWithNSString:AnIncubatorImpl_NAME_]) {
+        NSString *name = [convertedJo getStringWithNSString:AnIncubatorImpl_NAME_];
+        NSString *className_ = [convertedJo getStringWithNSString:AnIncubatorImpl_CLASS_];
+        IOSClass *cluss = [self getClassByNameWithNSString:className_];
+        (void) [((id<JavaUtilMap>) nil_chk(converterByNameMap)) putWithId:name withId:cluss];
+      }
+    }
+  }
+}
+
+id<AnOrm> AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(AnIncubatorImpl *self, NSString *name, id<JavaUtilMap> records) {
+  AnIncubatorImpl_AnObjectRecord *anObjRec = [((id<JavaUtilMap>) nil_chk(records)) getWithId:name];
+  id<AnOrm> anOrm = new_AnOrmImpl_init();
+  [anOrm setTableNameWithNSString:[((id<AnOrm>) nil_chk(((AnIncubatorImpl_AnObjectRecord *) nil_chk(anObjRec))->orm_)) getTableName]];
+  [anOrm setNativeClassWithIOSClass:[anObjRec->orm_ getNativeClass]];
+  [anOrm setJsonSetAdapterWithAnAdapter:[anObjRec->orm_ getJsonSetAdapter]];
+  [anOrm setJsonGetAdapterWithAnAdapter:[anObjRec->orm_ getJsonGetAdapter]];
+  [anOrm setDbSetAdapterWithAnAdapter:[anObjRec->orm_ getDbSetAdapter]];
+  [anOrm setDbGetAdapterWithAnAdapter:[anObjRec->orm_ getDbGetAdapter]];
+  {
+    IOSObjectArray *a__ = [anObjRec->orm_ getOwnAttribs];
+    id<AnAttrib> const *b__ = ((IOSObjectArray *) nil_chk(a__))->buffer_;
+    id<AnAttrib> const *e__ = b__ + a__->size_;
+    while (b__ < e__) {
+      id<AnAttrib> attr = *b__++;
+      id<AnAttrib> anAttrib = new_AnAttribImpl_init();
+      [anAttrib setAttribNameWithNSString:[((id<AnAttrib>) nil_chk(attr)) getAttribName]];
+      [anAttrib setColumnNameWithNSString:[attr getColumnName]];
+      [anAttrib setJsonNameWithNSString:[attr getJsonName]];
+      [anAttrib setJsonSetAdapterWithAnAdapter:[attr getJsonSetAdapter]];
+      [anAttrib setJsonGetAdapterWithAnAdapter:[attr getJsonGetAdapter]];
+      [anAttrib setDbSetAdapterWithAnAdapter:[attr getDbSetAdapter]];
+      [anAttrib setDbGetAdapterWithAnAdapter:[attr getDbGetAdapter]];
+      [anAttrib setDbColumnDefinitionWithNSString:[attr getDbColumnDefinition]];
+      [anOrm addAttribWithAnAttrib:anAttrib];
+    }
+  }
+  if (anObjRec->extendObject_ != nil) {
+    id<AnOrm> dependsOn = AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(self, anObjRec->extendObject_, records);
+    [anOrm setParentAnObjectWithAnObject:dependsOn];
+  }
+  return anOrm;
+}
+
 void AnIncubatorImpl_init(AnIncubatorImpl *self) {
   (void) NSObject_init(self);
 }
@@ -351,6 +596,8 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnIncubatorImpl)
 
 void AnIncubatorImpl_AnJsonSchema_initWithAnIncubatorImpl_(AnIncubatorImpl_AnJsonSchema *self, AnIncubatorImpl *outer$) {
   (void) NSObject_init(self);
+  self->adapterByNameMap_ = new_JavaUtilHashMap_init();
+  self->adapters_ = new_JavaUtilHashMap_init();
 }
 
 AnIncubatorImpl_AnJsonSchema *new_AnIncubatorImpl_AnJsonSchema_initWithAnIncubatorImpl_(AnIncubatorImpl *outer$) {

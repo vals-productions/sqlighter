@@ -6,7 +6,7 @@
 #include "IOSClass.h"
 #include "IOSObjectArray.h"
 #include "J2ObjC_source.h"
-#include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
+#include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 #include "com/vals/a2ios/amfibian/intf/AnSql.h"
 #include "java/lang/Exception.h"
 #include "java/lang/Integer.h"

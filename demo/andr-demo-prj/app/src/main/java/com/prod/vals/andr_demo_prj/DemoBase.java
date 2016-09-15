@@ -1,12 +1,10 @@
 package com.prod.vals.andr_demo_prj;
 
 import com.vals.a2ios.amfibian.impl.AnIncubatorImpl;
-import com.vals.a2ios.amfibian.impl.AnObjectImpl;
 import com.vals.a2ios.amfibian.impl.AnOrmImpl;
 import com.vals.a2ios.amfibian.intf.AnIncubator;
 import com.vals.a2ios.amfibian.intf.AnOrm;
 import com.vals.a2ios.mobilighter.intf.MobilAction;
-import com.vals.a2ios.mobilighter.intf.Mobilighter;
 import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
@@ -159,7 +157,7 @@ public abstract class DemoBase {
                 sql.startsWith("select appointment0.id "));
 
         anOrm.resetSkipInclAttrNameList();
-        anOrm.addSkipAttribs("id", "name", "createDate");
+        anOrm.addSkipAttribs("id", "name", "createDate", "status");
         anOrm.startSqlSelect();
         sql = anOrm.getQueryString();
 
@@ -202,10 +200,50 @@ public abstract class DemoBase {
     protected static boolean isUseJsonFile = true;
 
     protected static AnIncubator anIncubator = new AnIncubatorImpl() {
+        /**
+         This method should just do the following you'd think:
+
+         return Class.forName(name);
+
+         and you are right. iOS implementation for this method
+         has some strings attached though, that require some iOS
+         project settings tweaking.
+
+         You can read it here: http://j2objc.org/docs/Package-Prefixes.html
+
+         Quote:
+
+         Prefixed Classes at Runtime
+
+         Since the finished app has classes with prefixes, they cannot be
+         located using the original Java class name by default. However,
+         if the app has a file named prefixes.properties in its resource
+         bundle with the prefixes used for translation, Class.forName(javaName)
+         will find the mapped class.
+
+         To add the above prefixes.properties to an iOS app in Xcode, open the
+         build target's Build Phases tab, expand its Copy Bundle Resources section,
+         and add the prefixes.properties file to that list. [[Java Resources]] has
+         further information on how Java resource concepts map to iOS resources.
+
+         End Quote.
+
+         Sqlighter demo has the file mentioned in j2objc documentation
+         and I will try to feed it into xCode when time allows. Until
+         that or, if for whatever reason you do not have the file or do
+         not want to deal with it, the following implementation doesn't
+         require much brain and space, but several extra minutes of
+         attention.
+         */
         @Override
         public Class<?> getClassByName(String name) {
             if (name.equals(Entity.class.getName())) return Entity.class;
-            else if (name.equals(Appointment.class.getName())) return Appointment.class;
+            if (name.equals(Appointment.class.getName())) return Appointment.class;
+            if (name.equals(DemoDefaultGetAdapter.class.getName())) return DemoDefaultGetAdapter.class;
+            if (name.equals(DemoDefaultSetAdapter.class.getName())) return DemoDefaultSetAdapter.class;
+            if (name.equals(DemoIntGetAdapter.class.getName())) return DemoIntGetAdapter.class;
+            if (name.equals(DemoIntSetAdapter.class.getName())) return DemoIntSetAdapter.class;
+            if (name.equals(DemoAppointmentGetAdapter.class.getName())) return DemoAppointmentGetAdapter.class;
             return null;
         }
     };

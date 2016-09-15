@@ -20,6 +20,7 @@ ROOT_DIR=../../../..
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/sqlighter/intf/SQLighterDb.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/sqlighter/intf/SQLighterRs.java
 
+./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/intf/AnAdapter.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/intf/AnAttrib.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/intf/AnObject.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/intf/AnSql.java
@@ -50,11 +51,14 @@ cp -r $ROOT_DIR/android/com/vals $ROOT_DIR/demo/andr-demo-prj/app/src/main/java/
 # also temporarily bring mibilighter in
 cp -r $ROOT_DIR/demo/mobilighter/android/com/vals $ROOT_DIR/demo/andr-demo-prj/app/src/main/java/com
 
-# ./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/mobilighter/android com/vals/a2ios/mobilighter/intf/Mobilighter.java
-# ./j2objc.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/mobilighter/android com/vals/a2ios/mobilighter/intf/MobilAction.java
-
 ./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Entity.java
 ./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Appointment.java
+
+./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/DemoDefaultSetAdapter.java
+./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/DemoDefaultGetAdapter.java
+./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/DemoIntSetAdapter.java
+./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/DemoIntGetAdapter.java
+./j2objc-w-refl.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/DemoAppointmentGetAdapter.java
 
 ./j2objc.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/Demo.java
 ./j2objc.sh $ROOT_DIR/demo/ios-demo-prj/ios-demo-prj $ROOT_DIR/demo/andr-demo-prj/app/src/main/java com/prod/vals/andr_demo_prj/DemoBase.java

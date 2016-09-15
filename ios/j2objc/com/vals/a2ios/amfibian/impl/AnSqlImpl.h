@@ -13,8 +13,8 @@
 @class IOSClass;
 @class IOSObjectArray;
 @class JavaLangInteger;
+@protocol AnAdapter;
 @protocol AnAttrib;
-@protocol AnAttrib_CustomConverter;
 @protocol AnObject;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
@@ -63,9 +63,9 @@
 
 - (id<JavaUtilList>)getAttribNameList;
 
-- (id<AnAttrib_CustomConverter>)getDbCustomGetConverter;
+- (id<AnAdapter>)getDbGetAdapter;
 
-- (id<AnAttrib_CustomConverter>)getDbCustomSetConverter;
+- (id<AnAdapter>)getDbSetAdapter;
 
 - (id<JavaUtilList>)getParameters;
 
@@ -79,9 +79,9 @@
 
 - (void)resetSkipInclAttrNameList;
 
-- (void)setDbCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)dbCustomGetConverter;
+- (void)setDbGetAdapterWithAnAdapter:(id<AnAdapter>)dbGetAdapter;
 
-- (void)setDbCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)dbCustomSetConverter;
+- (void)setDbSetAdapterWithAnAdapter:(id<AnAdapter>)dbSetAdapter;
 
 - (void)setTableNameWithNSString:(NSString *)tableName;
 

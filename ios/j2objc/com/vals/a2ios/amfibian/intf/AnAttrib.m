@@ -5,11 +5,10 @@
 
 #include "IOSClass.h"
 #include "J2ObjC_source.h"
+#include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 #include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "java/lang/Exception.h"
 #include "java/lang/reflect/Method.h"
 
 J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(AnAttrib)
-
-J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(AnAttrib_CustomConverter)

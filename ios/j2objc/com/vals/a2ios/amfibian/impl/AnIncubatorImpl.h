@@ -30,6 +30,15 @@
 
 J2OBJC_EMPTY_STATIC_INIT(AnIncubatorImpl)
 
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_ADAPTERS_;
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, ADAPTERS_, NSString *)
+
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_ADAPTER_MAP_;
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, ADAPTER_MAP_, NSString *)
+
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_CLASS_;
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, CLASS_, NSString *)
+
 FOUNDATION_EXPORT void AnIncubatorImpl_init(AnIncubatorImpl *self);
 
 J2OBJC_TYPE_LITERAL_HEADER(AnIncubatorImpl)

@@ -56,7 +56,9 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
                     Object columnValue = rs.getObject(columnIndex++);
                     if (columnValue != null) {
                         AnAttrib attrib = getAttrib(attribName);
-                        setValue(getDbCustomSetConverter(), attrib, columnValue);
+                        setValue(attrib.getDbSetAdapter(),
+                                getDbSetAdapter(),
+                                attrib, columnValue);
                     }
                 }
             }

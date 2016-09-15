@@ -10,7 +10,7 @@
 
 @class IOSClass;
 @class JavaLangReflectMethod;
-@protocol AnAttrib_CustomConverter;
+@protocol AnAdapter;
 @protocol AnObject;
 
 @protocol AnAttrib < NSObject, JavaObject >
@@ -23,11 +23,15 @@
 
 - (NSString *)getJsonName;
 
+- (void)setJsonNameWithNSString:(NSString *)jsonName;
+
 - (NSString *)getColumnName;
 
 - (void)setColumnNameWithNSString:(NSString *)columnName;
 
 - (void)setValueWithId:(id)value;
+
+- (id)getValueWithAnAdapter:(id<AnAdapter>)converter;
 
 - (id)getValue;
 
@@ -41,13 +45,21 @@
 
 - (NSString *)getDbColumnDefinition;
 
-- (void)setCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
+- (void)setJsonSetAdapterWithAnAdapter:(id<AnAdapter>)converter;
 
-- (id<AnAttrib_CustomConverter>)getCustomSetConverter;
+- (id<AnAdapter>)getJsonSetAdapter;
 
-- (void)setCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)converter;
+- (void)setJsonGetAdapterWithAnAdapter:(id<AnAdapter>)converter;
 
-- (id<AnAttrib_CustomConverter>)getCustomGetConverter;
+- (id<AnAdapter>)getJsonGetAdapter;
+
+- (void)setDbSetAdapterWithAnAdapter:(id<AnAdapter>)converter;
+
+- (id<AnAdapter>)getDbSetAdapter;
+
+- (void)setDbGetAdapterWithAnAdapter:(id<AnAdapter>)converter;
+
+- (id<AnAdapter>)getDbGetAdapter;
 
 @end
 
@@ -56,20 +68,5 @@ J2OBJC_EMPTY_STATIC_INIT(AnAttrib)
 J2OBJC_TYPE_LITERAL_HEADER(AnAttrib)
 
 #define ComValsA2iosAmfibianIntfAnAttrib AnAttrib
-
-@protocol AnAttrib_CustomConverter < NSObject, JavaObject >
-
-- (id)convertWithAnAttrib:(id<AnAttrib>)attrib
-                   withId:(id)value;
-
-- (void)onWarningWithIOSClass:(IOSClass *)cluss
-                 withNSString:(NSString *)attribName
-                       withId:(id)value;
-
-@end
-
-J2OBJC_EMPTY_STATIC_INIT(AnAttrib_CustomConverter)
-
-J2OBJC_TYPE_LITERAL_HEADER(AnAttrib_CustomConverter)
 
 #endif // _ComValsA2iosAmfibianIntfAnAttrib_H_

@@ -12,6 +12,12 @@
 		8B0482531D813E6C00D5E4A8 /* an_objects.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B0482521D813E6C00D5E4A8 /* an_objects.json */; };
 		8B0482581D814D0200D5E4A8 /* AnIncubatorImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0482551D814D0200D5E4A8 /* AnIncubatorImpl.m */; };
 		8B0482591D814D0200D5E4A8 /* AnIncubator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0482571D814D0200D5E4A8 /* AnIncubator.m */; };
+		8B04826A1D8A296C00D5E4A8 /* DemoAppointmentGetAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0482601D8A296C00D5E4A8 /* DemoAppointmentGetAdapter.m */; };
+		8B04826B1D8A296C00D5E4A8 /* DemoIntGetAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0482631D8A296C00D5E4A8 /* DemoIntGetAdapter.m */; };
+		8B04826C1D8A296C00D5E4A8 /* DemoIntSetAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0482651D8A296C00D5E4A8 /* DemoIntSetAdapter.m */; };
+		8B04826D1D8A296C00D5E4A8 /* DemoDefaultGetAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0482671D8A296C00D5E4A8 /* DemoDefaultGetAdapter.m */; };
+		8B04826E1D8A296C00D5E4A8 /* DemoDefaultSetAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0482691D8A296C00D5E4A8 /* DemoDefaultSetAdapter.m */; };
+		8B0482711D8A2A8E00D5E4A8 /* AnAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0482701D8A2A8E00D5E4A8 /* AnAdapter.m */; };
 		8B0987001BBD8C4C003534E2 /* j2objc-w-refl.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */; };
 		8B1C0E331C3CDBA600FEE4DF /* MobilighterImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B1C0E301C3CDBA600FEE4DF /* MobilighterImpl.m */; };
 		8B1C0E341C3CDBA600FEE4DF /* MobilAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B1C0E311C3CDBA600FEE4DF /* MobilAction.m */; };
@@ -64,6 +70,18 @@
 		8B0482551D814D0200D5E4A8 /* AnIncubatorImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnIncubatorImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/impl/AnIncubatorImpl.m; sourceTree = "<group>"; };
 		8B0482561D814D0200D5E4A8 /* AnIncubator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnIncubator.h; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/intf/AnIncubator.h; sourceTree = "<group>"; };
 		8B0482571D814D0200D5E4A8 /* AnIncubator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnIncubator.m; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/intf/AnIncubator.m; sourceTree = "<group>"; };
+		8B0482601D8A296C00D5E4A8 /* DemoAppointmentGetAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DemoAppointmentGetAdapter.m; path = com/prod/vals/andr_demo_prj/DemoAppointmentGetAdapter.m; sourceTree = "<group>"; };
+		8B0482611D8A296C00D5E4A8 /* DemoAppointmentGetAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DemoAppointmentGetAdapter.h; path = com/prod/vals/andr_demo_prj/DemoAppointmentGetAdapter.h; sourceTree = "<group>"; };
+		8B0482621D8A296C00D5E4A8 /* DemoIntGetAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DemoIntGetAdapter.h; path = com/prod/vals/andr_demo_prj/DemoIntGetAdapter.h; sourceTree = "<group>"; };
+		8B0482631D8A296C00D5E4A8 /* DemoIntGetAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DemoIntGetAdapter.m; path = com/prod/vals/andr_demo_prj/DemoIntGetAdapter.m; sourceTree = "<group>"; };
+		8B0482641D8A296C00D5E4A8 /* DemoIntSetAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DemoIntSetAdapter.h; path = com/prod/vals/andr_demo_prj/DemoIntSetAdapter.h; sourceTree = "<group>"; };
+		8B0482651D8A296C00D5E4A8 /* DemoIntSetAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DemoIntSetAdapter.m; path = com/prod/vals/andr_demo_prj/DemoIntSetAdapter.m; sourceTree = "<group>"; };
+		8B0482661D8A296C00D5E4A8 /* DemoDefaultGetAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DemoDefaultGetAdapter.h; path = com/prod/vals/andr_demo_prj/DemoDefaultGetAdapter.h; sourceTree = "<group>"; };
+		8B0482671D8A296C00D5E4A8 /* DemoDefaultGetAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DemoDefaultGetAdapter.m; path = com/prod/vals/andr_demo_prj/DemoDefaultGetAdapter.m; sourceTree = "<group>"; };
+		8B0482681D8A296C00D5E4A8 /* DemoDefaultSetAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DemoDefaultSetAdapter.h; path = com/prod/vals/andr_demo_prj/DemoDefaultSetAdapter.h; sourceTree = "<group>"; };
+		8B0482691D8A296C00D5E4A8 /* DemoDefaultSetAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DemoDefaultSetAdapter.m; path = com/prod/vals/andr_demo_prj/DemoDefaultSetAdapter.m; sourceTree = "<group>"; };
+		8B04826F1D8A2A8E00D5E4A8 /* AnAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnAdapter.h; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/intf/AnAdapter.h; sourceTree = "<group>"; };
+		8B0482701D8A2A8E00D5E4A8 /* AnAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnAdapter.m; path = ../../../ios/j2objc/com/vals/a2ios/amfibian/intf/AnAdapter.m; sourceTree = "<group>"; };
 		8B0986FF1BBD8C4C003534E2 /* j2objc-w-refl.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "j2objc-w-refl.sh"; path = "ios-demo-prj/script/j2objc-w-refl.sh"; sourceTree = "<group>"; };
 		8B1C0E301C3CDBA600FEE4DF /* MobilighterImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MobilighterImpl.m; path = ../../mobilighter/ios/j2objc/com/vals/a2ios/mobilighter/impl/MobilighterImpl.m; sourceTree = "<group>"; };
 		8B1C0E311C3CDBA600FEE4DF /* MobilAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MobilAction.m; path = ../../mobilighter/ios/j2objc/com/vals/a2ios/mobilighter/intf/MobilAction.m; sourceTree = "<group>"; };
@@ -204,6 +222,18 @@
 		F37D0D631B90180300E73A01 /* ios-demo-prj */ = {
 			isa = PBXGroup;
 			children = (
+				8B04826F1D8A2A8E00D5E4A8 /* AnAdapter.h */,
+				8B0482701D8A2A8E00D5E4A8 /* AnAdapter.m */,
+				8B0482601D8A296C00D5E4A8 /* DemoAppointmentGetAdapter.m */,
+				8B0482611D8A296C00D5E4A8 /* DemoAppointmentGetAdapter.h */,
+				8B0482621D8A296C00D5E4A8 /* DemoIntGetAdapter.h */,
+				8B0482631D8A296C00D5E4A8 /* DemoIntGetAdapter.m */,
+				8B0482641D8A296C00D5E4A8 /* DemoIntSetAdapter.h */,
+				8B0482651D8A296C00D5E4A8 /* DemoIntSetAdapter.m */,
+				8B0482661D8A296C00D5E4A8 /* DemoDefaultGetAdapter.h */,
+				8B0482671D8A296C00D5E4A8 /* DemoDefaultGetAdapter.m */,
+				8B0482681D8A296C00D5E4A8 /* DemoDefaultSetAdapter.h */,
+				8B0482691D8A296C00D5E4A8 /* DemoDefaultSetAdapter.m */,
 				8B0482541D814D0200D5E4A8 /* AnIncubatorImpl.h */,
 				8B0482551D814D0200D5E4A8 /* AnIncubatorImpl.m */,
 				8B0482561D814D0200D5E4A8 /* AnIncubator.h */,
@@ -366,12 +396,14 @@
 				F37D0D6D1B90180300E73A01 /* ViewController.m in Sources */,
 				8B1C0E431C3FA49100FEE4DF /* AnSqlImpl.m in Sources */,
 				8B1C0E411C3FA49100FEE4DF /* AnObjectImpl.m in Sources */,
+				8B0482711D8A2A8E00D5E4A8 /* AnAdapter.m in Sources */,
 				8B1C0E511C3FA4A300FEE4DF /* AnOrm.m in Sources */,
 				8B0482591D814D0200D5E4A8 /* AnIncubator.m in Sources */,
 				8B1C0E521C3FA4A300FEE4DF /* AnSql.m in Sources */,
 				8B1C0E441C3FA49100FEE4DF /* AnUpgradeImpl.m in Sources */,
 				8B9E83DD1C043F4500F8CE66 /* SQLighterDb.m in Sources */,
 				F37D0D6A1B90180300E73A01 /* AppDelegate.m in Sources */,
+				8B04826E1D8A296C00D5E4A8 /* DemoDefaultSetAdapter.m in Sources */,
 				8B9848E21C2535A20098CF13 /* Appointment.m in Sources */,
 				8B9E83DE1C043F4500F8CE66 /* SQLighterRs.m in Sources */,
 				F32A9EC71B9ADCC00092C868 /* Bootstrap.m in Sources */,
@@ -382,13 +414,17 @@
 				8B1C0E421C3FA49100FEE4DF /* AnOrmImpl.m in Sources */,
 				8B493BC81C4EA41400D58FD5 /* DemoBase.m in Sources */,
 				8B1C0E351C3CDBA600FEE4DF /* Mobilighter.m in Sources */,
+				8B04826A1D8A296C00D5E4A8 /* DemoAppointmentGetAdapter.m in Sources */,
 				F37D0D671B90180300E73A01 /* main.m in Sources */,
 				F32A9EA71B9AD6BF0092C868 /* Demo.m in Sources */,
 				8B0482581D814D0200D5E4A8 /* AnIncubatorImpl.m in Sources */,
 				8B1C0E401C3FA49100FEE4DF /* AnAttribImpl.m in Sources */,
+				8B04826B1D8A296C00D5E4A8 /* DemoIntGetAdapter.m in Sources */,
+				8B04826C1D8A296C00D5E4A8 /* DemoIntSetAdapter.m in Sources */,
 				8B1C0E501C3FA4A300FEE4DF /* AnObject.m in Sources */,
 				8B028CA81BB1B20800AFD558 /* SQLighterRsImpl.m in Sources */,
 				8B1C0E4F1C3FA4A300FEE4DF /* AnAttrib.m in Sources */,
+				8B04826D1D8A296C00D5E4A8 /* DemoDefaultGetAdapter.m in Sources */,
 				8B9848E31C2535A20098CF13 /* Entity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

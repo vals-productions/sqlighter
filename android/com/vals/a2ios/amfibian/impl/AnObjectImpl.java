@@ -1,5 +1,6 @@
 package com.vals.a2ios.amfibian.impl;
 
+import com.vals.a2ios.amfibian.intf.AnAdapter;
 import com.vals.a2ios.amfibian.intf.AnObject;
 
 import java.lang.reflect.Constructor;
@@ -31,8 +32,8 @@ public class AnObjectImpl<T> implements AnObject<T> {
     protected Class<T> nativeClass;
     private Map<String, AnAttrib> attribMap = new LinkedHashMap<String, AnAttrib>();
 
-    private AnAttrib.CustomConverter jsonCustomGetConverter;
-    private AnAttrib.CustomConverter jsonCustomSetConverter;
+    private AnAdapter jsonGetAdapter;
+    private AnAdapter jsonSetAdapter;
 
     public AnObjectImpl() {
         initConverters();
@@ -86,8 +87,8 @@ public class AnObjectImpl<T> implements AnObject<T> {
     }
 
     public void initConverters() {
-        jsonCustomGetConverter = new SampleGetConverter();
-        jsonCustomSetConverter = new SampleSetConverter();
+        jsonGetAdapter = new SampleGetAdapter();
+        jsonSetAdapter = new SampleSetAdapter();
     }
 
     public AnObject getParentAnObject() {
@@ -233,7 +234,8 @@ public class AnObjectImpl<T> implements AnObject<T> {
                 AnAttrib attr =  attribMap.get(attrName);
                 if(attr.getJsonName() != null) {
                     Object value = getValue(
-                            jsonCustomGetConverter,
+                            attr.getJsonGetAdapter(),
+                            jsonGetAdapter,
                             attr);
                     if (value != null) {
                         jsonMap.put(attr.getJsonName(), value);
@@ -265,9 +267,9 @@ public class AnObjectImpl<T> implements AnObject<T> {
             Set<String> p = attribMap.keySet();
             for (String pName : p) {
                 AnAttrib pm =  attribMap.get(pName);
-                Object value = pm.getValue();
+                Object value = pm.getValue(null);
                 if (value != null) {
-                    nativeObjectMap.put(pName, pm.getValue());
+                    nativeObjectMap.put(pName, value);
                 }
             }
         }
@@ -304,7 +306,9 @@ public class AnObjectImpl<T> implements AnObject<T> {
                 if (!jsonObject.isNull(attr.getJsonName())) {
                     Object attrValue = jsonObject.get(attr.getJsonName());
                     if (attrValue != null) {
-                        setValue(jsonCustomSetConverter, attr, attrValue);
+                        setValue(attr.getJsonSetAdapter(),
+                                jsonSetAdapter,
+                                attr, attrValue);
                     }
                 }
             }
@@ -312,14 +316,18 @@ public class AnObjectImpl<T> implements AnObject<T> {
         return nativeObject;
     }
 
-    protected void setValue(AnAttrib.CustomConverter converter,
-                            AnAttrib attrib,
-                            Object value) throws Exception {
-        if(attrib.getCustomSetConverter() == null) {
-            if(converter != null) {
-                attrib.setValue(converter.convert(attrib, value));
-                return;
-            }
+    protected void setValue(
+            AnAdapter attribConverter,
+            AnAdapter objectConverter,
+            AnAttrib attrib,
+            Object value) throws Exception {
+        if(attribConverter != null) {
+            attrib.setValue(attribConverter.convert(attrib, value));
+            return;
+        }
+        if(objectConverter != null) {
+            attrib.setValue(objectConverter.convert(attrib, value));
+            return;
         }
         attrib.setValue(value);
     }
@@ -368,12 +376,13 @@ public class AnObjectImpl<T> implements AnObject<T> {
     }
 
     protected Object getValue(
-            AnAttrib.CustomConverter converter,
+            AnAdapter attribAdapter,
+            AnAdapter objectAdapter,
             AnAttrib attrb) throws Exception {
-        if(attrb.getCustomGetConverter() == null) {
-            if (converter != null) {
-                return converter.convert(attrb, attrb.getValue());
-            }
+        if(attribAdapter != null) {
+            return attribAdapter.convert(attrb, attrb.getValue());
+        } else if(objectAdapter != null) {
+            return objectAdapter.convert(attrb, attrb.getValue());
         }
         return attrb.getValue();
     }
@@ -382,43 +391,39 @@ public class AnObjectImpl<T> implements AnObject<T> {
      *
      * @return
      */
-    @Override
-    public AnAttrib.CustomConverter getJsonCustomSetConverter() {
-        return jsonCustomSetConverter;
+    public AnAdapter getJsonSetAdapter() {
+        return jsonSetAdapter;
     }
 
     /**
      *
      * @return
      */
-    @Override
-    public void setJsonCustomSetConverter(AnAttrib.CustomConverter jsonCustomSetConverter) {
-        this.jsonCustomSetConverter = jsonCustomSetConverter;
+    public void setJsonSetAdapter(AnAdapter jsonSetAdapter) {
+        this.jsonSetAdapter = jsonSetAdapter;
     }
 
     /**
      *
      * @return
      */
-    @Override
-    public AnAttrib.CustomConverter getJsonCustomGetConverter() {
-        return jsonCustomGetConverter;
+    public AnAdapter getJsonGetAdapter() {
+        return jsonGetAdapter;
     }
 
     /**
      *
      */
-    @Override
-    public void setJsonCustomGetConverter(AnAttrib.CustomConverter jsonCustomGetConverter) {
-        this.jsonCustomGetConverter = jsonCustomGetConverter;
+    public void setJsonGetAdapter(AnAdapter jsonGetAdapter) {
+        this.jsonGetAdapter = jsonGetAdapter;
     }
 
     /**
-     * Sample built in converter. YMMV, so you may want to implement
+     * Sample built in adapter. YMMV, so you may want to implement
      * yours once you get
      * deep into your project's implementation.
      */
-    public static class SampleGetConverter implements AnAttrib.CustomConverter {
+    public static class SampleGetAdapter implements AnAdapter {
         @Override
         public Object convert(AnAttrib attrib, Object value) {
             if(value != null && value instanceof Date) {
@@ -434,13 +439,13 @@ public class AnObjectImpl<T> implements AnObject<T> {
     }
 
     /**
-     * Sample built in converter. YMMV, so you may want to implement
+     * Sample built in adapter. YMMV, so you may want to implement
      * yours once you get
      * deep into your project's implementation.
      */
-    public static class SampleSetConverter implements AnAttrib.CustomConverter {
+    public static class SampleSetAdapter implements AnAdapter {
         /**
-         * (Auto) converts from source obj type to target if different.
+         * (Auto) adapts from source obj type to target if different.
          *
          * For example, sometimes json representation is different from object's expected
          * representation, like a Date could be represented by long (milli) seconds value.

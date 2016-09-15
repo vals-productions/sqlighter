@@ -9,6 +9,7 @@
 #include "com/vals/a2ios/amfibian/impl/AnObjectImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnOrmImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnSqlImpl.h"
+#include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 #include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
@@ -75,7 +76,7 @@ J2OBJC_IGNORE_DESIGNATED_END
         id columnValue = [rs getObjectWithInt:columnIndex++];
         if (columnValue != nil) {
           id<AnAttrib> attrib = [self getAttribWithNSString:attribName];
-          [self setValueWithAnAttrib_CustomConverter:[self getDbCustomSetConverter] withAnAttrib:attrib withId:columnValue];
+          [self setValueWithAnAdapter:[((id<AnAttrib>) nil_chk(attrib)) getDbSetAdapter] withAnAdapter:[self getDbSetAdapter] withAnAttrib:attrib withId:columnValue];
         }
       }
     }

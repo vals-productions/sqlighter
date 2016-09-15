@@ -3,6 +3,7 @@
      format ONLY. */
   "name": "AmfibiaN",
   "version": "1.0",
+
   "objects":
           [
             {
@@ -14,7 +15,8 @@
                 {"attribName": "name", "dbColumnDefinition": "TEXT NOT NULL"},
                 /* explicitly setting distinct names for native object, db column and json */
                 {"attribName": "isProcessed", "columnName": "is_processed", "jsonName":"processed"} /*long notation for names*/
-              ]
+              ],
+              "adapters": [ {"dbGet": "isProcessedGet"} ]
             },
 
             {
@@ -22,7 +24,8 @@
               "attributes":
               [
                 /* "null" in this situation means that this object does not persist "status" attribute in the database */
-                {"attribName": "status,null,status"},
+                {"attribName": "status, status, null",
+                    "adapters": [ {"dbSet": "intSet"}, {"dbGet": "intGet"} ] },
                 /* type should not be mapped to database table column */
                 {"attribName": "type", "columnName": "null", "jsonName": "entity_type"},
                 /* "id" will be used as nativeObject attribute, database and json names*/
@@ -32,5 +35,71 @@
                 {"attribName": "createDate,create_date,createDate"}
               ]
             }
-          ]
+          ],
+
+  /*
+  adapters are needed in case some object's attribute's type is different
+  in native, json and/or db presentation. If you control all presentations you
+  might not need this feature, but often you deal with third party systems and
+  have to deal with discrepancies.
+
+  For example, you receive JSON dates from third party systems in the format of milliseconds, but
+  would like to assign it to a Date attribute in your native object and then save it as formatted
+  date string in the database. Then you'd need adapters for this scenario.
+
+  adapters are AnAttrib'ute centric.
+
+  JsonGetAdapters will get the value from Native Object's attribute, convert it into the format
+  required by JSON representation. In the situation above, it would take a Date and convert it into
+  milliseconds.
+
+  JsonSetAdapters would get the value from JSON serialized onbject's date (long value in the example above),
+  convert in into a Date that would be suitable to assign to a native object's date attribute.
+
+  Json adapters are defined at AnObject level.
+
+  DbGetAdapters and DbSetadapters are similar and work for Native Object\Database conversions.
+  They are defined at AnSql level as this is the entry level for DB operations.
+
+  AnAttrib has SetAdapters and GetAdapters. If set at this level you have to make them flexible to understand
+  what type of conversion is requested - Json or database type.
+
+  If multiple adapters are defined, then the AmfibiaN will preffer:
+  a) Attribute level converter first
+  b) Object level converter if no attribute level converted defined.
+
+  If no adapters are supplied, straight assignment will be attempted.
+
+  AmfibiaN has some sample adapters turned on (see AnObject initadapters() method). They should
+  be replaced/customized per your needs as you develop and get into your project specifics.
+
+*/
+
+  "adapterMap": /* adapters would have to be j2objc's with reflection flag on */
+  [ /* to make it easier to refer adapters by short name further in JSON definitions */
+    {"name": "sampleGet", "class": "com.prod.vals.andr_demo_prj.DemoDefaultGetAdapter"},
+    {"name": "sampleSet", "class": "com.prod.vals.andr_demo_prj.DemoDefaultSetAdapter"},
+    {"name": "intGet", "class": "com.prod.vals.andr_demo_prj.DemoIntGetAdapter"},
+    {"name": "intSet", "class": "com.prod.vals.andr_demo_prj.DemoIntSetAdapter"},
+    {"name": "isProcessedGet", "class": "com.prod.vals.andr_demo_prj.DemoAppointmentGetAdapter"}
+  ],
+
+  "adapters":
+  [
+    /*
+       following adapters will be set at AnObject level to every object
+       defined in this json unless the object has individual definition for
+       the adapters.
+    */
+    {"jsonSet": "sampleSet"},
+    {"jsonGet": "sampleGet"},
+    /*
+       following adapters will be set at AnSql level to every object
+       defined in this json unless the object has individual definition for
+       the converter.
+    */
+    {"dbSet": "sampleSet"},
+    {"dbGet": "null"}
+  ]
+
 }

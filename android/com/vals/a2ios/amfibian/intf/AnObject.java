@@ -204,25 +204,25 @@ public interface AnObject<T> {
      *
      * @return
      */
-    AnAttrib.CustomConverter getJsonCustomSetConverter();
+    AnAdapter getJsonSetAdapter();
 
     /**
      * "Set" is for setting the value of the attribute
      * from external source. It is JSON for now at this level.
      * @return
      */
-    void setJsonCustomSetConverter(AnAttrib.CustomConverter objectCustomSetConverter);
+    void setJsonSetAdapter(AnAdapter objectCustomSetConverter);
 
     /**
      *
      * @return
      */
-    public AnAttrib.CustomConverter getJsonCustomGetConverter();
+    public AnAdapter getJsonGetAdapter();
 
     /**
      * "Get" is for getting the value of the attribute
      * for passing to external source, like JSON.
      * @return
      */
-    public void setJsonCustomGetConverter(AnAttrib.CustomConverter objectCustomGetConverter);
+    public void setJsonGetAdapter(AnAdapter objectCustomGetConverter);
 }

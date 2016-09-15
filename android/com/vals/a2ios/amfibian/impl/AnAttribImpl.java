@@ -1,5 +1,6 @@
 package com.vals.a2ios.amfibian.impl;
 
+import com.vals.a2ios.amfibian.intf.AnAdapter;
 import com.vals.a2ios.amfibian.intf.AnAttrib;
 import com.vals.a2ios.amfibian.intf.AnObject;
 
@@ -15,8 +16,13 @@ public class AnAttribImpl implements AnAttrib {
     private String jsonName;
     private String dbColumnDefinition;
 
-    private CustomConverter customSetConverter;
-    private CustomConverter customGetConverter;
+    private AnAdapter jsonSetAdapter;
+    private AnAdapter jsonGetAdapter;
+    private AnAdapter dbSetAdapter;
+    private AnAdapter dbGetAdapter;
+
+    public AnAttribImpl() {
+    }
 
     /**
      *
@@ -84,24 +90,36 @@ public class AnAttribImpl implements AnAttrib {
         this.dbColumnDefinition = dbColumnDefinition;
     }
 
-    @Override
-    public void setCustomSetConverter(CustomConverter converter) {
-        this.customSetConverter = converter;
+    public void setJsonSetAdapter(AnAdapter converter) {
+        this.jsonSetAdapter = converter;
     }
 
-    @Override
-    public CustomConverter getCustomSetConverter() {
-        return customSetConverter;
+    public AnAdapter getJsonSetAdapter() {
+        return jsonSetAdapter;
     }
 
-    @Override
-    public void setCustomGetConverter(CustomConverter converter) {
-        this.customGetConverter = converter;
+    public void setJsonGetAdapter(AnAdapter converter) {
+        this.jsonGetAdapter = converter;
     }
 
-    @Override
-    public CustomConverter getCustomGetConverter() {
-        return this.customGetConverter;
+    public AnAdapter getJsonGetAdapter() {
+        return this.jsonGetAdapter;
+    }
+
+    public void setDbSetAdapter(AnAdapter converter) {
+        this.dbSetAdapter = converter;
+    }
+
+    public AnAdapter getDbSetAdapter() {
+        return dbSetAdapter;
+    }
+
+    public void setDbGetAdapter(AnAdapter converter) {
+        this.dbGetAdapter = converter;
+    }
+
+    public AnAdapter getDbGetAdapter() {
+        return this.dbGetAdapter;
     }
 
     @Override
@@ -137,32 +155,22 @@ public class AnAttribImpl implements AnAttrib {
     @Override
     public void setValue(Object value) throws Exception {
         Method m = getSetter();
-        if(m != null) {
-            Object convertedValue = null;
-           /**
-            * See if custom converter is supplied
-            */
-            CustomConverter cc = getCustomSetConverter();
-            if (cc != null) {
-                convertedValue = cc.convert(this, value);
-            } else {
-                convertedValue = value;
-            }
-            // System.out.println("before setting " + attribName + " curr value: " + getValue() + " to " + value);
-            m.invoke(parentAnObject.getNativeObject(), convertedValue);
-            // System.out.println("after setting " + attribName + " curr value: " + getValue());
-        }
+        m.invoke(parentAnObject.getNativeObject(), value);
     }
-    
-     @Override
+
+    @Override
     public Object getValue() throws Exception {
+        return getValue(null);
+    }
+
+    @Override
+    public Object getValue(AnAdapter converter) throws Exception {
         Object value = null;
         Method m = getGetter();
         if(m != null ) {
             value = m.invoke(parentAnObject.getNativeObject());
-            CustomConverter cc = getCustomGetConverter();
-            if (cc != null) {
-                value = cc.convert(this, value);
+            if (converter != null) {
+                value = converter.convert(this, value);
                 return value;
             }
         }
@@ -200,23 +208,9 @@ public class AnAttribImpl implements AnAttrib {
         }
         return null;
     }
-    
-//    @Override
-//    @Deprecated
-//    public String getJsonOrAttribName() {
-//        if("null".equals(jsonName)) { //
-//            return null;
-//        }
-//        return columnName;
-//    }
-//
-//    @Override
-//    @Deprecated
-//    public String getColumnOrAttribName() {
-//        if("null".equals(columnName)) {
-//            return null;
-//        }
-//        return columnName;
-//    }
-    
+
+    @Override
+    public void setJsonName(String jsonName) {
+        this.jsonName = jsonName;
+    }
 }

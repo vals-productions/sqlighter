@@ -1,5 +1,6 @@
 package com.vals.a2ios.amfibian.impl;
 
+import com.vals.a2ios.amfibian.intf.AnAdapter;
 import com.vals.a2ios.amfibian.intf.AnAttrib;
 import com.vals.a2ios.amfibian.intf.AnObject;
 import com.vals.a2ios.amfibian.intf.AnSql;
@@ -24,12 +25,12 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
     public static final int TYPE_DELETE = 5;
 
     @Deprecated
-    private static AnAttrib.CustomConverter sqlCustomSetGlobalConverter; // = new SampleSetConverter();
+    private static AnAdapter sqlCustomSetGlobalConverter; // = new SampleSetConverter();
     @Deprecated
-    private static AnAttrib.CustomConverter sqlCustomGetGlobalConverter;
+    private static AnAdapter sqlCustomGetGlobalConverter;
 
-    private AnAttrib.CustomConverter dbCustomSetConverter;
-    private AnAttrib.CustomConverter dbCustomGetConverter;
+    private AnAdapter dbSetAdapter;
+    private AnAdapter dbGetAdapter;
 
     protected String tableName;
 
@@ -162,7 +163,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
             if (!isSkipAttr(attrName)) {
                 AnAttrib attr = om.get(attrName);
                 if(attr.getColumnName() != null) {
-                    Object value = getValue(dbCustomGetConverter, attr);
+                    Object value = getValue(attr.getDbGetAdapter(), dbGetAdapter, attr);
                     if (value != null) {
                         queryStr.append(attr.getColumnName());
                         parameters.add(value);
@@ -193,7 +194,7 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
             if (!isSkipAttr(attrName)) {
                 AnAttrib attrib = om.get(attrName);
                 if(attrib.getColumnName() != null) {
-                    Object value = getValue(dbCustomGetConverter, attrib);
+                    Object value = getValue(attrib.getDbGetAdapter(), dbGetAdapter, attrib);
                     if (value != null) {
                         queryStr.append(attrib.getColumnName()+ " = ? ");
                         parameters.add(value);
@@ -402,19 +403,19 @@ public class AnSqlImpl<T> extends AnObjectImpl<T> implements AnSql<T> {
         return null;
     }
 
-    public AnAttrib.CustomConverter getDbCustomSetConverter() {
-        return dbCustomSetConverter;
+    public AnAdapter getDbSetAdapter() {
+        return dbSetAdapter;
     }
 
-    public void setDbCustomSetConverter(AnAttrib.CustomConverter dbCustomSetConverter) {
-        this.dbCustomSetConverter = dbCustomSetConverter;
+    public void setDbSetAdapter(AnAdapter dbSetAdapter) {
+        this.dbSetAdapter = dbSetAdapter;
     }
 
-    public AnAttrib.CustomConverter getDbCustomGetConverter() {
-        return dbCustomGetConverter;
+    public AnAdapter getDbGetAdapter() {
+        return dbGetAdapter;
     }
 
-    public void setDbCustomGetConverter(AnAttrib.CustomConverter dbCustomGetConverter) {
-        this.dbCustomGetConverter = dbCustomGetConverter;
+    public void setDbGetAdapter(AnAdapter dbGetAdapter) {
+        this.dbGetAdapter = dbGetAdapter;
     }
 }

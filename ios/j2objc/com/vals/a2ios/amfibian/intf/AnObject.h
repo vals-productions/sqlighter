@@ -12,8 +12,8 @@
 @class IOSObjectArray;
 @class OrgJsonJSONArray;
 @class OrgJsonJSONObject;
+@protocol AnAdapter;
 @protocol AnAttrib;
-@protocol AnAttrib_CustomConverter;
 @protocol JavaUtilCollection;
 @protocol JavaUtilMap;
 
@@ -65,13 +65,13 @@
 
 - (NSString *)asJsonArrayStringWithJavaUtilCollection:(id<JavaUtilCollection>)objects;
 
-- (id<AnAttrib_CustomConverter>)getJsonCustomSetConverter;
+- (id<AnAdapter>)getJsonSetAdapter;
 
-- (void)setJsonCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)objectCustomSetConverter;
+- (void)setJsonSetAdapterWithAnAdapter:(id<AnAdapter>)objectCustomSetConverter;
 
-- (id<AnAttrib_CustomConverter>)getJsonCustomGetConverter;
+- (id<AnAdapter>)getJsonGetAdapter;
 
-- (void)setJsonCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)objectCustomGetConverter;
+- (void)setJsonGetAdapterWithAnAdapter:(id<AnAdapter>)objectCustomGetConverter;
 
 @end
 

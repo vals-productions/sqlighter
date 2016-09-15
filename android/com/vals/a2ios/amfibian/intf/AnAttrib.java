@@ -18,39 +18,6 @@ import java.lang.reflect.Method;
 public interface AnAttrib {
 
     /**
-     * Converter value may be used to implement customized
-     * attribute value conversions for specific cases.
-     *
-     * CustomConverters are used inside of getValue() and setValue(...)
-     * methods at the level of each individual attribute. This way you can  
-     * control value conversion on a case by case basis in case default conversions
-     * do not suit your needs.
-     *
-     * Custom conversion takes place before getValue() returns the value to the caller.
-     * Consumers of getValue() include database or JSON operations when they need to get 
-     * native object'  attribute value to, most likely, save it to the database, use in
-     * where clause, or set as JSON object property..
-     *
-     * Custom conversion takes place after the caller invokes setValue(,,,) but before
-     * the value gets assigned to the native object. Callers of setValue(...) include 
-     * database or JSON operations, typically, when the value gets retrieved from database
-     * or JSON and is being assigned to Native object.
-     *
-     * Custom converters are unaware who the consumer or caller is. They work uniformly for
-     * all the cases.
-     *
-     * It is possible to dynamically set or unset (set to null) the converters as your program flows,
-     * so you can inject custom behavior for a particular situation.
-     *
-     */
-    public static interface CustomConverter {
-
-        public Object convert(AnAttrib attrib, Object value);
-
-        void onWarning(Class cluss, String attribName, Object value);
-    }
-
-    /**
      * Sets an object associated with native object.
      * @param anObject
      */
@@ -75,6 +42,12 @@ public interface AnAttrib {
     String getJsonName();
 
     /**
+     *
+     * @param jsonName
+     */
+    void setJsonName(String jsonName);
+
+    /**
      * 
      * @return DB column name, or null if undefined.
      */
@@ -94,6 +67,14 @@ public interface AnAttrib {
     * auto match the value, or, custom converter might be supplied
     */
     void setValue(Object value) throws Exception;
+
+    /**
+     * Retrieves attribute value fron associated native object using
+     * supplied converter
+     * @return attribute value
+     * @throws Exception in case value extraction experiences issues
+     */
+    Object getValue(AnAdapter converter) throws Exception;
 
     /**
      * Retrieves attribute value fron associated native object.
@@ -120,24 +101,6 @@ public interface AnAttrib {
      */
     Class<?> getAttribClass();
 
-//    /**
-//     * Gives JSON attribute name, if different from
-//     * attribute name. Otherwise return attribute name.
-//     *
-//     * @return
-//     */
-//    @Deprecated
-//    String getJsonOrAttribName();
-//
-//    /**
-//     * Gives DB column name, if different from attribute name.
-//     * Otherwise return attribute name.
-//     *
-//     * @return
-//     */
-//    @Deprecated
-//    String getColumnOrAttribName();
-
     /**
      * DbColumnDefinition will be supplied to database create
      * statement as is next to the column name instead of auto
@@ -163,25 +126,52 @@ public interface AnAttrib {
      *
      * @param converter
      */
-    void setCustomSetConverter(CustomConverter converter);
+    void setJsonSetAdapter(AnAdapter converter);
 
     /**
      *
      * @return
      */
-    CustomConverter getCustomSetConverter();
+    AnAdapter getJsonSetAdapter();
 
     /**
      * "Get" is for getting the value of the attribute
      * for passing to external source.
      * @param converter
      */
-    void setCustomGetConverter(CustomConverter converter);
+    void setJsonGetAdapter(AnAdapter converter);
 
     /**
      *
      * @return
      */
-    CustomConverter getCustomGetConverter();
+    AnAdapter getJsonGetAdapter();
+
+    /**
+     * "Set" is for setting the value of the attribute
+     * from external source. It is JSON for now.
+     *
+     * @param converter
+     */
+    void setDbSetAdapter(AnAdapter converter);
+
+    /**
+     *
+     * @return
+     */
+    AnAdapter getDbSetAdapter();
+
+    /**
+     * "Get" is for getting the value of the attribute
+     * for passing to external source.
+     * @param converter
+     */
+    void setDbGetAdapter(AnAdapter converter);
+
+    /**
+     *
+     * @return
+     */
+    AnAdapter getDbGetAdapter();
 
 }

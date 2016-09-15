@@ -11,7 +11,7 @@
 
 @class IOSObjectArray;
 @class JavaLangInteger;
-@protocol AnAttrib_CustomConverter;
+@protocol AnAdapter;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
 
@@ -50,13 +50,13 @@
 
 - (id<AnSql>)startSqlCreate;
 
-- (id<AnAttrib_CustomConverter>)getDbCustomSetConverter;
+- (id<AnAdapter>)getDbSetAdapter;
 
-- (void)setDbCustomSetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)sqlCustomSetConverter;
+- (void)setDbSetAdapterWithAnAdapter:(id<AnAdapter>)sqlCustomSetConverter;
 
-- (id<AnAttrib_CustomConverter>)getDbCustomGetConverter;
+- (id<AnAdapter>)getDbGetAdapter;
 
-- (void)setDbCustomGetConverterWithAnAttrib_CustomConverter:(id<AnAttrib_CustomConverter>)sqlCustomGetConverter;
+- (void)setDbGetAdapterWithAnAdapter:(id<AnAdapter>)sqlCustomGetConverter;
 
 - (void)addLimitOffsetWithJavaLangInteger:(JavaLangInteger *)limit
                       withJavaLangInteger:(JavaLangInteger *)offset;

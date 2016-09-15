@@ -322,7 +322,7 @@ void Demo_amfibianOperations() {
     [anOrm startSqlInsertWithId:appointment456];
     (void) [anOrm apply];
     DemoBase_printAppointmentsWithAnOrm_(anOrm);
-    [appointment234 setIsProcessedWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(1)];
+    [appointment234 setIsProcessedWithJavaLangInteger:JavaLangInteger_valueOfWithInt_(10)];
     [anOrm startSqlUpdateWithId:appointment234];
     [anOrm addWhereWithNSString:@"id = ?" withId:[appointment234 getId]];
     returnCode = [anOrm apply];
@@ -332,6 +332,8 @@ void Demo_amfibianOperations() {
     [anOrm addWhereWithNSString:@"id = ?" withId:JavaLangInteger_valueOfWithInt_(234)];
     Appointment *meetAmfibianAppointment = [anOrm getSingleResult];
     if (meetAmfibianAppointment != nil) {
+      DemoBase_checkTestWithNSString_withBoolean_(@"attrib level adapter", [((JavaLangInteger *) nil_chk([meetAmfibianAppointment getStatus])) intValue] == 1);
+      DemoBase_checkTestWithNSString_withBoolean_(@"object level adapter", [((JavaLangInteger *) nil_chk([meetAmfibianAppointment getIsProcessed])) intValue] == 1);
       [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$$", @"Back to JSON string\nbecause we might want to send it\nback to the server like so: ", [anOrm asJsonStringWithId:meetAmfibianAppointment])];
       OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId:meetAmfibianAppointment];
       NSString *name = (NSString *) check_class_cast([((OrgJsonJSONObject *) nil_chk(jsonObject)) getWithNSString:@"name"], [NSString class]);
