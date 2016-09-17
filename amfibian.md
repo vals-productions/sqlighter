@@ -163,9 +163,9 @@ AnObject o---- AnAttrib
  ^
  |
 AnSql          AnUpgrade
- ^
- |
-AnOrm
+ ^             AnAdaptor
+ |             AnIncubator
+AnOrm          
 
 ```
 
@@ -190,6 +190,46 @@ If you do not deal with database, this might be all you need.
 **AnOrm** makes it much easier for you to manipulate and convert objects in most cases. Your mobile database is typically much simple than database server database and does not need complex joins as it represents a subset of data for a single customer. In case you need something complex, you can always use the full power of direct SQL. 
 
 For the cases when you do need to do an outer join and retrieve hierarchical result set, you can always use Sqlighter directly and go as far as you want.
+
+### AnAdapter
+
+Adapters are needed in case some object's attribute's type is different in native, json and/or db presentation. If you control all presentations you might not need this feature, but often you deal with third party systems and have to deal with discrepancies. 
+
+For example, you receive JSON dates from third party systems in the format of milliseconds, but would like to assign it to a Date attribute in your native object and then save it as formatted date string in the database. Then you'd need adapters for this scenario.
+
+Adapters are AnAttrib'ute centric.
+
+JsonGetAdapters will get the value from Native Object's attribute, convert it into the format required by JSON representation. In the situation above, it would take a Date and convert it into milliseconds.
+
+JsonSetAdapters would get the value from JSON serialized anbject's date (long value in the example above), convert in into a Date that would be suitable to assign to a native object's date attribute.
+
+Json adapters are defined at AnObject level.
+
+DbGetAdapters and DbSetadapters are similar and work for Native Object\Database conversions. They are defined at AnSql level as this is the entry level for DB operations.
+
+AnAttrib has SetAdapters and GetAdapters. If set at this level you have to make them flexible to understand what type of conversion is requested - Json or database type.
+
+If multiple adapters are defined, then the AmfibiaN will preffer:
+
+* Attribute level converter first
+* Object level converter if no attribute level converted defined.
+
+If no adapters are supplied, straight assignment will be attempted.
+
+AmfibiaN has some sample adapters turned on (see AnObject initadapters() method). They should be replaced/customized per your needs as you develop and get into your project specifics.
+
+### AnIncubator
+
+AnIncubator consumes JSON defintion file, parses it, and produces AnOrm instancs upon request. It can be used instead of configurng AnOrm instances in programmatic way.
+
+```java
+incubator.load(jsonString);
+AnOrm<Appointment> orm = incubator.make(Appointment.class);
+
+```
+[Sample json definition file from Demo project] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/assets/an_objects.json)
+
+Demo project contains expamples of AmfibiaN usage.
 
 ## Database versioning
 

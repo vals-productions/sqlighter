@@ -375,12 +375,14 @@ J2ObjC conversion generates extra files/stubs. To make it easier to understand a
 
 Conversion should be done with the use of ``--prefixes <file with prefix configs>`` j2objc 
 switch to prevent adding java package prefix to class names. Sample file is below.
+
 ```
 <file with prefix configs>
 ...
 com.vals.a2ios.sqlighter=
 ...
 ```
+
 This makes code look cleaner in case you'd like to use SQLighter for some iOS 
 functionality that is not matching your Android counterpart. 
 
@@ -400,13 +402,16 @@ not work, check docs for more detailed explainations.
 
 Include content of sqlighter/android in your Android project. I.e.,  
 you should have these packages/files in your sources:
+
 ```
 com.vals.a2ios.sqlighter.impl.SQLighterDbImpl.java
 com.vals.a2ios.sqlighter.intf.SQLighterDb.java
 com.vals.a2ios.sqlighter.intf.SQLighterRs.java
 ```
+
 You can manually copy them into your project, or, edit gradle.build and point to the
 location of files, 
+
 ```
 android {
 ....
@@ -415,6 +420,7 @@ android {
     }
 }
 ```
+
 or whatever other method of including sources in the project
 you know.
 
@@ -463,11 +469,13 @@ on the file system and add it to the project this way.
 ``SQLighterDb.setDbPath(String path)`` specifies path to the file on the device. This is
 different between Android and iOS. For android this path might be either "/data/data/<<YOUR PROJECT path>>/databases/", or,
 "/data/user/0/<<YOUR PROJECT path>>/databases/", so, as of now, it's best to call the following code to determine/specify the path:
+
 ``` java
 // from the Activity class:
 String dbPath = this.getApplication().getApplicationContext().getFilesDir()
                         .getParentFile().getPath() + "/databases/";
 ```
+
 for iOS this method is missing as the library knows the location relative
 to project's location. All examples below assume you have some initial database file.
 
@@ -475,9 +483,10 @@ Otherwise...
 
 #### The database file is not provided
 
-If the file is not provided, then you should not use`` SQLighterDb.deployDbOnce();`` 
+If the file is not provided, then you should not use 
+``` SQLighterDb.deployDbOnce();```
 method (see more on this method in the next provision). Since the initial file is not
-provided, it would be created. In this case you do not have an option of the database
+provided, it should be created. In this case you do not have an option of the database
 preloaded with data, but you can compensate for that by running your initial database 
 initialization script.
 
@@ -529,6 +538,7 @@ initialization and initialize the database file.
 
 One of the ways this might be done is by using singleton pattern. Code below is for 
 Android, which could/should be converted to iOS with j2objc.
+
 ``` java
 public class Bootstrap {
     private static Bootstrap instance;
@@ -541,7 +551,9 @@ public class Bootstrap {
 ...
 }
 ```
+
 Then your activity's ``onCreate`` method might look like this:
+
 ``` java
 protected void onCreate(Bundle savedInstanceState) {
   SQLighterDbImpl db = new SQLighterDbImpl();
@@ -567,8 +579,10 @@ protected void onCreate(Bundle savedInstanceState) {
   }
 ...
 ```
+
 And your iOS' app delegate initialization method may look like this. Note that 
 Bootstrap is just a j2objc clone of Android's Bootstrap class.
+
 ``` objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     Bootstrap *b = [Bootstrap getInstance];
@@ -582,6 +596,7 @@ Bootstrap is just a j2objc clone of Android's Bootstrap class.
     return YES;
 }
 ```
+
 One important feature of this implementation is - you get uniform and platform 
 independent way to get access to your DB implementation interface in your shared 
 between platforms code as this
@@ -597,7 +612,7 @@ id<SQLighterDb> db = [[Bootstrap getInstance] getDb];
 
 Usage is very straightforward. Mostly, it reminds Java JDBC style of database interface. 
 
-Most critical methods are thread safe, but if you have database logics that spans across multiple database methods, it's up to you to ensure your code's thread safety if needed.
+Most critical methods are thread safe, but if you have database logics that spans across multiple database methods, it's up to you to ensure your code's thread safety if needed. Most likely, you should have SQLighterDb instance per thread.
 
 Positional parameters are supported. No naming parameter support.
 
