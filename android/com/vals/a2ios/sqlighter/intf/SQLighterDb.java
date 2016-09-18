@@ -17,6 +17,10 @@ public interface SQLighterDb {
     public static final String DATE_HINT = "_date";
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    /**
+     * Based on this flag SQLighterRs.getObject(...) will return
+     * Integer or Long value for SQLITE INTEGER column type.
+     */
     public static final int DEFAULT_INTEGER_COLUMN_CLASS_INTEGER = 0;
     public static final int DEFAULT_INTEGER_COLUMN_CLASS_LONG = 1;
 
@@ -255,6 +259,8 @@ public interface SQLighterDb {
     void setDateFormatString(String dateFormatString);
 
     /**
+     * Based on this flag SQLighterRs.getObject(...) will return
+     * Integer or Long value for SQLITE INTEGER column type.
      *
      * @param defaultIntegerColumnType
      */
