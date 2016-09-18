@@ -153,17 +153,20 @@
                 [self bindString: o atIndex: par];
             } else if ([o isKindOfClass: [NSNumber class]]) {
                 NSNumber *num = [parameters objectAtIndex: par - 1];
+
                 if (strcmp([num objCType], @encode(int)) == 0 ||
-                    strcmp([num objCType], @encode(long)) == 0 ||
                     strcmp([num objCType], @encode(unsigned int)) == 0 ||
-                    strcmp([num objCType], @encode(unsigned long)) == 0 ||
-                    strcmp([num objCType], @encode(unsigned long long)) == 0 ||
                     strcmp([num objCType], @encode(unsigned short)) == 0 ||
-                    strcmp([num objCType], @encode(short)) == 0 ||
-                    strcmp([num objCType], @encode(long long)) == 0
-                    ) {
+                    strcmp([num objCType], @encode(short)) == 0) {
                     [self bindInt:[num intValue] atIndex: par];
-                } else if (strcmp([num objCType], @encode(float)) == 0 ||
+                }
+                else if (strcmp([num objCType], @encode(long)) == 0 ||
+                    strcmp([num objCType], @encode(long long)) == 0 ||
+                    strcmp([num objCType], @encode(unsigned long)) == 0 ||
+                    strcmp([num objCType], @encode(unsigned long long)) == 0) {
+                    [self bindLong:[num longLongValue] atIndex: par];
+                }
+                else if (strcmp([num objCType], @encode(float)) == 0 ||
                            strcmp([num objCType], @encode(double)) == 0) {
                     [self bindDouble: [num doubleValue] atIndex: par];
                 }
@@ -354,7 +357,7 @@
 }
 
 -(void) bindLong: (long) par  atIndex: (int) paramIdx{
-        sqlite3_bind_int(self.lastPreparedStmt, paramIdx, (int)par);
+        sqlite3_bind_int64(self.lastPreparedStmt, paramIdx, (sqlite3_int64)par);
 }
 
 -(void) bindBlob: (NSData*) data  atIndex: (int) paramIdx {
