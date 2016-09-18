@@ -17,6 +17,9 @@ public interface SQLighterDb {
     public static final String DATE_HINT = "_date";
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    public static final int DEFAULT_INTEGER_COLUMN_CLASS_INTEGER = 0;
+    public static final int DEFAULT_INTEGER_COLUMN_CLASS_LONG = 1;
+
     /**
      * Checks if Db file is already in place
      */
@@ -250,5 +253,11 @@ public interface SQLighterDb {
      * @param dateFormatString
      */
     void setDateFormatString(String dateFormatString);
+
+    /**
+     *
+     * @param defaultIntegerColumnType
+     */
+    void setDefaultIntegerColumnType(int defaultIntegerColumnType);
 
 }

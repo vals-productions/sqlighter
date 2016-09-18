@@ -15,6 +15,7 @@
 @implementation SQLighterDbImpl
 
 @synthesize dbName, replaceDatabase, database, parameterDictionary, isDateNamedColumn, dateColumnHint;
+@synthesize defaultIntegerColumnType;
 
 -(id) init {
     if( self = [super init]) {
@@ -27,6 +28,7 @@
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setDateFormat:SQLighterDb_DATE_FORMAT_];
         self.dateColumnHint = SQLighterDb_DATE_HINT_;
+        self.defaultIntegerColumnType = SQLighterDb_DEFAULT_INTEGER_COLUMN_CLASS_INTEGER;
     }
     return self;
 }
@@ -452,6 +454,10 @@
 
 - (void)setDateFormatStringWithNSString:(NSString *)dateFormatString {
     self.dateFormatter.dateFormat = dateFormatString;
+}
+
+- (void)setDefaultIntegerColumnTypeWithInt:(jint)defaultIntegerColType {
+    self.defaultIntegerColumnType = defaultIntegerColType;
 }
 
 @end

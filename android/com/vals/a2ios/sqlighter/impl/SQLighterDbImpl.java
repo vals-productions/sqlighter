@@ -42,6 +42,7 @@ public class SQLighterDbImpl implements SQLighterDb {
     private Map<Long, List<Object>> parameterMap = new HashMap<Long, List<Object>>();
     private SimpleDateFormat dateFormat = new SimpleDateFormat(SQLighterDb.DATE_FORMAT);
     private boolean isDateNamedColumn = true;
+    private int defaultIntegerColumnType = DEFAULT_INTEGER_COLUMN_CLASS_INTEGER;
 
     public class ResultSetImpl implements SQLighterRs {
         private Cursor cursor;
@@ -149,11 +150,10 @@ public class SQLighterDbImpl implements SQLighterDb {
             if (columnType == Cursor.FIELD_TYPE_NULL) {
                 return null;
             } else if (columnType == Cursor.FIELD_TYPE_INTEGER) {
-                Long testLong = getLong(index);
-                if(testLong >= Integer.MIN_VALUE && testLong <= Integer.MAX_VALUE) {
+                if(defaultIntegerColumnType == DEFAULT_INTEGER_COLUMN_CLASS_INTEGER) {
                     return getInt(index);
                 }
-                return testLong;
+                return getLong(index);
             } else if (columnType == Cursor.FIELD_TYPE_FLOAT) {
                 return getDouble(index);
             } else if (columnType == Cursor.FIELD_TYPE_BLOB) {
@@ -487,5 +487,9 @@ public class SQLighterDbImpl implements SQLighterDb {
     public void setDateFormatString(String dateFormatString) {
         this.dateFormatString = dateFormatString;
         dateFormat.applyPattern(dateFormatString);
+    }
+
+    public void setDefaultIntegerColumnType(int defaultIntegerColumnType) {
+        this.defaultIntegerColumnType = defaultIntegerColumnType;
     }
 }

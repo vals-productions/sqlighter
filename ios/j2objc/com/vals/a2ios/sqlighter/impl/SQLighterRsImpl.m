@@ -97,8 +97,11 @@
     int type = [self getColumnTypeWithInt: index];
     if (type == SQLITE_NULL) {
         return nil;
-    } else if(type == SQLITE_INTEGER) {
-        return [self getIntWithInt: index];
+    } else if (type == SQLITE_INTEGER) {
+        if (db.defaultIntegerColumnType == SQLighterDb_DEFAULT_INTEGER_COLUMN_CLASS_INTEGER) {
+            return [self getIntWithInt: index];
+        }
+        return [self getLongWithInt: index];
     } else if (type == SQLITE_FLOAT) {
         return [self getDoubleWithInt: index];
     } else if (type == SQLITE_BLOB) {

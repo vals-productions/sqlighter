@@ -27,6 +27,7 @@
 @property sqlite3_stmt *lastPreparedStmt;
 @property NSDateFormatter *dateFormatter;
 @property NSString *dateColumnHint;
+@property int defaultIntegerColumnType;
 
 
 -(void) analyzeReturnCodeForErrors: (int) code;

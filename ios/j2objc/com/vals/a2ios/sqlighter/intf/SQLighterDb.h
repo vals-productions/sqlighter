@@ -13,6 +13,9 @@
 @class JavaUtilDate;
 @protocol SQLighterRs;
 
+#define SQLighterDb_DEFAULT_INTEGER_COLUMN_CLASS_INTEGER 0
+#define SQLighterDb_DEFAULT_INTEGER_COLUMN_CLASS_LONG 1
+
 @protocol SQLighterDb < NSObject, JavaObject >
 
 - (jboolean)isDbFileDeployed;
@@ -71,6 +74,8 @@
 
 - (void)setDateFormatStringWithNSString:(NSString *)dateFormatString;
 
+- (void)setDefaultIntegerColumnTypeWithInt:(jint)defaultIntegerColumnType;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(SQLighterDb)
@@ -80,6 +85,10 @@ J2OBJC_STATIC_FIELD_GETTER(SQLighterDb, DATE_HINT_, NSString *)
 
 FOUNDATION_EXPORT NSString *SQLighterDb_DATE_FORMAT_;
 J2OBJC_STATIC_FIELD_GETTER(SQLighterDb, DATE_FORMAT_, NSString *)
+
+J2OBJC_STATIC_FIELD_GETTER(SQLighterDb, DEFAULT_INTEGER_COLUMN_CLASS_INTEGER, jint)
+
+J2OBJC_STATIC_FIELD_GETTER(SQLighterDb, DEFAULT_INTEGER_COLUMN_CLASS_LONG, jint)
 
 J2OBJC_TYPE_LITERAL_HEADER(SQLighterDb)
 
