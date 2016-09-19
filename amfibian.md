@@ -71,8 +71,9 @@ We might've received the following JSON string representation of the Appointment
 
 Let's assume our goal is to convert this appointment definition JSON string into a native Appointment business object, do some operations with the object, save it in the database and  send transformed business object back to the server as JSON string.
 
-First, let's tell AmfibiaN about our business entities and their properties we would like to manage. We do not have to manage all of them, just those we care of. Essentially, this is our opportunity to map our native properties to their JSON and database column properties. If you are lucky to control their
-names, it could be just simply one name for all, but if you are dealing with some legacy system and names do not match, then you have flexibility to deal with such situation.
+First, let's tell AmfibiaN about our business entities and their properties we would like to manage. We do not have to manage all of them, just those we care of. Essentially, this is our opportunity to map our native properties to their JSON and database column properties. If you are lucky to control their names, it could be just simply one name for all, but if you are dealing with some legacy system and names do not match, then you have flexibility to deal with such situation.
+
+Below is programmatic way to define entities, but loading definitions through JSON file is also supported. JSON way helps you to keep your code cleaner and delegate entity instantiation to AnIncubator class. Demo project contains JSON file/AnIncubator example.
 
 ```java
 AnObject<Entity> anEntity = 
@@ -227,9 +228,14 @@ incubator.load(jsonString);
 AnOrm<Appointment> orm = incubator.make(Appointment.class);
 
 ```
-[Sample json definition file from Demo project] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/assets/an_objects.json)
 
 Demo project contains expamples of AmfibiaN usage.
+
+### JSON file definitions.
+Here's 
+[sample json definition file from Demo project] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/assets/an_objects.json) with comments that help to understand its format.
+
+This section is to be updated with more content.
 
 ## Database versioning
 

@@ -4,7 +4,7 @@
 
 ```java
 /* This is Java */
-AnOrm<Announcement> anOrm = Bootstrap.getInstance().getOrm(Announcement.class);
+AnOrm<Announcement> anOrm = incubator.make(Announcement.class);
 String jsonAppointment234 =  "{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
 // get as native object
 Appointment appointment234 = anOrm.asNativeObject(jsonAppointment234);
@@ -35,7 +35,7 @@ OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId: appointment234Process
 SQLighter is Object Oriented SQLite implementation for Android and iOS mobile platforms. 
 
 * Provides basic SQL capabilities and flexibilty (SQLighter)
-* ORM features, auto generate tables for your objects (AmfibiaN sub-project)
+* ORM features, auto generate tables for your objects (AmfibiaN sub-project within this github repository)
 * Database schema versioning management
 * JSON mappings
 * Portability of your implementation between Android and iOS platforms by being compliant with J2ObjC code translation standards.
@@ -79,7 +79,7 @@ platform specific implementations.
 
 Sqlighter design reminds JDBC  implementation. Anyone familiar with JDBC should pick it up really easy.
 
-Sqlighter supports all SQLite datatypes and adds its own implementation of Date type.
+Sqlighter supports all SQLite datatypes and adds its own (optional) implementation of Date type.
 
 # ORM
 
@@ -362,6 +362,8 @@ AnObject*.java               AnObject*.h AnObject*.m
 AnSql*.java                  AnSql*.h AnSql*.m
 AnOrm*.java                  AnOrm*.h AnOrm*.m
 AnUpgrade*.java              AnUpgrade*.h AnUpgrade*.m
+AnIncubator*.java           AnIncubator*.h AnIncubator*.m
+AnAdapter*.java           AnAdapter*.h AnAdapter*.m
 ```
 
 Both implementations conform to SQLighterDb (core database methods) and
@@ -438,7 +440,7 @@ should be able to use the following in your code, because these files are under
 sqlighter/ios/j2objc and Xcode has sqlighter/ios/j2objc in include search path:
 
 ```
-#import "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
+# import "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #import "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 ```
 
