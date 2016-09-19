@@ -362,8 +362,8 @@ AnObject*.java               AnObject*.h AnObject*.m
 AnSql*.java                  AnSql*.h AnSql*.m
 AnOrm*.java                  AnOrm*.h AnOrm*.m
 AnUpgrade*.java              AnUpgrade*.h AnUpgrade*.m
-AnIncubator*.java           AnIncubator*.h AnIncubator*.m
-AnAdapter*.java           AnAdapter*.h AnAdapter*.m
+AnIncubator*.java            AnIncubator*.h AnIncubator*.m
+AnAdapter*.java              AnAdapter*.h AnAdapter*.m
 ```
 
 Both implementations conform to SQLighterDb (core database methods) and
@@ -440,7 +440,7 @@ should be able to use the following in your code, because these files are under
 sqlighter/ios/j2objc and Xcode has sqlighter/ios/j2objc in include search path:
 
 ```
-# import "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
+#import "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #import "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 ```
 
@@ -483,10 +483,9 @@ to project's location. All examples below assume you have some initial database 
 
 Otherwise...
 
-#### The database file is not provided
+#### The database file is not provided.
 
-If the file is not provided, then you should not use 
-``` SQLighterDb.deployDbOnce();```
+If the file is not provided, then you should not use deployDbOnce()
 method (see more on this method in the next provision). Since the initial file is not
 provided, it should be created. In this case you do not have an option of the database
 preloaded with data, but you can compensate for that by running your initial database 
@@ -514,7 +513,7 @@ should be copied from its project location into designated device's target locat
 This, also, should be done before you start using the database. Basically #deployDbOnce
 takes the complexity of various checks out of your hands.
 
-```deployDbOnce``` works only once per SQLighterDb instance per application startup. This is 
+``deployDbOnce`` works only once per SQLighterDb instance per application startup. This is 
 just to prevent erroneous database overrides during application runs.
 
 Once invoked:
@@ -632,6 +631,7 @@ executing corresponding getters. The SQLighterRs should be closed once you are d
 the result set. executeChange closes underlying statements implicitly.
 
 ResultSet has getters to retrieve positional select clause parameters like this:
+
 ``` java
 SQLighterRs rs = db.executeSelect("select id, email, name, data, height from user");
 while (rs.hasNext()) {
@@ -642,6 +642,7 @@ while (rs.hasNext()) {
 }
 rs.close();
 ```
+
 c) once your statement is executed, bound parameters are cleaned up, so you can use
  ``addParam*`` methods again to be bound/used with your next statement.
 
