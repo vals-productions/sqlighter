@@ -44,9 +44,9 @@
 
 - (id<JavaUtilMap>)ensureMapWithJavaUtilMap:(id<JavaUtilMap>)map;
 
-- (IOSObjectArray *)stringsToAttribsWithNSStringArray:(IOSObjectArray *)propertyNames;
+- (IOSObjectArray *)stringsToAttribsWithNSStringArray:(IOSObjectArray *)attribNames;
 
-- (void)initAttribsWithAnAttribArray:(IOSObjectArray *)attribMappers OBJC_METHOD_FAMILY_NONE;
+- (void)initAttribsWithAnAttribArray:(IOSObjectArray *)attribs OBJC_METHOD_FAMILY_NONE;
 
 @end
 
@@ -64,9 +64,9 @@ __attribute__((unused)) static jboolean AnObjectImpl_isEmptyWithJavaUtilMap_(AnO
 
 __attribute__((unused)) static id<JavaUtilMap> AnObjectImpl_ensureMapWithJavaUtilMap_(AnObjectImpl *self, id<JavaUtilMap> map);
 
-__attribute__((unused)) static IOSObjectArray *AnObjectImpl_stringsToAttribsWithNSStringArray_(AnObjectImpl *self, IOSObjectArray *propertyNames);
+__attribute__((unused)) static IOSObjectArray *AnObjectImpl_stringsToAttribsWithNSStringArray_(AnObjectImpl *self, IOSObjectArray *attribNames);
 
-__attribute__((unused)) static void AnObjectImpl_initAttribsWithAnAttribArray_(AnObjectImpl *self, IOSObjectArray *attribMappers);
+__attribute__((unused)) static void AnObjectImpl_initAttribsWithAnAttribArray_(AnObjectImpl *self, IOSObjectArray *attribs);
 
 @implementation AnObjectImpl
 
@@ -221,10 +221,10 @@ J2OBJC_IGNORE_DESIGNATED_END
   return attribs;
 }
 
-- (id<AnAttrib>)getAttribWithNSString:(NSString *)propertyName {
-  id<AnAttrib> a = [((id<JavaUtilMap>) nil_chk(attribMap_)) getWithId:propertyName];
+- (id<AnAttrib>)getAttribWithNSString:(NSString *)attribName {
+  id<AnAttrib> a = [((id<JavaUtilMap>) nil_chk(attribMap_)) getWithId:attribName];
   if (a == nil && parentAnObject_ != nil) {
-    a = [parentAnObject_ getAttribWithNSString:propertyName];
+    a = [parentAnObject_ getAttribWithNSString:attribName];
   }
   return a;
 }
@@ -239,21 +239,21 @@ J2OBJC_IGNORE_DESIGNATED_END
   }
 }
 
-- (IOSObjectArray *)stringsToAttribsWithNSStringArray:(IOSObjectArray *)propertyNames {
-  return AnObjectImpl_stringsToAttribsWithNSStringArray_(self, propertyNames);
+- (IOSObjectArray *)stringsToAttribsWithNSStringArray:(IOSObjectArray *)attribNames {
+  return AnObjectImpl_stringsToAttribsWithNSStringArray_(self, attribNames);
 }
 
-- (void)initAttribsWithAnAttribArray:(IOSObjectArray *)attribMappers {
-  AnObjectImpl_initAttribsWithAnAttribArray_(self, attribMappers);
+- (void)initAttribsWithAnAttribArray:(IOSObjectArray *)attribs {
+  AnObjectImpl_initAttribsWithAnAttribArray_(self, attribs);
 }
 
 - (void)setOwnAttribsWithAnAttribArray:(IOSObjectArray *)attribs {
   AnObjectImpl_initAttribsWithAnAttribArray_(self, attribs);
 }
 
-- (void)addAttribWithAnAttrib:(id<AnAttrib>)anAttribMapper {
-  [((id<AnAttrib>) nil_chk(anAttribMapper)) setAnObjectWithAnObject:self];
-  (void) [((id<JavaUtilMap>) nil_chk(attribMap_)) putWithId:[anAttribMapper getAttribName] withId:anAttribMapper];
+- (void)addAttribWithAnAttrib:(id<AnAttrib>)anAttrib {
+  [((id<AnAttrib>) nil_chk(anAttrib)) setAnObjectWithAnObject:self];
+  (void) [((id<JavaUtilMap>) nil_chk(attribMap_)) putWithId:[anAttrib getAttribName] withId:anAttrib];
 }
 
 - (id<JavaUtilMap>)asJsonMap {
@@ -524,13 +524,13 @@ id<JavaUtilMap> AnObjectImpl_ensureMapWithJavaUtilMap_(AnObjectImpl *self, id<Ja
   return map;
 }
 
-IOSObjectArray *AnObjectImpl_stringsToAttribsWithNSStringArray_(AnObjectImpl *self, IOSObjectArray *propertyNames) {
+IOSObjectArray *AnObjectImpl_stringsToAttribsWithNSStringArray_(AnObjectImpl *self, IOSObjectArray *attribNames) {
   IOSObjectArray *list = nil;
-  if (propertyNames != nil) {
-    list = [IOSObjectArray newArrayWithLength:propertyNames->size_ type:AnAttrib_class_()];
+  if (attribNames != nil) {
+    list = [IOSObjectArray newArrayWithLength:attribNames->size_ type:AnAttrib_class_()];
     jint idx = 0;
     {
-      IOSObjectArray *a__ = propertyNames;
+      IOSObjectArray *a__ = attribNames;
       NSString * const *b__ = a__->buffer_;
       NSString * const *e__ = b__ + a__->size_;
       while (b__ < e__) {
@@ -543,9 +543,9 @@ IOSObjectArray *AnObjectImpl_stringsToAttribsWithNSStringArray_(AnObjectImpl *se
   return list;
 }
 
-void AnObjectImpl_initAttribsWithAnAttribArray_(AnObjectImpl *self, IOSObjectArray *attribMappers) {
+void AnObjectImpl_initAttribsWithAnAttribArray_(AnObjectImpl *self, IOSObjectArray *attribs) {
   {
-    IOSObjectArray *a__ = attribMappers;
+    IOSObjectArray *a__ = attribs;
     id<AnAttrib> const *b__ = ((IOSObjectArray *) nil_chk(a__))->buffer_;
     id<AnAttrib> const *e__ = b__ + a__->size_;
     while (b__ < e__) {
@@ -603,6 +603,10 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnObjectImpl_SampleGetAdapter)
   }
   IOSClass *objClass = [nil_chk(value) getClass];
   JavaLangReflectMethod *m = [((id<AnAttrib>) nil_chk(attrib)) getSetter];
+  if (m == nil) {
+    [self onWarningWithIOSClass:objClass withNSString:[attrib getAttribName] withId:value];
+    return nil;
+  }
   NSString *attribName = [attrib getAttribName];
   IOSObjectArray *paramTypes = [((JavaLangReflectMethod *) nil_chk(m)) getParameterTypes];
   IOSClass *p = IOSObjectArray_Get(nil_chk(paramTypes), 0);

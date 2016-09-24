@@ -6,15 +6,19 @@ package com.vals.a2ios.amfibian.impl;
 import com.vals.a2ios.amfibian.intf.AnAdapter;
 import com.vals.a2ios.amfibian.intf.AnIncubator;
 import com.vals.a2ios.amfibian.intf.AnAttrib;
+import com.vals.a2ios.amfibian.intf.AnObject;
 import com.vals.a2ios.amfibian.intf.AnOrm;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public abstract class AnIncubatorImpl implements AnIncubator {
+public class AnIncubatorImpl implements AnIncubator {
     private static final String VERSION = "version";
     private static final String NAME = "name";
 
@@ -42,6 +46,24 @@ public abstract class AnIncubatorImpl implements AnIncubator {
     public static final String ADAPTER_MAP = "adapterMap";
     public static final String CLASS = "class";
 
+    public static final String ASSOCIATIONS = "associations";
+    public static final String ASSOCIATE = "fetch";
+    public static final String OBJECT = "object";
+    public static final String SRC = "srcAttribName";
+    public static final String DST = "trgAttribName";
+
+    private boolean isLoaded = false;
+
+    private class ErrorContext {
+        String contextSchema;
+        String contextObject;
+        String contextAttribute;
+        String contextAssociation;
+        String contextAdapter;
+        String step;
+    }
+
+    private ErrorContext eCtx;
     private AnJsonSchema anSchema;
 
     private class AnJsonSchema {
@@ -56,21 +78,69 @@ public abstract class AnIncubatorImpl implements AnIncubator {
         AnOrm orm;
         String className;
         String extendObject;
+        Map<String, AnAssociateRecord> associationMap = new HashMap<>();
     }
 
+    private class AnAssociateRecord {
+        String assocName;
+        String objectName;
+        String srcAttribName;
+        String trgAttribName;
+    }
+
+    private String getContext() {
+        return
+                " Last known position: " +
+                        ((eCtx.step == null)? "" : "Step: " + eCtx.step + ". ") +
+                        ((eCtx.contextObject == null) ? "" : "Object: " + eCtx.contextObject + ". ") +
+                        ((eCtx.contextAttribute == null) ? "" : "Attrib: " + eCtx.contextAttribute + ". ") +
+                        ((eCtx.contextAssociation == null) ? "" : "Association: " + eCtx.contextAssociation + ". ") +
+                        ((eCtx.contextAdapter == null) ? "":"Adapter: " + eCtx.contextAdapter);
+    }
+
+    /**
+     * Will parse jsonString and prepare object hierarchy for
+     * fast object making. jsonString is discarded upon loading.
+     * This method will throw Exception if JSON structure error
+     * occurs with best guess diagnostic message and the most
+     * current position.
+     */
     @Override
     public void load(String jsonString) throws Exception {
+        eCtx = new ErrorContext();
+        eCtx.step = "schema";
         jsonString = removeComments(jsonString, "/*", "*/");
         JSONObject jo = new JSONObject(jsonString);
         anSchema = new AnJsonSchema();
-        anSchema.name = ensureProperty(NAME, jo, null);
-        anSchema.version = ensureProperty(VERSION, jo, null);
+        anSchema.name = ensureProperty(NAME, jo, true);
+        anSchema.version = ensureProperty(VERSION, jo, true);
+        eCtx.contextSchema = anSchema.name;
+        eCtx.step = "schema adapters";
         loadSchemaAdapters(jo);
+        eCtx.step = "schema adapter maps";
         loadAdapterMap(jo, anSchema.adapterByNameMap);
         if(jo.has(OBJECTS)) {
             JSONArray ja = jo.getJSONArray(OBJECTS);
             anSchema.entityRecordMap = loadObjects(ja);
         }
+        eCtx = null;
+        isLoaded = true;
+    }
+
+    /**
+     * Releases memory for situations like low memory conditions.
+     * The object can be re-loaded by calling
+     * load(...) adain.
+     */
+    @Override
+    public void unload() {
+        anSchema = null;
+        isLoaded = false;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return isLoaded;
     }
 
     private void loadSchemaAdapters(JSONObject jo) throws Exception {
@@ -93,6 +163,7 @@ public abstract class AnIncubatorImpl implements AnIncubator {
     }
 
     private Map<String, AnObjectRecord> loadObjects(JSONArray jsonArray) throws Exception {
+        eCtx.step = OBJECTS;
         Map<String, AnObjectRecord> objRecMap = new HashMap<>();
 
         int itemCount = jsonArray.length();
@@ -108,41 +179,48 @@ public abstract class AnIncubatorImpl implements AnIncubator {
 
     private AnObjectRecord loadAnObjectRecord(JSONObject jo) throws Exception {
         AnObjectRecord rec = new AnObjectRecord();
+        eCtx.step = OBJECT;
         rec.orm = new AnOrmImpl();
-        rec.extendObject = ensureProperty(EXTENDS, jo, null);
-        rec.className = ensureProperty(CLASS_NAME, jo, null);
+        rec.className = ensureProperty(CLASS_NAME, jo, true);
+        eCtx.contextObject = rec.className;
+        rec.extendObject = ensureProperty(EXTENDS, jo, false);
         rec.orm.setNativeClass(getClassByName(rec.className));
-        ensureAnObjectAdapters(rec.orm, jo, anSchema.adapterByNameMap);
-        String assignedTableName = ensureProperty(TABLE_NAME, jo, null);
+        ensureAnObjectAdapters(rec.orm, jo);
+        String assignedTableName = ensureProperty(TABLE_NAME, jo, false);
         if(assignedTableName == null) {
             rec.orm.setTableName(rec.orm.getNativeClass().getSimpleName());
         } else {
             rec.orm.setTableName(assignedTableName);
         }
         ensureAttributes(rec.orm, jo, rec);
+        eCtx.contextAttribute = null;
+        ensureAssociations( jo, rec);
+        eCtx.contextAssociation = null;
         return rec;
     }
 
-    private String ensureProperty(String name, JSONObject jo, Map<String, String> propertiesMap) throws Exception {
+    private String ensureProperty(String name, JSONObject jo, boolean required) throws Exception {
         if(jo.has(name)) {
             String value = jo.getString(name);
-            if(propertiesMap != null) {
-                propertiesMap.put(name, value);
-            }
             return value;
+        }
+        if(required) {
+            throw new Exception("missing: " + name + getContext());
         }
         return null;
     }
 
     private void ensureAttributes(AnOrm orm, JSONObject jo, AnObjectRecord rec) throws Exception {
         if(jo.has(ATTRIBUTES)) {
-            JSONArray detailsArray = jo.getJSONArray(ATTRIBUTES);
-            for (int i = 0; i < detailsArray.length(); i++) {
-                JSONObject objectDefinition = detailsArray.getJSONObject(i);
-                String attribName = ensureProperty(ATTRIB_NAME, objectDefinition, null);
-                String columnName = ensureProperty(COLUMN_NAME, objectDefinition, null);
-                String jsonName = ensureProperty(JSON_NAME, objectDefinition, null);
-                String columnDef = ensureProperty(DB_COLUMN_DEFINITION, objectDefinition, null);
+            eCtx.step = ATTRIBUTES;
+            JSONArray attribArray = jo.getJSONArray(ATTRIBUTES);
+            for (int i = 0; i < attribArray.length(); i++) {
+                JSONObject attribDefinition = attribArray.getJSONObject(i);
+                String attribName = ensureProperty(ATTRIB_NAME, attribDefinition, true);
+                eCtx.contextAttribute = attribName;
+                String columnName = ensureProperty(COLUMN_NAME, attribDefinition, false);
+                String jsonName = ensureProperty(JSON_NAME, attribDefinition, false);
+                String columnDef = ensureProperty(DB_COLUMN_DEFINITION, attribDefinition, false);
                 AnAttrib anAttrib = null;
                 if (attribName.indexOf(',') != -1) {
                     anAttrib = new AnAttribImpl(attribName);
@@ -150,41 +228,46 @@ public abstract class AnIncubatorImpl implements AnIncubator {
                     anAttrib = new AnAttribImpl(attribName, columnName, jsonName);
                 }
                 anAttrib.setDbColumnDefinition(columnDef);
-                ensureAnAttribAdapters(orm, anAttrib, objectDefinition);
+                ensureAnAttribAdapters(orm, anAttrib, attribDefinition);
                 orm.addAttrib(anAttrib);
             }
         }
     }
 
-    private void ensureAnObjectAdapters(AnOrm orm, JSONObject jo, Map<String, Class<?>> converterByNameMap) throws Exception {
+    private void ensureAssociations(JSONObject jo, AnObjectRecord rec) throws Exception {
+        if(jo.has(ASSOCIATIONS)) {
+            eCtx.step = ATTRIBUTES + "/" + ASSOCIATIONS;
+            JSONArray assocArray = jo.getJSONArray(ASSOCIATIONS);
+            for (int i = 0; i < assocArray.length(); i++) {
+                JSONObject associationJo = assocArray.getJSONObject(i);
+                AnAssociateRecord ar = new AnAssociateRecord();
+                ar.assocName = ensureProperty(NAME, associationJo, true);
+                eCtx.contextAssociation = ar.assocName;
+                ar.objectName = ensureProperty(OBJECT, associationJo, true);
+                ar.srcAttribName = ensureProperty(SRC, associationJo, true);
+                ar.trgAttribName = ensureProperty(DST, associationJo, true);
+                rec.associationMap.put(ar.assocName, ar);
+            }
+        }
+    }
+
+    private void ensureAnObjectAdapters(AnOrm orm, JSONObject jo) throws Exception {
         Class clussjs = getAdapterClass(JSON_SET_ADAPTER);
         if(clussjs != null) {
             orm.setJsonSetAdapter((AnAdapter)clussjs.newInstance());
         }
-//        else {
-//            orm.setJsonSetAdapter(null);
-//        }
         Class clussjg = getAdapterClass(JSON_GET_ADAPTER);
         if(clussjg != null) {
             orm.setJsonGetAdapter((AnAdapter)clussjg.newInstance());
         }
-//        else {
-//            orm.setJsonGetAdapter(null);
-//        }
         Class clussds = getAdapterClass(DB_SET_ADAPTER);
         if(clussds != null) {
             orm.setDbSetAdapter((AnAdapter)clussds.newInstance());
         }
-//        else {
-//            orm.setDbSetAdapter(null);
-//        }
         Class clussdg = getAdapterClass(DB_GET_ADAPTER);
         if(clussdg != null) {
             orm.setDbGetAdapter((AnAdapter)clussdg.newInstance());
         }
-//        else {
-//            orm.setDbGetAdapter(null);
-//        }
         if(jo.has(ADAPTERS)) {
             JSONArray ja = jo.getJSONArray(ADAPTERS);
             int count = ja.length();
@@ -232,8 +315,11 @@ public abstract class AnIncubatorImpl implements AnIncubator {
 
     private Class getAdapterClass(String adapterName) {
         String name = anSchema.adapters.get(adapterName);
-        Class cluss = anSchema.adapterByNameMap.get(name);
-        return cluss;
+        if(name != null) {
+            Class cluss = anSchema.adapterByNameMap.get(name);
+            return cluss;
+        }
+        return null;
     }
 
     private AnAdapter getAdapterInstance(String adapterName) throws Exception {
@@ -241,7 +327,7 @@ public abstract class AnIncubatorImpl implements AnIncubator {
         if(cluss != null) {
             return (AnAdapter) cluss.newInstance();
         }
-        return null;
+        throw new Exception("Missing adapter: " + adapterName + getContext());
     }
 
     private void ensureAnAttribAdapters(AnOrm orm, AnAttrib attrib, JSONObject jo) throws Exception {
@@ -318,18 +404,23 @@ public abstract class AnIncubatorImpl implements AnIncubator {
             int count = ja.length();
             for (int i = 0; i < count; i++) {
                 JSONObject convertedJo = ja.getJSONObject(i);
-                if(convertedJo.has(NAME)) {
-                    String name = convertedJo.getString(NAME);
-                    String className = convertedJo.getString(CLASS);
-                    Class cluss = getClassByName(className);
-                    converterByNameMap.put(name, cluss);
-                }
+                String name = ensureProperty(NAME, convertedJo, true); convertedJo.getString(NAME);
+                String className = ensureProperty(CLASS, convertedJo, true);
+                Class cluss = getClassByName(className);
+                converterByNameMap.put(name, cluss);
             }
         }
     }
 
+    /**
+     * Makes a new instance of anOrm manager for the class name
+     * // todo - remane name to className
+     */
     private AnOrm<?> make(String name, Map<String, AnObjectRecord> records) throws Exception {
         AnObjectRecord anObjRec = records.get(name);
+        if(anObjRec == null) {
+            throw new Exception("Could not find definition for " + name);
+        }
         AnOrm anOrm = new AnOrmImpl();
         anOrm.setTableName(anObjRec.orm.getTableName());
         anOrm.setNativeClass(anObjRec.orm.getNativeClass());
@@ -338,7 +429,7 @@ public abstract class AnIncubatorImpl implements AnIncubator {
         anOrm.setDbSetAdapter(anObjRec.orm.getDbSetAdapter());
         anOrm.setDbGetAdapter(anObjRec.orm.getDbGetAdapter());
         for (AnAttrib attr: anObjRec.orm.getOwnAttribs()) {
-            AnAttrib anAttrib = new AnAttribImpl(); //, , attr.getJsonName());
+            AnAttrib anAttrib = new AnAttribImpl();
             anAttrib.setAttribName(attr.getAttribName());
             anAttrib.setColumnName(attr.getColumnName());
             anAttrib.setJsonName(attr.getJsonName());
@@ -355,21 +446,68 @@ public abstract class AnIncubatorImpl implements AnIncubator {
             AnOrm dependsOn = make(anObjRec.extendObject, records);
             anOrm.setParentAnObject(dependsOn);
         }
+        anOrm.setIncubator(this);
         return anOrm;
     }
 
+    /**
+     * Makes a new instance of anOrm manager for the classname
+     */
     @Override
-    public AnOrm make(String name) throws Exception {
-        return make(name, anSchema.entityRecordMap);
+    public AnOrm make(String className) throws Exception {
+        return make(className, anSchema.entityRecordMap);
     }
 
+    /**
+     * Makes a new instance of anOrm manager for the class
+     */
     @Override
     public <T> AnOrm<T> make(Class<T> cluss) throws Exception {
         return (AnOrm<T>) make(cluss.getName(), anSchema.entityRecordMap);
     }
 
     @Override
-    public abstract Class<?> getClassByName(String name);
+    public Class<?> getClassByName(String name) throws Exception {
+        return Class.forName(name);
+    }
 
+    private AnAssociateRecord getArAssociateRecord(Class cluss, AnAttrib attrib) throws Exception {
+        if(cluss == null || attrib == null) {
+            throw new Exception("Wrong parameters");
+        }
+        AnObjectRecord anObjRec = anSchema.entityRecordMap.get(cluss.getName());
+        if(anObjRec == null) {
+            throw new Exception("Undefined class: " + cluss.getName());
+        }
+        AnAssociateRecord ar = anObjRec.associationMap.get(attrib.getAttribName());
+        if(ar == null) {
+            throw new Exception("Undefined association for: " + attrib.getAttribName());
+        }
+        return ar;
+    }
+
+    @Override
+    public String getAssociationTrgClassName(Class cluss, AnAttrib attrib) throws Exception {
+        AnAssociateRecord ar = getArAssociateRecord(cluss, attrib);
+        return ar.objectName;
+    }
+
+    @Override
+    public String getAssociationTrgJoinAttribName(Class cluss, AnAttrib attrib) throws Exception {
+        AnAssociateRecord ar = getArAssociateRecord(cluss, attrib);
+        return ar.trgAttribName;
+    }
+
+    @Override
+    public String getAssociationSrcJoinAttribName(Class cluss, AnAttrib attrib) throws Exception {
+        AnAssociateRecord ar = getArAssociateRecord(cluss, attrib);
+        return ar.srcAttribName;
+    }
+
+    @Override
+    public String getAssociationSrcAttribName(Class cluss, AnAttrib attrib) throws Exception {
+        AnAssociateRecord ar = getArAssociateRecord(cluss, attrib);
+        return ar.assocName;
+    }
 
 }

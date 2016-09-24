@@ -23,6 +23,10 @@ public interface AnIncubator {
      */
     void load(String jsonString) throws Exception;
 
+    void unload();
+
+    boolean isLoaded();
+
     /**
      *
      * @param name
@@ -45,5 +49,13 @@ public interface AnIncubator {
      * @param name
      * @return
      */
-    Class<?> getClassByName(String name);
+    Class<?> getClassByName(String name) throws Exception;
+
+    String getAssociationTrgClassName(Class cluss, AnAttrib attrib) throws Exception ;
+
+    String getAssociationTrgJoinAttribName(Class cluss, AnAttrib attrib) throws Exception ;
+
+    String getAssociationSrcJoinAttribName(Class cluss, AnAttrib attrib) throws Exception ;
+
+    String getAssociationSrcAttribName(Class cluss, AnAttrib attrib) throws Exception ;
 }

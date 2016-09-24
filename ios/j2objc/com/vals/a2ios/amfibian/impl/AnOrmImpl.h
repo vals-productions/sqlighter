@@ -13,6 +13,7 @@
 @class IOSClass;
 @class IOSObjectArray;
 @class JavaLangLong;
+@protocol AnIncubator;
 @protocol AnObject;
 @protocol JavaUtilCollection;
 @protocol SQLighterDb;
@@ -40,6 +41,20 @@
 
 - (JavaLangLong *)apply;
 
+- (void)fetchWithJavaUtilCollection:(id<JavaUtilCollection>)entities
+                       withNSString:(NSString *)attribName;
+
+- (void)fetchWithJavaUtilCollection:(id<JavaUtilCollection>)entities
+                       withNSString:(NSString *)attribName
+                       withNSString:(NSString *)extraSql;
+
+- (void)fetchWithId:(id)entity
+       withNSString:(NSString *)attribName;
+
+- (void)fetchWithId:(id)entity
+       withNSString:(NSString *)attribName
+       withNSString:(NSString *)extraSql;
+
 - (id)getFirstResultOrNull;
 
 - (id<JavaUtilCollection>)getJSONObjectRecords;
@@ -53,6 +68,8 @@
 - (id)getSingleResult;
 
 - (id<SQLighterDb>)getSqlighterDb;
+
+- (void)setIncubatorWithAnIncubator:(id<AnIncubator>)incubator;
 
 - (void)setSqlighterDbWithSQLighterDb:(id<SQLighterDb>)sqlighterDb;
 

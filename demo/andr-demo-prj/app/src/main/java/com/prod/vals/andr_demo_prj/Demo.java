@@ -12,7 +12,9 @@ import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +30,8 @@ public class Demo extends DemoBase {
      * Demo sequence of Db operations with SQLighter.
      * @return - greeting string to be displayed at the screen
      */
-    public static void sqlighterOperations() {
+    public void sqlighterOperations() {
+//        test();
         String greetingStr = null;
         try {
             resetTestCounters();
@@ -318,12 +321,12 @@ public class Demo extends DemoBase {
      * AnObjectImpl / AnSqlImpl / AnOrmImpl demo
      * @return "Meet AmfiniaN greeting.
      */
-    public static void amfibianOperations() {
+    public void amfibianOperations() {
         try {
             /**
              *
              */
-            anIncubator.load(DemoBase.jsonStringWithObjectDefinitions);
+            anIncubator.load(jsonStringWithObjectDefinitions);
 
             resetTestCounters();
 
@@ -343,7 +346,7 @@ public class Demo extends DemoBase {
             /**
              * First, let's instantiate AmfibiaN object management entity
              */
-            AnOrm<Appointment> anOrm = getOrmAppointent(sqlighterDb);
+            AnOrm<Appointment> anOrm = getOrm(Appointment.class);
             /**
              * Get native object from json object, so that we could manipulate
              * it with ease.
@@ -430,6 +433,7 @@ public class Demo extends DemoBase {
              */
             anOrm.startSqlSelect();
             anOrm.addWhere("id = ?", 234);
+
             /**
              * Two lines above set the query to SELECT records from
              * appontment table where id  234.
@@ -439,57 +443,61 @@ public class Demo extends DemoBase {
              * columns, giving you a collection of objects ready to use.
              */
             Appointment meetAmfibianAppointment = anOrm.getSingleResult();
-            if (meetAmfibianAppointment != null) { // just making sure we've got the result
 
-                checkTest("attrib level adapter", meetAmfibianAppointment.getStatus() == 1);
-                checkTest("object level adapter", meetAmfibianAppointment.getIsProcessed() == 1);
+            checkTest("attrib level adapter", meetAmfibianAppointment.getStatus() == 1);
+            checkTest("object level adapter", meetAmfibianAppointment.getIsProcessed() == 1);
 
-                System.out.println(
+            System.out.println(
                     "Back to JSON string\nbecause we " +
-                    "might want to send it\nback to the " +
-                    "server like so: " + anOrm.asJsonString(meetAmfibianAppointment));
-                /**
-                 * return the value through JSONObject, just because
-                 * we can do it this way as well.
-                 */
-                JSONObject jsonObject = anOrm.asJSONObject(meetAmfibianAppointment);
-                String name = (String)jsonObject.get("name");
-                checkTest("native to JSON", name.equals("Meet AmfibiaN!"));
+                            "might want to send it\nback to the " +
+                            "server like so: " + anOrm.asJsonString(meetAmfibianAppointment));
+            /**
+             * return the value through JSONObject, just because
+             * we can do it this way as well.
+             */
+            JSONObject jsonObject = anOrm.asJSONObject(meetAmfibianAppointment);
+            String name = (String) jsonObject.get("name");
+            checkTest("native to JSON", name.equals("Meet AmfibiaN!"));
 
-                /**
-                 * AnUpdate demo/tests are in a separate method.
-                 * We'll pass our AnAppointment Amfibian object
-                 * in so that we can reuse it there and keep our
-                 * demo code smaller.
-                 */
-                anUpdateOperations(anOrm);
+            /**
+             * Association resolution tests
+             */
+            amfibianAssociationTests();
 
-                /**
-                 * Run extra tests
-                 */
-                extraAmfibianTests(anOrm);
+            /**
+             * Run extra tests
+             */
+            extraAmfibianTests(anOrm);
 
-                if(!testSummaryCheck()) {
-                    Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN DemoBase did not pass");
-                    Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, "One or more tests failed");
-                    return;
-                }
-                Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, name);
-                Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, "All tests passed.");
+            /**
+             * AnUpdate demo/tests are in a separate method.
+             * We'll pass our AnAppointment Amfibian object
+             * in so that we can reuse it there and keep our
+             * demo code smaller.
+             */
+            anUpdateOperations(anOrm);
+
+
+            if(!testSummaryCheck()) {
+                Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN DemoBase did not pass");
+                Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, "One or more tests failed");
                 return;
             }
+            Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, name);
+            Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, "All tests passed.");
+            return;
         } catch (Exception e) {
-            Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN DemoBase did not pass");
+            Bootstrap.getInstance().getMobilighter().setText(amfibianHelloLabel, "AmfibiaN Demo did not pass");
             Bootstrap.getInstance().getMobilighter().setText(amfibianDetailsLabel, e.getMessage());
-            return ;
+            return;
         }
     }
 
-    private static AnObject<Appointment> anAppointmentObject;
+    private AnObject<Appointment> anAppointmentObject;
     /**
      * Database upgrade strategy demonstration.
      */
-    public static void anUpdateOperations(final AnObject<Appointment> anAppointment) {
+    public void anUpdateOperations(final AnObject<Appointment> anAppointment) {
         try {
             anAppointmentObject = anAppointment;
             SQLighterDb db = Bootstrap.getInstance().getSqLighterDb();
@@ -665,18 +673,18 @@ public class Demo extends DemoBase {
         }
     }
 
-    public static void bindUi(
+    public void bindUi(
             Object title,
             Object sqlighterHelloLabel, Object sqlighterDetailsLabel, final Object sqlighterStartButton,
             Object amfibianHelloLabel, Object amfibianDetailsLabel, final Object amfibianStartButton,
             Object mobilighterCredit
     ) {
-        Demo.sqlighterHelloLabel = sqlighterHelloLabel;
-        Demo.sqlighterDetailsLabel = sqlighterDetailsLabel;
-        Demo.amfibianHelloLabel = amfibianHelloLabel;
-        Demo.amfibianDetailsLabel = amfibianDetailsLabel;
+        this.sqlighterHelloLabel = sqlighterHelloLabel;
+        this.sqlighterDetailsLabel = sqlighterDetailsLabel;
+        this.amfibianHelloLabel = amfibianHelloLabel;
+        this.amfibianDetailsLabel = amfibianDetailsLabel;
 
-        DemoBase.jsonStringWithObjectDefinitions = Bootstrap.getInstance().getMobilighter().readFile("an_objects.json");
+        this.jsonStringWithObjectDefinitions = Bootstrap.getInstance().getMobilighter().readFile("an_objects.json");
 
         final Mobilighter mobilighter = Bootstrap.getInstance().getMobilighter();
 
@@ -711,6 +719,130 @@ public class Demo extends DemoBase {
             }
         };
         mobilighter.addActionListener(amfibianStartButton, amfibianStartAction);
+    }
+
+    public void amfibianAssociationTests() throws Exception {
+        /**
+         * Lets create Usess table, insert a user
+         * and fetch all apointments with this user.
+         */
+        AnOrm<User> userOrm = getOrm(User.class);
+
+        userOrm.startSqlCreate();
+        userOrm.apply();
+
+        User user = new User();
+        user.setId(1);
+        user.setName("John Roberts");
+        User user2 = new User();
+        user2.setId(2);
+        user2.setName("Peter Pencil");
+
+        userOrm.startSqlInsert(user);
+        userOrm.apply();
+        userOrm.startSqlInsert(user2);
+        userOrm.apply();
+
+        AnOrm<Appointment> appOrm = getOrm(Appointment.class);
+
+        Appointment user2Appointment = new Appointment();
+        user2Appointment.setId(678);
+        user2Appointment.setName("Appointment #678");
+        user2Appointment.setIsProcessed(0);
+        user2Appointment.setCreateUserId(2);
+        appOrm.startSqlInsert(user2Appointment);
+        appOrm.apply();
+
+        appOrm.startSqlSelect();
+        appOrm.addSql(" order by id asc");
+        Collection<Appointment> appointments = appOrm.getRecords();
+
+        for (Appointment app: appointments) {
+            if (app.getCreateUserId() == null) {
+                app.setCreateUserId(user.getId());
+            }
+            appOrm.startSqlUpdate(app);
+            appOrm.addWhere("id = ?", app.getId());
+            appOrm.apply();
+        }
+
+        /**
+         * Now lets test association fetching.
+         */
+        appOrm.fetch(appointments, "createUser", "order by id asc");
+
+        Iterator<Appointment> i = appointments.iterator();
+        Appointment app234 = i.next();
+        Appointment app456 = i.next();
+        Appointment app678 = i.next();
+
+        checkTest("association 1 test",
+                app234.getId().equals(234) &&
+                        app456.getId().equals(456) &&
+                        app678.getId().equals(678) &&
+                        app234.getCreateUser().getId().equals(1) &&
+                        app456.getCreateUser().getId().equals(1) &&
+                        app678.getCreateUser().getId().equals(2)
+        );
+
+        userOrm.fetch(user, "appointments", "order by id desc");
+
+        i = user.getAppointments().iterator();
+        app456 = i.next();
+        app234 = i.next();
+
+        checkTest("association 1 test",
+                user.getAppointments().size() == 2 &&
+                        app234.getId().equals(234) &&
+                        app456.getId().equals(456));
+
+    }
+    public void extraAmfibianTests(AnOrm<Appointment> anOrm) throws Exception {
+        anOrm.addInclAttribs(new String[]{"id"});
+
+        anOrm.startSqlSelect();
+        String sql = anOrm.getQueryString();
+
+        checkTest("restricted select clause test 1",
+                sql.startsWith("select appointment0.id "));
+
+        anOrm.resetSkipInclAttrNameList();
+        anOrm.addSkipAttribs("id", "name", "createDate", "status", "createUserId", "createUser");
+        anOrm.startSqlSelect();
+        sql = anOrm.getQueryString();
+
+        checkTest("restricted select clause test 2",
+                sql.startsWith("select appointment0.is_processed "));
+
+        String jsonArrayStr = "[";
+        /* to json array */
+        int nElem = 2;
+        for (int i = 0; i < nElem; i++) {
+            Appointment a = new Appointment();
+            a.setId(i);
+            a.setName("Appointemnt " + i);
+            a.setIsProcessed(i);
+            anOrm.setNativeObject(a);
+            String jsonObjectString = anOrm.asJsonString(a);
+            jsonArrayStr += jsonObjectString;
+            if(i < nElem - 1) {
+                jsonArrayStr += ",";
+            }
+        }
+        jsonArrayStr += "]";
+
+        Collection<Appointment> appointments = anOrm.asList(jsonArrayStr);
+        checkTest("2 and back from JSON", appointments.size() == nElem);
+        int i = 0;
+        Iterator<Appointment> it = appointments.iterator();
+        while (it.hasNext()) {
+            Appointment a = it.next();
+            checkTest("json array check #1",
+                    a.getId().equals(i) &&
+                            a.getName().equals("Appointemnt " + i) &&
+                            a.getIsProcessed().equals(i));
+            i++;
+        }
     }
 
 }

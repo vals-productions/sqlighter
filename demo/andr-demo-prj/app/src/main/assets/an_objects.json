@@ -14,7 +14,15 @@
               [  /* "name" will be used as nativeObject attribute name, database column and json names */
                 {"attribName": "name", "dbColumnDefinition": "TEXT NOT NULL"},
                 /* explicitly setting distinct names for native object, db column and json */
-                {"attribName": "isProcessed", "columnName": "is_processed", "jsonName":"processed"} /*long notation for names*/
+                {"attribName": "isProcessed", "columnName": "is_processed", "jsonName":"processed"}, /*long notation for names*/
+                {"attribName": "createUser"}
+              ],
+              "associations":
+              [
+                { "name": "createUser",
+                  "srcAttribName":"createUserId",
+                  "trgAttribName":"id",
+                  "object":"com.prod.vals.andr_demo_prj.User"}
               ],
               "adapters": [ {"dbGet": "isProcessedGet"} ]
             },
@@ -32,7 +40,26 @@
                 {"attribName": "id"},
                 /* short notation for name specification - comma delimited
                   attribName, columnName, jsonName */
-                {"attribName": "createDate,create_date,createDate"}
+                {"attribName": "createDate,create_date,createDate"},
+                {"attribName": "createUserId"}
+              ]
+            },
+
+            {
+              "className":"com.prod.vals.andr_demo_prj.User",
+              "tableName": "appointment_user",
+              "extends":"com.prod.vals.andr_demo_prj.Entity",
+              "attributes" :
+              [
+                {"attribName":"name"},
+                {"attribName":"appointments"}
+              ],
+              "associations":
+              [
+                { "name": "appointments",
+                  "srcAttribName":"id",
+                  "trgAttribName":"createUserId",
+                  "object":"com.prod.vals.andr_demo_prj.Appointment"}
               ]
             }
           ],

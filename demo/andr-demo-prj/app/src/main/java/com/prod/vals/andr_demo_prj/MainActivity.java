@@ -75,7 +75,8 @@ public class MainActivity extends ActionBarActivity {
         /**
          * Everything else is Java -> J2ObjC -> Objective C
          */
-        Demo.bindUi(
+        Demo demo = new Demo();
+        demo.bindUi(
                 titleText,
                 mGreetSqlighterView, mSqlighterDetailsView, mStartSQLighterButton,
                 mGreetAmfibianView, mAmfibianDetailsView, mStartAmfibianButton,

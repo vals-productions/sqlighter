@@ -10,12 +10,15 @@
 #include "com/vals/a2ios/amfibian/intf/AnSql.h"
 
 @class JavaLangLong;
+@protocol AnIncubator;
 @protocol JavaUtilCollection;
 @protocol SQLighterDb;
 
 @protocol AnOrm < AnSql, NSObject, JavaObject >
 
 - (id<JavaUtilCollection>)getRecords;
+
+- (void)setIncubatorWithAnIncubator:(id<AnIncubator>)incubator;
 
 - (id<JavaUtilCollection>)getRecordsWithJavaUtilCollection:(id<JavaUtilCollection>)collectionToUse;
 
@@ -32,6 +35,20 @@
 - (void)setSqlighterDbWithSQLighterDb:(id<SQLighterDb>)sqlighterDb;
 
 - (id<SQLighterDb>)getSqlighterDb;
+
+- (void)fetchWithId:(id)entity
+       withNSString:(NSString *)attribName
+       withNSString:(NSString *)extraSql;
+
+- (void)fetchWithJavaUtilCollection:(id<JavaUtilCollection>)entities
+                       withNSString:(NSString *)attribName
+                       withNSString:(NSString *)extraSql;
+
+- (void)fetchWithId:(id)entity
+       withNSString:(NSString *)attribName;
+
+- (void)fetchWithJavaUtilCollection:(id<JavaUtilCollection>)entities
+                       withNSString:(NSString *)attribName;
 
 @end
 

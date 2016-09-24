@@ -4,43 +4,43 @@
 
 ```java
 /* This is Java */
-AnOrm<Announcement> anOrm = incubator.make(Announcement.class);
-String jsonAppointment234 =  "{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
-// get as native object
-Appointment appointment234 = anOrm.asNativeObject(jsonAppointment234);
-appointment234.setIsProcessed(1); // some native usage
-anOrm.startSqlInsert(appointment234);
-anOrm.apply(); // insert into SQLite database
-// DB retrieval
-anOrm.startSqlSelect(); 
-anOrm.addWhere("id = ?", 234);
-Appointment appointment234Processed = anOrm.getSingleResult();
-// And back to JSON
-JSONObject jsonObject = anOrm.asJSONObject(appointment234Processed);
+AnOrm<Customer> customerOrm = incubator.make(Customer.class);
+AnOrm<Appointment> apptOrm = incubator.make(Appointment.class);
+	// retrieve the Customer with id == 1;
+customerOrm.startSqlSelect(); 
+customerOrm.addWhere("id = ?", 1); 
+Customer customer = customerOrm.getSingleResult(); 
+
+/* many-to-one and one-to-many association fetching */
+
+	// lets retrieve customer.getAppointments() associaion
+customerOrm.fetch(customer, "appointments");
+	// let's retrieve appointment.getCreateUser() 
+apptOrm.fetch(customer.getAppointments(), "createUser");
+
+
 ```
 ``` objc
-/* This is Objective C (J2ObjC compatible)*/
+/* This Objective C */
 // ...
-NSString *jsonAppointment234 = @"{id: \"234\", name: \"Meet AmfibiaN!\", isProcessed: \"0\"}";
-Appointment *appointment234 = [anOrm asNativeObjectWithNSString:jsonAppointment234];
-[anOrm startSqlInsertWithId:appointment234];
-[anOrm apply];
-[anOrm startSqlSelect]; 
-[anOrm addWhereWithNSString:@"id = ?" withId:JavaLangInteger_valueOfWithInt_(234)];
-Appointment *appointment234Processed = [anOrm getSingleResult];
-OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId: appointment234Processed];
-
+// jsonAppointmentStringFromServer is:  {"id": "234", "name": "Appointment #234", "isProcessed": "0"}
+Appointment *appointmentFromServer = [apptOrm asNativeObjectWithNSString: jsonAppointmentStringFromServer];
+[apptOrm startSqlInsertWithId: appointmentFromServer];
+[apptOrm apply]; // inserted into mobile device's database
+...
 ```
 ### What is it?
 SQLighter is Object Oriented SQLite implementation for Android and iOS mobile platforms. 
 
-* Provides basic SQL capabilities and flexibilty (SQLighter)
-* ORM features, auto generate tables for your objects (AmfibiaN sub-project within this github repository)
+* Provides SQL capabilities and flexibilty (SQLighter) in similar to JDBC way
+* ORM features such as property mapping, association fetching,  auto generate tables for your objects etc. (AmfibiaN ORM sub-project within this github repository)
 * Database schema versioning management
 * JSON mappings
 * Portability of your implementation between Android and iOS platforms by being compliant with J2ObjC code translation standards.
 
-SQLighter is compatible with [J2ObjC](http://j2objc.org) technology.
+This repository contains two Demo projects [url] (one for each platforma=s - Android and iOS) with demonstration and tests.
+
+SQLighter is compatible with [J2ObjC](http://j2objc.org) technology and provides both Android and Objective C libraries.
 
 You should be able to code SQLite database related logics in java programming language for your Android application and translate/reuse your code for your iOS mobile application using [J2ObjC](http://j2objc.org) tool from Google. 
 
@@ -83,12 +83,12 @@ Sqlighter supports all SQLite datatypes and adds its own (optional) implementati
 
 # ORM
 
-[AmfibiaN](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md), part of this repository,
-is a "swiss army knife" toolkit that is integrated with SQLighter. 
+[AmfibiaN ORM](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md), part of this repository,
+is a "swiss army knife" toolkit that fully supports SQLighter. 
 
 AmfibiaN lets you transition your domain objects between their native state, JSON representation and SQL database persistent storage. This covers all your basic needs on object transformations in mobile application. AmfibiaN is J2ObjC compatible given your business objects carry reflection information through J2ObjC translation process.
 
-AmfibiaN's AnUpgrade privides DB schema versioning and upgrade management features.
+AmfibiaN's AnUpgrade class provides DB schema versioning and upgrade management features.
 
 ```
       AmfibiaN
@@ -101,19 +101,20 @@ AmfibiaN's AnUpgrade privides DB schema versioning and upgrade management featur
 
 For more information on AmfibiaN go  [here](https://github.com/vals-productions/sqlighter/blob/master/amfibian.md)
 
+Note, that AmfibiaN might migrate in its own github repository in the future.
+
 We will continue with SQLighter basic SQL features in this document.
 
 # Going by example
 
-The following sample Java code gives identical output after being converted into Objective-C using J2ObjC. Therefore, you can implement your database related logics in java language amd just convert/reuse it in iOS.
+The following sample Java code results in identical output after being converted into Objective-C using J2ObjC. Therefore, you can implement your database related logics in java language and just convert/reuse it in iOS.
 
 Note: for more up to date examples please check some demo code [Demo.java] 
-(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) which is part of the actual demo project code. 
+(https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) which is part of the actual demo project code for Android and iOS devices. 
 
 ### Pre requisites
 
-Let's create some sqlite database file using sqlite command line or one of the existing UI tools
-and create a table "user" in it.
+Let's create table "user" in sqlite database.
 
 ``` sql
 CREATE TABLE "user" (

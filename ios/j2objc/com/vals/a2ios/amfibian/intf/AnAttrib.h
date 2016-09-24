@@ -17,6 +17,8 @@
 
 - (void)setAnObjectWithAnObject:(id<AnObject>)anObject;
 
+- (id<AnObject>)getAnObject;
+
 - (NSString *)getAttribName;
 
 - (void)setAttribNameWithNSString:(NSString *)attribName;
@@ -31,7 +33,10 @@
 
 - (void)setValueWithId:(id)value;
 
-- (id)getValueWithAnAdapter:(id<AnAdapter>)converter;
+- (void)setValueWithId:(id)value
+         withAnAdapter:(id<AnAdapter>)adapter;
+
+- (id)getValueWithAnAdapter:(id<AnAdapter>)adapter;
 
 - (id)getValue;
 
@@ -45,19 +50,19 @@
 
 - (NSString *)getDbColumnDefinition;
 
-- (void)setJsonSetAdapterWithAnAdapter:(id<AnAdapter>)converter;
+- (void)setJsonSetAdapterWithAnAdapter:(id<AnAdapter>)adapter;
 
 - (id<AnAdapter>)getJsonSetAdapter;
 
-- (void)setJsonGetAdapterWithAnAdapter:(id<AnAdapter>)converter;
+- (void)setJsonGetAdapterWithAnAdapter:(id<AnAdapter>)adapter;
 
 - (id<AnAdapter>)getJsonGetAdapter;
 
-- (void)setDbSetAdapterWithAnAdapter:(id<AnAdapter>)converter;
+- (void)setDbSetAdapterWithAnAdapter:(id<AnAdapter>)adapter;
 
 - (id<AnAdapter>)getDbSetAdapter;
 
-- (void)setDbGetAdapterWithAnAdapter:(id<AnAdapter>)converter;
+- (void)setDbGetAdapterWithAnAdapter:(id<AnAdapter>)adapter;
 
 - (id<AnAdapter>)getDbGetAdapter;
 

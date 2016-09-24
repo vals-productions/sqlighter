@@ -10,6 +10,7 @@
 #include "com/prod/vals/andr_demo_prj/DemoBase.h"
 
 @protocol AnObject;
+@protocol AnOrm;
 
 @interface Demo : DemoBase
 
@@ -17,11 +18,13 @@
 
 - (instancetype)init;
 
-+ (void)amfibianOperations;
+- (void)amfibianAssociationTests;
 
-+ (void)anUpdateOperationsWithAnObject:(id<AnObject>)anAppointment;
+- (void)amfibianOperations;
 
-+ (void)bindUiWithId:(id)title
+- (void)anUpdateOperationsWithAnObject:(id<AnObject>)anAppointment;
+
+- (void)bindUiWithId:(id)title
               withId:(id)sqlighterHelloLabel
               withId:(id)sqlighterDetailsLabel
               withId:(id)sqlighterStartButton
@@ -30,19 +33,13 @@
               withId:(id)amfibianStartButton
               withId:(id)mobilighterCredit;
 
-+ (void)sqlighterOperations;
+- (void)extraAmfibianTestsWithAnOrm:(id<AnOrm>)anOrm;
+
+- (void)sqlighterOperations;
 
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(Demo)
-
-FOUNDATION_EXPORT void Demo_sqlighterOperations();
-
-FOUNDATION_EXPORT void Demo_amfibianOperations();
-
-FOUNDATION_EXPORT void Demo_anUpdateOperationsWithAnObject_(id<AnObject> anAppointment);
-
-FOUNDATION_EXPORT void Demo_bindUiWithId_withId_withId_withId_withId_withId_withId_withId_(id title, id sqlighterHelloLabel, id sqlighterDetailsLabel, id sqlighterStartButton, id amfibianHelloLabel, id amfibianDetailsLabel, id amfibianStartButton, id mobilighterCredit);
 
 FOUNDATION_EXPORT void Demo_init(Demo *self);
 

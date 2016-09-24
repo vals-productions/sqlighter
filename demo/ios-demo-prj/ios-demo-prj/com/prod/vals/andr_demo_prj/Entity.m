@@ -5,7 +5,9 @@
 
 #include "J2ObjC_source.h"
 #include "com/prod/vals/andr_demo_prj/Entity.h"
+#include "com/prod/vals/andr_demo_prj/User.h"
 #include "java/lang/Integer.h"
+#include "java/util/Collection.h"
 #include "java/util/Date.h"
 
 @implementation Entity
@@ -42,6 +44,30 @@
   self->type_ = type;
 }
 
+- (JavaLangInteger *)getCreateUserId {
+  return createUserId_;
+}
+
+- (void)setCreateUserIdWithJavaLangInteger:(JavaLangInteger *)createUserId {
+  self->createUserId_ = createUserId;
+}
+
+- (User *)getCreateUser {
+  return createUser_;
+}
+
+- (void)setCreateUserWithUser:(User *)createUser {
+  self->createUser_ = createUser;
+}
+
+- (id<JavaUtilCollection>)getAppointments {
+  return appointments_;
+}
+
+- (void)setAppointmentsWithJavaUtilCollection:(id<JavaUtilCollection>)appointments {
+  self->appointments_ = appointments;
+}
+
 J2OBJC_IGNORE_DESIGNATED_BEGIN
 - (instancetype)init {
   Entity_init(self);
@@ -59,6 +85,12 @@ J2OBJC_IGNORE_DESIGNATED_END
     { "setStatusWithJavaLangInteger:", "setStatus", "V", 0x1, NULL, NULL },
     { "getType", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
     { "setTypeWithJavaLangInteger:", "setType", "V", 0x1, NULL, NULL },
+    { "getCreateUserId", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
+    { "setCreateUserIdWithJavaLangInteger:", "setCreateUserId", "V", 0x1, NULL, NULL },
+    { "getCreateUser", NULL, "Lcom.prod.vals.andr_demo_prj.User;", 0x1, NULL, NULL },
+    { "setCreateUserWithUser:", "setCreateUser", "V", 0x1, NULL, NULL },
+    { "getAppointments", NULL, "Ljava.util.Collection;", 0x1, NULL, NULL },
+    { "setAppointmentsWithJavaUtilCollection:", "setAppointments", "V", 0x1, NULL, NULL },
     { "init", NULL, NULL, 0x1, NULL, NULL },
   };
   static const J2ObjcFieldInfo fields[] = {
@@ -66,8 +98,11 @@ J2OBJC_IGNORE_DESIGNATED_END
     { "createDate_", NULL, 0x1, "Ljava.util.Date;", NULL, NULL, .constantValue.asLong = 0 },
     { "status_", NULL, 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
     { "type_", NULL, 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
+    { "createUserId_", NULL, 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
+    { "createUser_", NULL, 0x1, "Lcom.prod.vals.andr_demo_prj.User;", NULL, NULL, .constantValue.asLong = 0 },
+    { "appointments_", NULL, 0x1, "Ljava.util.Collection;", NULL, "Ljava/util/Collection<Lcom/prod/vals/andr_demo_prj/Appointment;>;", .constantValue.asLong = 0 },
   };
-  static const J2ObjcClassInfo _Entity = { 2, "Entity", "com.prod.vals.andr_demo_prj", NULL, 0x1, 9, methods, 4, fields, 0, NULL, 0, NULL, NULL, NULL };
+  static const J2ObjcClassInfo _Entity = { 2, "Entity", "com.prod.vals.andr_demo_prj", NULL, 0x1, 15, methods, 7, fields, 0, NULL, 0, NULL, NULL, NULL };
   return &_Entity;
 }
 

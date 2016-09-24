@@ -78,32 +78,32 @@ J2OBJC_IGNORE_DESIGNATED_END
   self->dbColumnDefinition_ = dbColumnDefinition;
 }
 
-- (void)setJsonSetAdapterWithAnAdapter:(id<AnAdapter>)converter {
-  self->jsonSetAdapter_ = converter;
+- (void)setJsonSetAdapterWithAnAdapter:(id<AnAdapter>)adapter {
+  self->jsonSetAdapter_ = adapter;
 }
 
 - (id<AnAdapter>)getJsonSetAdapter {
   return jsonSetAdapter_;
 }
 
-- (void)setJsonGetAdapterWithAnAdapter:(id<AnAdapter>)converter {
-  self->jsonGetAdapter_ = converter;
+- (void)setJsonGetAdapterWithAnAdapter:(id<AnAdapter>)adapter {
+  self->jsonGetAdapter_ = adapter;
 }
 
 - (id<AnAdapter>)getJsonGetAdapter {
   return self->jsonGetAdapter_;
 }
 
-- (void)setDbSetAdapterWithAnAdapter:(id<AnAdapter>)converter {
-  self->dbSetAdapter_ = converter;
+- (void)setDbSetAdapterWithAnAdapter:(id<AnAdapter>)adapter {
+  self->dbSetAdapter_ = adapter;
 }
 
 - (id<AnAdapter>)getDbSetAdapter {
   return dbSetAdapter_;
 }
 
-- (void)setDbGetAdapterWithAnAdapter:(id<AnAdapter>)converter {
-  self->dbGetAdapter_ = converter;
+- (void)setDbGetAdapterWithAnAdapter:(id<AnAdapter>)adapter {
+  self->dbGetAdapter_ = adapter;
 }
 
 - (id<AnAdapter>)getDbGetAdapter {
@@ -112,6 +112,10 @@ J2OBJC_IGNORE_DESIGNATED_END
 
 - (void)setAnObjectWithAnObject:(id<AnObject>)anObject {
   self->parentAnObject_ = anObject;
+}
+
+- (id<AnObject>)getAnObject {
+  return self->parentAnObject_;
 }
 
 - (NSString *)getAttribName {
@@ -139,17 +143,27 @@ J2OBJC_IGNORE_DESIGNATED_END
   (void) [((JavaLangReflectMethod *) nil_chk(m)) invokeWithId:[((id<AnObject>) nil_chk(parentAnObject_)) getNativeObject] withNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ value } count:1 type:NSObject_class_()]];
 }
 
+- (void)setValueWithId:(id)value
+         withAnAdapter:(id<AnAdapter>)adapter {
+  if (adapter != nil) {
+    [self setValueWithId:[adapter convertWithAnAttrib:self withId:value]];
+  }
+  else {
+    [self setValueWithId:value];
+  }
+}
+
 - (id)getValue {
   return [self getValueWithAnAdapter:nil];
 }
 
-- (id)getValueWithAnAdapter:(id<AnAdapter>)converter {
+- (id)getValueWithAnAdapter:(id<AnAdapter>)adapter {
   id value = nil;
   JavaLangReflectMethod *m = [self getGetter];
   if (m != nil) {
     value = [m invokeWithId:[((id<AnObject>) nil_chk(parentAnObject_)) getNativeObject] withNSObjectArray:[IOSObjectArray newArrayWithLength:0 type:NSObject_class_()]];
-    if (converter != nil) {
-      value = [converter convertWithAnAttrib:self withId:value];
+    if (adapter != nil) {
+      value = [adapter convertWithAnAttrib:self withId:value];
       return value;
     }
   }

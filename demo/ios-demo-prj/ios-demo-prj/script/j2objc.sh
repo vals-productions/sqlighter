@@ -12,4 +12,4 @@
 
 # Used by convert.sh
 
- ../../../j2objc/j2objc -use-arc --strip-reflection --prefixes pckgs.sh -d $1 -sourcepath $2 $3
+ ../../../j2objc/j2objc -use-arc --strip-reflection --prefixes prefixes.properties -d $1 -sourcepath $2 $3

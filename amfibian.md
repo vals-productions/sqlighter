@@ -3,13 +3,15 @@
 # Table of content
 * [Overview] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#vverview)
 * [Going by example] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#going-by-example)
+* [Association fetching] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#association-fetching)
 * [Class diagram] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#class-diagram)
 * [Database versioning] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#database-versioning)
+* [JSON definitions] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#json-definitions)
 * [Install] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#install)
 
 ## Overview
 
-AmfibiaN is called after amphibians,- inhabitants that inhabit in a variety of habitats.
+AmfibiaN ORM is called after amphibians,- inhabitants that inhabit in a variety of habitats.
 
 Inhabitants of modern software systems have to be able to transition between their native
 state on different platforms, database persistent state and various text representations
@@ -17,7 +19,9 @@ such as JSON format. AmfibiaN is here to help with these scenarios.
 
 AmfibiaN is a lightweight java framework that stands between native objects, their JSON
 repesentations (to communicate with the server if necessary), and CRUD database operations
-with elements of ORM. 
+with elements of ORM. It supports association fetching. It is executing only one query per
+association (no N + 1). Association fetching also solves absence of outer join suport by
+SQLite.
 
 AmfibiaN's code is J2ObjC compatible. You would be able to execute your code in Android
 and iOS. You can use it in conjunction with SQLighter to implement local database storage
@@ -32,7 +36,7 @@ deployments.
 
 AmfibiaN objects are not thread safe, so instantiate an instance of what you need per thread.
 
-AmfibiaN does not introduce yet another query language. It generates SQLs and maps object properties to SQL statements. If you need to specify WHERE clause conditions, you do this in SQL.
+AmfibiaN does not introduce yet another query language. It generates SQLs and maps object properties to SQL statements. If you need to specify WHERE clause conditions or tweak queries, you do this in SQL.
 
 ## Going by example
 
@@ -66,33 +70,16 @@ We might've received the following JSON string representation of the Appointment
 
 
 ```json
-"{id: "234", name: "Meet AmfibiaN!", isProcessed: "0"}"
+"{"id": "234", "name": "Meet AmfibiaN!", "isProcessed": "0"}"
 ```
 
 Let's assume our goal is to convert this appointment definition JSON string into a native Appointment business object, do some operations with the object, save it in the database and  send transformed business object back to the server as JSON string.
 
 First, let's tell AmfibiaN about our business entities and their properties we would like to manage. We do not have to manage all of them, just those we care of. Essentially, this is our opportunity to map our native properties to their JSON and database column properties. If you are lucky to control their names, it could be just simply one name for all, but if you are dealing with some legacy system and names do not match, then you have flexibility to deal with such situation.
 
-Below is programmatic way to define entities, but loading definitions through JSON file is also supported. JSON way helps you to keep your code cleaner and delegate entity instantiation to AnIncubator class. Demo project contains JSON file/AnIncubator example.
+JSON file with definitions is a preferred way of providing definitions. Here's demo project's defintion file with
+extensive comments: 
 
-```java
-AnObject<Entity> anEntity = 
-	new AnObject( Entity.class, new String[]{"id"});
-   
-AnOrm<Appointment> anOrm = new AnOrm<>(
-	/* reference sqlighter database management object */
-	sqlighterDb,
-	/*database table name*/
-	"appointment",
-	/*provide the class info for java reflection*/
-    Appointment.class, 
-	/* Provide column mappings, here isProcessed 
-	attribute is mapped to  "is_processed" database
-	column in "amfibian" database table, while the
-	"name" is named identically everywhere */
-    new String[]{"name", "isProcessed,is_processed"},
-    anEntity);
-```
 After we've done with mappings, we can get native object from json string so that we could manipulate it in native way:
 
 ```java
@@ -113,7 +100,8 @@ statements above will execute the following SQL:
 create table appointment(
   name TEXT,
   id INTEGER,
-  is_processed INTEGER )
+  ....
+
 ```
 
 Note how database column names relate to object attributes.
@@ -154,8 +142,88 @@ if (list.size() == 1) { // just making sure we've got the result
 
 jsonString above is ready to be sent back to the server.
 
-## Class diagram
+### Association fetching
 
+In order to be able to deal with association fetching you should define each assiciation in JSON definition file.
+
+Here's one example:
+
+``` java 
+public class User {
+    private Long userId;
+    private Collection<Appointment> appointments;
+...
+
+public class Appointment {
+    private Long createUserId;
+    private User createUser;
+...
+```
+
+We would like to be able to fetch user.getAppointments() (appointments created by the user) and appointment.getCreateUser().
+
+```
+    /* json file fragment */
+    
+    /* Appointment */
+        ...
+        { "attribName":"createUserId"},
+        { "attribName":"createUser,null,createUser", /* null means we don't need matching db table column for createUser. 
+                                                        createUserId serves this purpose */
+       ...
+            "associations": [
+                {
+                    "name": "createUser", /* association name */
+                    "srcAttribName": "createUserId", /* createUserId is matching column at the (source) Appointment object */
+                    "trgAttribName": "id", /* User.id is matching column at the (target) User object */
+                    "object": "package.name.User" /* full class name of the associated User object */
+                }
+            }
+        }
+        ...
+    
+    /* User */
+        ...
+        { "attribName": "id",
+          "attribName": "appointments,null,appointments", /* null means we do not need a matching db table column for appointments. */
+          ...
+            "associations": [
+                {
+                     "name": "appointments", /* association name */
+                     "srcAttribName": "id", /* id is matching column at the (source) User object */
+                     "trgAttribName": "createUserId", /* Appointment.createUserId is matching column at the (target) Appointment object */
+                     "object":"package.name.Appointment" /* full class name of the associated Appointment object */
+                }
+            ]
+        }
+```
+So as you see in addition to createUser object (which is not mapped to the database) we also need to keep createUserId - the actual
+database column name that identifies the create User in the Appointment object.
+
+After this we'll be able to fetch associations just like that:
+
+``` java
+userOrm.fetch(user, "appointments", "and isProcessed = 0");
+```
+
+The call above will select all user appointments that are not processed yet in a single query, and assign to supplied user object.
+
+Or it could be done the following way. The next call will select all appointments for users in userList collection in a single query
+and assign to respective user.appointments collections if found. As you can see this is also working like outer join substitute
+as SQLite does not support one.
+
+``` java
+userOrm.fetch(userList, "appointments", "and isProcessed = 1");
+```
+
+and this is also working:
+
+``` java
+appointmentOrm.fetch(appointmentList, "createUser");
+appointmentOrm.fetch(appointment, "createUser");
+```
+
+## Class diagram
 
 ```
    AmfibiaN
@@ -165,8 +233,8 @@ AnObject o---- AnAttrib
  |
 AnSql          AnUpgrade
  ^             AnAdaptor
- |             AnIncubator
-AnOrm          
+ |             
+AnOrm    ----  AnIncubator
 
 ```
 
@@ -260,8 +328,16 @@ Check out [Demo.java]
 (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java) 
 for AnUpgrade in action steps.
 
+## JSON definitions
+
+For now the sample Demo project json file: [url] serves as documentation. The file contains extensive comments
+and I hope its content is easy to understand.
+
+### Associations
+
+Association JSON section is explained here:
+[Association fetching] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#association-fetching)
+
 ## Installation
 
-AmfibiaN is part of SQLighter repository. Follow SQLighter installation instructions.
-
-<b>AmfibiaN is a part of library based distribution since v 2.0.0. </b>
+AmfibiaN ORM is part of SQLighter repository. Follow SQLighter installation instructions.

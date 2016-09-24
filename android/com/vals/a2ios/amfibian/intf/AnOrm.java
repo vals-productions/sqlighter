@@ -27,6 +27,8 @@ public interface AnOrm<T> extends AnSql<T> {
      */
     Collection<T> getRecords() throws Exception;
 
+    void setIncubator(AnIncubator incubator);
+
     /**
      * Executes SQL select query and returns results placed
      * in provided collection.
@@ -80,14 +82,26 @@ public interface AnOrm<T> extends AnSql<T> {
     Long apply() throws Exception;
 
     /**
-     *
+     * Assign db engine
      * @param sqlighterDb
      */
     void setSqlighterDb(SQLighterDb sqlighterDb);
 
     /**
      *
-     * @return
+     * @return assigned DB engine
      */
     SQLighterDb getSqlighterDb();
+
+    /**
+     * Will select associations of entit(y/ies) by attribName, and
+     * assign associations to respective entit(y/ies). Extra Sql will
+     * be optionally appended to association retrieval query. It might
+     * contain filter or order by condition.
+     */
+    void fetch(T entity, String attribName, String extraSql) throws Exception;
+    void fetch(Collection<T> entities, String attribName, String extraSql) throws Exception;
+    void fetch(T entity, String attribName) throws Exception;
+    void fetch(Collection<T> entities, String attribName) throws Exception;
+
 }

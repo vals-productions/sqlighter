@@ -24,6 +24,12 @@ public interface AnAttrib {
     void setAnObject(AnObject<?> anObject);
 
     /**
+     *
+     * @return
+     */
+    AnObject<?> getAnObject();
+
+    /**
      * 
      * @return attribute name
      */
@@ -62,11 +68,16 @@ public interface AnAttrib {
     /**
     * Sets native object's attribute value
     *
-    * @param value - value to set. Sometimes it may not directly match
-    * destination value type. For this case there will be an attempt to
-    * auto match the value, or, custom converter might be supplied
     */
     void setValue(Object value) throws Exception;
+
+    /**
+     *
+     * @param value
+     * @param adapter
+     * @throws Exception
+     */
+    void setValue(Object value, AnAdapter adapter) throws Exception;
 
     /**
      * Retrieves attribute value fron associated native object using
@@ -74,7 +85,7 @@ public interface AnAttrib {
      * @return attribute value
      * @throws Exception in case value extraction experiences issues
      */
-    Object getValue(AnAdapter converter) throws Exception;
+    Object getValue(AnAdapter adapter) throws Exception;
 
     /**
      * Retrieves attribute value fron associated native object.
@@ -124,9 +135,9 @@ public interface AnAttrib {
      * "Set" is for setting the value of the attribute
      * from external source. It is JSON for now.
      *
-     * @param converter
+     * @param adapter
      */
-    void setJsonSetAdapter(AnAdapter converter);
+    void setJsonSetAdapter(AnAdapter adapter);
 
     /**
      *
@@ -137,9 +148,9 @@ public interface AnAttrib {
     /**
      * "Get" is for getting the value of the attribute
      * for passing to external source.
-     * @param converter
+     * @param adapter
      */
-    void setJsonGetAdapter(AnAdapter converter);
+    void setJsonGetAdapter(AnAdapter adapter);
 
     /**
      *
@@ -151,9 +162,9 @@ public interface AnAttrib {
      * "Set" is for setting the value of the attribute
      * from external source. It is JSON for now.
      *
-     * @param converter
+     * @param adapter
      */
-    void setDbSetAdapter(AnAdapter converter);
+    void setDbSetAdapter(AnAdapter adapter);
 
     /**
      *
@@ -164,9 +175,9 @@ public interface AnAttrib {
     /**
      * "Get" is for getting the value of the attribute
      * for passing to external source.
-     * @param converter
+     * @param adapter
      */
-    void setDbGetAdapter(AnAdapter converter);
+    void setDbGetAdapter(AnAdapter adapter);
 
     /**
      *

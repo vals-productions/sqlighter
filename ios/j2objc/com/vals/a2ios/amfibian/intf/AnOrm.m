@@ -5,6 +5,7 @@
 
 #include "IOSClass.h"
 #include "J2ObjC_source.h"
+#include "com/vals/a2ios/amfibian/intf/AnIncubator.h"
 #include "com/vals/a2ios/amfibian/intf/AnOrm.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #include "java/lang/Exception.h"

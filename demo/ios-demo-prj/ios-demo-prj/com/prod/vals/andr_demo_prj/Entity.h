@@ -10,6 +10,8 @@
 
 @class JavaLangInteger;
 @class JavaUtilDate;
+@class User;
+@protocol JavaUtilCollection;
 
 @interface Entity : NSObject {
  @public
@@ -17,13 +19,22 @@
   JavaUtilDate *createDate_;
   JavaLangInteger *status_;
   JavaLangInteger *type_;
+  JavaLangInteger *createUserId_;
+  User *createUser_;
+  id<JavaUtilCollection> appointments_;
 }
 
 #pragma mark Public
 
 - (instancetype)init;
 
+- (id<JavaUtilCollection>)getAppointments;
+
 - (JavaUtilDate *)getCreateDate;
+
+- (User *)getCreateUser;
+
+- (JavaLangInteger *)getCreateUserId;
 
 - (JavaLangInteger *)getId;
 
@@ -31,7 +42,13 @@
 
 - (JavaLangInteger *)getType;
 
+- (void)setAppointmentsWithJavaUtilCollection:(id<JavaUtilCollection>)appointments;
+
 - (void)setCreateDateWithJavaUtilDate:(JavaUtilDate *)createDate;
+
+- (void)setCreateUserWithUser:(User *)createUser;
+
+- (void)setCreateUserIdWithJavaLangInteger:(JavaLangInteger *)createUserId;
 
 - (void)setIdWithJavaLangInteger:(JavaLangInteger *)id_;
 
@@ -47,6 +64,9 @@ J2OBJC_FIELD_SETTER(Entity, id__, JavaLangInteger *)
 J2OBJC_FIELD_SETTER(Entity, createDate_, JavaUtilDate *)
 J2OBJC_FIELD_SETTER(Entity, status_, JavaLangInteger *)
 J2OBJC_FIELD_SETTER(Entity, type_, JavaLangInteger *)
+J2OBJC_FIELD_SETTER(Entity, createUserId_, JavaLangInteger *)
+J2OBJC_FIELD_SETTER(Entity, createUser_, User *)
+J2OBJC_FIELD_SETTER(Entity, appointments_, id<JavaUtilCollection>)
 
 FOUNDATION_EXPORT void Entity_init(Entity *self);
 

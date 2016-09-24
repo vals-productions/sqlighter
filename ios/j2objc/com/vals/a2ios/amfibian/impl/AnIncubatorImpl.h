@@ -10,6 +10,7 @@
 #include "com/vals/a2ios/amfibian/intf/AnIncubator.h"
 
 @class IOSClass;
+@protocol AnAttrib;
 @protocol AnOrm;
 
 @interface AnIncubatorImpl : NSObject < AnIncubator >
@@ -18,13 +19,29 @@
 
 - (instancetype)init;
 
+- (NSString *)getAssociationSrcAttribNameWithIOSClass:(IOSClass *)cluss
+                                         withAnAttrib:(id<AnAttrib>)attrib;
+
+- (NSString *)getAssociationSrcJoinAttribNameWithIOSClass:(IOSClass *)cluss
+                                             withAnAttrib:(id<AnAttrib>)attrib;
+
+- (NSString *)getAssociationTrgClassNameWithIOSClass:(IOSClass *)cluss
+                                        withAnAttrib:(id<AnAttrib>)attrib;
+
+- (NSString *)getAssociationTrgJoinAttribNameWithIOSClass:(IOSClass *)cluss
+                                             withAnAttrib:(id<AnAttrib>)attrib;
+
 - (IOSClass *)getClassByNameWithNSString:(NSString *)name;
+
+- (jboolean)isLoaded;
 
 - (void)load__WithNSString:(NSString *)jsonString;
 
 - (id<AnOrm>)makeWithIOSClass:(IOSClass *)cluss;
 
-- (id<AnOrm>)makeWithNSString:(NSString *)name;
+- (id<AnOrm>)makeWithNSString:(NSString *)className_;
+
+- (void)unload;
 
 @end
 
@@ -39,7 +56,24 @@ J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, ADAPTER_MAP_, NSString *)
 FOUNDATION_EXPORT NSString *AnIncubatorImpl_CLASS_;
 J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, CLASS_, NSString *)
 
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_ASSOCIATIONS_;
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, ASSOCIATIONS_, NSString *)
+
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_ASSOCIATE_;
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, ASSOCIATE_, NSString *)
+
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_OBJECT_;
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, OBJECT_, NSString *)
+
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_SRC_;
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, SRC_, NSString *)
+
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_DST_;
+J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, DST_, NSString *)
+
 FOUNDATION_EXPORT void AnIncubatorImpl_init(AnIncubatorImpl *self);
+
+FOUNDATION_EXPORT AnIncubatorImpl *new_AnIncubatorImpl_init() NS_RETURNS_RETAINED;
 
 J2OBJC_TYPE_LITERAL_HEADER(AnIncubatorImpl)
 

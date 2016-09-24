@@ -172,14 +172,13 @@ public class AnObjectImpl<T> implements AnObject<T> {
             attribs[i++] = map.get(key);
         }
         return attribs;
-
     }
 
     @Override
-    public AnAttrib getAttrib(String propertyName) {
-        AnAttrib a = attribMap.get(propertyName);
+    public AnAttrib getAttrib(String attribName) {
+        AnAttrib a = attribMap.get(attribName);
         if (a == null && parentAnObject != null) {
-            a = parentAnObject.getAttrib(propertyName);
+            a = parentAnObject.getAttrib(attribName);
         }
         return a;
     }
@@ -195,12 +194,12 @@ public class AnObjectImpl<T> implements AnObject<T> {
         }
     }
 
-    private AnAttrib[] stringsToAttribs(String[] propertyNames) {
+    private AnAttrib[] stringsToAttribs(String[] attribNames) {
         AnAttrib[] list = null;
-        if (propertyNames != null) {
-                list = new AnAttrib[propertyNames.length];
+        if (attribNames != null) {
+                list = new AnAttrib[attribNames.length];
                 int idx = 0;
-                for (String propertyName: propertyNames) {
+                for (String propertyName: attribNames) {
                         AnAttrib a = new AnAttribImpl(propertyName);
                         list[idx++] = a;
                 }
@@ -208,8 +207,8 @@ public class AnObjectImpl<T> implements AnObject<T> {
         return list;
     }
     
-    private void initAttribs(AnAttrib[] attribMappers)  {
-        for (AnAttrib pm: attribMappers) {
+    private void initAttribs(AnAttrib[] attribs)  {
+        for (AnAttrib pm: attribs) {
             addAttrib(pm);
         }
     }
@@ -220,9 +219,9 @@ public class AnObjectImpl<T> implements AnObject<T> {
     }
 
     @Override
-    public void addAttrib(AnAttrib anAttribMapper) {
-        anAttribMapper.setAnObject(this);
-        attribMap.put(anAttribMapper.getAttribName(), anAttribMapper);
+    public void addAttrib(AnAttrib anAttrib) {
+        anAttrib.setAnObject(this);
+        attribMap.put(anAttrib.getAttribName(), anAttrib);
     }
 
     @Override
@@ -461,6 +460,10 @@ public class AnObjectImpl<T> implements AnObject<T> {
             }
             Class<?> objClass = value.getClass();
             Method m = attrib.getSetter();
+            if(m == null) {
+                onWarning(objClass, attrib.getAttribName(), value);
+                return null;
+            }
             String attribName = attrib.getAttribName();
             Class<?>[] paramTypes = m.getParameterTypes();
             Class<?> p = paramTypes[0];

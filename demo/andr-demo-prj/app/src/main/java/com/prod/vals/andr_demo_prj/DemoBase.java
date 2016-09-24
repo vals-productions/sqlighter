@@ -1,7 +1,6 @@
 package com.prod.vals.andr_demo_prj;
 
 import com.vals.a2ios.amfibian.impl.AnIncubatorImpl;
-import com.vals.a2ios.amfibian.impl.AnOrmImpl;
 import com.vals.a2ios.amfibian.intf.AnIncubator;
 import com.vals.a2ios.amfibian.intf.AnOrm;
 import com.vals.a2ios.mobilighter.intf.MobilAction;
@@ -24,56 +23,56 @@ public abstract class DemoBase {
     /**
      * Test tracking variables
      */
-    private static int passedTestCount = 0;
-    private static List<String> testList = new LinkedList<>();
+    private int passedTestCount = 0;
+    private List<String> testList = new LinkedList<>();
 
-    protected static Object sqlighterHelloLabel, sqlighterDetailsLabel;
-    protected static Object amfibianHelloLabel, amfibianDetailsLabel;
-    protected static MobilAction sqlighterStartAction, amfibianStartAction;
+    protected Object sqlighterHelloLabel, sqlighterDetailsLabel;
+    protected Object amfibianHelloLabel, amfibianDetailsLabel;
+    protected MobilAction sqlighterStartAction, amfibianStartAction;
 
-    protected static void resetTestCounters() {
+    protected void resetTestCounters() {
         testList.clear();
         passedTestCount = 0;
     }
-    protected static void checkTest(String name, boolean isPassed) {
+    protected void checkTest(String name, boolean isPassed) {
         testList.add(name);
         if(isPassed) {
             passedTestCount++;
         }
     }
 
-    protected static void startTest(String name) {
+    protected void startTest(String name) {
         testList.add(name);
     }
 
-    protected static void finishTest(boolean isPassed) {
+    protected void finishTest(boolean isPassed) {
         if(isPassed) {
             passedTestCount++;
         }
     }
 
-    protected static void makeTestsFail() {
+    protected void makeTestsFail() {
         passedTestCount = 0;
     }
 
-    protected static boolean testSummaryCheck() {
+    protected boolean testSummaryCheck() {
         return testList.size() == passedTestCount;
     }
 
 
-    protected static void printAppointments(AnOrm<Appointment> anOrm) throws Exception {
+    protected void printAppointments(AnOrm<Appointment> anOrm) throws Exception {
         System.out.println("Appointment records");
         anOrm.startSqlSelect();
         print(anOrm.getRecords());
     }
 
-    protected static void print(Collection<Appointment> appointments) {
+    protected void print(Collection<Appointment> appointments) {
         for (Appointment a: appointments) {
             print(a);
         }
     }
 
-    protected static void print(Appointment appointment) {
+    protected void print(Appointment appointment) {
         System.out.println(
                 "Appointment object. id: " + appointment.getId() +
                         ", name: " + appointment.getName() +
@@ -87,7 +86,7 @@ public abstract class DemoBase {
      *
      * @param rs - SQLighterRs reference
      */
-    protected static void print(SQLighterRs rs) {
+    protected void print(SQLighterRs rs) {
         Long pk = rs.getLong(0);
         String e = rs.getString(1);
         String n = rs.getString(2);
@@ -107,7 +106,7 @@ public abstract class DemoBase {
      * @param db - SQLighterDb reference
      * @throws Exception
      */
-    protected static void printUserTable(String title, SQLighterDb db) throws Exception {
+    protected void printUserTable(String title, SQLighterDb db) throws Exception {
         System.out.println(title);
         SQLighterRs rs = db.executeSelect("select id, email, name, data, height from user");
         while (rs.hasNext()) {
@@ -127,7 +126,7 @@ public abstract class DemoBase {
      * @param id
      * @return
      */
-    protected static boolean verifyRecord(SQLighterRs rs, String userName, String userEmail,
+    protected boolean verifyRecord(SQLighterRs rs, String userName, String userEmail,
                                           Double userHeight, String blobString, Long id) {
         Long pk = rs.getLong(0);
         String e = rs.getString(1);
@@ -147,153 +146,13 @@ public abstract class DemoBase {
                 h.doubleValue() == userHeight.doubleValue());
     }
 
-    protected static void extraAmfibianTests(AnOrm<Appointment> anOrm) throws Exception {
-        anOrm.addInclAttribs(new String[]{"id"});
+    protected String jsonStringWithObjectDefinitions;
 
-        anOrm.startSqlSelect();
-        String sql = anOrm.getQueryString();
+    protected AnIncubator anIncubator = new AnIncubatorImpl();
 
-        checkTest("restricted select clause test 1",
-                sql.startsWith("select appointment0.id "));
-
-        anOrm.resetSkipInclAttrNameList();
-        anOrm.addSkipAttribs("id", "name", "createDate", "status");
-        anOrm.startSqlSelect();
-        sql = anOrm.getQueryString();
-
-        checkTest("restricted select clause test 2",
-                sql.startsWith("select appointment0.is_processed "));
-
-        String jsonArrayStr = "[";
-        /* to json array */
-        int nElem = 2;
-        for (int i = 0; i < nElem; i++) {
-            Appointment a = new Appointment();
-            a.setId(i);
-            a.setName("Appointemnt " + i);
-            a.setIsProcessed(i);
-            anOrm.setNativeObject(a);
-            String jsonObjectString = anOrm.asJsonString(a);
-            jsonArrayStr += jsonObjectString;
-            if(i < nElem - 1) {
-                jsonArrayStr += ",";
-            }
-        }
-        jsonArrayStr += "]";
-
-        Collection<Appointment> appointments = anOrm.asList(jsonArrayStr);
-        checkTest("2 and back from JSON", appointments.size() == nElem);
-        int i = 0;
-        Iterator<Appointment> it = appointments.iterator();
-        while (it.hasNext()) {
-            Appointment a = it.next();
-            checkTest("json array check #1",
-                    a.getId().equals(i) &&
-                            a.getName().equals("Appointemnt " + i) &&
-                            a.getIsProcessed().equals(i));
-            i++;
-        }
-    }
-
-    protected static String jsonStringWithObjectDefinitions;
-
-    protected static boolean isUseJsonFile = true;
-
-    protected static AnIncubator anIncubator = new AnIncubatorImpl() {
-        /**
-         This method should just do the following you'd think:
-
-         return Class.forName(name);
-
-         and you are right. iOS implementation for this method
-         has some strings attached though, that require some iOS
-         project settings tweaking.
-
-         You can read it here: http://j2objc.org/docs/Package-Prefixes.html
-
-         Quote:
-
-         Prefixed Classes at Runtime
-
-         Since the finished app has classes with prefixes, they cannot be
-         located using the original Java class name by default. However,
-         if the app has a file named prefixes.properties in its resource
-         bundle with the prefixes used for translation, Class.forName(javaName)
-         will find the mapped class.
-
-         To add the above prefixes.properties to an iOS app in Xcode, open the
-         build target's Build Phases tab, expand its Copy Bundle Resources section,
-         and add the prefixes.properties file to that list. [[Java Resources]] has
-         further information on how Java resource concepts map to iOS resources.
-
-         End Quote.
-
-         Sqlighter demo has the file mentioned in j2objc documentation
-         and I will try to feed it into xCode when time allows. Until
-         that or, if for whatever reason you do not have the file or do
-         not want to deal with it, the following implementation doesn't
-         require much brain and space, but several extra minutes of
-         attention.
-         */
-        @Override
-        public Class<?> getClassByName(String name) {
-            if (name.equals(Entity.class.getName())) return Entity.class;
-            if (name.equals(Appointment.class.getName())) return Appointment.class;
-            if (name.equals(DemoDefaultGetAdapter.class.getName())) return DemoDefaultGetAdapter.class;
-            if (name.equals(DemoDefaultSetAdapter.class.getName())) return DemoDefaultSetAdapter.class;
-            if (name.equals(DemoIntGetAdapter.class.getName())) return DemoIntGetAdapter.class;
-            if (name.equals(DemoIntSetAdapter.class.getName())) return DemoIntSetAdapter.class;
-            if (name.equals(DemoAppointmentGetAdapter.class.getName())) return DemoAppointmentGetAdapter.class;
-            return null;
-        }
-    };
-
-    /**
-     * The Entity class is a base class for our imaginable project's business objects.
-     * It makes sure all our business objects have the id property.
-     */
-    public static AnOrm<Entity> getOrmEntity() throws Exception {
-        if(!isUseJsonFile) {
-            return new AnOrmImpl(
-                    null,
-                    "",
-                    Entity.class,
-                    /* attribute names/definitions */
-                    new String[]{"id"},
-                    null);
-        } else {
-            return anIncubator.make(Entity.class);
-        }
-    }
-
-    /**
-     * An Appointment object extends the Entity and has appointment name property as
-     * well as isProcessed property that is represented by is_processed database
-     * column. Each attribute may contain a comma delimited mapping names.
-     * <pre>
-     *     <li>native object mapping (required)</li>
-     *     <li>db column mapping (optional)</li>
-     *     <li>JSON object mapping (optional)</li>
-     * </pre>
-     */
-    public static AnOrm<Appointment> getOrmAppointent(SQLighterDb sqLighterDb) throws Exception {
-        if(!isUseJsonFile) {
-            AnOrm<Appointment> anOrm = new AnOrmImpl<Appointment>(
-                    sqLighterDb, // reference to sqlighter database management object
-                    "appointment", // table name
-                    Appointment.class, // will
-                    /* attribute names/definitions */
-                    new String[]{"name", "isProcessed,is_processed,processed"},
-                    getOrmEntity());
-             /*
-             * Lets customize the name with NOT NULL constraint
-             */
-            anOrm.getAttrib("name").setDbColumnDefinition("TEXT NOT NULL");
-            return anOrm;
-        } else {
-            AnOrm<Appointment> anOrm = anIncubator.make(Appointment.class);
-            anOrm.setSqlighterDb(sqLighterDb);
-            return anOrm;
-        }
+    public <T> AnOrm<T> getOrm(Class<T> cluss) throws Exception {
+        AnOrm<T> anOrm = anIncubator.make(cluss);
+        anOrm.setSqlighterDb(Bootstrap.getInstance().getSqLighterDb());
+        return anOrm;
     }
 }

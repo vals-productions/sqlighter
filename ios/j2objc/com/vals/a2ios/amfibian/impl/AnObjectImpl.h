@@ -45,7 +45,7 @@
                withNSStringArray:(IOSObjectArray *)propertyNames
                     withAnObject:(id<AnObject>)parentAnObject;
 
-- (void)addAttribWithAnAttrib:(id<AnAttrib>)anAttribMapper;
+- (void)addAttribWithAnAttrib:(id<AnAttrib>)anAttrib;
 
 - (OrgJsonJSONArray *)asJSONArrayWithJavaUtilCollection:(id<JavaUtilCollection>)objects;
 
@@ -69,7 +69,7 @@
 
 - (IOSObjectArray *)getAllAttribs;
 
-- (id<AnAttrib>)getAttribWithNSString:(NSString *)propertyName;
+- (id<AnAttrib>)getAttribWithNSString:(NSString *)attribName;
 
 - (id<AnAdapter>)getJsonGetAdapter;
 

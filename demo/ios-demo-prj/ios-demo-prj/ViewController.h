@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class Demo;
+
 @interface ViewController : UIViewController {
     IBOutlet UILabel *titleText,
         *mGreetSqlighterView, *mSqlighterDetailsView,
@@ -15,6 +17,8 @@
         *mMobilighterCreditTextView;
     IBOutlet UIButton *mStartSQLighterButton, *mStartAmfibianButton;
 }
+
+@property (strong, nonatomic) Demo *demo;
 
 @end
 

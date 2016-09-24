@@ -90,32 +90,32 @@ public class AnAttribImpl implements AnAttrib {
         this.dbColumnDefinition = dbColumnDefinition;
     }
 
-    public void setJsonSetAdapter(AnAdapter converter) {
-        this.jsonSetAdapter = converter;
+    public void setJsonSetAdapter(AnAdapter adapter) {
+        this.jsonSetAdapter = adapter;
     }
 
     public AnAdapter getJsonSetAdapter() {
         return jsonSetAdapter;
     }
 
-    public void setJsonGetAdapter(AnAdapter converter) {
-        this.jsonGetAdapter = converter;
+    public void setJsonGetAdapter(AnAdapter adapter) {
+        this.jsonGetAdapter = adapter;
     }
 
     public AnAdapter getJsonGetAdapter() {
         return this.jsonGetAdapter;
     }
 
-    public void setDbSetAdapter(AnAdapter converter) {
-        this.dbSetAdapter = converter;
+    public void setDbSetAdapter(AnAdapter adapter) {
+        this.dbSetAdapter = adapter;
     }
 
     public AnAdapter getDbSetAdapter() {
         return dbSetAdapter;
     }
 
-    public void setDbGetAdapter(AnAdapter converter) {
-        this.dbGetAdapter = converter;
+    public void setDbGetAdapter(AnAdapter adapter) {
+        this.dbGetAdapter = adapter;
     }
 
     public AnAdapter getDbGetAdapter() {
@@ -125,6 +125,11 @@ public class AnAttribImpl implements AnAttrib {
     @Override
     public void setAnObject(AnObject<?> anObject) {
         this.parentAnObject = anObject;
+    }
+
+    @Override
+    public AnObject<?> getAnObject() {
+        return this.parentAnObject;
     }
 
     @Override
@@ -159,18 +164,27 @@ public class AnAttribImpl implements AnAttrib {
     }
 
     @Override
+    public void setValue(Object value, AnAdapter adapter) throws Exception {
+        if(adapter != null) {
+            setValue(adapter.convert(this, value));
+        } else {
+            setValue(value);
+        }
+    }
+
+    @Override
     public Object getValue() throws Exception {
         return getValue(null);
     }
 
     @Override
-    public Object getValue(AnAdapter converter) throws Exception {
+    public Object getValue(AnAdapter adapter) throws Exception {
         Object value = null;
         Method m = getGetter();
         if(m != null ) {
             value = m.invoke(parentAnObject.getNativeObject());
-            if (converter != null) {
-                value = converter.convert(this, value);
+            if (adapter != null) {
+                value = adapter.convert(this, value);
                 return value;
             }
         }

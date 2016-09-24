@@ -9,17 +9,34 @@
 #include "J2ObjC_header.h"
 
 @class IOSClass;
+@protocol AnAttrib;
 @protocol AnOrm;
 
 @protocol AnIncubator < NSObject, JavaObject >
 
 - (void)load__WithNSString:(NSString *)jsonString;
 
+- (void)unload;
+
+- (jboolean)isLoaded;
+
 - (id<AnOrm>)makeWithNSString:(NSString *)name;
 
 - (id<AnOrm>)makeWithIOSClass:(IOSClass *)cluss;
 
 - (IOSClass *)getClassByNameWithNSString:(NSString *)name;
+
+- (NSString *)getAssociationTrgClassNameWithIOSClass:(IOSClass *)cluss
+                                        withAnAttrib:(id<AnAttrib>)attrib;
+
+- (NSString *)getAssociationTrgJoinAttribNameWithIOSClass:(IOSClass *)cluss
+                                             withAnAttrib:(id<AnAttrib>)attrib;
+
+- (NSString *)getAssociationSrcJoinAttribNameWithIOSClass:(IOSClass *)cluss
+                                             withAnAttrib:(id<AnAttrib>)attrib;
+
+- (NSString *)getAssociationSrcAttribNameWithIOSClass:(IOSClass *)cluss
+                                         withAnAttrib:(id<AnAttrib>)attrib;
 
 @end
 
