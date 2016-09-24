@@ -1,6 +1,6 @@
 # SQLighter
 
-### Quick bite
+### Quick bite with property mapping and association fetching
 
 ```java
 /* This is Java */
@@ -21,7 +21,7 @@ apptOrm.fetch(customer.getAppointments(), "createUser");
 
 ```
 ``` objc
-/* This Objective C */
+/* This is Objective C */
 // ...
 // jsonAppointmentStringFromServer is:  {"id": "234", "name": "Appointment #234", "isProcessed": "0"}
 Appointment *appointmentFromServer = [apptOrm asNativeObjectWithNSString: jsonAppointmentStringFromServer];
@@ -31,6 +31,8 @@ Appointment *appointmentFromServer = [apptOrm asNativeObjectWithNSString: jsonAp
 ```
 ### What is it?
 SQLighter is Object Oriented SQLite implementation for Android and iOS mobile platforms. 
+
+![Tests are being executed on both platrorms](https://github.com/vals-productions/sqlighter/blob/master/demo/demo.png "Tests are being executed on both platrorms") 
 
 * Provides SQL capabilities and flexibilty (SQLighter) in similar to JDBC way
 * ORM features such as property mapping, association fetching,  auto generate tables for your objects etc. (AmfibiaN ORM sub-project within this github repository)
