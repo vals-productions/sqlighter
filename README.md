@@ -40,7 +40,7 @@ SQLighter is Object Oriented SQLite implementation for Android and iOS mobile pl
 * JSON mappings
 * Portability of your implementation between Android and iOS platforms by being compliant with J2ObjC code translation standards.
 
-This repository contains two Demo projects [url] (one for each platforma=s - Android and iOS) with demonstration and tests.
+This repository contains two [Demo](https://github.com/vals-productions/sqlighter/tree/master/demo) projects  (one for each platforma=s - Android and iOS) with demonstration and tests.
 
 SQLighter is compatible with [J2ObjC](http://j2objc.org) technology and provides both Android and Objective C libraries.
 

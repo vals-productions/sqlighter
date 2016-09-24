@@ -299,11 +299,6 @@ AnOrm<Appointment> orm = incubator.make(Appointment.class);
 
 Demo project contains expamples of AmfibiaN usage.
 
-### JSON file definitions.
-Here's 
-[sample json definition file from Demo project] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/assets/an_objects.json) with comments that help to understand its format.
-
-This section is to be updated with more content.
 
 ## Database versioning
 
@@ -330,8 +325,7 @@ for AnUpgrade in action steps.
 
 ## JSON definitions
 
-For now the sample Demo project json file: [url] serves as documentation. The file contains extensive comments
-and I hope its content is easy to understand.
+For now the sample [Demo project json file] (https://github.com/vals-productions/sqlighter/blob/master/demo/andr-demo-prj/app/src/main/assets/an_objects.json) serves as documentation. The file contains extensive comments with variety of situations and I hope its content is easy to understand.
 
 ### Associations
 
