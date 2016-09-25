@@ -21,6 +21,9 @@ public class AnAttribImpl implements AnAttrib {
     private AnAdapter dbSetAdapter;
     private AnAdapter dbGetAdapter;
 
+    private Method getter;
+    private Method setter;
+
     public AnAttribImpl() {
     }
 
@@ -193,24 +196,30 @@ public class AnAttribImpl implements AnAttrib {
     
     @Override
     public Method getGetter() {
-        Method[] methods = parentAnObject.getNativeClass().getMethods();
-        for (Method m: methods) {
-            if (m.getName().equalsIgnoreCase("get" + attribName)) {
-                return m;
+        if(getter == null) {
+            Method[] methods = parentAnObject.getNativeClass().getMethods();
+            for (Method m : methods) {
+                if (m.getName().equalsIgnoreCase("get" + attribName)) {
+                    getter = m;
+                    return m;
+                }
             }
         }
-        return null;
+        return getter;
     }
     
     @Override
     public Method getSetter() {
-        Method[] methods = parentAnObject.getNativeClass().getMethods();
-        for (Method m: methods) {
-            if (m.getName().equalsIgnoreCase("set" + attribName)) {
-                return m;
+        if(setter == null) {
+            Method[] methods = parentAnObject.getNativeClass().getMethods();
+            for (Method m : methods) {
+                if (m.getName().equalsIgnoreCase("set" + attribName)) {
+                    setter = m;
+                    return m;
+                }
             }
         }
-        return null;
+        return setter;
     }
     
     @Override

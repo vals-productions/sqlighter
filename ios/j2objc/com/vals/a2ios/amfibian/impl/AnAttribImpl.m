@@ -23,6 +23,8 @@
   id<AnAdapter> jsonGetAdapter_;
   id<AnAdapter> dbSetAdapter_;
   id<AnAdapter> dbGetAdapter_;
+  JavaLangReflectMethod *getter_;
+  JavaLangReflectMethod *setter_;
 }
 
 - (void)init__WithNSString:(NSString *)attribName
@@ -40,6 +42,8 @@ J2OBJC_FIELD_SETTER(AnAttribImpl, jsonSetAdapter_, id<AnAdapter>)
 J2OBJC_FIELD_SETTER(AnAttribImpl, jsonGetAdapter_, id<AnAdapter>)
 J2OBJC_FIELD_SETTER(AnAttribImpl, dbSetAdapter_, id<AnAdapter>)
 J2OBJC_FIELD_SETTER(AnAttribImpl, dbGetAdapter_, id<AnAdapter>)
+J2OBJC_FIELD_SETTER(AnAttribImpl, getter_, JavaLangReflectMethod *)
+J2OBJC_FIELD_SETTER(AnAttribImpl, setter_, JavaLangReflectMethod *)
 
 __attribute__((unused)) static void AnAttribImpl_init__WithNSString_withNSString_withNSString_(AnAttribImpl *self, NSString *attribName, NSString *columnName, NSString *jsonName);
 
@@ -171,35 +175,41 @@ J2OBJC_IGNORE_DESIGNATED_END
 }
 
 - (JavaLangReflectMethod *)getGetter {
-  IOSObjectArray *methods = [((IOSClass *) nil_chk([((id<AnObject>) nil_chk(parentAnObject_)) getNativeClass])) getMethods];
-  {
-    IOSObjectArray *a__ = methods;
-    JavaLangReflectMethod * const *b__ = ((IOSObjectArray *) nil_chk(a__))->buffer_;
-    JavaLangReflectMethod * const *e__ = b__ + a__->size_;
-    while (b__ < e__) {
-      JavaLangReflectMethod *m = *b__++;
-      if ([((NSString *) nil_chk([((JavaLangReflectMethod *) nil_chk(m)) getName])) equalsIgnoreCase:JreStrcat("$$", @"get", attribName_)]) {
-        return m;
+  if (getter_ == nil) {
+    IOSObjectArray *methods = [((IOSClass *) nil_chk([((id<AnObject>) nil_chk(parentAnObject_)) getNativeClass])) getMethods];
+    {
+      IOSObjectArray *a__ = methods;
+      JavaLangReflectMethod * const *b__ = ((IOSObjectArray *) nil_chk(a__))->buffer_;
+      JavaLangReflectMethod * const *e__ = b__ + a__->size_;
+      while (b__ < e__) {
+        JavaLangReflectMethod *m = *b__++;
+        if ([((NSString *) nil_chk([((JavaLangReflectMethod *) nil_chk(m)) getName])) equalsIgnoreCase:JreStrcat("$$", @"get", attribName_)]) {
+          getter_ = m;
+          return m;
+        }
       }
     }
   }
-  return nil;
+  return getter_;
 }
 
 - (JavaLangReflectMethod *)getSetter {
-  IOSObjectArray *methods = [((IOSClass *) nil_chk([((id<AnObject>) nil_chk(parentAnObject_)) getNativeClass])) getMethods];
-  {
-    IOSObjectArray *a__ = methods;
-    JavaLangReflectMethod * const *b__ = ((IOSObjectArray *) nil_chk(a__))->buffer_;
-    JavaLangReflectMethod * const *e__ = b__ + a__->size_;
-    while (b__ < e__) {
-      JavaLangReflectMethod *m = *b__++;
-      if ([((NSString *) nil_chk([((JavaLangReflectMethod *) nil_chk(m)) getName])) equalsIgnoreCase:JreStrcat("$$", @"set", attribName_)]) {
-        return m;
+  if (setter_ == nil) {
+    IOSObjectArray *methods = [((IOSClass *) nil_chk([((id<AnObject>) nil_chk(parentAnObject_)) getNativeClass])) getMethods];
+    {
+      IOSObjectArray *a__ = methods;
+      JavaLangReflectMethod * const *b__ = ((IOSObjectArray *) nil_chk(a__))->buffer_;
+      JavaLangReflectMethod * const *e__ = b__ + a__->size_;
+      while (b__ < e__) {
+        JavaLangReflectMethod *m = *b__++;
+        if ([((NSString *) nil_chk([((JavaLangReflectMethod *) nil_chk(m)) getName])) equalsIgnoreCase:JreStrcat("$$", @"set", attribName_)]) {
+          setter_ = m;
+          return m;
+        }
       }
     }
   }
-  return nil;
+  return setter_;
 }
 
 - (IOSClass *)getAttribClass {
