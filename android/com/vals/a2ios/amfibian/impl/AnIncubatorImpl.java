@@ -8,6 +8,7 @@ import com.vals.a2ios.amfibian.intf.AnIncubator;
 import com.vals.a2ios.amfibian.intf.AnAttrib;
 import com.vals.a2ios.amfibian.intf.AnObject;
 import com.vals.a2ios.amfibian.intf.AnOrm;
+import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -53,6 +54,8 @@ public class AnIncubatorImpl implements AnIncubator {
     public static final String DST = "trgAttribName";
 
     private boolean isLoaded = false;
+
+    private SQLighterDb sqLighterDb;
 
     private class ErrorContext {
         String contextSchema;
@@ -447,6 +450,7 @@ public class AnIncubatorImpl implements AnIncubator {
             anOrm.setParentAnObject(dependsOn);
         }
         anOrm.setIncubator(this);
+        anOrm.setSqlighterDb(sqLighterDb);
         return anOrm;
     }
 
@@ -510,4 +514,13 @@ public class AnIncubatorImpl implements AnIncubator {
         return ar.assocName;
     }
 
+    @Override
+    public SQLighterDb getSqLighterDb() {
+        return sqLighterDb;
+    }
+
+    @Override
+    public void setSqLighterDb(SQLighterDb sqLighterDb) {
+        this.sqLighterDb = sqLighterDb;
+    }
 }

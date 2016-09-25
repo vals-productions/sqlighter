@@ -12,6 +12,7 @@
 @class IOSClass;
 @protocol AnAttrib;
 @protocol AnOrm;
+@protocol SQLighterDb;
 
 @interface AnIncubatorImpl : NSObject < AnIncubator >
 
@@ -33,6 +34,8 @@
 
 - (IOSClass *)getClassByNameWithNSString:(NSString *)name;
 
+- (id<SQLighterDb>)getSqLighterDb;
+
 - (jboolean)isLoaded;
 
 - (void)load__WithNSString:(NSString *)jsonString;
@@ -40,6 +43,8 @@
 - (id<AnOrm>)makeWithIOSClass:(IOSClass *)cluss;
 
 - (id<AnOrm>)makeWithNSString:(NSString *)className_;
+
+- (void)setSqLighterDbWithSQLighterDb:(id<SQLighterDb>)sqLighterDb;
 
 - (void)unload;
 

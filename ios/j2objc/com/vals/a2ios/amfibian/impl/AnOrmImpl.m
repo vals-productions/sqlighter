@@ -32,6 +32,10 @@
   id<AnIncubator> incubator_;
 }
 
+- (id<SQLighterDb>)getDbEngine;
+
+- (id<AnIncubator>)getIncubator;
+
 - (void)applyParameters;
 
 - (void)assignWithJavaUtilCollection:(id<JavaUtilCollection>)entities
@@ -57,6 +61,10 @@
 @end
 
 J2OBJC_FIELD_SETTER(AnOrmImpl, incubator_, id<AnIncubator>)
+
+__attribute__((unused)) static id<SQLighterDb> AnOrmImpl_getDbEngine(AnOrmImpl *self);
+
+__attribute__((unused)) static id<AnIncubator> AnOrmImpl_getIncubator(AnOrmImpl *self);
 
 __attribute__((unused)) static void AnOrmImpl_applyParameters(AnOrmImpl *self);
 
@@ -103,13 +111,21 @@ J2OBJC_IGNORE_DESIGNATED_END
   self->incubator_ = incubator;
 }
 
+- (id<SQLighterDb>)getDbEngine {
+  return AnOrmImpl_getDbEngine(self);
+}
+
+- (id<AnIncubator>)getIncubator {
+  return AnOrmImpl_getIncubator(self);
+}
+
 - (id<JavaUtilCollection>)getRecordsWithJavaUtilCollection:(id<JavaUtilCollection>)collectionToUse {
   NSString *queryStr = [self getQueryString];
   if (collectionToUse == nil) {
     collectionToUse = new_JavaUtilLinkedList_init();
   }
   AnOrmImpl_applyParameters(self);
-  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeSelectWithNSString:queryStr];
+  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(AnOrmImpl_getDbEngine(self))) executeSelectWithNSString:queryStr];
   while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
     [self resetNativeObject];
     jint columnIndex = 0;
@@ -168,12 +184,12 @@ J2OBJC_IGNORE_DESIGNATED_END
   if ([self getType] == AnSqlImpl_TYPE_INSERT || [self getType] == AnSqlImpl_TYPE_UPDATE || [self getType] == AnSqlImpl_TYPE_DELETE) {
     NSString *q = [self getQueryString];
     AnOrmImpl_applyParameters(self);
-    JavaLangLong *updateInfo = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:q];
+    JavaLangLong *updateInfo = [((id<SQLighterDb>) nil_chk(AnOrmImpl_getDbEngine(self))) executeChangeWithNSString:q];
     return updateInfo;
   }
   else if ([self getType] == AnSqlImpl_TYPE_CREATE) {
     NSString *q = [self getQueryString];
-    JavaLangLong *updateInfo = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:q];
+    JavaLangLong *updateInfo = [((id<SQLighterDb>) nil_chk(AnOrmImpl_getDbEngine(self))) executeChangeWithNSString:q];
     return updateInfo;
   }
   return nil;
@@ -215,7 +231,7 @@ J2OBJC_IGNORE_DESIGNATED_END
     @throw new_JavaLangException_initWithNSString_(@"Incorrect parameters.");
   }
   IOSClass *cluss = [self getNativeClass];
-  id<AnOrm> sourceOrm = [((id<AnIncubator>) nil_chk(incubator_)) makeWithIOSClass:cluss];
+  id<AnOrm> sourceOrm = [((id<AnIncubator>) nil_chk(AnOrmImpl_getIncubator(self))) makeWithIOSClass:cluss];
   if (sourceOrm == nil) {
     @throw new_JavaLangException_initWithNSString_(JreStrcat("$$", @"No definition found for ", [((IOSClass *) nil_chk(cluss)) getName]));
   }
@@ -224,14 +240,14 @@ J2OBJC_IGNORE_DESIGNATED_END
   if (attrib == nil) {
     @throw new_JavaLangException_initWithNSString_(JreStrcat("$$$", @"Attribute ", attribName, @" is not defined"));
   }
-  NSString *associationClassName = [incubator_ getAssociationTrgClassNameWithIOSClass:cluss withAnAttrib:attrib];
-  NSString *associationTrgJoinAttribName = [incubator_ getAssociationTrgJoinAttribNameWithIOSClass:cluss withAnAttrib:attrib];
-  NSString *assiciationSrcJoinAttribName = [incubator_ getAssociationSrcJoinAttribNameWithIOSClass:cluss withAnAttrib:attrib];
-  NSString *associationSrcAttribName = [incubator_ getAssociationSrcAttribNameWithIOSClass:cluss withAnAttrib:attrib];
+  NSString *associationClassName = [((id<AnIncubator>) nil_chk(AnOrmImpl_getIncubator(self))) getAssociationTrgClassNameWithIOSClass:cluss withAnAttrib:attrib];
+  NSString *associationTrgJoinAttribName = [((id<AnIncubator>) nil_chk(AnOrmImpl_getIncubator(self))) getAssociationTrgJoinAttribNameWithIOSClass:cluss withAnAttrib:attrib];
+  NSString *assiciationSrcJoinAttribName = [((id<AnIncubator>) nil_chk(AnOrmImpl_getIncubator(self))) getAssociationSrcJoinAttribNameWithIOSClass:cluss withAnAttrib:attrib];
+  NSString *associationSrcAttribName = [((id<AnIncubator>) nil_chk(AnOrmImpl_getIncubator(self))) getAssociationSrcAttribNameWithIOSClass:cluss withAnAttrib:attrib];
   if (associationClassName == nil || associationTrgJoinAttribName == nil || assiciationSrcJoinAttribName == nil || associationSrcAttribName == nil) {
     @throw new_JavaLangException_initWithNSString_(@"Association definition is not complete.");
   }
-  id<AnOrm> associateOrm = [incubator_ makeWithNSString:associationClassName];
+  id<AnOrm> associateOrm = [((id<AnIncubator>) nil_chk(AnOrmImpl_getIncubator(self))) makeWithNSString:associationClassName];
   if (associateOrm == nil) {
     @throw new_JavaLangException_initWithNSString_(JreStrcat("$$", @"No definition found for: ", associationClassName));
   }
@@ -303,10 +319,24 @@ AnOrmImpl *new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStr
   return self;
 }
 
+id<SQLighterDb> AnOrmImpl_getDbEngine(AnOrmImpl *self) {
+  if (self->sqlighterDb_ == nil) {
+    @throw new_JavaLangException_initWithNSString_(@"DB engine is not set.");
+  }
+  return self->sqlighterDb_;
+}
+
+id<AnIncubator> AnOrmImpl_getIncubator(AnOrmImpl *self) {
+  if (self->incubator_ == nil) {
+    @throw new_JavaLangException_initWithNSString_(@"Incubator is not set");
+  }
+  return self->incubator_;
+}
+
 void AnOrmImpl_applyParameters(AnOrmImpl *self) {
   id<JavaUtilList> parameters = [self getParameters];
   for (id __strong par in nil_chk(parameters)) {
-    [((id<SQLighterDb>) nil_chk(self->sqlighterDb_)) addParamObjWithId:par];
+    [((id<SQLighterDb>) nil_chk(AnOrmImpl_getDbEngine(self))) addParamObjWithId:par];
   }
 }
 

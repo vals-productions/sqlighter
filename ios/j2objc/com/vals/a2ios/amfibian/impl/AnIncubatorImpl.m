@@ -12,6 +12,7 @@
 #include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 #include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/intf/AnOrm.h"
+#include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
 #include "java/lang/Exception.h"
 #include "java/lang/StringBuilder.h"
 #include "java/util/HashMap.h"
@@ -27,6 +28,7 @@
 @interface AnIncubatorImpl () {
  @public
   jboolean isLoaded_;
+  id<SQLighterDb> sqLighterDb_;
   AnIncubatorImpl_ErrorContext *eCtx_;
   AnIncubatorImpl_AnJsonSchema *anSchema_;
 }
@@ -76,6 +78,7 @@ withAnIncubatorImpl_AnObjectRecord:(AnIncubatorImpl_AnObjectRecord *)rec;
 
 @end
 
+J2OBJC_FIELD_SETTER(AnIncubatorImpl, sqLighterDb_, id<SQLighterDb>)
 J2OBJC_FIELD_SETTER(AnIncubatorImpl, eCtx_, AnIncubatorImpl_ErrorContext *)
 J2OBJC_FIELD_SETTER(AnIncubatorImpl, anSchema_, AnIncubatorImpl_AnJsonSchema *)
 
@@ -413,6 +416,14 @@ withAnIncubatorImpl_AnObjectRecord:(AnIncubatorImpl_AnObjectRecord *)rec {
   return ((AnIncubatorImpl_AnAssociateRecord *) nil_chk(ar))->assocName_;
 }
 
+- (id<SQLighterDb>)getSqLighterDb {
+  return sqLighterDb_;
+}
+
+- (void)setSqLighterDbWithSQLighterDb:(id<SQLighterDb>)sqLighterDb {
+  self->sqLighterDb_ = sqLighterDb;
+}
+
 J2OBJC_IGNORE_DESIGNATED_BEGIN
 - (instancetype)init {
   AnIncubatorImpl_init(self);
@@ -744,6 +755,7 @@ id<AnOrm> AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(AnIncubatorImpl *sel
     [anOrm setParentAnObjectWithAnObject:dependsOn];
   }
   [anOrm setIncubatorWithAnIncubator:self];
+  [anOrm setSqlighterDbWithSQLighterDb:self->sqLighterDb_];
   return anOrm;
 }
 

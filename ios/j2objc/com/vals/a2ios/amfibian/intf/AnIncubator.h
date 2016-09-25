@@ -11,6 +11,7 @@
 @class IOSClass;
 @protocol AnAttrib;
 @protocol AnOrm;
+@protocol SQLighterDb;
 
 @protocol AnIncubator < NSObject, JavaObject >
 
@@ -37,6 +38,10 @@
 
 - (NSString *)getAssociationSrcAttribNameWithIOSClass:(IOSClass *)cluss
                                          withAnAttrib:(id<AnAttrib>)attrib;
+
+- (id<SQLighterDb>)getSqLighterDb;
+
+- (void)setSqLighterDbWithSQLighterDb:(id<SQLighterDb>)sqLighterDb;
 
 @end
 

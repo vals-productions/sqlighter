@@ -1,6 +1,7 @@
 package com.vals.a2ios.amfibian.intf;
 
 import com.vals.a2ios.amfibian.intf.AnOrm;
+import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 
 import org.json.JSONException;
 
@@ -58,4 +59,8 @@ public interface AnIncubator {
     String getAssociationSrcJoinAttribName(Class cluss, AnAttrib attrib) throws Exception ;
 
     String getAssociationSrcAttribName(Class cluss, AnAttrib attrib) throws Exception ;
+
+    SQLighterDb getSqLighterDb();
+
+    void setSqLighterDb(SQLighterDb sqLighterDb);
 }

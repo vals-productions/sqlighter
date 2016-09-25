@@ -22,7 +22,6 @@ import java.util.Map;
  */
 public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
     protected SQLighterDb sqlighterDb;
-
     private AnIncubator incubator;
 
     public AnOrmImpl() {
@@ -49,6 +48,20 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
         this.incubator = incubator;
     }
 
+    private SQLighterDb getDbEngine() throws Exception {
+        if(sqlighterDb == null) {
+            throw new Exception("DB engine is not set.");
+        }
+        return sqlighterDb;
+    }
+
+    private AnIncubator getIncubator() throws Exception {
+        if(incubator == null) {
+            throw new Exception("Incubator is not set");
+        }
+        return incubator;
+    }
+
     @Override
     public Collection<T> getRecords(Collection<T> collectionToUse) throws Exception {
         String queryStr = this.getQueryString();
@@ -57,7 +70,7 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
         }
         applyParameters();
 
-        SQLighterRs rs = sqlighterDb.executeSelect(queryStr);
+        SQLighterRs rs = getDbEngine().executeSelect(queryStr);
         while(rs.hasNext()) {
             resetNativeObject();
             int columnIndex = 0;
@@ -117,10 +130,10 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
         return i.next();
     }
 
-    private void applyParameters() {
+    private void applyParameters() throws Exception {
         List<Object> parameters = this.getParameters();
         for (Object par: parameters) {
-            sqlighterDb.addParamObj(par);
+            getDbEngine().addParamObj(par);
         }
     }
 
@@ -132,11 +145,11 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
                 ) {
             String q = this.getQueryString();
             applyParameters();
-            Long updateInfo = sqlighterDb.executeChange(q);
+            Long updateInfo = getDbEngine().executeChange(q);
             return updateInfo;
         } else if(this.getType() == AnSqlImpl.TYPE_CREATE) {
             String q = this.getQueryString();
-            Long updateInfo = sqlighterDb.executeChange(q);
+            Long updateInfo = getDbEngine().executeChange(q);
             return updateInfo;
         }
         return null;
@@ -193,7 +206,7 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
             throw new Exception("Incorrect parameters.");
         }
         Class<T> cluss = getNativeClass();
-        AnOrm<T> sourceOrm = incubator.make(cluss);
+        AnOrm<T> sourceOrm = getIncubator().make(cluss);
         if(sourceOrm == null) {
             throw new Exception("No definition found for " + cluss.getName());
         }
@@ -202,15 +215,15 @@ public class AnOrmImpl<T> extends AnSqlImpl<T> implements AnOrm<T> {
         if(attrib == null) {
             throw new Exception("Attribute " + attribName +  " is not defined");
         }
-        String associationClassName = incubator.getAssociationTrgClassName(cluss, attrib);
-        String associationTrgJoinAttribName = incubator.getAssociationTrgJoinAttribName(cluss, attrib);
-        String assiciationSrcJoinAttribName = incubator.getAssociationSrcJoinAttribName(cluss, attrib);
-        String associationSrcAttribName = incubator.getAssociationSrcAttribName(cluss, attrib);
+        String associationClassName = getIncubator().getAssociationTrgClassName(cluss, attrib);
+        String associationTrgJoinAttribName = getIncubator().getAssociationTrgJoinAttribName(cluss, attrib);
+        String assiciationSrcJoinAttribName = getIncubator().getAssociationSrcJoinAttribName(cluss, attrib);
+        String associationSrcAttribName = getIncubator().getAssociationSrcAttribName(cluss, attrib);
         if(associationClassName == null || associationTrgJoinAttribName == null ||
                 assiciationSrcJoinAttribName == null || associationSrcAttribName == null) {
             throw new Exception("Association definition is not complete.");
         }
-        AnOrm<T> associateOrm = (AnOrm<T>)incubator.make(associationClassName);
+        AnOrm<T> associateOrm = (AnOrm<T>)getIncubator().make(associationClassName);
         if(associateOrm == null) {
             throw new Exception("No definition found for: " + associationClassName);
         }
