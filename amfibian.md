@@ -240,7 +240,9 @@ AnOrm    ----  AnIncubator
 
 ### AnAttrib
 
-**AnAttrib** defines a single property of AnObject. In the example above it is not referenced anywhere in the code. They are being created implicitly by **AnObject** based on column mappings provided. In complicated scenarios you might need to work with them directly to be able to gain more control.
+**AnAttrib** defines a single property of AnObject. In the example above it is not referenced anywhere in the code. They are being created implicitly by **AnObject** based on column mappings provided. In complicated scenarios you might need to work with them directly to be able to gain more control. 
+
+Property values are being accessed and modified by using appropriate getter and setter. 
 
 ### AnObject
 
