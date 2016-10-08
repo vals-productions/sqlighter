@@ -417,12 +417,14 @@ public class AnIncubatorImpl implements AnIncubator {
 
     /**
      * Makes a new instance of anOrm manager for the class name
-     * // todo - remane name to className
      */
-    private AnOrm<?> make(String name, Map<String, AnObjectRecord> records) throws Exception {
-        AnObjectRecord anObjRec = records.get(name);
+    private AnOrm<?> make(String className, Map<String, AnObjectRecord> records) throws Exception {
+        if(records == null) {
+            throw new Exception("No object definitions loaded.");
+        }
+        AnObjectRecord anObjRec = records.get(className);
         if(anObjRec == null) {
-            throw new Exception("Could not find definition for " + name);
+            throw new Exception("Could not find definition for " + className);
         }
         AnOrm anOrm = new AnOrmImpl();
         anOrm.setTableName(anObjRec.orm.getTableName());

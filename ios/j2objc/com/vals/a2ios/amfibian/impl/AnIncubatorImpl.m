@@ -70,7 +70,7 @@ withAnIncubatorImpl_AnObjectRecord:(AnIncubatorImpl_AnObjectRecord *)rec;
 - (void)loadAdapterMapWithOrgJsonJSONObject:(OrgJsonJSONObject *)jo
                             withJavaUtilMap:(id<JavaUtilMap>)converterByNameMap;
 
-- (id<AnOrm>)makeWithNSString:(NSString *)name
+- (id<AnOrm>)makeWithNSString:(NSString *)className_
               withJavaUtilMap:(id<JavaUtilMap>)records;
 
 - (AnIncubatorImpl_AnAssociateRecord *)getArAssociateRecordWithIOSClass:(IOSClass *)cluss
@@ -156,7 +156,7 @@ __attribute__((unused)) static NSString *AnIncubatorImpl_removeCommentsWithNSStr
 
 __attribute__((unused)) static void AnIncubatorImpl_loadAdapterMapWithOrgJsonJSONObject_withJavaUtilMap_(AnIncubatorImpl *self, OrgJsonJSONObject *jo, id<JavaUtilMap> converterByNameMap);
 
-__attribute__((unused)) static id<AnOrm> AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(AnIncubatorImpl *self, NSString *name, id<JavaUtilMap> records);
+__attribute__((unused)) static id<AnOrm> AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(AnIncubatorImpl *self, NSString *className_, id<JavaUtilMap> records);
 
 __attribute__((unused)) static AnIncubatorImpl_AnAssociateRecord *AnIncubatorImpl_getArAssociateRecordWithIOSClass_withAnAttrib_(AnIncubatorImpl *self, IOSClass *cluss, id<AnAttrib> attrib);
 
@@ -370,9 +370,9 @@ withAnIncubatorImpl_AnObjectRecord:(AnIncubatorImpl_AnObjectRecord *)rec {
   AnIncubatorImpl_loadAdapterMapWithOrgJsonJSONObject_withJavaUtilMap_(self, jo, converterByNameMap);
 }
 
-- (id<AnOrm>)makeWithNSString:(NSString *)name
+- (id<AnOrm>)makeWithNSString:(NSString *)className_
               withJavaUtilMap:(id<JavaUtilMap>)records {
-  return AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(self, name, records);
+  return AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(self, className_, records);
 }
 
 - (id<AnOrm>)makeWithNSString:(NSString *)className_ {
@@ -720,10 +720,13 @@ void AnIncubatorImpl_loadAdapterMapWithOrgJsonJSONObject_withJavaUtilMap_(AnIncu
   }
 }
 
-id<AnOrm> AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(AnIncubatorImpl *self, NSString *name, id<JavaUtilMap> records) {
-  AnIncubatorImpl_AnObjectRecord *anObjRec = [((id<JavaUtilMap>) nil_chk(records)) getWithId:name];
+id<AnOrm> AnIncubatorImpl_makeWithNSString_withJavaUtilMap_(AnIncubatorImpl *self, NSString *className_, id<JavaUtilMap> records) {
+  if (records == nil) {
+    @throw new_JavaLangException_initWithNSString_(@"No object definitions loaded.");
+  }
+  AnIncubatorImpl_AnObjectRecord *anObjRec = [((id<JavaUtilMap>) nil_chk(records)) getWithId:className_];
   if (anObjRec == nil) {
-    @throw new_JavaLangException_initWithNSString_(JreStrcat("$$", @"Could not find definition for ", name));
+    @throw new_JavaLangException_initWithNSString_(JreStrcat("$$", @"Could not find definition for ", className_));
   }
   id<AnOrm> anOrm = new_AnOrmImpl_init();
   [anOrm setTableNameWithNSString:[((id<AnOrm>) nil_chk(((AnIncubatorImpl_AnObjectRecord *) nil_chk(anObjRec))->orm_)) getTableName]];
