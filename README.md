@@ -649,7 +649,7 @@ rs.close();
 c) once your statement is executed, bound parameters are cleaned up, so you can use
  ``addParam*`` methods again to be bound/used with your next statement.
 
-Please see the next section that has some pretty straightforward examples.
+Please see [going by example section] (https://github.com/vals-productions/sqlighter#going-by-example) that has some pretty straightforward examples.
 
 ## Exception and error handling
 
@@ -669,7 +669,7 @@ Sample code
 		db.addParam("inloop@email.com");
 		db.executeChange("update user set email = ? where email = ?");
 	} catch (Exception e) {
-		// do something like...
+		// do something about the exception...
 		System.out.println(e.getMessage());
 	}
 ```
