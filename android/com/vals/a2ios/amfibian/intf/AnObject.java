@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by vsayenko on 1/8/16.
  *
  * AmfibiaN Object management interface.
- *
+ * JSON management does not support relations.
  */
 public interface AnObject<T> {
 
@@ -49,7 +49,7 @@ public interface AnObject<T> {
      * Returns <String (parameter name), value> map of object's attributes.
      * This might be useful if you'd like to build HTTP request's GET/POST
      * parameters.
-     *
+     * Supports only simple properties - no relationship management support for JSON.
      * @param nativeObject - native object to convert to the map
      * @return
      * @throws Exception
@@ -58,7 +58,7 @@ public interface AnObject<T> {
 
     /**
      * Use asNativeMap
-     *
+     * Supports only simple properties - no relationship management support for JSON.
      * @param nativeObject
      * @return
      * @throws Exception
@@ -67,7 +67,7 @@ public interface AnObject<T> {
     public Map<String, Object> getMap(T nativeObject) throws Exception;
 
     /**
-     * Transfroms native object into a org.json.JSONObject
+     * Transfroms native object into a org.json.JSONObject. Supports only simple properties - no relationship management support for JSON.
      * @param nativeObject
      * @return org.json.JSONObject representation of an object
      *
@@ -77,7 +77,7 @@ public interface AnObject<T> {
 
     /**
      * Transforms org.json.JSONObject into a native object.
-     *
+     * Supports only simple properties - no relationship management support for JSON.
      * @param jsonObject
      * @return T - native object
      * @throws Exception
@@ -86,7 +86,7 @@ public interface AnObject<T> {
 
     /**
      * JSON String is converted into a native object
-     *
+     * Supports only simple properties - no relationship management support for JSON.
      * @param jsonString
      * @return
      * @throws Exception
@@ -96,7 +96,7 @@ public interface AnObject<T> {
     /**
      * JSON String representing an array of T is being transformed into
      * a collection<T>
-     *
+     * Supports only simple properties - no relationship management support for JSON.
      * @param jsonArrayString
      * @return
      * @throws Exception
@@ -105,7 +105,7 @@ public interface AnObject<T> {
 
     /**
      * Native object is converted into a JSON string
-     *
+     * Supports only simple properties - no relationship management support for JSON.
      * @param nativeObject
      * @return JSON string
      * @throws Exception
@@ -119,7 +119,7 @@ public interface AnObject<T> {
     public T getNativeObject();
 
     /**
-     *
+     * Supports only simple properties - no relationship management support for JSON.
      * @return
      * @throws Exception
      */
@@ -156,7 +156,7 @@ public interface AnObject<T> {
      */
     void setParentAnObject(AnObject parentObject);
     /**
-     *
+     * Does not include inherited attributes.
      * @return
      */
     AnAttrib[] getOwnAttribs();

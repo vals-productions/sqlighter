@@ -3,7 +3,7 @@
 # Table of content
 * [Overview] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#vverview)
 * [Going by example] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#going-by-example)
-* [Association fetching] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#association-fetching)
+* [Database association fetching] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#database-association-fetching)
 * [Class diagram] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#class-diagram)
 * [Database versioning] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#database-versioning)
 * [JSON definitions] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#json-definitions)
@@ -142,7 +142,7 @@ if (list.size() == 1) { // just making sure we've got the result
 
 jsonString above is ready to be sent back to the server.
 
-### Association fetching
+### Database association fetching
 
 In order to be able to deal with association fetching you should define each assiciation in JSON definition file.
 
@@ -250,17 +250,17 @@ Property values are being accessed and modified by using appropriate getter and 
 
 If you do not deal with database, this might be all you need.
 
+JSON mappings are supporting simple properties only. No object relations are supported at the moment.
+
 ### AnSql
 
-**AnSql** extends **AnObject** and gives you database query generation capabilities on top of what **AnObject** provides. You can execute the queries through whatever Database implementation you have, not only SQLite.
+**AnSql** extends **AnObject** and gives you database query generation capabilities on top of what **AnObject** provides. You can execute generated queries through whatever SQL Database implementation you have, not only SQLite.
 
 ### AnOrm
 
-**AnOrm** adds object mapping capabilities on top of what **AnSql** implements. You can perform CRUD operations on your objects, or, collections of objects.
+**AnOrm** adds object mapping capabilities on top of what **AnSql** implements.
 
-**AnOrm** makes it much easier for you to manipulate and convert objects in most cases. Your mobile database is typically much simple than database server database and does not need complex joins as it represents a subset of data for a single customer. In case you need something complex, you can always use the full power of direct SQL. 
-
-For the cases when you do need to do an outer join and retrieve hierarchical result set, you can always use Sqlighter directly and go as far as you want.
+**AnOrm** makes it much easier for you to perform CRUD operations and retrieve mapped associated entities and collections.
 
 ### AnAdapter
 
@@ -291,7 +291,7 @@ AmfibiaN has some sample adapters turned on (see AnObject initadapters() method)
 
 ### AnIncubator
 
-AnIncubator consumes JSON defintion file, parses it, and produces AnOrm instancs upon request. It can be used instead of configurng AnOrm instances in programmatic way.
+AnIncubator consumes JSON defintion file, parses it, and produces AnOrm instances upon request. It should be used instead of configurng AnOrm instances in programmatic way.
 
 ```java
 incubator.load(jsonString);
@@ -299,8 +299,7 @@ AnOrm<Appointment> orm = incubator.make(Appointment.class);
 
 ```
 
-Demo project contains expamples of AmfibiaN usage.
-
+Demo project contains examples of AmfibiaN usage.
 
 ## Database versioning
 
@@ -332,7 +331,7 @@ For now the sample [Demo project json file] (https://github.com/vals-productions
 ### Associations
 
 Association JSON section is explained here:
-[Association fetching] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#association-fetching)
+[Databsse association fetching] (https://github.com/vals-productions/sqlighter/blob/master/amfibian.md#database-association-fetching)
 
 ## Installation
 
