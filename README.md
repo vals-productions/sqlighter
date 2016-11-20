@@ -15,7 +15,7 @@ Customer customer = customerOrm.getSingleResult();
 
 	// lets retrieve customer.getAppointments() associaion
 customerOrm.fetch(customer, "appointments");
-	// let's retrieve appointment.getCreateUser() 
+	// let's retrieve appointment.getCreateUser() for each Appointment
 apptOrm.fetch(customer.getAppointments(), "createUser");
 
 
