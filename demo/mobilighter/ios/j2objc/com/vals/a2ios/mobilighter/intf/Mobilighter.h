@@ -59,6 +59,16 @@
 
 - (void)hideWaitPopup;
 
+- (void)setFontWithId:(id)widget
+               withId:(id)font
+               withId:(id)size;
+
+- (void)setTextColorWithId:(id)widget
+                 withFloat:(jfloat)r
+                 withFloat:(jfloat)g
+                 withFloat:(jfloat)b
+                 withFloat:(jfloat)a;
+
 - (void)runOnUiThreadWithMobilAction:(id<MobilAction>)action;
 
 - (NSString *)readFileWithNSString:(NSString *)fileName;

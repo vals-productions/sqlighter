@@ -180,7 +180,7 @@ void MobilighterImpl_init(MobilighterImpl *self) {
 }
 
 - (id)getContext {
-    return nil;
+    return self.contextController;
 }
 
 - (jboolean)isOnWithId:(id)toggleButton {
@@ -211,16 +211,66 @@ void MobilighterImpl_init(MobilighterImpl *self) {
 
 - (void)showWaitPopupWithNSString:(NSString *)title
                      withNSString:(NSString *)message {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
+                                                                       message:@"Please wait\n\n\n"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(130.5, 65.5);
+    spinner.color = [UIColor blackColor];
+    [spinner startAnimating];
+    [alert.view addSubview:spinner];
+    
+    UIViewController *c = (UIViewController*)self.contextController;
+    
+    [c presentViewController:alert animated:NO completion:nil];
 }
 
 - (void)hideWaitPopup {
+    UIViewController *c = (UIViewController*)self.contextController;
+    [c dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)runOnUiThreadWithMobilAction:(id<MobilAction>)action {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [action onActionWithId:nil];
+    });
 }
 
 - (void)setEnabledWithId:(id)widget
              withBoolean:(jboolean)isEnabled {
+    if ([widget isKindOfClass: [UIButton class]]) {
+        UIButton *w = (UIButton*)widget;
+        w.enabled = isEnabled;
+    }
+}
+
+- (void)setFontWithId:(id)widget
+               withId:(id)font
+               withId:(id)size {
+    if ([widget isKindOfClass: [UIButton class]]) {
+        UIButton *w = (UIButton*)widget;
+        UIFont *f = (UIFont*)font;
+        UIFont *fnt = [UIFont fontWithName:f.fontName size: f.pointSize];
+        w.titleLabel.font = fnt;
+    } else if ([widget isKindOfClass: [UILabel class]]) {
+        UILabel *w = (UILabel*)widget;
+        UIFont *f = (UIFont*)font;
+        UIFont *fnt = [UIFont fontWithName:f.fontName size: f.pointSize];
+        w.font = (UIFont*)fnt;
+    }
+   
+}
+
+- (void)setTextColorWithId:(id)widget
+                 withFloat:(jfloat)r
+                 withFloat:(jfloat)g
+                 withFloat:(jfloat)b
+                 withFloat:(jfloat)a {
+    if ([widget isKindOfClass: [UILabel class]]) {
+        UILabel *w = (UILabel*)widget;
+        [w setTextColor:[UIColor colorWithRed:r green:g blue:b alpha:a]];
+    }
 }
 
 @end

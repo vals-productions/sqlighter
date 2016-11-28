@@ -36,11 +36,13 @@
     { "dateToStringWithId:withNSString:", "dateToString", "Ljava.lang.String;", 0x401, NULL, NULL },
     { "showWaitPopupWithNSString:withNSString:", "showWaitPopup", "V", 0x401, NULL, NULL },
     { "hideWaitPopup", NULL, "V", 0x401, NULL, NULL },
+    { "setFontWithId:withId:withId:", "setFont", "V", 0x401, NULL, NULL },
+    { "setTextColorWithId:withFloat:withFloat:withFloat:withFloat:", "setTextColor", "V", 0x401, NULL, NULL },
     { "runOnUiThreadWithMobilAction:", "runOnUiThread", "V", 0x401, NULL, NULL },
     { "readFileWithNSString:", "readFile", "Ljava.lang.String;", 0x401, NULL, NULL },
   };
   static const char *inner_classes[] = {"Lcom.vals.a2ios.mobilighter.intf.Mobilighter$Navigator;"};
-  static const J2ObjcClassInfo _Mobilighter = { 2, "Mobilighter", "com.vals.a2ios.mobilighter.intf", NULL, 0x609, 19, methods, 0, NULL, 0, NULL, 1, inner_classes, NULL, NULL };
+  static const J2ObjcClassInfo _Mobilighter = { 2, "Mobilighter", "com.vals.a2ios.mobilighter.intf", NULL, 0x609, 21, methods, 0, NULL, 0, NULL, 1, inner_classes, NULL, NULL };
   return &_Mobilighter;
 }
 

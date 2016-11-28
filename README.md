@@ -57,6 +57,7 @@ SQLite database is your best choice for mobile platform development since it is 
  * [Pre requisites] (https://github.com/vals-productions/sqlighter#pre-requisites)
  * [Android code] (https://github.com/vals-productions/sqlighter#android-code)
  * [iOS code] (https://github.com/vals-productions/sqlighter#ios-code)
+ * [Demo](https://github.com/vals-productions/sqlighter#demo)
 * [J2ObjC] (https://github.com/vals-productions/sqlighter#j2objc)
 * [Project configuration] (https://github.com/vals-productions/sqlighter#project-configuration)
  * [Using provided libraries] (https://github.com/vals-productions/sqlighter#using-provided-libraries)
@@ -316,6 +317,10 @@ If you are familiar with both languages (and you should be if you are reading th
 The biggest advantage you'd get if you reuse your java coding efforts at iOS platform using J2ObjC.
 
 Since Objective C classes are overwritten during J2ObjC conversion, only java classes and interfaces are documented.
+
+### Demo
+
+[Demo](https://github.com/vals-productions/sqlighter/tree/master/demo) Android and iOS projects are demo implementation and tests of SQlighter and AmfibiaN features. User interface is controlled by [Mobilighter](https://github.com/vals-productions/mobilighter) project.
 
 # J2ObjC
 

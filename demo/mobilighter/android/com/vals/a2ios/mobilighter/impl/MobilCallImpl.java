@@ -305,7 +305,7 @@ public class MobilCallImpl implements MobilCall {
             } else {
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 beforeConnect();
-                writePostBody(buildUrlParams(paramMap)); // writes to body if not url params
+                writePostBody(buildUrlParams(paramMap)); // writes to body if not url cameraParams
             }
         }
     }

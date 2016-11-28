@@ -121,6 +121,10 @@ public interface Mobilighter {
      */
     public void hideWaitPopup();
 
+    void setFont(Object widget, Object font, Object size);
+
+    void setTextColor(Object widget, float r, float g, float b, float a);
+
     /**
      *
      * @param action
