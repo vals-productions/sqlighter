@@ -3,10 +3,21 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/DemoAppointmentGetAdapter.java
 //
 
-#ifndef _ComProdValsAndr_demo_prjDemoAppointmentGetAdapter_H_
-#define _ComProdValsAndr_demo_prjDemoAppointmentGetAdapter_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjDemoAppointmentGetAdapter")
+#ifdef RESTRICT_ComProdValsAndr_demo_prjDemoAppointmentGetAdapter
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjDemoAppointmentGetAdapter 0
+#else
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjDemoAppointmentGetAdapter 1
+#endif
+#undef RESTRICT_ComProdValsAndr_demo_prjDemoAppointmentGetAdapter
+
+#if !defined (DemoAppointmentGetAdapter_) && (INCLUDE_ALL_ComProdValsAndr_demo_prjDemoAppointmentGetAdapter || defined(INCLUDE_DemoAppointmentGetAdapter))
+#define DemoAppointmentGetAdapter_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnAdapter 1
+#define INCLUDE_AnAdapter 1
 #include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 
 @class IOSClass;
@@ -33,8 +44,12 @@ FOUNDATION_EXPORT void DemoAppointmentGetAdapter_init(DemoAppointmentGetAdapter 
 
 FOUNDATION_EXPORT DemoAppointmentGetAdapter *new_DemoAppointmentGetAdapter_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT DemoAppointmentGetAdapter *create_DemoAppointmentGetAdapter_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(DemoAppointmentGetAdapter)
 
 @compatibility_alias ComProdValsAndr_demo_prjDemoAppointmentGetAdapter DemoAppointmentGetAdapter;
 
-#endif // _ComProdValsAndr_demo_prjDemoAppointmentGetAdapter_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjDemoAppointmentGetAdapter")

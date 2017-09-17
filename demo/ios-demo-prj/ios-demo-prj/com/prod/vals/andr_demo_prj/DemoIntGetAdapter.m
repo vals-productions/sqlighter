@@ -11,9 +11,16 @@
 
 @implementation DemoIntGetAdapter
 
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  DemoIntGetAdapter_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
+
 - (id)convertWithAnAttrib:(id<AnAttrib>)attrib
                    withId:(id)value {
-  jint returnValue = ((value == nil) ? 0 : [(JavaLangInteger *) check_class_cast(value, [JavaLangInteger class]) intValue]);
+  jint returnValue = ((value == nil) ? 0 : [((JavaLangInteger *) nil_chk((JavaLangInteger *) cast_chk(value, [JavaLangInteger class]))) intValue]);
   return JavaLangInteger_valueOfWithInt_(returnValue);
 }
 
@@ -22,33 +29,35 @@
                        withId:(id)value {
 }
 
-J2OBJC_IGNORE_DESIGNATED_BEGIN
-- (instancetype)init {
-  DemoIntGetAdapter_init(self);
-  return self;
-}
-J2OBJC_IGNORE_DESIGNATED_END
-
 + (const J2ObjcClassInfo *)__metadata {
-  static const J2ObjcMethodInfo methods[] = {
-    { "convertWithAnAttrib:withId:", "convert", "Ljava.lang.Object;", 0x1, NULL, NULL },
-    { "onWarningWithIOSClass:withNSString:withId:", "onWarning", "V", 0x1, NULL, NULL },
-    { "init", NULL, NULL, 0x1, NULL, NULL },
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "LNSObject;", 0x1, 0, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 2, 3, -1, -1, -1, -1 },
   };
-  static const J2ObjcClassInfo _DemoIntGetAdapter = { 2, "DemoIntGetAdapter", "com.prod.vals.andr_demo_prj", NULL, 0x1, 3, methods, 0, NULL, 0, NULL, 0, NULL, NULL, NULL };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  methods[0].selector = @selector(init);
+  methods[1].selector = @selector(convertWithAnAttrib:withId:);
+  methods[2].selector = @selector(onWarningWithIOSClass:withNSString:withId:);
+  #pragma clang diagnostic pop
+  static const void *ptrTable[] = { "convert", "LAnAttrib;LNSObject;", "onWarning", "LIOSClass;LNSString;LNSObject;" };
+  static const J2ObjcClassInfo _DemoIntGetAdapter = { "DemoIntGetAdapter", "com.prod.vals.andr_demo_prj", ptrTable, methods, NULL, 7, 0x1, 3, 0, -1, -1, -1, -1, -1 };
   return &_DemoIntGetAdapter;
 }
 
 @end
 
 void DemoIntGetAdapter_init(DemoIntGetAdapter *self) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
 }
 
 DemoIntGetAdapter *new_DemoIntGetAdapter_init() {
-  DemoIntGetAdapter *self = [DemoIntGetAdapter alloc];
-  DemoIntGetAdapter_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(DemoIntGetAdapter, init)
+}
+
+DemoIntGetAdapter *create_DemoIntGetAdapter_init() {
+  J2OBJC_CREATE_IMPL(DemoIntGetAdapter, init)
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(DemoIntGetAdapter)

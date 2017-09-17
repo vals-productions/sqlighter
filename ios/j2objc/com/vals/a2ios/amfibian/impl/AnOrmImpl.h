@@ -3,11 +3,25 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/impl/AnOrmImpl.java
 //
 
-#ifndef _ComValsA2iosAmfibianImplAnOrmImpl_H_
-#define _ComValsA2iosAmfibianImplAnOrmImpl_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianImplAnOrmImpl")
+#ifdef RESTRICT_ComValsA2iosAmfibianImplAnOrmImpl
+#define INCLUDE_ALL_ComValsA2iosAmfibianImplAnOrmImpl 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianImplAnOrmImpl 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianImplAnOrmImpl
+
+#if !defined (AnOrmImpl_) && (INCLUDE_ALL_ComValsA2iosAmfibianImplAnOrmImpl || defined(INCLUDE_AnOrmImpl))
+#define AnOrmImpl_
+
+#define RESTRICT_ComValsA2iosAmfibianImplAnSqlImpl 1
+#define INCLUDE_AnSqlImpl 1
 #include "com/vals/a2ios/amfibian/impl/AnSqlImpl.h"
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnOrm 1
+#define INCLUDE_AnOrm 1
 #include "com/vals/a2ios/amfibian/intf/AnOrm.h"
 
 @class IOSClass;
@@ -73,6 +87,21 @@
 
 - (void)setSqlighterDbWithSQLighterDb:(id<SQLighterDb>)sqlighterDb;
 
+// Disallowed inherited constructors, do not use.
+
+- (instancetype)initWithNSString:(NSString *)arg0
+                    withAnObject:(id<AnObject>)arg1 NS_UNAVAILABLE;
+
+- (instancetype)initWithNSString:(NSString *)arg0
+                    withIOSClass:(IOSClass *)arg1
+               withAnAttribArray:(IOSObjectArray *)arg2
+                    withAnObject:(id<AnObject>)arg3 NS_UNAVAILABLE;
+
+- (instancetype)initWithNSString:(NSString *)arg0
+                    withIOSClass:(IOSClass *)arg1
+               withNSStringArray:(IOSObjectArray *)arg2
+                    withAnObject:(id<AnObject>)arg3 NS_UNAVAILABLE;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(AnOrmImpl)
@@ -83,16 +112,24 @@ FOUNDATION_EXPORT void AnOrmImpl_init(AnOrmImpl *self);
 
 FOUNDATION_EXPORT AnOrmImpl *new_AnOrmImpl_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnOrmImpl *create_AnOrmImpl_init();
+
 FOUNDATION_EXPORT void AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withAnAttribArray_withAnObject_(AnOrmImpl *self, id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject);
 
 FOUNDATION_EXPORT AnOrmImpl *new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withAnAttribArray_withAnObject_(id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject) NS_RETURNS_RETAINED;
+
+FOUNDATION_EXPORT AnOrmImpl *create_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withAnAttribArray_withAnObject_(id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject);
 
 FOUNDATION_EXPORT void AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(AnOrmImpl *self, id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject);
 
 FOUNDATION_EXPORT AnOrmImpl *new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject) NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnOrmImpl *create_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject);
+
 J2OBJC_TYPE_LITERAL_HEADER(AnOrmImpl)
 
 @compatibility_alias ComValsA2iosAmfibianImplAnOrmImpl AnOrmImpl;
 
-#endif // _ComValsA2iosAmfibianImplAnOrmImpl_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianImplAnOrmImpl")

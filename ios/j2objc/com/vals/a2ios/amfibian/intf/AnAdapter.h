@@ -3,15 +3,23 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/intf/AnAdapter.java
 //
 
-#ifndef _ComValsA2iosAmfibianIntfAnAdapter_H_
-#define _ComValsA2iosAmfibianIntfAnAdapter_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnAdapter")
+#ifdef RESTRICT_ComValsA2iosAmfibianIntfAnAdapter
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnAdapter 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnAdapter 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianIntfAnAdapter
+
+#if !defined (AnAdapter_) && (INCLUDE_ALL_ComValsA2iosAmfibianIntfAnAdapter || defined(INCLUDE_AnAdapter))
+#define AnAdapter_
 
 @class IOSClass;
 @protocol AnAttrib;
 
-@protocol AnAdapter < NSObject, JavaObject >
+@protocol AnAdapter < JavaObject >
 
 - (id)convertWithAnAttrib:(id<AnAttrib>)attrib
                    withId:(id)value;
@@ -28,4 +36,6 @@ J2OBJC_TYPE_LITERAL_HEADER(AnAdapter)
 
 #define ComValsA2iosAmfibianIntfAnAdapter AnAdapter
 
-#endif // _ComValsA2iosAmfibianIntfAnAdapter_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnAdapter")

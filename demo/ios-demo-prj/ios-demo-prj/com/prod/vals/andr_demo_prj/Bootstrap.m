@@ -14,29 +14,23 @@
   id<Mobilighter> mobilighter_;
 }
 
-- (instancetype)init;
-
 @end
 
 J2OBJC_FIELD_SETTER(Bootstrap, sqLighterDb_, id<SQLighterDb>)
 J2OBJC_FIELD_SETTER(Bootstrap, mobilighter_, id<Mobilighter>)
 
-static Bootstrap *Bootstrap_bootstrap_;
-J2OBJC_STATIC_FIELD_GETTER(Bootstrap, bootstrap_, Bootstrap *)
-J2OBJC_STATIC_FIELD_SETTER(Bootstrap, bootstrap_, Bootstrap *)
+inline Bootstrap *Bootstrap_get_bootstrap();
+inline Bootstrap *Bootstrap_set_bootstrap(Bootstrap *value);
+static Bootstrap *Bootstrap_bootstrap;
+J2OBJC_STATIC_FIELD_OBJ(Bootstrap, bootstrap, Bootstrap *)
 
 __attribute__((unused)) static void Bootstrap_init(Bootstrap *self);
 
 __attribute__((unused)) static Bootstrap *new_Bootstrap_init() NS_RETURNS_RETAINED;
 
-@implementation Bootstrap
+__attribute__((unused)) static Bootstrap *create_Bootstrap_init();
 
-J2OBJC_IGNORE_DESIGNATED_BEGIN
-- (instancetype)init {
-  Bootstrap_init(self);
-  return self;
-}
-J2OBJC_IGNORE_DESIGNATED_END
+@implementation Bootstrap
 
 + (Bootstrap *)getInstance {
   return Bootstrap_getInstance();
@@ -61,22 +55,24 @@ J2OBJC_IGNORE_DESIGNATED_END
 @end
 
 void Bootstrap_init(Bootstrap *self) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
 }
 
 Bootstrap *new_Bootstrap_init() {
-  Bootstrap *self = [Bootstrap alloc];
-  Bootstrap_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(Bootstrap, init)
+}
+
+Bootstrap *create_Bootstrap_init() {
+  J2OBJC_CREATE_IMPL(Bootstrap, init)
 }
 
 Bootstrap *Bootstrap_getInstance() {
   Bootstrap_initialize();
   @synchronized(Bootstrap_class_()) {
-    if (Bootstrap_bootstrap_ == nil) {
-      Bootstrap_bootstrap_ = new_Bootstrap_init();
+    if (Bootstrap_bootstrap == nil) {
+      Bootstrap_bootstrap = new_Bootstrap_init();
     }
-    return Bootstrap_bootstrap_;
+    return Bootstrap_bootstrap;
   }
 }
 

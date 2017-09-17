@@ -3,17 +3,25 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/intf/AnAttrib.java
 //
 
-#ifndef _ComValsA2iosAmfibianIntfAnAttrib_H_
-#define _ComValsA2iosAmfibianIntfAnAttrib_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnAttrib")
+#ifdef RESTRICT_ComValsA2iosAmfibianIntfAnAttrib
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnAttrib 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnAttrib 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianIntfAnAttrib
+
+#if !defined (AnAttrib_) && (INCLUDE_ALL_ComValsA2iosAmfibianIntfAnAttrib || defined(INCLUDE_AnAttrib))
+#define AnAttrib_
 
 @class IOSClass;
 @class JavaLangReflectMethod;
 @protocol AnAdapter;
 @protocol AnObject;
 
-@protocol AnAttrib < NSObject, JavaObject >
+@protocol AnAttrib < JavaObject >
 
 - (void)setAnObjectWithAnObject:(id<AnObject>)anObject;
 
@@ -74,4 +82,6 @@ J2OBJC_TYPE_LITERAL_HEADER(AnAttrib)
 
 #define ComValsA2iosAmfibianIntfAnAttrib AnAttrib
 
-#endif // _ComValsA2iosAmfibianIntfAnAttrib_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnAttrib")

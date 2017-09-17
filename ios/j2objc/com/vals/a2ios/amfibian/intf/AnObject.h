@@ -3,10 +3,18 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/intf/AnObject.java
 //
 
-#ifndef _ComValsA2iosAmfibianIntfAnObject_H_
-#define _ComValsA2iosAmfibianIntfAnObject_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnObject")
+#ifdef RESTRICT_ComValsA2iosAmfibianIntfAnObject
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnObject 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnObject 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianIntfAnObject
+
+#if !defined (AnObject_) && (INCLUDE_ALL_ComValsA2iosAmfibianIntfAnObject || defined(INCLUDE_AnObject))
+#define AnObject_
 
 @class IOSClass;
 @class IOSObjectArray;
@@ -17,7 +25,7 @@
 @protocol JavaUtilCollection;
 @protocol JavaUtilMap;
 
-@protocol AnObject < NSObject, JavaObject >
+@protocol AnObject < JavaObject >
 
 - (void)resetNativeObject;
 
@@ -81,4 +89,6 @@ J2OBJC_TYPE_LITERAL_HEADER(AnObject)
 
 #define ComValsA2iosAmfibianIntfAnObject AnObject
 
-#endif // _ComValsA2iosAmfibianIntfAnObject_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnObject")

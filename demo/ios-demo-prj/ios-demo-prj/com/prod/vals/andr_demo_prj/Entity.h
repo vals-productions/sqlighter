@@ -3,10 +3,18 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Entity.java
 //
 
-#ifndef _ComProdValsAndr_demo_prjEntity_H_
-#define _ComProdValsAndr_demo_prjEntity_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjEntity")
+#ifdef RESTRICT_ComProdValsAndr_demo_prjEntity
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjEntity 0
+#else
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjEntity 1
+#endif
+#undef RESTRICT_ComProdValsAndr_demo_prjEntity
+
+#if !defined (Entity_) && (INCLUDE_ALL_ComProdValsAndr_demo_prjEntity || defined(INCLUDE_Entity))
+#define Entity_
 
 @class JavaLangInteger;
 @class JavaUtilDate;
@@ -72,8 +80,12 @@ FOUNDATION_EXPORT void Entity_init(Entity *self);
 
 FOUNDATION_EXPORT Entity *new_Entity_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT Entity *create_Entity_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(Entity)
 
 @compatibility_alias ComProdValsAndr_demo_prjEntity Entity;
 
-#endif // _ComProdValsAndr_demo_prjEntity_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjEntity")

@@ -3,16 +3,24 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/intf/AnUpgrade.java
 //
 
-#ifndef _ComValsA2iosAmfibianIntfAnUpgrade_H_
-#define _ComValsA2iosAmfibianIntfAnUpgrade_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnUpgrade")
+#ifdef RESTRICT_ComValsA2iosAmfibianIntfAnUpgrade
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnUpgrade 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnUpgrade 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianIntfAnUpgrade
+
+#if !defined (AnUpgrade_) && (INCLUDE_ALL_ComValsA2iosAmfibianIntfAnUpgrade || defined(INCLUDE_AnUpgrade))
+#define AnUpgrade_
 
 @class JavaLangThrowable;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
 
-@protocol AnUpgrade < NSObject, JavaObject >
+@protocol AnUpgrade < JavaObject >
 
 - (jint)applyUpdates;
 
@@ -37,14 +45,20 @@
 
 J2OBJC_EMPTY_STATIC_INIT(AnUpgrade)
 
-FOUNDATION_EXPORT NSString *AnUpgrade_DB_RECOVER_KEY_;
-J2OBJC_STATIC_FIELD_GETTER(AnUpgrade, DB_RECOVER_KEY_, NSString *)
+inline NSString *AnUpgrade_get_DB_RECOVER_KEY();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *AnUpgrade_DB_RECOVER_KEY;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnUpgrade, DB_RECOVER_KEY, NSString *)
 
-FOUNDATION_EXPORT NSString *AnUpgrade_TABLE_NAME_;
-J2OBJC_STATIC_FIELD_GETTER(AnUpgrade, TABLE_NAME_, NSString *)
+inline NSString *AnUpgrade_get_TABLE_NAME();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *AnUpgrade_TABLE_NAME;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnUpgrade, TABLE_NAME, NSString *)
 
 J2OBJC_TYPE_LITERAL_HEADER(AnUpgrade)
 
 #define ComValsA2iosAmfibianIntfAnUpgrade AnUpgrade
 
-#endif // _ComValsA2iosAmfibianIntfAnUpgrade_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnUpgrade")

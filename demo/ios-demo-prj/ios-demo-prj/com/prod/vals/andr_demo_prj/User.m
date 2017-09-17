@@ -21,6 +21,13 @@ J2OBJC_FIELD_SETTER(User, appointments_User_, id<JavaUtilCollection>)
 
 @implementation User
 
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  User_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
+
 - (NSString *)getName {
   return name_;
 }
@@ -37,39 +44,43 @@ J2OBJC_FIELD_SETTER(User, appointments_User_, id<JavaUtilCollection>)
   self->appointments_User_ = appointments;
 }
 
-J2OBJC_IGNORE_DESIGNATED_BEGIN
-- (instancetype)init {
-  User_init(self);
-  return self;
-}
-J2OBJC_IGNORE_DESIGNATED_END
-
 + (const J2ObjcClassInfo *)__metadata {
-  static const J2ObjcMethodInfo methods[] = {
-    { "getName", NULL, "Ljava.lang.String;", 0x1, NULL, NULL },
-    { "setNameWithNSString:", "setName", "V", 0x1, NULL, NULL },
-    { "getAppointments", NULL, "Ljava.util.Collection;", 0x1, NULL, NULL },
-    { "setAppointmentsWithJavaUtilCollection:", "setAppointments", "V", 0x1, NULL, NULL },
-    { "init", NULL, NULL, 0x1, NULL, NULL },
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "LNSString;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 0, 1, -1, -1, -1, -1 },
+    { NULL, "LJavaUtilCollection;", 0x1, -1, -1, -1, 2, -1, -1 },
+    { NULL, "V", 0x1, 3, 4, -1, 5, -1, -1 },
   };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  methods[0].selector = @selector(init);
+  methods[1].selector = @selector(getName);
+  methods[2].selector = @selector(setNameWithNSString:);
+  methods[3].selector = @selector(getAppointments);
+  methods[4].selector = @selector(setAppointmentsWithJavaUtilCollection:);
+  #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
-    { "name_", NULL, 0x2, "Ljava.lang.String;", NULL, NULL, .constantValue.asLong = 0 },
-    { "appointments_User_", "appointments", 0x2, "Ljava.util.Collection;", NULL, "Ljava/util/Collection<Lcom/prod/vals/andr_demo_prj/Appointment;>;", .constantValue.asLong = 0 },
+    { "name_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "appointments_User_", "LJavaUtilCollection;", .constantValue.asLong = 0, 0x2, 6, -1, 7, -1 },
   };
-  static const J2ObjcClassInfo _User = { 2, "User", "com.prod.vals.andr_demo_prj", NULL, 0x1, 5, methods, 2, fields, 0, NULL, 0, NULL, NULL, NULL };
+  static const void *ptrTable[] = { "setName", "LNSString;", "()Ljava/util/Collection<Lcom/prod/vals/andr_demo_prj/Appointment;>;", "setAppointments", "LJavaUtilCollection;", "(Ljava/util/Collection<Lcom/prod/vals/andr_demo_prj/Appointment;>;)V", "appointments", "Ljava/util/Collection<Lcom/prod/vals/andr_demo_prj/Appointment;>;" };
+  static const J2ObjcClassInfo _User = { "User", "com.prod.vals.andr_demo_prj", ptrTable, methods, fields, 7, 0x1, 5, 2, -1, -1, -1, -1, -1 };
   return &_User;
 }
 
 @end
 
 void User_init(User *self) {
-  (void) Entity_init(self);
+  Entity_init(self);
 }
 
 User *new_User_init() {
-  User *self = [User alloc];
-  User_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(User, init)
+}
+
+User *create_User_init() {
+  J2OBJC_CREATE_IMPL(User, init)
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(User)

@@ -3,17 +3,25 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/intf/AnIncubator.java
 //
 
-#ifndef _ComValsA2iosAmfibianIntfAnIncubator_H_
-#define _ComValsA2iosAmfibianIntfAnIncubator_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnIncubator")
+#ifdef RESTRICT_ComValsA2iosAmfibianIntfAnIncubator
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnIncubator 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnIncubator 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianIntfAnIncubator
+
+#if !defined (AnIncubator_) && (INCLUDE_ALL_ComValsA2iosAmfibianIntfAnIncubator || defined(INCLUDE_AnIncubator))
+#define AnIncubator_
 
 @class IOSClass;
 @protocol AnAttrib;
 @protocol AnOrm;
 @protocol SQLighterDb;
 
-@protocol AnIncubator < NSObject, JavaObject >
+@protocol AnIncubator < JavaObject >
 
 - (void)load__WithNSString:(NSString *)jsonString;
 
@@ -51,4 +59,6 @@ J2OBJC_TYPE_LITERAL_HEADER(AnIncubator)
 
 #define ComValsA2iosAmfibianIntfAnIncubator AnIncubator
 
-#endif // _ComValsA2iosAmfibianIntfAnIncubator_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnIncubator")

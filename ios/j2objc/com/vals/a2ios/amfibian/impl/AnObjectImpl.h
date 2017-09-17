@@ -3,11 +3,21 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/impl/AnObjectImpl.java
 //
 
-#ifndef _ComValsA2iosAmfibianImplAnObjectImpl_H_
-#define _ComValsA2iosAmfibianImplAnObjectImpl_H_
-
 #include "J2ObjC_header.h"
-#include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianImplAnObjectImpl")
+#ifdef RESTRICT_ComValsA2iosAmfibianImplAnObjectImpl
+#define INCLUDE_ALL_ComValsA2iosAmfibianImplAnObjectImpl 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianImplAnObjectImpl 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianImplAnObjectImpl
+
+#if !defined (AnObjectImpl_) && (INCLUDE_ALL_ComValsA2iosAmfibianImplAnObjectImpl || defined(INCLUDE_AnObjectImpl))
+#define AnObjectImpl_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnObject 1
+#define INCLUDE_AnObject 1
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 
 @class IOSClass;
@@ -139,29 +149,53 @@ FOUNDATION_EXPORT void AnObjectImpl_init(AnObjectImpl *self);
 
 FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnObjectImpl *create_AnObjectImpl_init();
+
 FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, id<AnObject> parentAnObject);
 
 FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnObject_(IOSClass *anObjClass, id<AnObject> parentAnObject) NS_RETURNS_RETAINED;
+
+FOUNDATION_EXPORT AnObjectImpl *create_AnObjectImpl_initWithIOSClass_withAnObject_(IOSClass *anObjClass, id<AnObject> parentAnObject);
 
 FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentAnObject);
 
 FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentAnObject) NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnObjectImpl *create_AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentAnObject);
+
 FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentAnObject);
 
 FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentAnObject) NS_RETURNS_RETAINED;
+
+FOUNDATION_EXPORT AnObjectImpl *create_AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentAnObject);
 
 FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withNSStringArray_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyNames);
 
 FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withNSStringArray_(IOSClass *anObjClass, IOSObjectArray *propertyNames) NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnObjectImpl *create_AnObjectImpl_initWithIOSClass_withNSStringArray_(IOSClass *anObjClass, IOSObjectArray *propertyNames);
+
 FOUNDATION_EXPORT void AnObjectImpl_initWithIOSClass_withAnAttribArray_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyMappers);
 
 FOUNDATION_EXPORT AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_(IOSClass *anObjClass, IOSObjectArray *propertyMappers) NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnObjectImpl *create_AnObjectImpl_initWithIOSClass_withAnAttribArray_(IOSClass *anObjClass, IOSObjectArray *propertyMappers);
+
 J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl)
 
 @compatibility_alias ComValsA2iosAmfibianImplAnObjectImpl AnObjectImpl;
+
+#endif
+
+#if !defined (AnObjectImpl_SampleGetAdapter_) && (INCLUDE_ALL_ComValsA2iosAmfibianImplAnObjectImpl || defined(INCLUDE_AnObjectImpl_SampleGetAdapter))
+#define AnObjectImpl_SampleGetAdapter_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnAdapter 1
+#define INCLUDE_AnAdapter 1
+#include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
+
+@class IOSClass;
+@protocol AnAttrib;
 
 @interface AnObjectImpl_SampleGetAdapter : NSObject < AnAdapter >
 
@@ -184,7 +218,21 @@ FOUNDATION_EXPORT void AnObjectImpl_SampleGetAdapter_init(AnObjectImpl_SampleGet
 
 FOUNDATION_EXPORT AnObjectImpl_SampleGetAdapter *new_AnObjectImpl_SampleGetAdapter_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnObjectImpl_SampleGetAdapter *create_AnObjectImpl_SampleGetAdapter_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl_SampleGetAdapter)
+
+#endif
+
+#if !defined (AnObjectImpl_SampleSetAdapter_) && (INCLUDE_ALL_ComValsA2iosAmfibianImplAnObjectImpl || defined(INCLUDE_AnObjectImpl_SampleSetAdapter))
+#define AnObjectImpl_SampleSetAdapter_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnAdapter 1
+#define INCLUDE_AnAdapter 1
+#include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
+
+@class IOSClass;
+@protocol AnAttrib;
 
 @interface AnObjectImpl_SampleSetAdapter : NSObject < AnAdapter >
 
@@ -207,6 +255,10 @@ FOUNDATION_EXPORT void AnObjectImpl_SampleSetAdapter_init(AnObjectImpl_SampleSet
 
 FOUNDATION_EXPORT AnObjectImpl_SampleSetAdapter *new_AnObjectImpl_SampleSetAdapter_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnObjectImpl_SampleSetAdapter *create_AnObjectImpl_SampleSetAdapter_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(AnObjectImpl_SampleSetAdapter)
 
-#endif // _ComValsA2iosAmfibianImplAnObjectImpl_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianImplAnObjectImpl")

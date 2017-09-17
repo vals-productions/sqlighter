@@ -3,10 +3,21 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/DemoDefaultGetAdapter.java
 //
 
-#ifndef _ComProdValsAndr_demo_prjDemoDefaultGetAdapter_H_
-#define _ComProdValsAndr_demo_prjDemoDefaultGetAdapter_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjDemoDefaultGetAdapter")
+#ifdef RESTRICT_ComProdValsAndr_demo_prjDemoDefaultGetAdapter
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjDemoDefaultGetAdapter 0
+#else
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjDemoDefaultGetAdapter 1
+#endif
+#undef RESTRICT_ComProdValsAndr_demo_prjDemoDefaultGetAdapter
+
+#if !defined (DemoDefaultGetAdapter_) && (INCLUDE_ALL_ComProdValsAndr_demo_prjDemoDefaultGetAdapter || defined(INCLUDE_DemoDefaultGetAdapter))
+#define DemoDefaultGetAdapter_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnAdapter 1
+#define INCLUDE_AnAdapter 1
 #include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 
 @class IOSClass;
@@ -33,8 +44,12 @@ FOUNDATION_EXPORT void DemoDefaultGetAdapter_init(DemoDefaultGetAdapter *self);
 
 FOUNDATION_EXPORT DemoDefaultGetAdapter *new_DemoDefaultGetAdapter_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT DemoDefaultGetAdapter *create_DemoDefaultGetAdapter_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(DemoDefaultGetAdapter)
 
 @compatibility_alias ComProdValsAndr_demo_prjDemoDefaultGetAdapter DemoDefaultGetAdapter;
 
-#endif // _ComProdValsAndr_demo_prjDemoDefaultGetAdapter_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjDemoDefaultGetAdapter")

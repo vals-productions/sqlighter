@@ -12,6 +12,13 @@
 
 @implementation Entity
 
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  Entity_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
+
 - (JavaLangInteger *)getId {
   return id__;
 }
@@ -68,54 +75,68 @@
   self->appointments_ = appointments;
 }
 
-J2OBJC_IGNORE_DESIGNATED_BEGIN
-- (instancetype)init {
-  Entity_init(self);
-  return self;
-}
-J2OBJC_IGNORE_DESIGNATED_END
-
 + (const J2ObjcClassInfo *)__metadata {
-  static const J2ObjcMethodInfo methods[] = {
-    { "getId", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
-    { "setIdWithJavaLangInteger:", "setId", "V", 0x1, NULL, NULL },
-    { "getCreateDate", NULL, "Ljava.util.Date;", 0x1, NULL, NULL },
-    { "setCreateDateWithJavaUtilDate:", "setCreateDate", "V", 0x1, NULL, NULL },
-    { "getStatus", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
-    { "setStatusWithJavaLangInteger:", "setStatus", "V", 0x1, NULL, NULL },
-    { "getType", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
-    { "setTypeWithJavaLangInteger:", "setType", "V", 0x1, NULL, NULL },
-    { "getCreateUserId", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
-    { "setCreateUserIdWithJavaLangInteger:", "setCreateUserId", "V", 0x1, NULL, NULL },
-    { "getCreateUser", NULL, "Lcom.prod.vals.andr_demo_prj.User;", 0x1, NULL, NULL },
-    { "setCreateUserWithUser:", "setCreateUser", "V", 0x1, NULL, NULL },
-    { "getAppointments", NULL, "Ljava.util.Collection;", 0x1, NULL, NULL },
-    { "setAppointmentsWithJavaUtilCollection:", "setAppointments", "V", 0x1, NULL, NULL },
-    { "init", NULL, NULL, 0x1, NULL, NULL },
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "LJavaLangInteger;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 0, 1, -1, -1, -1, -1 },
+    { NULL, "LJavaUtilDate;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 2, 3, -1, -1, -1, -1 },
+    { NULL, "LJavaLangInteger;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 4, 1, -1, -1, -1, -1 },
+    { NULL, "LJavaLangInteger;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 5, 1, -1, -1, -1, -1 },
+    { NULL, "LJavaLangInteger;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 6, 1, -1, -1, -1, -1 },
+    { NULL, "LUser;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 7, 8, -1, -1, -1, -1 },
+    { NULL, "LJavaUtilCollection;", 0x1, -1, -1, -1, 9, -1, -1 },
+    { NULL, "V", 0x1, 10, 11, -1, 12, -1, -1 },
   };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  methods[0].selector = @selector(init);
+  methods[1].selector = @selector(getId);
+  methods[2].selector = @selector(setIdWithJavaLangInteger:);
+  methods[3].selector = @selector(getCreateDate);
+  methods[4].selector = @selector(setCreateDateWithJavaUtilDate:);
+  methods[5].selector = @selector(getStatus);
+  methods[6].selector = @selector(setStatusWithJavaLangInteger:);
+  methods[7].selector = @selector(getType);
+  methods[8].selector = @selector(setTypeWithJavaLangInteger:);
+  methods[9].selector = @selector(getCreateUserId);
+  methods[10].selector = @selector(setCreateUserIdWithJavaLangInteger:);
+  methods[11].selector = @selector(getCreateUser);
+  methods[12].selector = @selector(setCreateUserWithUser:);
+  methods[13].selector = @selector(getAppointments);
+  methods[14].selector = @selector(setAppointmentsWithJavaUtilCollection:);
+  #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
-    { "id__", "id", 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
-    { "createDate_", NULL, 0x1, "Ljava.util.Date;", NULL, NULL, .constantValue.asLong = 0 },
-    { "status_", NULL, 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
-    { "type_", NULL, 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
-    { "createUserId_", NULL, 0x1, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
-    { "createUser_", NULL, 0x1, "Lcom.prod.vals.andr_demo_prj.User;", NULL, NULL, .constantValue.asLong = 0 },
-    { "appointments_", NULL, 0x1, "Ljava.util.Collection;", NULL, "Ljava/util/Collection<Lcom/prod/vals/andr_demo_prj/Appointment;>;", .constantValue.asLong = 0 },
+    { "id__", "LJavaLangInteger;", .constantValue.asLong = 0, 0x1, 13, -1, -1, -1 },
+    { "createDate_", "LJavaUtilDate;", .constantValue.asLong = 0, 0x1, -1, -1, -1, -1 },
+    { "status_", "LJavaLangInteger;", .constantValue.asLong = 0, 0x1, -1, -1, -1, -1 },
+    { "type_", "LJavaLangInteger;", .constantValue.asLong = 0, 0x1, -1, -1, -1, -1 },
+    { "createUserId_", "LJavaLangInteger;", .constantValue.asLong = 0, 0x1, -1, -1, -1, -1 },
+    { "createUser_", "LUser;", .constantValue.asLong = 0, 0x1, -1, -1, -1, -1 },
+    { "appointments_", "LJavaUtilCollection;", .constantValue.asLong = 0, 0x1, -1, -1, 14, -1 },
   };
-  static const J2ObjcClassInfo _Entity = { 2, "Entity", "com.prod.vals.andr_demo_prj", NULL, 0x1, 15, methods, 7, fields, 0, NULL, 0, NULL, NULL, NULL };
+  static const void *ptrTable[] = { "setId", "LJavaLangInteger;", "setCreateDate", "LJavaUtilDate;", "setStatus", "setType", "setCreateUserId", "setCreateUser", "LUser;", "()Ljava/util/Collection<Lcom/prod/vals/andr_demo_prj/Appointment;>;", "setAppointments", "LJavaUtilCollection;", "(Ljava/util/Collection<Lcom/prod/vals/andr_demo_prj/Appointment;>;)V", "id", "Ljava/util/Collection<Lcom/prod/vals/andr_demo_prj/Appointment;>;" };
+  static const J2ObjcClassInfo _Entity = { "Entity", "com.prod.vals.andr_demo_prj", ptrTable, methods, fields, 7, 0x1, 15, 7, -1, -1, -1, -1, -1 };
   return &_Entity;
 }
 
 @end
 
 void Entity_init(Entity *self) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
 }
 
 Entity *new_Entity_init() {
-  Entity *self = [Entity alloc];
-  Entity_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(Entity, init)
+}
+
+Entity *create_Entity_init() {
+  J2OBJC_CREATE_IMPL(Entity, init)
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Entity)

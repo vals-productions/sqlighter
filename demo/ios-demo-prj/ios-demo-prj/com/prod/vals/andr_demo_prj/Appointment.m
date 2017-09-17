@@ -21,6 +21,13 @@ J2OBJC_FIELD_SETTER(Appointment, isProcessed_, JavaLangInteger *)
 
 @implementation Appointment
 
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  Appointment_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
+
 - (NSString *)getName {
   return name_;
 }
@@ -37,39 +44,43 @@ J2OBJC_FIELD_SETTER(Appointment, isProcessed_, JavaLangInteger *)
   self->isProcessed_ = isProcessed;
 }
 
-J2OBJC_IGNORE_DESIGNATED_BEGIN
-- (instancetype)init {
-  Appointment_init(self);
-  return self;
-}
-J2OBJC_IGNORE_DESIGNATED_END
-
 + (const J2ObjcClassInfo *)__metadata {
-  static const J2ObjcMethodInfo methods[] = {
-    { "getName", NULL, "Ljava.lang.String;", 0x1, NULL, NULL },
-    { "setNameWithNSString:", "setName", "V", 0x1, NULL, NULL },
-    { "getIsProcessed", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
-    { "setIsProcessedWithJavaLangInteger:", "setIsProcessed", "V", 0x1, NULL, NULL },
-    { "init", NULL, NULL, 0x1, NULL, NULL },
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "LNSString;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 0, 1, -1, -1, -1, -1 },
+    { NULL, "LJavaLangInteger;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 2, 3, -1, -1, -1, -1 },
   };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  methods[0].selector = @selector(init);
+  methods[1].selector = @selector(getName);
+  methods[2].selector = @selector(setNameWithNSString:);
+  methods[3].selector = @selector(getIsProcessed);
+  methods[4].selector = @selector(setIsProcessedWithJavaLangInteger:);
+  #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
-    { "name_", NULL, 0x2, "Ljava.lang.String;", NULL, NULL, .constantValue.asLong = 0 },
-    { "isProcessed_", NULL, 0x2, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
+    { "name_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "isProcessed_", "LJavaLangInteger;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
   };
-  static const J2ObjcClassInfo _Appointment = { 2, "Appointment", "com.prod.vals.andr_demo_prj", NULL, 0x1, 5, methods, 2, fields, 0, NULL, 0, NULL, NULL, NULL };
+  static const void *ptrTable[] = { "setName", "LNSString;", "setIsProcessed", "LJavaLangInteger;" };
+  static const J2ObjcClassInfo _Appointment = { "Appointment", "com.prod.vals.andr_demo_prj", ptrTable, methods, fields, 7, 0x1, 5, 2, -1, -1, -1, -1, -1 };
   return &_Appointment;
 }
 
 @end
 
 void Appointment_init(Appointment *self) {
-  (void) Entity_init(self);
+  Entity_init(self);
 }
 
 Appointment *new_Appointment_init() {
-  Appointment *self = [Appointment alloc];
-  Appointment_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(Appointment, init)
+}
+
+Appointment *create_Appointment_init() {
+  J2OBJC_CREATE_IMPL(Appointment, init)
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Appointment)

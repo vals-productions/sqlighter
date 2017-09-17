@@ -3,10 +3,21 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Demo.java
 //
 
-#ifndef _ComProdValsAndr_demo_prjDemo_H_
-#define _ComProdValsAndr_demo_prjDemo_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjDemo")
+#ifdef RESTRICT_ComProdValsAndr_demo_prjDemo
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjDemo 0
+#else
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjDemo 1
+#endif
+#undef RESTRICT_ComProdValsAndr_demo_prjDemo
+
+#if !defined (Demo_) && (INCLUDE_ALL_ComProdValsAndr_demo_prjDemo || defined(INCLUDE_Demo))
+#define Demo_
+
+#define RESTRICT_ComProdValsAndr_demo_prjDemoBase 1
+#define INCLUDE_DemoBase 1
 #include "com/prod/vals/andr_demo_prj/DemoBase.h"
 
 @protocol AnObject;
@@ -45,8 +56,12 @@ FOUNDATION_EXPORT void Demo_init(Demo *self);
 
 FOUNDATION_EXPORT Demo *new_Demo_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT Demo *create_Demo_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(Demo)
 
 @compatibility_alias ComProdValsAndr_demo_prjDemo Demo;
 
-#endif // _ComProdValsAndr_demo_prjDemo_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjDemo")

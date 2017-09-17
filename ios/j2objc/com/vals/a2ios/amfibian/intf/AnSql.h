@@ -3,10 +3,21 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/intf/AnSql.java
 //
 
-#ifndef _ComValsA2iosAmfibianIntfAnSql_H_
-#define _ComValsA2iosAmfibianIntfAnSql_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnSql")
+#ifdef RESTRICT_ComValsA2iosAmfibianIntfAnSql
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnSql 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnSql 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianIntfAnSql
+
+#if !defined (AnSql_) && (INCLUDE_ALL_ComValsA2iosAmfibianIntfAnSql || defined(INCLUDE_AnSql))
+#define AnSql_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnObject 1
+#define INCLUDE_AnObject 1
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 
 @class IOSObjectArray;
@@ -15,7 +26,7 @@
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
 
-@protocol AnSql < AnObject, NSObject, JavaObject >
+@protocol AnSql < AnObject, JavaObject >
 
 - (void)startSqlSelect;
 
@@ -69,4 +80,6 @@ J2OBJC_TYPE_LITERAL_HEADER(AnSql)
 
 #define ComValsA2iosAmfibianIntfAnSql AnSql
 
-#endif // _ComValsA2iosAmfibianIntfAnSql_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnSql")

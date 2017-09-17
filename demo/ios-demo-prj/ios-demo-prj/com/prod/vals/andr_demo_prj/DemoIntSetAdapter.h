@@ -3,10 +3,21 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/DemoIntSetAdapter.java
 //
 
-#ifndef _ComProdValsAndr_demo_prjDemoIntSetAdapter_H_
-#define _ComProdValsAndr_demo_prjDemoIntSetAdapter_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjDemoIntSetAdapter")
+#ifdef RESTRICT_ComProdValsAndr_demo_prjDemoIntSetAdapter
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjDemoIntSetAdapter 0
+#else
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjDemoIntSetAdapter 1
+#endif
+#undef RESTRICT_ComProdValsAndr_demo_prjDemoIntSetAdapter
+
+#if !defined (DemoIntSetAdapter_) && (INCLUDE_ALL_ComProdValsAndr_demo_prjDemoIntSetAdapter || defined(INCLUDE_DemoIntSetAdapter))
+#define DemoIntSetAdapter_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnAdapter 1
+#define INCLUDE_AnAdapter 1
 #include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 
 @class IOSClass;
@@ -33,8 +44,12 @@ FOUNDATION_EXPORT void DemoIntSetAdapter_init(DemoIntSetAdapter *self);
 
 FOUNDATION_EXPORT DemoIntSetAdapter *new_DemoIntSetAdapter_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT DemoIntSetAdapter *create_DemoIntSetAdapter_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(DemoIntSetAdapter)
 
 @compatibility_alias ComProdValsAndr_demo_prjDemoIntSetAdapter DemoIntSetAdapter;
 
-#endif // _ComProdValsAndr_demo_prjDemoIntSetAdapter_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjDemoIntSetAdapter")

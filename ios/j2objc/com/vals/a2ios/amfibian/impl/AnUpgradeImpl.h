@@ -3,17 +3,25 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/impl/AnUpgradeImpl.java
 //
 
-#ifndef _ComValsA2iosAmfibianImplAnUpgradeImpl_H_
-#define _ComValsA2iosAmfibianImplAnUpgradeImpl_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianImplAnUpgradeImpl")
+#ifdef RESTRICT_ComValsA2iosAmfibianImplAnUpgradeImpl
+#define INCLUDE_ALL_ComValsA2iosAmfibianImplAnUpgradeImpl 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianImplAnUpgradeImpl 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianImplAnUpgradeImpl
+
+#if !defined (AnUpgradeImpl_) && (INCLUDE_ALL_ComValsA2iosAmfibianImplAnUpgradeImpl || defined(INCLUDE_AnUpgradeImpl))
+#define AnUpgradeImpl_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnUpgrade 1
+#define INCLUDE_AnUpgrade 1
 #include "com/vals/a2ios/amfibian/intf/AnUpgrade.h"
 
 @class AnOrmImpl;
-@class JavaLangDouble;
-@class JavaLangInteger;
 @class JavaLangThrowable;
-@class JavaUtilDate;
 @protocol JavaUtilList;
 @protocol JavaUtilSet;
 @protocol SQLighterDb;
@@ -75,6 +83,15 @@ J2OBJC_TYPE_LITERAL_HEADER(AnUpgradeImpl)
 
 @compatibility_alias ComValsA2iosAmfibianImplAnUpgradeImpl AnUpgradeImpl;
 
+#endif
+
+#if !defined (AnUpgradeImpl_Upgrade_) && (INCLUDE_ALL_ComValsA2iosAmfibianImplAnUpgradeImpl || defined(INCLUDE_AnUpgradeImpl_Upgrade))
+#define AnUpgradeImpl_Upgrade_
+
+@class JavaLangDouble;
+@class JavaLangInteger;
+@class JavaUtilDate;
+
 @interface AnUpgradeImpl_Upgrade : NSObject
 
 #pragma mark Public
@@ -121,6 +138,10 @@ FOUNDATION_EXPORT void AnUpgradeImpl_Upgrade_init(AnUpgradeImpl_Upgrade *self);
 
 FOUNDATION_EXPORT AnUpgradeImpl_Upgrade *new_AnUpgradeImpl_Upgrade_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnUpgradeImpl_Upgrade *create_AnUpgradeImpl_Upgrade_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(AnUpgradeImpl_Upgrade)
 
-#endif // _ComValsA2iosAmfibianImplAnUpgradeImpl_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianImplAnUpgradeImpl")

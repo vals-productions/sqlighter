@@ -3,10 +3,21 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/intf/AnOrm.java
 //
 
-#ifndef _ComValsA2iosAmfibianIntfAnOrm_H_
-#define _ComValsA2iosAmfibianIntfAnOrm_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnOrm")
+#ifdef RESTRICT_ComValsA2iosAmfibianIntfAnOrm
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnOrm 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianIntfAnOrm 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianIntfAnOrm
+
+#if !defined (AnOrm_) && (INCLUDE_ALL_ComValsA2iosAmfibianIntfAnOrm || defined(INCLUDE_AnOrm))
+#define AnOrm_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnSql 1
+#define INCLUDE_AnSql 1
 #include "com/vals/a2ios/amfibian/intf/AnSql.h"
 
 @class JavaLangLong;
@@ -14,7 +25,7 @@
 @protocol JavaUtilCollection;
 @protocol SQLighterDb;
 
-@protocol AnOrm < AnSql, NSObject, JavaObject >
+@protocol AnOrm < AnSql, JavaObject >
 
 - (id<JavaUtilCollection>)getRecords;
 
@@ -58,4 +69,6 @@ J2OBJC_TYPE_LITERAL_HEADER(AnOrm)
 
 #define ComValsA2iosAmfibianIntfAnOrm AnOrm
 
-#endif // _ComValsA2iosAmfibianIntfAnOrm_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianIntfAnOrm")
