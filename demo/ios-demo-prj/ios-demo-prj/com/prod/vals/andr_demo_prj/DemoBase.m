@@ -84,7 +84,7 @@ J2OBJC_FIELD_SETTER(DemoBase, testList_, id<JavaUtilList>)
 }
 
 - (void)printWithAppointment:(Appointment *)appointment {
-  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$@$@", @"Appointment object. id: ", [((Appointment *) nil_chk(appointment)) getId], @", name: ", [appointment getName], @", isProcessed:", [appointment getIsProcessed], @", createDate:", [appointment getCreateDate])];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$@$@$@", @"Appointment object. id: ", [((Appointment *) nil_chk(appointment)) getId], @", name: ", [appointment getName], @", isProcessed:", [appointment getIsProcessed], @", createDate:", [appointment getCreateDate], @", status: ", [appointment getStatus])];
 }
 
 - (void)printWithSQLighterRs:(id<SQLighterRs>)rs {

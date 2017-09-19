@@ -447,6 +447,26 @@ public class Demo extends DemoBase {
             checkTest("attrib level adapter", meetAmfibianAppointment.getStatus() == 1);
             checkTest("object level adapter", meetAmfibianAppointment.getIsProcessed() == 1);
 
+            // Partial list of columns usage.
+            anOrm.addInclAttribs("name"); // we limit Amfibian to use only column "name" from now on.
+            meetAmfibianAppointment.setName("Meet AmfibiaN! + 1"); // we set the value of name to some new value.
+            meetAmfibianAppointment.setIsProcessed(0); // we also set isProcessed to the new value only to verify it''ll not be saved
+            anOrm.startSqlUpdate(meetAmfibianAppointment); // initiat the update
+            anOrm.addWhere("id = ?", 234);
+            anOrm.apply();
+
+            // read the info from DB
+            anOrm.resetSkipInclAttrNameList();
+            anOrm.startSqlSelect();
+            anOrm.addWhere("id = ?", 234);
+            meetAmfibianAppointment = anOrm.getSingleResult();
+
+            printAppointments(anOrm); // Lets check what we've got in the table
+
+            // we are suposed to get new value of name, but old value of is processed
+            checkTest("partial update attrib level adapter", meetAmfibianAppointment.getName().equals("Meet AmfibiaN! + 1"));
+            checkTest("partial update object level adapter", meetAmfibianAppointment.getIsProcessed() == 1);
+
             System.out.println(
                     "Back to JSON string\nbecause we " +
                             "might want to send it\nback to the " +
@@ -457,7 +477,7 @@ public class Demo extends DemoBase {
              */
             JSONObject jsonObject = anOrm.asJSONObject(meetAmfibianAppointment);
             String name = (String) jsonObject.get("name");
-            checkTest("native to JSON", name.equals("Meet AmfibiaN!"));
+            checkTest("native to JSON", name.equals("Meet AmfibiaN! + 1"));
 
             /**
              * Association resolution tests
