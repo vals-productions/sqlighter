@@ -77,7 +77,8 @@ public abstract class DemoBase {
                 "Appointment object. id: " + appointment.getId() +
                         ", name: " + appointment.getName() +
                         ", isProcessed:" + appointment.getIsProcessed() +
-                        ", createDate:" + appointment.getCreateDate()
+                        ", createDate:" + appointment.getCreateDate() +
+                        ", status: " + appointment.getStatus()
         );
     }
 
