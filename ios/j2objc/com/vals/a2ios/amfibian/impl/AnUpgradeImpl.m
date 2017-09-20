@@ -28,7 +28,6 @@
 #include "java/util/Set.h"
 
 #pragma clang diagnostic ignored "-Wprotocol"
-#pragma clang diagnostic ignored "-Wincomplete-implementation"
 
 @interface AnUpgradeImpl () {
  @public
@@ -121,6 +120,18 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
 - (instancetype)initWithSQLighterDb:(id<SQLighterDb>)sqLighterDb {
   AnUpgradeImpl_initWithSQLighterDb_(self, sqLighterDb);
   return self;
+}
+
+- (id<JavaUtilList>)getTasksByKeyWithNSString:(NSString *)key {
+  // can't call an abstract method
+  [self doesNotRecognizeSelector:_cmd];
+  return 0;
+}
+
+- (id<JavaUtilList>)getUpdateKeys {
+  // can't call an abstract method
+  [self doesNotRecognizeSelector:_cmd];
+  return 0;
 }
 
 - (NSString *)getLogTableName {
@@ -267,6 +278,46 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
     [tasks addWithId:JreStrcat("$$$", @"update ", [self getLogTableName], @" set type = 1 where value is not null")];
   }
   return tasks;
+}
+
++ (const J2ObjcClassInfo *)__metadata {
+  static const J2ObjcMethodInfo methods[] = {
+    { "initWithSQLighterDb:withNSString:withNSString:", "AnUpgradeImpl", NULL, 0x1, "Ljava.lang.Exception;", NULL },
+    { "initWithSQLighterDb:", "AnUpgradeImpl", NULL, 0x1, "Ljava.lang.Exception;", NULL },
+    { "getTasksByKeyWithNSString:", "getTasksByKey", "Ljava.util.List;", 0x401, NULL, NULL },
+    { "getUpdateKeys", NULL, "Ljava.util.List;", 0x401, NULL, NULL },
+    { "getLogTableName", NULL, "Ljava.lang.String;", 0x1, NULL, NULL },
+    { "setLogTableNameWithNSString:", "setLogTableName", "V", 0x1, NULL, NULL },
+    { "getAppliedUpdates", NULL, "Ljava.util.Set;", 0x1, "Ljava.lang.Exception;", NULL },
+    { "applyUpdates", NULL, "I", 0x1, "Ljava.lang.Exception;", NULL },
+    { "applyUpdatesWithInt:", "applyUpdates", "I", 0x2, "Ljava.lang.Exception;", NULL },
+    { "applyUpdateWithNSString:withJavaUtilList:", "applyUpdate", "Z", 0x4, NULL, NULL },
+    { "attemptToRecover", NULL, "I", 0x1, "Ljava.lang.Exception;", NULL },
+    { "attemptToRecoverWithInt:", "attemptToRecover", "I", 0x2, "Ljava.lang.Exception;", NULL },
+    { "setRecoverKeyWithNSString:", "setRecoverKey", "V", 0x1, NULL, NULL },
+    { "logUpgradeStepWithNSString:withNSString:withJavaLangLong:", "logUpgradeStep", "V", 0x2, "Ljava.lang.Exception;", NULL },
+    { "logKeyWithNSString:withNSString:withJavaLangInteger:", "logKey", "V", 0x2, "Ljava.lang.Exception;", NULL },
+    { "saveLogWithAnUpgradeImpl_Upgrade:", "saveLog", "V", 0x2, "Ljava.lang.Exception;", NULL },
+    { "findTableWithNSString:", "findTable", "Z", 0x2, "Ljava.lang.Exception;", NULL },
+    { "onTaskSuccessWithId:", "onTaskSuccess", "V", 0x1, NULL, NULL },
+    { "onTaskFailWithId:withJavaLangThrowable:", "onTaskFail", "V", 0x1, NULL, NULL },
+    { "getPrivateUpdateKeys", NULL, "Ljava.util.List;", 0x2, NULL, NULL },
+    { "getPrivateTasksByKeyWithNSString:", "getPrivateTasksByKey", "Ljava.util.List;", 0x4, NULL, NULL },
+  };
+  static const J2ObjcFieldInfo fields[] = {
+    { "map_", NULL, 0x2, "Ljava.util.Map;", NULL, "Ljava/util/Map<Ljava/lang/Integer;Ljava/util/List<Ljava/lang/String;>;>;", .constantValue.asLong = 0 },
+    { "sqlighterDb_", NULL, 0x4, "Lcom.vals.a2ios.sqlighter.intf.SQLighterDb;", NULL, NULL, .constantValue.asLong = 0 },
+    { "recoverKey_", NULL, 0x2, "Ljava.lang.String;", NULL, NULL, .constantValue.asLong = 0 },
+    { "logTableName_", NULL, 0x2, "Ljava.lang.String;", NULL, NULL, .constantValue.asLong = 0 },
+    { "anOrm_", NULL, 0x4, "Lcom.vals.a2ios.amfibian.impl.AnOrmImpl;", NULL, "Lcom/vals/a2ios/amfibian/impl/AnOrmImpl<Lcom/vals/a2ios/amfibian/impl/AnUpgradeImpl$Upgrade;>;", .constantValue.asLong = 0 },
+    { "delayedLogs_", NULL, 0x2, "Ljava.util.List;", NULL, "Ljava/util/List<Lcom/vals/a2ios/amfibian/impl/AnUpgradeImpl$Upgrade;>;", .constantValue.asLong = 0 },
+    { "PRIVATE_PREFIX_", NULL, 0x1a, "Ljava.lang.String;", &AnUpgradeImpl_PRIVATE_PREFIX_, NULL, .constantValue.asLong = 0 },
+    { "PRIVATE_REC_KEY_", NULL, 0x1a, "Ljava.lang.String;", &AnUpgradeImpl_PRIVATE_REC_KEY_, NULL, .constantValue.asLong = 0 },
+    { "PRIVATE_KEY1_", NULL, 0x1a, "Ljava.lang.String;", &AnUpgradeImpl_PRIVATE_KEY1_, NULL, .constantValue.asLong = 0 },
+  };
+  static const char *inner_classes[] = {"Lcom.vals.a2ios.amfibian.impl.AnUpgradeImpl$Upgrade;"};
+  static const J2ObjcClassInfo _AnUpgradeImpl = { 2, "AnUpgradeImpl", "com.vals.a2ios.amfibian.impl", NULL, 0x401, 21, methods, 9, fields, 0, NULL, 1, inner_classes, NULL, NULL };
+  return &_AnUpgradeImpl;
 }
 
 @end
@@ -457,6 +508,40 @@ J2OBJC_IGNORE_DESIGNATED_BEGIN
   return self;
 }
 J2OBJC_IGNORE_DESIGNATED_END
+
++ (const J2ObjcClassInfo *)__metadata {
+  static const J2ObjcMethodInfo methods[] = {
+    { "getKey", NULL, "Ljava.lang.String;", 0x1, NULL, NULL },
+    { "setKeyWithNSString:", "setKey", "V", 0x1, NULL, NULL },
+    { "getValue", NULL, "Ljava.lang.String;", 0x1, NULL, NULL },
+    { "setValueWithNSString:", "setValue", "V", 0x1, NULL, NULL },
+    { "getCreateDate", NULL, "Ljava.util.Date;", 0x1, NULL, NULL },
+    { "setCreateDateWithJavaUtilDate:", "setCreateDate", "V", 0x1, NULL, NULL },
+    { "getStatus", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
+    { "setStatusWithJavaLangInteger:", "setStatus", "V", 0x1, NULL, NULL },
+    { "getType", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
+    { "setTypeWithJavaLangInteger:", "setType", "V", 0x1, NULL, NULL },
+    { "getRefi", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
+    { "setRefiWithJavaLangInteger:", "setRefi", "V", 0x1, NULL, NULL },
+    { "getRefd", NULL, "Ljava.lang.Double;", 0x1, NULL, NULL },
+    { "setRefdWithJavaLangDouble:", "setRefd", "V", 0x1, NULL, NULL },
+    { "getRefs", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
+    { "setRefsWithJavaLangInteger:", "setRefs", "V", 0x1, NULL, NULL },
+    { "init", NULL, NULL, 0x1, NULL, NULL },
+  };
+  static const J2ObjcFieldInfo fields[] = {
+    { "key_", NULL, 0x2, "Ljava.lang.String;", NULL, NULL, .constantValue.asLong = 0 },
+    { "value_", NULL, 0x2, "Ljava.lang.String;", NULL, NULL, .constantValue.asLong = 0 },
+    { "createDate_", NULL, 0x2, "Ljava.util.Date;", NULL, NULL, .constantValue.asLong = 0 },
+    { "status_", NULL, 0x2, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
+    { "type_", NULL, 0x2, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
+    { "refi_", NULL, 0x2, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
+    { "refd_", NULL, 0x2, "Ljava.lang.Double;", NULL, NULL, .constantValue.asLong = 0 },
+    { "refs_", NULL, 0x2, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
+  };
+  static const J2ObjcClassInfo _AnUpgradeImpl_Upgrade = { 2, "Upgrade", "com.vals.a2ios.amfibian.impl", "AnUpgradeImpl", 0x9, 17, methods, 8, fields, 0, NULL, 0, NULL, NULL, NULL };
+  return &_AnUpgradeImpl_Upgrade;
+}
 
 @end
 

@@ -33,7 +33,7 @@ ROOT_DIR=../../../..
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnObjectImpl.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnSqlImpl.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnOrmImpl.java
-./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnUpgradeImpl.java
+./j2objc-w-refl.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnUpgradeImpl.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnIncubatorImpl.java
 # ./j2objc.sh $ROOT_DIR/ios/j2objc/ $ROOT_DIR/android/ com/vals/a2ios/amfibian/impl/AnAssociateImpl.java
 
