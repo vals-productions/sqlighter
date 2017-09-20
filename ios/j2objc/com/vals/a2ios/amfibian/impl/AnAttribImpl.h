@@ -3,10 +3,21 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/impl/AnAttribImpl.java
 //
 
-#ifndef _ComValsA2iosAmfibianImplAnAttribImpl_H_
-#define _ComValsA2iosAmfibianImplAnAttribImpl_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianImplAnAttribImpl")
+#ifdef RESTRICT_ComValsA2iosAmfibianImplAnAttribImpl
+#define INCLUDE_ALL_ComValsA2iosAmfibianImplAnAttribImpl 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianImplAnAttribImpl 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianImplAnAttribImpl
+
+#if !defined (AnAttribImpl_) && (INCLUDE_ALL_ComValsA2iosAmfibianImplAnAttribImpl || defined(INCLUDE_AnAttribImpl))
+#define AnAttribImpl_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnAttrib 1
+#define INCLUDE_AnAttrib 1
 #include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 
 @class IOSClass;
@@ -85,16 +96,24 @@ FOUNDATION_EXPORT void AnAttribImpl_init(AnAttribImpl *self);
 
 FOUNDATION_EXPORT AnAttribImpl *new_AnAttribImpl_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnAttribImpl *create_AnAttribImpl_init();
+
 FOUNDATION_EXPORT void AnAttribImpl_initWithNSString_withNSString_withNSString_(AnAttribImpl *self, NSString *attribName, NSString *columnName, NSString *jsonName);
 
 FOUNDATION_EXPORT AnAttribImpl *new_AnAttribImpl_initWithNSString_withNSString_withNSString_(NSString *attribName, NSString *columnName, NSString *jsonName) NS_RETURNS_RETAINED;
+
+FOUNDATION_EXPORT AnAttribImpl *create_AnAttribImpl_initWithNSString_withNSString_withNSString_(NSString *attribName, NSString *columnName, NSString *jsonName);
 
 FOUNDATION_EXPORT void AnAttribImpl_initWithNSString_(AnAttribImpl *self, NSString *attribColumnJsonName);
 
 FOUNDATION_EXPORT AnAttribImpl *new_AnAttribImpl_initWithNSString_(NSString *attribColumnJsonName) NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnAttribImpl *create_AnAttribImpl_initWithNSString_(NSString *attribColumnJsonName);
+
 J2OBJC_TYPE_LITERAL_HEADER(AnAttribImpl)
 
 @compatibility_alias ComValsA2iosAmfibianImplAnAttribImpl AnAttribImpl;
 
-#endif // _ComValsA2iosAmfibianImplAnAttribImpl_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianImplAnAttribImpl")

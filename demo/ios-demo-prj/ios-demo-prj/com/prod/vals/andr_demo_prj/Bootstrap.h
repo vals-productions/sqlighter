@@ -3,10 +3,18 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Bootstrap.java
 //
 
-#ifndef _ComProdValsAndr_demo_prjBootstrap_H_
-#define _ComProdValsAndr_demo_prjBootstrap_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjBootstrap")
+#ifdef RESTRICT_ComProdValsAndr_demo_prjBootstrap
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjBootstrap 0
+#else
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjBootstrap 1
+#endif
+#undef RESTRICT_ComProdValsAndr_demo_prjBootstrap
+
+#if !defined (Bootstrap_) && (INCLUDE_ALL_ComProdValsAndr_demo_prjBootstrap || defined(INCLUDE_Bootstrap))
+#define Bootstrap_
 
 @protocol Mobilighter;
 @protocol SQLighterDb;
@@ -35,4 +43,6 @@ J2OBJC_TYPE_LITERAL_HEADER(Bootstrap)
 
 @compatibility_alias ComProdValsAndr_demo_prjBootstrap Bootstrap;
 
-#endif // _ComProdValsAndr_demo_prjBootstrap_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjBootstrap")

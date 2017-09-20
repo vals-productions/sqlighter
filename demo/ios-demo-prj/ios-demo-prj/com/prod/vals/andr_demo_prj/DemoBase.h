@@ -3,10 +3,18 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/DemoBase.java
 //
 
-#ifndef _ComProdValsAndr_demo_prjDemoBase_H_
-#define _ComProdValsAndr_demo_prjDemoBase_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjDemoBase")
+#ifdef RESTRICT_ComProdValsAndr_demo_prjDemoBase
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjDemoBase 0
+#else
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjDemoBase 1
+#endif
+#undef RESTRICT_ComProdValsAndr_demo_prjDemoBase
+
+#if !defined (DemoBase_) && (INCLUDE_ALL_ComProdValsAndr_demo_prjDemoBase || defined(INCLUDE_DemoBase))
+#define DemoBase_
 
 @class Appointment;
 @class IOSClass;
@@ -21,9 +29,12 @@
 
 @interface DemoBase : NSObject {
  @public
-  id sqlighterHelloLabel_, sqlighterDetailsLabel_;
-  id amfibianHelloLabel_, amfibianDetailsLabel_;
-  id<MobilAction> sqlighterStartAction_, amfibianStartAction_;
+  id sqlighterHelloLabel_;
+  id sqlighterDetailsLabel_;
+  id amfibianHelloLabel_;
+  id amfibianDetailsLabel_;
+  id<MobilAction> sqlighterStartAction_;
+  id<MobilAction> amfibianStartAction_;
   NSString *jsonStringWithObjectDefinitions_;
   id<AnIncubator> anIncubator_;
 }
@@ -86,4 +97,6 @@ J2OBJC_TYPE_LITERAL_HEADER(DemoBase)
 
 @compatibility_alias ComProdValsAndr_demo_prjDemoBase DemoBase;
 
-#endif // _ComProdValsAndr_demo_prjDemoBase_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjDemoBase")

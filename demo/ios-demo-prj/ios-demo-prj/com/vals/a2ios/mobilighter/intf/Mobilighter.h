@@ -3,14 +3,22 @@
 //  source: ../../../../demo/mobilighter/android/com/vals/a2ios/mobilighter/intf/Mobilighter.java
 //
 
-#ifndef _ComValsA2iosMobilighterIntfMobilighter_H_
-#define _ComValsA2iosMobilighterIntfMobilighter_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosMobilighterIntfMobilighter")
+#ifdef RESTRICT_ComValsA2iosMobilighterIntfMobilighter
+#define INCLUDE_ALL_ComValsA2iosMobilighterIntfMobilighter 0
+#else
+#define INCLUDE_ALL_ComValsA2iosMobilighterIntfMobilighter 1
+#endif
+#undef RESTRICT_ComValsA2iosMobilighterIntfMobilighter
+
+#if !defined (Mobilighter_) && (INCLUDE_ALL_ComValsA2iosMobilighterIntfMobilighter || defined(INCLUDE_Mobilighter))
+#define Mobilighter_
 
 @protocol MobilAction;
 
-@protocol Mobilighter < NSObject, JavaObject >
+@protocol Mobilighter < JavaObject >
 
 - (void)setContextWithId:(id)context;
 
@@ -81,7 +89,12 @@ J2OBJC_TYPE_LITERAL_HEADER(Mobilighter)
 
 #define ComValsA2iosMobilighterIntfMobilighter Mobilighter
 
-@protocol Mobilighter_Navigator < NSObject, JavaObject >
+#endif
+
+#if !defined (Mobilighter_Navigator_) && (INCLUDE_ALL_ComValsA2iosMobilighterIntfMobilighter || defined(INCLUDE_Mobilighter_Navigator))
+#define Mobilighter_Navigator_
+
+@protocol Mobilighter_Navigator < JavaObject >
 
 - (void)navigateToScreenWithNSString:(NSString *)name
                               withId:(id)source;
@@ -113,4 +126,6 @@ J2OBJC_EMPTY_STATIC_INIT(Mobilighter_Navigator)
 
 J2OBJC_TYPE_LITERAL_HEADER(Mobilighter_Navigator)
 
-#endif // _ComValsA2iosMobilighterIntfMobilighter_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosMobilighterIntfMobilighter")

@@ -26,8 +26,8 @@
         stmtCloseCnt = 0;
         self.isDateNamedColumn = YES;
         self.dateFormatter = [[NSDateFormatter alloc] init];
-        [self.dateFormatter setDateFormat:SQLighterDb_DATE_FORMAT_];
-        self.dateColumnHint = SQLighterDb_DATE_HINT_;
+        [self.dateFormatter setDateFormat:SQLighterDb_DATE_FORMAT];
+        self.dateColumnHint = SQLighterDb_DATE_HINT;
         self.defaultIntegerColumnType = SQLighterDb_DEFAULT_INTEGER_COLUMN_CLASS_INTEGER;
     }
     return self;

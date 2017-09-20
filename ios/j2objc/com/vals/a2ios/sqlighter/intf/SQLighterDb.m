@@ -3,16 +3,10 @@
 //  source: ../../../../android//com/vals/a2ios/sqlighter/intf/SQLighterDb.java
 //
 
-#include "IOSClass.h"
-#include "IOSPrimitiveArray.h"
 #include "J2ObjC_source.h"
 #include "com/vals/a2ios/sqlighter/intf/SQLighterDb.h"
-#include "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
-#include "java/lang/Exception.h"
-#include "java/lang/Long.h"
-#include "java/util/Date.h"
 
-NSString *SQLighterDb_DATE_HINT_ = @"_date";
-NSString *SQLighterDb_DATE_FORMAT_ = @"yyyy-MM-dd HH:mm:ss";
+NSString *SQLighterDb_DATE_HINT = @"_date";
+NSString *SQLighterDb_DATE_FORMAT = @"yyyy-MM-dd HH:mm:ss";
 
 J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(SQLighterDb)

@@ -6,7 +6,6 @@
 #include "IOSClass.h"
 #include "IOSObjectArray.h"
 #include "J2ObjC_source.h"
-#include "com/vals/a2ios/amfibian/impl/AnObjectImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnOrmImpl.h"
 #include "com/vals/a2ios/amfibian/impl/AnSqlImpl.h"
 #include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
@@ -31,32 +30,6 @@
  @public
   id<AnIncubator> incubator_;
 }
-
-- (id<SQLighterDb>)getDbEngine;
-
-- (id<AnIncubator>)getIncubator;
-
-- (void)applyParameters;
-
-- (void)assignWithJavaUtilCollection:(id<JavaUtilCollection>)entities
-                     withJavaUtilMap:(id<JavaUtilMap>)associationMap
-                        withNSString:(NSString *)assiciationSrcJoinAttribName
-                        withNSString:(NSString *)assiciationSrcAttribName
-                           withAnOrm:(id<AnOrm>)sourceOrm;
-
-- (id<JavaUtilMap>)mapAssociationsWithJavaUtilCollection:(id<JavaUtilCollection>)associations
-                                               withAnOrm:(id<AnOrm>)associateOrm
-                                            withNSString:(NSString *)associationTrgJoinAttribName;
-
-- (jboolean)isCollectionWithAnAttrib:(id<AnAttrib>)attrib;
-
-- (id<JavaUtilCollection>)fetchAssociationsWithNSString:(NSString *)associationClassName
-                                 withJavaUtilCollection:(id<JavaUtilCollection>)entities
-                                           withNSString:(NSString *)assiciationSrcJoinAttribName
-                                           withNSString:(NSString *)associationTrgJoinAttribName
-                                              withAnOrm:(id<AnOrm>)sourceOrm
-                                              withAnOrm:(id<AnOrm>)associateOrm
-                                           withNSString:(NSString *)extraSql;
 
 @end
 
@@ -111,14 +84,6 @@ J2OBJC_IGNORE_DESIGNATED_END
   self->incubator_ = incubator;
 }
 
-- (id<SQLighterDb>)getDbEngine {
-  return AnOrmImpl_getDbEngine(self);
-}
-
-- (id<AnIncubator>)getIncubator {
-  return AnOrmImpl_getIncubator(self);
-}
-
 - (id<JavaUtilCollection>)getRecordsWithJavaUtilCollection:(id<JavaUtilCollection>)collectionToUse {
   NSString *queryStr = [self getQueryString];
   if (collectionToUse == nil) {
@@ -139,8 +104,8 @@ J2OBJC_IGNORE_DESIGNATED_END
       }
     }
     id objectValue = [self getNativeObject];
-    id ov = (id) objectValue;
-    [((id<JavaUtilCollection>) nil_chk(collectionToUse)) addWithId:ov];
+    id ov = objectValue;
+    [collectionToUse addWithId:ov];
   }
   [rs close];
   return collectionToUse;
@@ -164,7 +129,7 @@ J2OBJC_IGNORE_DESIGNATED_END
   if (l == nil || [l size] != 1) {
     return nil;
   }
-  return [((id<JavaUtilIterator>) nil_chk([((id<JavaUtilCollection>) nil_chk(l)) iterator])) next];
+  return [((id<JavaUtilIterator>) nil_chk([l iterator])) next];
 }
 
 - (id)getFirstResultOrNull {
@@ -172,12 +137,8 @@ J2OBJC_IGNORE_DESIGNATED_END
   if (l == nil || [l size] == 0) {
     return nil;
   }
-  id<JavaUtilIterator> i = [((id<JavaUtilCollection>) nil_chk(l)) iterator];
+  id<JavaUtilIterator> i = [l iterator];
   return [((id<JavaUtilIterator>) nil_chk(i)) next];
-}
-
-- (void)applyParameters {
-  AnOrmImpl_applyParameters(self);
 }
 
 - (JavaLangLong *)apply {
@@ -227,7 +188,7 @@ J2OBJC_IGNORE_DESIGNATED_END
   if (sqlighterDb_ == nil) {
     @throw new_JavaLangException_initWithNSString_(@"SQlighterDb is not set");
   }
-  if (entities == nil || [entities isEmpty] || attribName == nil || [((NSString *) nil_chk([@"" trim])) isEqual:attribName]) {
+  if (entities == nil || [entities isEmpty] || attribName == nil || [((NSString *) nil_chk([@"" java_trim])) isEqual:attribName]) {
     @throw new_JavaLangException_initWithNSString_(@"Incorrect parameters.");
   }
   IOSClass *cluss = [self getNativeClass];
@@ -235,7 +196,7 @@ J2OBJC_IGNORE_DESIGNATED_END
   if (sourceOrm == nil) {
     @throw new_JavaLangException_initWithNSString_(JreStrcat("$$", @"No definition found for ", [((IOSClass *) nil_chk(cluss)) getName]));
   }
-  [((id<AnOrm>) nil_chk(sourceOrm)) setSqlighterDbWithSQLighterDb:sqlighterDb_];
+  [sourceOrm setSqlighterDbWithSQLighterDb:sqlighterDb_];
   id<AnAttrib> attrib = [sourceOrm getAttribWithNSString:attribName];
   if (attrib == nil) {
     @throw new_JavaLangException_initWithNSString_(JreStrcat("$$$", @"Attribute ", attribName, @" is not defined"));
@@ -251,72 +212,50 @@ J2OBJC_IGNORE_DESIGNATED_END
   if (associateOrm == nil) {
     @throw new_JavaLangException_initWithNSString_(JreStrcat("$$", @"No definition found for: ", associationClassName));
   }
-  [((id<AnOrm>) nil_chk(associateOrm)) setSqlighterDbWithSQLighterDb:sqlighterDb_];
+  [associateOrm setSqlighterDbWithSQLighterDb:sqlighterDb_];
   id<JavaUtilCollection> associations = AnOrmImpl_fetchAssociationsWithNSString_withJavaUtilCollection_withNSString_withNSString_withAnOrm_withAnOrm_withNSString_(self, associationClassName, entities, assiciationSrcJoinAttribName, associationTrgJoinAttribName, sourceOrm, associateOrm, extraSql);
   id<JavaUtilMap> associationMap = AnOrmImpl_mapAssociationsWithJavaUtilCollection_withAnOrm_withNSString_(self, associations, associateOrm, associationTrgJoinAttribName);
   AnOrmImpl_assignWithJavaUtilCollection_withJavaUtilMap_withNSString_withNSString_withAnOrm_(self, entities, associationMap, assiciationSrcJoinAttribName, associationSrcAttribName, sourceOrm);
 }
 
-- (void)assignWithJavaUtilCollection:(id<JavaUtilCollection>)entities
-                     withJavaUtilMap:(id<JavaUtilMap>)associationMap
-                        withNSString:(NSString *)assiciationSrcJoinAttribName
-                        withNSString:(NSString *)assiciationSrcAttribName
-                           withAnOrm:(id<AnOrm>)sourceOrm {
-  AnOrmImpl_assignWithJavaUtilCollection_withJavaUtilMap_withNSString_withNSString_withAnOrm_(self, entities, associationMap, assiciationSrcJoinAttribName, assiciationSrcAttribName, sourceOrm);
-}
-
-- (id<JavaUtilMap>)mapAssociationsWithJavaUtilCollection:(id<JavaUtilCollection>)associations
-                                               withAnOrm:(id<AnOrm>)associateOrm
-                                            withNSString:(NSString *)associationTrgJoinAttribName {
-  return AnOrmImpl_mapAssociationsWithJavaUtilCollection_withAnOrm_withNSString_(self, associations, associateOrm, associationTrgJoinAttribName);
-}
-
-- (jboolean)isCollectionWithAnAttrib:(id<AnAttrib>)attrib {
-  return AnOrmImpl_isCollectionWithAnAttrib_(self, attrib);
-}
-
-- (id<JavaUtilCollection>)fetchAssociationsWithNSString:(NSString *)associationClassName
-                                 withJavaUtilCollection:(id<JavaUtilCollection>)entities
-                                           withNSString:(NSString *)assiciationSrcJoinAttribName
-                                           withNSString:(NSString *)associationTrgJoinAttribName
-                                              withAnOrm:(id<AnOrm>)sourceOrm
-                                              withAnOrm:(id<AnOrm>)associateOrm
-                                           withNSString:(NSString *)extraSql {
-  return AnOrmImpl_fetchAssociationsWithNSString_withJavaUtilCollection_withNSString_withNSString_withAnOrm_withAnOrm_withNSString_(self, associationClassName, entities, assiciationSrcJoinAttribName, associationTrgJoinAttribName, sourceOrm, associateOrm, extraSql);
-}
-
 @end
 
 void AnOrmImpl_init(AnOrmImpl *self) {
-  (void) AnSqlImpl_init(self);
+  AnSqlImpl_init(self);
 }
 
 AnOrmImpl *new_AnOrmImpl_init() {
-  AnOrmImpl *self = [AnOrmImpl alloc];
-  AnOrmImpl_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(AnOrmImpl, init)
+}
+
+AnOrmImpl *create_AnOrmImpl_init() {
+  J2OBJC_CREATE_IMPL(AnOrmImpl, init)
 }
 
 void AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withAnAttribArray_withAnObject_(AnOrmImpl *self, id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject) {
-  (void) AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnObject_(self, tableName, anObjClass, attribList, parentAnObject);
+  AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnObject_(self, tableName, anObjClass, attribList, parentAnObject);
   self->sqlighterDb_ = sqLighterDb;
 }
 
 AnOrmImpl *new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withAnAttribArray_withAnObject_(id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject) {
-  AnOrmImpl *self = [AnOrmImpl alloc];
-  AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withAnAttribArray_withAnObject_(self, sqLighterDb, tableName, anObjClass, attribList, parentAnObject);
-  return self;
+  J2OBJC_NEW_IMPL(AnOrmImpl, initWithSQLighterDb_withNSString_withIOSClass_withAnAttribArray_withAnObject_, sqLighterDb, tableName, anObjClass, attribList, parentAnObject)
+}
+
+AnOrmImpl *create_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withAnAttribArray_withAnObject_(id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject) {
+  J2OBJC_CREATE_IMPL(AnOrmImpl, initWithSQLighterDb_withNSString_withIOSClass_withAnAttribArray_withAnObject_, sqLighterDb, tableName, anObjClass, attribList, parentAnObject)
 }
 
 void AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(AnOrmImpl *self, id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject) {
-  (void) AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(self, tableName, anObjClass, attribColumnList, parentAnObject);
+  AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(self, tableName, anObjClass, attribColumnList, parentAnObject);
   self->sqlighterDb_ = sqLighterDb;
 }
 
 AnOrmImpl *new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject) {
-  AnOrmImpl *self = [AnOrmImpl alloc];
-  AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(self, sqLighterDb, tableName, anObjClass, attribColumnList, parentAnObject);
-  return self;
+  J2OBJC_NEW_IMPL(AnOrmImpl, initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_, sqLighterDb, tableName, anObjClass, attribColumnList, parentAnObject)
+}
+
+AnOrmImpl *create_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(id<SQLighterDb> sqLighterDb, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject) {
+  J2OBJC_CREATE_IMPL(AnOrmImpl, initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_, sqLighterDb, tableName, anObjClass, attribColumnList, parentAnObject)
 }
 
 id<SQLighterDb> AnOrmImpl_getDbEngine(AnOrmImpl *self) {
@@ -351,13 +290,13 @@ void AnOrmImpl_assignWithJavaUtilCollection_withJavaUtilMap_withNSString_withNSS
     }
     id<JavaUtilCollection> associations = [((id<JavaUtilMap>) nil_chk(associationMap)) getWithId:assiciationKeyValue];
     if (AnOrmImpl_isCollectionWithAnAttrib_(self, attrib)) {
-      [((id<AnAttrib>) nil_chk(attrib)) setValueWithId:associations];
+      [attrib setValueWithId:associations];
     }
     else if (associations != nil && [associations size] == 1) {
-      [((id<AnAttrib>) nil_chk(attrib)) setValueWithId:[((id<JavaUtilIterator>) nil_chk([associations iterator])) next]];
+      [attrib setValueWithId:[((id<JavaUtilIterator>) nil_chk([associations iterator])) next]];
     }
     else {
-      [((id<AnAttrib>) nil_chk(attrib)) setValueWithId:nil];
+      [attrib setValueWithId:nil];
     }
   }
 }
@@ -372,7 +311,7 @@ id<JavaUtilMap> AnOrmImpl_mapAssociationsWithJavaUtilCollection_withAnOrm_withNS
       items = new_JavaUtilLinkedList_init();
       (void) [associationMap putWithId:associationColumnValue withId:items];
     }
-    [((id<JavaUtilCollection>) nil_chk(items)) addWithId:association];
+    [items addWithId:association];
   }
   return associationMap;
 }
@@ -405,12 +344,12 @@ id<JavaUtilCollection> AnOrmImpl_fetchAssociationsWithNSString_withJavaUtilColle
     if (scrAttr == nil) {
       @throw new_JavaLangException_initWithNSString_(JreStrcat("$$$", @"Source attribute ", associationTrgJoinAttribName, @" is not defined."));
     }
-    id parameter = [((id<AnAttrib>) nil_chk(scrAttr)) getValue];
+    id parameter = [scrAttr getValue];
     if (idx == 0 && idx == size - 1) {
-      [associateOrm addWhereWithNSString:JreStrcat("$$$", @"and ", [((id<AnAttrib>) nil_chk(trgAttr)) getColumnName], @" = ?") withId:parameter];
+      [associateOrm addWhereWithNSString:JreStrcat("$$$", @"and ", [trgAttr getColumnName], @" = ?") withId:parameter];
     }
     else if (idx == 0) {
-      [associateOrm addWhereWithNSString:JreStrcat("$$$", @"and ", [((id<AnAttrib>) nil_chk(trgAttr)) getColumnName], @" in(?") withId:parameter];
+      [associateOrm addWhereWithNSString:JreStrcat("$$$", @"and ", [trgAttr getColumnName], @" in(?") withId:parameter];
     }
     else if (idx == size - 1) {
       [associateOrm addWhereWithNSString:@",?)" withId:parameter];

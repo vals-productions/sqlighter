@@ -14,7 +14,6 @@
 #include "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 #include "java/io/PrintStream.h"
 #include "java/lang/Double.h"
-#include "java/lang/Exception.h"
 #include "java/lang/Integer.h"
 #include "java/lang/Long.h"
 #include "java/lang/System.h"
@@ -62,14 +61,17 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl, recoverKey_, NSString *)
 J2OBJC_FIELD_SETTER(AnUpgradeImpl, logTableName_, NSString *)
 J2OBJC_FIELD_SETTER(AnUpgradeImpl, delayedLogs_, id<JavaUtilList>)
 
-static NSString *AnUpgradeImpl_PRIVATE_PREFIX_ = @"an-upg-";
-J2OBJC_STATIC_FIELD_GETTER(AnUpgradeImpl, PRIVATE_PREFIX_, NSString *)
+inline NSString *AnUpgradeImpl_get_PRIVATE_PREFIX();
+static NSString *AnUpgradeImpl_PRIVATE_PREFIX = @"an-upg-";
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnUpgradeImpl, PRIVATE_PREFIX, NSString *)
 
-static NSString *AnUpgradeImpl_PRIVATE_REC_KEY_ = @"an-upg-recoveryKey";
-J2OBJC_STATIC_FIELD_GETTER(AnUpgradeImpl, PRIVATE_REC_KEY_, NSString *)
+inline NSString *AnUpgradeImpl_get_PRIVATE_REC_KEY();
+static NSString *AnUpgradeImpl_PRIVATE_REC_KEY = @"an-upg-recoveryKey";
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnUpgradeImpl, PRIVATE_REC_KEY, NSString *)
 
-static NSString *AnUpgradeImpl_PRIVATE_KEY1_ = @"an-upg-init-1";
-J2OBJC_STATIC_FIELD_GETTER(AnUpgradeImpl, PRIVATE_KEY1_, NSString *)
+inline NSString *AnUpgradeImpl_get_PRIVATE_KEY1();
+static NSString *AnUpgradeImpl_PRIVATE_KEY1 = @"an-upg-init-1";
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnUpgradeImpl, PRIVATE_KEY1, NSString *)
 
 __attribute__((unused)) static jint AnUpgradeImpl_applyUpdatesWithInt_(AnUpgradeImpl *self, jint privatePublic);
 
@@ -147,7 +149,7 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
   if (!AnUpgradeImpl_findTableWithNSString_(self, [self getLogTableName])) {
     return keys;
   }
-  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeSelectWithNSString:JreStrcat("$$$", @"select key from ", AnUpgrade_TABLE_NAME_, @" where type = 0")];
+  id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeSelectWithNSString:JreStrcat("$$$", @"select key from ", AnUpgrade_TABLE_NAME, @" where type = 0")];
   while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
     NSString *key = [rs getStringWithInt:0];
     [keys addWithId:key];
@@ -184,11 +186,11 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
       NSString *sqlStr = nil;
       JavaLangLong *result = nil;
       if ([task isKindOfClass:[NSString class]]) {
-        sqlStr = (NSString *) check_class_cast(task, [NSString class]);
+        sqlStr = (NSString *) cast_chk(task, [NSString class]);
         result = [((id<SQLighterDb>) nil_chk(sqlighterDb_)) executeChangeWithNSString:sqlStr];
       }
       else if ([task isKindOfClass:[AnOrmImpl class]]) {
-        AnOrmImpl *createObjectTask = (AnOrmImpl *) check_class_cast(task, [AnOrmImpl class]);
+        AnOrmImpl *createObjectTask = (AnOrmImpl *) cast_chk(task, [AnOrmImpl class]);
         [((AnOrmImpl *) nil_chk(createObjectTask)) setSqlighterDbWithSQLighterDb:sqlighterDb_];
         (void) [createObjectTask startSqlCreate];
         sqlStr = [createObjectTask getQueryString];
@@ -205,10 +207,10 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
   @catch (JavaLangThrowable *t) {
     [self onTaskFailWithId:taskObject withJavaLangThrowable:t];
     @try {
-      AnUpgradeImpl_logKeyWithNSString_withNSString_withJavaLangInteger_(self, key, [((JavaLangThrowable *) nil_chk(t)) getMessage], JavaLangInteger_valueOfWithInt_(0));
+      AnUpgradeImpl_logKeyWithNSString_withNSString_withJavaLangInteger_(self, key, [t getMessage], JavaLangInteger_valueOfWithInt_(0));
     }
     @catch (JavaLangThrowable *failureMarkExcp) {
-      [((JavaLangThrowable *) nil_chk(failureMarkExcp)) printStackTrace];
+      [failureMarkExcp printStackTrace];
     }
     return false;
   }
@@ -264,11 +266,11 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
 
 - (id<JavaUtilList>)getPrivateTasksByKeyWithNSString:(NSString *)key {
   id<JavaUtilList> tasks = new_JavaUtilLinkedList_init();
-  if ([((NSString *) nil_chk(AnUpgradeImpl_PRIVATE_REC_KEY_)) isEqual:key]) {
+  if ([((NSString *) nil_chk(AnUpgradeImpl_PRIVATE_REC_KEY)) isEqual:key]) {
     [tasks addWithId:anOrm_];
     [tasks addWithId:JreStrcat("$$$$$", @"create index ", [self getLogTableName], @"_idx on ", [self getLogTableName], @"(key, type, status)")];
   }
-  else if ([((NSString *) nil_chk(AnUpgradeImpl_PRIVATE_KEY1_)) isEqual:key]) {
+  else if ([((NSString *) nil_chk(AnUpgradeImpl_PRIVATE_KEY1)) isEqual:key]) {
     [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column type INTEGER")];
     [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column refi INTEGER")];
     [tasks addWithId:JreStrcat("$$$", @"alter table ", [self getLogTableName], @" add column refd REAL")];
@@ -281,57 +283,81 @@ J2OBJC_FIELD_SETTER(AnUpgradeImpl_Upgrade, refs_, JavaLangInteger *)
 }
 
 + (const J2ObjcClassInfo *)__metadata {
-  static const J2ObjcMethodInfo methods[] = {
-    { "initWithSQLighterDb:withNSString:withNSString:", "AnUpgradeImpl", NULL, 0x1, "Ljava.lang.Exception;", NULL },
-    { "initWithSQLighterDb:", "AnUpgradeImpl", NULL, 0x1, "Ljava.lang.Exception;", NULL },
-    { "getTasksByKeyWithNSString:", "getTasksByKey", "Ljava.util.List;", 0x401, NULL, NULL },
-    { "getUpdateKeys", NULL, "Ljava.util.List;", 0x401, NULL, NULL },
-    { "getLogTableName", NULL, "Ljava.lang.String;", 0x1, NULL, NULL },
-    { "setLogTableNameWithNSString:", "setLogTableName", "V", 0x1, NULL, NULL },
-    { "getAppliedUpdates", NULL, "Ljava.util.Set;", 0x1, "Ljava.lang.Exception;", NULL },
-    { "applyUpdates", NULL, "I", 0x1, "Ljava.lang.Exception;", NULL },
-    { "applyUpdatesWithInt:", "applyUpdates", "I", 0x2, "Ljava.lang.Exception;", NULL },
-    { "applyUpdateWithNSString:withJavaUtilList:", "applyUpdate", "Z", 0x4, NULL, NULL },
-    { "attemptToRecover", NULL, "I", 0x1, "Ljava.lang.Exception;", NULL },
-    { "attemptToRecoverWithInt:", "attemptToRecover", "I", 0x2, "Ljava.lang.Exception;", NULL },
-    { "setRecoverKeyWithNSString:", "setRecoverKey", "V", 0x1, NULL, NULL },
-    { "logUpgradeStepWithNSString:withNSString:withJavaLangLong:", "logUpgradeStep", "V", 0x2, "Ljava.lang.Exception;", NULL },
-    { "logKeyWithNSString:withNSString:withJavaLangInteger:", "logKey", "V", 0x2, "Ljava.lang.Exception;", NULL },
-    { "saveLogWithAnUpgradeImpl_Upgrade:", "saveLog", "V", 0x2, "Ljava.lang.Exception;", NULL },
-    { "findTableWithNSString:", "findTable", "Z", 0x2, "Ljava.lang.Exception;", NULL },
-    { "onTaskSuccessWithId:", "onTaskSuccess", "V", 0x1, NULL, NULL },
-    { "onTaskFailWithId:withJavaLangThrowable:", "onTaskFail", "V", 0x1, NULL, NULL },
-    { "getPrivateUpdateKeys", NULL, "Ljava.util.List;", 0x2, NULL, NULL },
-    { "getPrivateTasksByKeyWithNSString:", "getPrivateTasksByKey", "Ljava.util.List;", 0x4, NULL, NULL },
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x1, -1, 0, 1, -1, -1, -1 },
+    { NULL, NULL, 0x1, -1, 2, 1, -1, -1, -1 },
+    { NULL, "LJavaUtilList;", 0x401, 3, 4, -1, 5, -1, -1 },
+    { NULL, "LJavaUtilList;", 0x401, -1, -1, -1, 6, -1, -1 },
+    { NULL, "LNSString;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 7, 4, -1, -1, -1, -1 },
+    { NULL, "LJavaUtilSet;", 0x1, -1, -1, 1, 8, -1, -1 },
+    { NULL, "I", 0x1, -1, -1, 1, -1, -1, -1 },
+    { NULL, "I", 0x2, 9, 10, 1, -1, -1, -1 },
+    { NULL, "Z", 0x4, 11, 12, -1, 13, -1, -1 },
+    { NULL, "I", 0x1, -1, -1, 1, -1, -1, -1 },
+    { NULL, "I", 0x2, 14, 10, 1, -1, -1, -1 },
+    { NULL, "V", 0x1, 15, 4, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, 16, 17, 1, -1, -1, -1 },
+    { NULL, "V", 0x2, 18, 19, 1, -1, -1, -1 },
+    { NULL, "V", 0x2, 20, 21, 1, -1, -1, -1 },
+    { NULL, "Z", 0x2, 22, 4, 1, -1, -1, -1 },
+    { NULL, "V", 0x1, 23, 24, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 25, 26, -1, -1, -1, -1 },
+    { NULL, "LJavaUtilList;", 0x2, -1, -1, -1, 6, -1, -1 },
+    { NULL, "LJavaUtilList;", 0x4, 27, 4, -1, 5, -1, -1 },
   };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  methods[0].selector = @selector(initWithSQLighterDb:withNSString:withNSString:);
+  methods[1].selector = @selector(initWithSQLighterDb:);
+  methods[2].selector = @selector(getTasksByKeyWithNSString:);
+  methods[3].selector = @selector(getUpdateKeys);
+  methods[4].selector = @selector(getLogTableName);
+  methods[5].selector = @selector(setLogTableNameWithNSString:);
+  methods[6].selector = @selector(getAppliedUpdates);
+  methods[7].selector = @selector(applyUpdates);
+  methods[8].selector = @selector(applyUpdatesWithInt:);
+  methods[9].selector = @selector(applyUpdateWithNSString:withJavaUtilList:);
+  methods[10].selector = @selector(attemptToRecover);
+  methods[11].selector = @selector(attemptToRecoverWithInt:);
+  methods[12].selector = @selector(setRecoverKeyWithNSString:);
+  methods[13].selector = @selector(logUpgradeStepWithNSString:withNSString:withJavaLangLong:);
+  methods[14].selector = @selector(logKeyWithNSString:withNSString:withJavaLangInteger:);
+  methods[15].selector = @selector(saveLogWithAnUpgradeImpl_Upgrade:);
+  methods[16].selector = @selector(findTableWithNSString:);
+  methods[17].selector = @selector(onTaskSuccessWithId:);
+  methods[18].selector = @selector(onTaskFailWithId:withJavaLangThrowable:);
+  methods[19].selector = @selector(getPrivateUpdateKeys);
+  methods[20].selector = @selector(getPrivateTasksByKeyWithNSString:);
+  #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
-    { "map_", NULL, 0x2, "Ljava.util.Map;", NULL, "Ljava/util/Map<Ljava/lang/Integer;Ljava/util/List<Ljava/lang/String;>;>;", .constantValue.asLong = 0 },
-    { "sqlighterDb_", NULL, 0x4, "Lcom.vals.a2ios.sqlighter.intf.SQLighterDb;", NULL, NULL, .constantValue.asLong = 0 },
-    { "recoverKey_", NULL, 0x2, "Ljava.lang.String;", NULL, NULL, .constantValue.asLong = 0 },
-    { "logTableName_", NULL, 0x2, "Ljava.lang.String;", NULL, NULL, .constantValue.asLong = 0 },
-    { "anOrm_", NULL, 0x4, "Lcom.vals.a2ios.amfibian.impl.AnOrmImpl;", NULL, "Lcom/vals/a2ios/amfibian/impl/AnOrmImpl<Lcom/vals/a2ios/amfibian/impl/AnUpgradeImpl$Upgrade;>;", .constantValue.asLong = 0 },
-    { "delayedLogs_", NULL, 0x2, "Ljava.util.List;", NULL, "Ljava/util/List<Lcom/vals/a2ios/amfibian/impl/AnUpgradeImpl$Upgrade;>;", .constantValue.asLong = 0 },
-    { "PRIVATE_PREFIX_", NULL, 0x1a, "Ljava.lang.String;", &AnUpgradeImpl_PRIVATE_PREFIX_, NULL, .constantValue.asLong = 0 },
-    { "PRIVATE_REC_KEY_", NULL, 0x1a, "Ljava.lang.String;", &AnUpgradeImpl_PRIVATE_REC_KEY_, NULL, .constantValue.asLong = 0 },
-    { "PRIVATE_KEY1_", NULL, 0x1a, "Ljava.lang.String;", &AnUpgradeImpl_PRIVATE_KEY1_, NULL, .constantValue.asLong = 0 },
+    { "map_", "LJavaUtilMap;", .constantValue.asLong = 0, 0x2, -1, -1, 28, -1 },
+    { "sqlighterDb_", "LSQLighterDb;", .constantValue.asLong = 0, 0x4, -1, -1, -1, -1 },
+    { "recoverKey_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "logTableName_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "anOrm_", "LAnOrmImpl;", .constantValue.asLong = 0, 0x4, -1, -1, 29, -1 },
+    { "delayedLogs_", "LJavaUtilList;", .constantValue.asLong = 0, 0x2, -1, -1, 30, -1 },
+    { "PRIVATE_PREFIX", "LNSString;", .constantValue.asLong = 0, 0x1a, -1, 31, -1, -1 },
+    { "PRIVATE_REC_KEY", "LNSString;", .constantValue.asLong = 0, 0x1a, -1, 32, -1, -1 },
+    { "PRIVATE_KEY1", "LNSString;", .constantValue.asLong = 0, 0x1a, -1, 33, -1, -1 },
   };
-  static const char *inner_classes[] = {"Lcom.vals.a2ios.amfibian.impl.AnUpgradeImpl$Upgrade;"};
-  static const J2ObjcClassInfo _AnUpgradeImpl = { 2, "AnUpgradeImpl", "com.vals.a2ios.amfibian.impl", NULL, 0x401, 21, methods, 9, fields, 0, NULL, 1, inner_classes, NULL, NULL };
+  static const void *ptrTable[] = { "LSQLighterDb;LNSString;LNSString;", "LJavaLangException;", "LSQLighterDb;", "getTasksByKey", "LNSString;", "(Ljava/lang/String;)Ljava/util/List<Ljava/lang/Object;>;", "()Ljava/util/List<Ljava/lang/String;>;", "setLogTableName", "()Ljava/util/Set<Ljava/lang/String;>;", "applyUpdates", "I", "applyUpdate", "LNSString;LJavaUtilList;", "(Ljava/lang/String;Ljava/util/List<Ljava/lang/Object;>;)Z", "attemptToRecover", "setRecoverKey", "logUpgradeStep", "LNSString;LNSString;LJavaLangLong;", "logKey", "LNSString;LNSString;LJavaLangInteger;", "saveLog", "LAnUpgradeImpl_Upgrade;", "findTable", "onTaskSuccess", "LNSObject;", "onTaskFail", "LNSObject;LJavaLangThrowable;", "getPrivateTasksByKey", "Ljava/util/Map<Ljava/lang/Integer;Ljava/util/List<Ljava/lang/String;>;>;", "Lcom/vals/a2ios/amfibian/impl/AnOrmImpl<Lcom/vals/a2ios/amfibian/impl/AnUpgradeImpl$Upgrade;>;", "Ljava/util/List<Lcom/vals/a2ios/amfibian/impl/AnUpgradeImpl$Upgrade;>;", &AnUpgradeImpl_PRIVATE_PREFIX, &AnUpgradeImpl_PRIVATE_REC_KEY, &AnUpgradeImpl_PRIVATE_KEY1 };
+  static const J2ObjcClassInfo _AnUpgradeImpl = { "AnUpgradeImpl", "com.vals.a2ios.amfibian.impl", ptrTable, methods, fields, 7, 0x401, 21, 9, -1, 21, -1, -1, -1 };
   return &_AnUpgradeImpl;
 }
 
 @end
 
 void AnUpgradeImpl_initWithSQLighterDb_withNSString_withNSString_(AnUpgradeImpl *self, id<SQLighterDb> sqLighterDb, NSString *tableName, NSString *recoveryKey) {
-  (void) AnUpgradeImpl_initWithSQLighterDb_(self, sqLighterDb);
+  AnUpgradeImpl_initWithSQLighterDb_(self, sqLighterDb);
   self->logTableName_ = tableName;
   self->recoverKey_ = recoveryKey;
 }
 
 void AnUpgradeImpl_initWithSQLighterDb_(AnUpgradeImpl *self, id<SQLighterDb> sqLighterDb) {
-  (void) NSObject_init(self);
-  self->recoverKey_ = AnUpgrade_DB_RECOVER_KEY_;
-  self->logTableName_ = AnUpgrade_TABLE_NAME_;
+  NSObject_init(self);
+  self->recoverKey_ = AnUpgrade_DB_RECOVER_KEY;
+  self->logTableName_ = AnUpgrade_TABLE_NAME;
   self->delayedLogs_ = new_JavaUtilLinkedList_init();
   self->sqlighterDb_ = sqLighterDb;
   self->anOrm_ = new_AnOrmImpl_initWithSQLighterDb_withNSString_withIOSClass_withNSStringArray_withAnObject_(sqLighterDb, [self getLogTableName], AnUpgradeImpl_Upgrade_class_(), [IOSObjectArray newArrayWithObjects:(id[]){ @"key", @"value", @"createDate,create_date", @"status", @"type", @"refi", @"refd", @"refs" } count:8 type:NSString_class_()], nil);
@@ -357,12 +383,12 @@ jint AnUpgradeImpl_applyUpdatesWithInt_(AnUpgradeImpl *self, jint privatePublic)
 }
 
 jint AnUpgradeImpl_attemptToRecoverWithInt_(AnUpgradeImpl *self, jint privatePublic) {
-  id<JavaUtilList> recoverTasks = (privatePublic == 0) ? [self getPrivateTasksByKeyWithNSString:AnUpgradeImpl_PRIVATE_REC_KEY_] : [self getTasksByKeyWithNSString:self->recoverKey_];
+  id<JavaUtilList> recoverTasks = (privatePublic == 0) ? [self getPrivateTasksByKeyWithNSString:AnUpgradeImpl_PRIVATE_REC_KEY] : [self getTasksByKeyWithNSString:self->recoverKey_];
   jint rc = 0;
   if ([recoverTasks size] > 0) {
     id<JavaUtilList> keys = (privatePublic == 0) ? AnUpgradeImpl_getPrivateUpdateKeys(self) : [self getUpdateKeys];
     for (NSString * __strong key in keys) {
-      NSString *recKey = (privatePublic == 0) ? AnUpgradeImpl_PRIVATE_REC_KEY_ : self->recoverKey_;
+      NSString *recKey = (privatePublic == 0) ? AnUpgradeImpl_PRIVATE_REC_KEY : self->recoverKey_;
       if ([((NSString *) nil_chk(key)) isEqual:recKey]) {
         jboolean result = [self applyUpdateWithNSString:key withJavaUtilList:recoverTasks];
         if (!result) {
@@ -379,7 +405,7 @@ jint AnUpgradeImpl_attemptToRecoverWithInt_(AnUpgradeImpl *self, jint privatePub
 }
 
 void AnUpgradeImpl_logUpgradeStepWithNSString_withNSString_withJavaLangLong_(AnUpgradeImpl *self, NSString *key, NSString *sqlStr, JavaLangLong *result) {
-  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$", @"result: ", result, @" for ", sqlStr)];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:JreStrcat("$@$$", @"result: ", result, @" for ", sqlStr)];
   AnUpgradeImpl_Upgrade *appUpdate = new_AnUpgradeImpl_Upgrade_init();
   [appUpdate setKeyWithNSString:key];
   [appUpdate setValueWithNSString:sqlStr];
@@ -408,11 +434,11 @@ void AnUpgradeImpl_saveLogWithAnUpgradeImpl_Upgrade_(AnUpgradeImpl *self, AnUpgr
   else {
     for (AnUpgradeImpl_Upgrade * __strong upgradeLog in nil_chk(self->delayedLogs_)) {
       [((AnOrmImpl *) nil_chk(self->anOrm_)) startSqlInsertWithId:upgradeLog];
-      (void) [self->anOrm_ apply];
+      (void) [((AnOrmImpl *) nil_chk(self->anOrm_)) apply];
     }
     [self->delayedLogs_ clear];
     [((AnOrmImpl *) nil_chk(self->anOrm_)) startSqlInsertWithId:appUpdateEntry];
-    (void) [self->anOrm_ apply];
+    (void) [((AnOrmImpl *) nil_chk(self->anOrm_)) apply];
   }
 }
 
@@ -431,12 +457,19 @@ jboolean AnUpgradeImpl_findTableWithNSString_(AnUpgradeImpl *self, NSString *sea
 }
 
 id<JavaUtilList> AnUpgradeImpl_getPrivateUpdateKeys(AnUpgradeImpl *self) {
-  return JavaUtilArrays_asListWithNSObjectArray_([IOSObjectArray newArrayWithObjects:(id[]){ AnUpgradeImpl_PRIVATE_KEY1_, AnUpgradeImpl_PRIVATE_REC_KEY_ } count:2 type:NSString_class_()]);
+  return JavaUtilArrays_asListWithNSObjectArray_([IOSObjectArray newArrayWithObjects:(id[]){ AnUpgradeImpl_PRIVATE_KEY1, AnUpgradeImpl_PRIVATE_REC_KEY } count:2 type:NSString_class_()]);
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnUpgradeImpl)
 
 @implementation AnUpgradeImpl_Upgrade
+
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  AnUpgradeImpl_Upgrade_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
 
 - (NSString *)getKey {
   return key_;
@@ -502,57 +535,73 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnUpgradeImpl)
   self->refs_ = refs;
 }
 
-J2OBJC_IGNORE_DESIGNATED_BEGIN
-- (instancetype)init {
-  AnUpgradeImpl_Upgrade_init(self);
-  return self;
-}
-J2OBJC_IGNORE_DESIGNATED_END
-
 + (const J2ObjcClassInfo *)__metadata {
-  static const J2ObjcMethodInfo methods[] = {
-    { "getKey", NULL, "Ljava.lang.String;", 0x1, NULL, NULL },
-    { "setKeyWithNSString:", "setKey", "V", 0x1, NULL, NULL },
-    { "getValue", NULL, "Ljava.lang.String;", 0x1, NULL, NULL },
-    { "setValueWithNSString:", "setValue", "V", 0x1, NULL, NULL },
-    { "getCreateDate", NULL, "Ljava.util.Date;", 0x1, NULL, NULL },
-    { "setCreateDateWithJavaUtilDate:", "setCreateDate", "V", 0x1, NULL, NULL },
-    { "getStatus", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
-    { "setStatusWithJavaLangInteger:", "setStatus", "V", 0x1, NULL, NULL },
-    { "getType", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
-    { "setTypeWithJavaLangInteger:", "setType", "V", 0x1, NULL, NULL },
-    { "getRefi", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
-    { "setRefiWithJavaLangInteger:", "setRefi", "V", 0x1, NULL, NULL },
-    { "getRefd", NULL, "Ljava.lang.Double;", 0x1, NULL, NULL },
-    { "setRefdWithJavaLangDouble:", "setRefd", "V", 0x1, NULL, NULL },
-    { "getRefs", NULL, "Ljava.lang.Integer;", 0x1, NULL, NULL },
-    { "setRefsWithJavaLangInteger:", "setRefs", "V", 0x1, NULL, NULL },
-    { "init", NULL, NULL, 0x1, NULL, NULL },
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "LNSString;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 0, 1, -1, -1, -1, -1 },
+    { NULL, "LNSString;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 2, 1, -1, -1, -1, -1 },
+    { NULL, "LJavaUtilDate;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 3, 4, -1, -1, -1, -1 },
+    { NULL, "LJavaLangInteger;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 5, 6, -1, -1, -1, -1 },
+    { NULL, "LJavaLangInteger;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 7, 6, -1, -1, -1, -1 },
+    { NULL, "LJavaLangInteger;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 8, 6, -1, -1, -1, -1 },
+    { NULL, "LJavaLangDouble;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 9, 10, -1, -1, -1, -1 },
+    { NULL, "LJavaLangInteger;", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 11, 6, -1, -1, -1, -1 },
   };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  methods[0].selector = @selector(init);
+  methods[1].selector = @selector(getKey);
+  methods[2].selector = @selector(setKeyWithNSString:);
+  methods[3].selector = @selector(getValue);
+  methods[4].selector = @selector(setValueWithNSString:);
+  methods[5].selector = @selector(getCreateDate);
+  methods[6].selector = @selector(setCreateDateWithJavaUtilDate:);
+  methods[7].selector = @selector(getStatus);
+  methods[8].selector = @selector(setStatusWithJavaLangInteger:);
+  methods[9].selector = @selector(getType);
+  methods[10].selector = @selector(setTypeWithJavaLangInteger:);
+  methods[11].selector = @selector(getRefi);
+  methods[12].selector = @selector(setRefiWithJavaLangInteger:);
+  methods[13].selector = @selector(getRefd);
+  methods[14].selector = @selector(setRefdWithJavaLangDouble:);
+  methods[15].selector = @selector(getRefs);
+  methods[16].selector = @selector(setRefsWithJavaLangInteger:);
+  #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
-    { "key_", NULL, 0x2, "Ljava.lang.String;", NULL, NULL, .constantValue.asLong = 0 },
-    { "value_", NULL, 0x2, "Ljava.lang.String;", NULL, NULL, .constantValue.asLong = 0 },
-    { "createDate_", NULL, 0x2, "Ljava.util.Date;", NULL, NULL, .constantValue.asLong = 0 },
-    { "status_", NULL, 0x2, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
-    { "type_", NULL, 0x2, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
-    { "refi_", NULL, 0x2, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
-    { "refd_", NULL, 0x2, "Ljava.lang.Double;", NULL, NULL, .constantValue.asLong = 0 },
-    { "refs_", NULL, 0x2, "Ljava.lang.Integer;", NULL, NULL, .constantValue.asLong = 0 },
+    { "key_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "value_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "createDate_", "LJavaUtilDate;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "status_", "LJavaLangInteger;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "type_", "LJavaLangInteger;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "refi_", "LJavaLangInteger;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "refd_", "LJavaLangDouble;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+    { "refs_", "LJavaLangInteger;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
   };
-  static const J2ObjcClassInfo _AnUpgradeImpl_Upgrade = { 2, "Upgrade", "com.vals.a2ios.amfibian.impl", "AnUpgradeImpl", 0x9, 17, methods, 8, fields, 0, NULL, 0, NULL, NULL, NULL };
+  static const void *ptrTable[] = { "setKey", "LNSString;", "setValue", "setCreateDate", "LJavaUtilDate;", "setStatus", "LJavaLangInteger;", "setType", "setRefi", "setRefd", "LJavaLangDouble;", "setRefs", "LAnUpgradeImpl;" };
+  static const J2ObjcClassInfo _AnUpgradeImpl_Upgrade = { "Upgrade", "com.vals.a2ios.amfibian.impl", ptrTable, methods, fields, 7, 0x9, 17, 8, 12, -1, -1, -1, -1 };
   return &_AnUpgradeImpl_Upgrade;
 }
 
 @end
 
 void AnUpgradeImpl_Upgrade_init(AnUpgradeImpl_Upgrade *self) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
 }
 
 AnUpgradeImpl_Upgrade *new_AnUpgradeImpl_Upgrade_init() {
-  AnUpgradeImpl_Upgrade *self = [AnUpgradeImpl_Upgrade alloc];
-  AnUpgradeImpl_Upgrade_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(AnUpgradeImpl_Upgrade, init)
+}
+
+AnUpgradeImpl_Upgrade *create_AnUpgradeImpl_Upgrade_init() {
+  J2OBJC_CREATE_IMPL(AnUpgradeImpl_Upgrade, init)
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnUpgradeImpl_Upgrade)

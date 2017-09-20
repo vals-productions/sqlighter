@@ -3,15 +3,10 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/intf/AnUpgrade.java
 //
 
-#include "IOSClass.h"
 #include "J2ObjC_source.h"
 #include "com/vals/a2ios/amfibian/intf/AnUpgrade.h"
-#include "java/lang/Exception.h"
-#include "java/lang/Throwable.h"
-#include "java/util/List.h"
-#include "java/util/Set.h"
 
-NSString *AnUpgrade_DB_RECOVER_KEY_ = @"recoveryKey";
-NSString *AnUpgrade_TABLE_NAME_ = @"app_db_maint";
+NSString *AnUpgrade_DB_RECOVER_KEY = @"recoveryKey";
+NSString *AnUpgrade_TABLE_NAME = @"app_db_maint";
 
 J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(AnUpgrade)

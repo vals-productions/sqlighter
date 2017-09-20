@@ -17,7 +17,6 @@
 #include "com/vals/a2ios/sqlighter/intf/SQLighterRs.h"
 #include "java/io/PrintStream.h"
 #include "java/lang/Double.h"
-#include "java/lang/Exception.h"
 #include "java/lang/Integer.h"
 #include "java/lang/Long.h"
 #include "java/lang/System.h"
@@ -39,6 +38,13 @@ J2OBJC_FIELD_SETTER(DemoBase, sqLighterDb_, id<SQLighterDb>)
 J2OBJC_FIELD_SETTER(DemoBase, testList_, id<JavaUtilList>)
 
 @implementation DemoBase
+
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  DemoBase_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
 
 - (void)resetTestCounters {
   [((id<JavaUtilList>) nil_chk(testList_)) clear];
@@ -72,7 +78,7 @@ J2OBJC_FIELD_SETTER(DemoBase, testList_, id<JavaUtilList>)
 }
 
 - (void)printAppointmentsWithAnOrm:(id<AnOrm>)anOrm {
-  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:@"Appointment records"];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:@"Appointment records"];
   [((id<AnOrm>) nil_chk(anOrm)) startSqlSelect];
   [self printWithJavaUtilCollection:[anOrm getRecords]];
 }
@@ -84,7 +90,7 @@ J2OBJC_FIELD_SETTER(DemoBase, testList_, id<JavaUtilList>)
 }
 
 - (void)printWithAppointment:(Appointment *)appointment {
-  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$@$@$@", @"Appointment object. id: ", [((Appointment *) nil_chk(appointment)) getId], @", name: ", [appointment getName], @", isProcessed:", [appointment getIsProcessed], @", createDate:", [appointment getCreateDate], @", status: ", [appointment getStatus])];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:JreStrcat("$@$$$@$@$@", @"Appointment object. id: ", [((Appointment *) nil_chk(appointment)) getId], @", name: ", [appointment getName], @", isProcessed:", [appointment getIsProcessed], @", createDate:", [appointment getCreateDate], @", status: ", [appointment getStatus])];
 }
 
 - (void)printWithSQLighterRs:(id<SQLighterRs>)rs {
@@ -94,15 +100,15 @@ J2OBJC_FIELD_SETTER(DemoBase, testList_, id<JavaUtilList>)
   IOSByteArray *dataBytes = [rs getBlobWithInt:3];
   NSString *dataString = nil;
   if (dataBytes != nil) {
-    dataString = [NSString stringWithBytes:dataBytes];
+    dataString = [NSString java_stringWithBytes:dataBytes];
   }
   NSNumber *h = [rs getDoubleWithInt:4];
-  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
 }
 
 - (void)printUserTableWithNSString:(NSString *)title
                    withSQLighterDb:(id<SQLighterDb>)db {
-  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:title];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:title];
   id<SQLighterRs> rs = [((id<SQLighterDb>) nil_chk(db)) executeSelectWithNSString:@"select id, email, name, data, height from user"];
   while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
     [self printWithSQLighterRs:rs];
@@ -122,10 +128,10 @@ J2OBJC_FIELD_SETTER(DemoBase, testList_, id<JavaUtilList>)
   IOSByteArray *dataBytes = [rs getBlobWithInt:3];
   NSString *dataString = nil;
   if (dataBytes != nil) {
-    dataString = [NSString stringWithBytes:dataBytes];
+    dataString = [NSString java_stringWithBytes:dataBytes];
   }
   NSNumber *h = [rs getDoubleWithInt:4];
-  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:JreStrcat("$@$$$$$$$@", @"pk: ", pk, @", email: ", e, @", name: ", n, @", blob data: ", dataString, @", height: ", h)];
   return ([((JavaLangLong *) nil_chk(pk)) isEqual:id_] && [((NSString *) nil_chk(e)) isEqual:userEmail] && [((NSString *) nil_chk(n)) isEqual:userName] && [((NSString *) nil_chk(dataString)) isEqual:blobString] && [((NSNumber *) nil_chk(h)) doubleValue] == [((JavaLangDouble *) nil_chk(userHeight)) doubleValue]);
 }
 
@@ -135,17 +141,10 @@ J2OBJC_FIELD_SETTER(DemoBase, testList_, id<JavaUtilList>)
   return anOrm;
 }
 
-J2OBJC_IGNORE_DESIGNATED_BEGIN
-- (instancetype)init {
-  DemoBase_init(self);
-  return self;
-}
-J2OBJC_IGNORE_DESIGNATED_END
-
 @end
 
 void DemoBase_init(DemoBase *self) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
   self->sqLighterDb_ = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
   self->passedTestCount_ = 0;
   self->testList_ = new_JavaUtilLinkedList_init();

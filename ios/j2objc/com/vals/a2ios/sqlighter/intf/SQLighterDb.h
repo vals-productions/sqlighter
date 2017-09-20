@@ -3,20 +3,25 @@
 //  source: ../../../../android//com/vals/a2ios/sqlighter/intf/SQLighterDb.java
 //
 
-#ifndef _ComValsA2iosSqlighterIntfSQLighterDb_H_
-#define _ComValsA2iosSqlighterIntfSQLighterDb_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosSqlighterIntfSQLighterDb")
+#ifdef RESTRICT_ComValsA2iosSqlighterIntfSQLighterDb
+#define INCLUDE_ALL_ComValsA2iosSqlighterIntfSQLighterDb 0
+#else
+#define INCLUDE_ALL_ComValsA2iosSqlighterIntfSQLighterDb 1
+#endif
+#undef RESTRICT_ComValsA2iosSqlighterIntfSQLighterDb
+
+#if !defined (SQLighterDb_) && (INCLUDE_ALL_ComValsA2iosSqlighterIntfSQLighterDb || defined(INCLUDE_SQLighterDb))
+#define SQLighterDb_
 
 @class IOSByteArray;
 @class JavaLangLong;
 @class JavaUtilDate;
 @protocol SQLighterRs;
 
-#define SQLighterDb_DEFAULT_INTEGER_COLUMN_CLASS_INTEGER 0
-#define SQLighterDb_DEFAULT_INTEGER_COLUMN_CLASS_LONG 1
-
-@protocol SQLighterDb < NSObject, JavaObject >
+@protocol SQLighterDb < JavaObject >
 
 - (jboolean)isDbFileDeployed;
 
@@ -80,18 +85,28 @@
 
 J2OBJC_EMPTY_STATIC_INIT(SQLighterDb)
 
-FOUNDATION_EXPORT NSString *SQLighterDb_DATE_HINT_;
-J2OBJC_STATIC_FIELD_GETTER(SQLighterDb, DATE_HINT_, NSString *)
+inline NSString *SQLighterDb_get_DATE_HINT();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *SQLighterDb_DATE_HINT;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(SQLighterDb, DATE_HINT, NSString *)
 
-FOUNDATION_EXPORT NSString *SQLighterDb_DATE_FORMAT_;
-J2OBJC_STATIC_FIELD_GETTER(SQLighterDb, DATE_FORMAT_, NSString *)
+inline NSString *SQLighterDb_get_DATE_FORMAT();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *SQLighterDb_DATE_FORMAT;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(SQLighterDb, DATE_FORMAT, NSString *)
 
-J2OBJC_STATIC_FIELD_GETTER(SQLighterDb, DEFAULT_INTEGER_COLUMN_CLASS_INTEGER, jint)
+inline jint SQLighterDb_get_DEFAULT_INTEGER_COLUMN_CLASS_INTEGER();
+#define SQLighterDb_DEFAULT_INTEGER_COLUMN_CLASS_INTEGER 0
+J2OBJC_STATIC_FIELD_CONSTANT(SQLighterDb, DEFAULT_INTEGER_COLUMN_CLASS_INTEGER, jint)
 
-J2OBJC_STATIC_FIELD_GETTER(SQLighterDb, DEFAULT_INTEGER_COLUMN_CLASS_LONG, jint)
+inline jint SQLighterDb_get_DEFAULT_INTEGER_COLUMN_CLASS_LONG();
+#define SQLighterDb_DEFAULT_INTEGER_COLUMN_CLASS_LONG 1
+J2OBJC_STATIC_FIELD_CONSTANT(SQLighterDb, DEFAULT_INTEGER_COLUMN_CLASS_LONG, jint)
 
 J2OBJC_TYPE_LITERAL_HEADER(SQLighterDb)
 
 #define ComValsA2iosSqlighterIntfSQLighterDb SQLighterDb
 
-#endif // _ComValsA2iosSqlighterIntfSQLighterDb_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosSqlighterIntfSQLighterDb")

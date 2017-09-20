@@ -3,10 +3,21 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/User.java
 //
 
-#ifndef _ComProdValsAndr_demo_prjUser_H_
-#define _ComProdValsAndr_demo_prjUser_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjUser")
+#ifdef RESTRICT_ComProdValsAndr_demo_prjUser
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjUser 0
+#else
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjUser 1
+#endif
+#undef RESTRICT_ComProdValsAndr_demo_prjUser
+
+#if !defined (User_) && (INCLUDE_ALL_ComProdValsAndr_demo_prjUser || defined(INCLUDE_User))
+#define User_
+
+#define RESTRICT_ComProdValsAndr_demo_prjEntity 1
+#define INCLUDE_Entity 1
 #include "com/prod/vals/andr_demo_prj/Entity.h"
 
 @protocol JavaUtilCollection;
@@ -33,8 +44,12 @@ FOUNDATION_EXPORT void User_init(User *self);
 
 FOUNDATION_EXPORT User *new_User_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT User *create_User_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(User)
 
 @compatibility_alias ComProdValsAndr_demo_prjUser User;
 
-#endif // _ComProdValsAndr_demo_prjUser_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjUser")

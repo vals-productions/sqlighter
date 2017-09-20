@@ -3,10 +3,21 @@
 //  source: ../../../../demo/andr-demo-prj/app/src/main/java/com/prod/vals/andr_demo_prj/Appointment.java
 //
 
-#ifndef _ComProdValsAndr_demo_prjAppointment_H_
-#define _ComProdValsAndr_demo_prjAppointment_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjAppointment")
+#ifdef RESTRICT_ComProdValsAndr_demo_prjAppointment
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjAppointment 0
+#else
+#define INCLUDE_ALL_ComProdValsAndr_demo_prjAppointment 1
+#endif
+#undef RESTRICT_ComProdValsAndr_demo_prjAppointment
+
+#if !defined (Appointment_) && (INCLUDE_ALL_ComProdValsAndr_demo_prjAppointment || defined(INCLUDE_Appointment))
+#define Appointment_
+
+#define RESTRICT_ComProdValsAndr_demo_prjEntity 1
+#define INCLUDE_Entity 1
 #include "com/prod/vals/andr_demo_prj/Entity.h"
 
 @class JavaLangInteger;
@@ -33,8 +44,12 @@ FOUNDATION_EXPORT void Appointment_init(Appointment *self);
 
 FOUNDATION_EXPORT Appointment *new_Appointment_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT Appointment *create_Appointment_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(Appointment)
 
 @compatibility_alias ComProdValsAndr_demo_prjAppointment Appointment;
 
-#endif // _ComProdValsAndr_demo_prjAppointment_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComProdValsAndr_demo_prjAppointment")

@@ -11,7 +11,6 @@
 #include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 #include "com/vals/a2ios/amfibian/intf/AnAttrib.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
-#include "java/lang/Exception.h"
 #include "java/lang/Long.h"
 #include "java/lang/Throwable.h"
 #include "java/lang/reflect/Constructor.h"
@@ -37,16 +36,6 @@
   id<AnAdapter> jsonGetAdapter_;
   id<AnAdapter> jsonSetAdapter_;
 }
-
-- (void)clearMaps;
-
-- (jboolean)isEmptyWithJavaUtilMap:(id<JavaUtilMap>)map;
-
-- (id<JavaUtilMap>)ensureMapWithJavaUtilMap:(id<JavaUtilMap>)map;
-
-- (IOSObjectArray *)stringsToAttribsWithNSStringArray:(IOSObjectArray *)attribNames;
-
-- (void)initAttribsWithAnAttribArray:(IOSObjectArray *)attribs OBJC_METHOD_FAMILY_NONE;
 
 @end
 
@@ -160,18 +149,6 @@ J2OBJC_IGNORE_DESIGNATED_END
   [self setNativeObjectWithId:[((IOSClass *) nil_chk(nativeClass_)) newInstance]];
 }
 
-- (void)clearMaps {
-  AnObjectImpl_clearMaps(self);
-}
-
-- (jboolean)isEmptyWithJavaUtilMap:(id<JavaUtilMap>)map {
-  return AnObjectImpl_isEmptyWithJavaUtilMap_(self, map);
-}
-
-- (id<JavaUtilMap>)ensureMapWithJavaUtilMap:(id<JavaUtilMap>)map {
-  return AnObjectImpl_ensureMapWithJavaUtilMap_(self, map);
-}
-
 - (void)setNativeObjectWithId:(id)o {
   self->nativeObject_ = o;
   AnObjectImpl_clearMaps(self);
@@ -239,14 +216,6 @@ J2OBJC_IGNORE_DESIGNATED_END
   }
 }
 
-- (IOSObjectArray *)stringsToAttribsWithNSStringArray:(IOSObjectArray *)attribNames {
-  return AnObjectImpl_stringsToAttribsWithNSStringArray_(self, attribNames);
-}
-
-- (void)initAttribsWithAnAttribArray:(IOSObjectArray *)attribs {
-  AnObjectImpl_initAttribsWithAnAttribArray_(self, attribs);
-}
-
 - (void)setOwnAttribsWithAnAttribArray:(IOSObjectArray *)attribs {
   AnObjectImpl_initAttribsWithAnAttribArray_(self, attribs);
 }
@@ -261,7 +230,7 @@ J2OBJC_IGNORE_DESIGNATED_END
     jsonMap_ = AnObjectImpl_ensureMapWithJavaUtilMap_(self, jsonMap_);
     id<JavaUtilSet> p = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
     for (NSString * __strong attrName in nil_chk(p)) {
-      id<AnAttrib> attr = [attribMap_ getWithId:attrName];
+      id<AnAttrib> attr = [((id<JavaUtilMap>) nil_chk(attribMap_)) getWithId:attrName];
       if ([((id<AnAttrib>) nil_chk(attr)) getJsonName] != nil) {
         id value = [self getValueWithAnAdapter:[attr getJsonGetAdapter] withAnAdapter:jsonGetAdapter_ withAnAttrib:attr];
         if (value != nil) {
@@ -293,7 +262,7 @@ J2OBJC_IGNORE_DESIGNATED_END
       nativeObjectMap_ = AnObjectImpl_ensureMapWithJavaUtilMap_(self, nativeObjectMap_);
       id<JavaUtilSet> p = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
       for (NSString * __strong pName in nil_chk(p)) {
-        id<AnAttrib> pm = [attribMap_ getWithId:pName];
+        id<AnAttrib> pm = [((id<JavaUtilMap>) nil_chk(attribMap_)) getWithId:pName];
         id value = [((id<AnAttrib>) nil_chk(pm)) getValueWithAnAdapter:nil];
         if (value != nil) {
           (void) [((id<JavaUtilMap>) nil_chk(nativeObjectMap_)) putWithId:pName withId:value];
@@ -329,7 +298,7 @@ J2OBJC_IGNORE_DESIGNATED_END
     }
     id<JavaUtilSet> attrObjsKeys = [((id<JavaUtilMap>) nil_chk(attribMap_)) keySet];
     for (NSString * __strong attribName in nil_chk(attrObjsKeys)) {
-      id<AnAttrib> attr = [attribMap_ getWithId:attribName];
+      id<AnAttrib> attr = [((id<JavaUtilMap>) nil_chk(attribMap_)) getWithId:attribName];
       if ([((id<AnAttrib>) nil_chk(attr)) getJsonName] != nil) {
         if (![((OrgJsonJSONObject *) nil_chk(jsonObject)) isNullWithNSString:[attr getJsonName]]) {
           id attrValue = [jsonObject getWithNSString:[attr getJsonName]];
@@ -371,7 +340,7 @@ J2OBJC_IGNORE_DESIGNATED_END
     for (jint i = 0; i < [jsonArray length]; i++) {
       id o = [jsonArray getWithInt:i];
       [self resetNativeObject];
-      id t = [self asNativeObjectWithOrgJsonJSONObject:(OrgJsonJSONObject *) check_class_cast(o, [OrgJsonJSONObject class])];
+      id t = [self asNativeObjectWithOrgJsonJSONObject:(OrgJsonJSONObject *) cast_chk(o, [OrgJsonJSONObject class])];
       [l addWithId:t];
     }
     [self resetNativeObject];
@@ -437,75 +406,87 @@ J2OBJC_IGNORE_DESIGNATED_END
 @end
 
 void AnObjectImpl_init(AnObjectImpl *self) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
   self->attribMap_ = new_JavaUtilLinkedHashMap_init();
   [self initConverters];
 }
 
 AnObjectImpl *new_AnObjectImpl_init() {
-  AnObjectImpl *self = [AnObjectImpl alloc];
-  AnObjectImpl_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(AnObjectImpl, init)
+}
+
+AnObjectImpl *create_AnObjectImpl_init() {
+  J2OBJC_CREATE_IMPL(AnObjectImpl, init)
 }
 
 void AnObjectImpl_initWithIOSClass_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, id<AnObject> parentAnObject) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
   self->attribMap_ = new_JavaUtilLinkedHashMap_init();
   [self init__WithIOSClass:anObjClass withAnObject:parentAnObject];
 }
 
 AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnObject_(IOSClass *anObjClass, id<AnObject> parentAnObject) {
-  AnObjectImpl *self = [AnObjectImpl alloc];
-  AnObjectImpl_initWithIOSClass_withAnObject_(self, anObjClass, parentAnObject);
-  return self;
+  J2OBJC_NEW_IMPL(AnObjectImpl, initWithIOSClass_withAnObject_, anObjClass, parentAnObject)
+}
+
+AnObjectImpl *create_AnObjectImpl_initWithIOSClass_withAnObject_(IOSClass *anObjClass, id<AnObject> parentAnObject) {
+  J2OBJC_CREATE_IMPL(AnObjectImpl, initWithIOSClass_withAnObject_, anObjClass, parentAnObject)
 }
 
 void AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentAnObject) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
   self->attribMap_ = new_JavaUtilLinkedHashMap_init();
   [self init__WithIOSClass:anObjClass withNSStringArray:propertyNames withAnObject:parentAnObject];
 }
 
 AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentAnObject) {
-  AnObjectImpl *self = [AnObjectImpl alloc];
-  AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(self, anObjClass, propertyNames, parentAnObject);
-  return self;
+  J2OBJC_NEW_IMPL(AnObjectImpl, initWithIOSClass_withNSStringArray_withAnObject_, anObjClass, propertyNames, parentAnObject)
+}
+
+AnObjectImpl *create_AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyNames, id<AnObject> parentAnObject) {
+  J2OBJC_CREATE_IMPL(AnObjectImpl, initWithIOSClass_withNSStringArray_withAnObject_, anObjClass, propertyNames, parentAnObject)
 }
 
 void AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentAnObject) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
   self->attribMap_ = new_JavaUtilLinkedHashMap_init();
   [self init__WithIOSClass:anObjClass withAnAttribArray:propertyMappers withAnObject:parentAnObject];
 }
 
 AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentAnObject) {
-  AnObjectImpl *self = [AnObjectImpl alloc];
-  AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(self, anObjClass, propertyMappers, parentAnObject);
-  return self;
+  J2OBJC_NEW_IMPL(AnObjectImpl, initWithIOSClass_withAnAttribArray_withAnObject_, anObjClass, propertyMappers, parentAnObject)
+}
+
+AnObjectImpl *create_AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(IOSClass *anObjClass, IOSObjectArray *propertyMappers, id<AnObject> parentAnObject) {
+  J2OBJC_CREATE_IMPL(AnObjectImpl, initWithIOSClass_withAnAttribArray_withAnObject_, anObjClass, propertyMappers, parentAnObject)
 }
 
 void AnObjectImpl_initWithIOSClass_withNSStringArray_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyNames) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
   self->attribMap_ = new_JavaUtilLinkedHashMap_init();
   [self init__WithIOSClass:anObjClass withNSStringArray:propertyNames];
 }
 
 AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withNSStringArray_(IOSClass *anObjClass, IOSObjectArray *propertyNames) {
-  AnObjectImpl *self = [AnObjectImpl alloc];
-  AnObjectImpl_initWithIOSClass_withNSStringArray_(self, anObjClass, propertyNames);
-  return self;
+  J2OBJC_NEW_IMPL(AnObjectImpl, initWithIOSClass_withNSStringArray_, anObjClass, propertyNames)
+}
+
+AnObjectImpl *create_AnObjectImpl_initWithIOSClass_withNSStringArray_(IOSClass *anObjClass, IOSObjectArray *propertyNames) {
+  J2OBJC_CREATE_IMPL(AnObjectImpl, initWithIOSClass_withNSStringArray_, anObjClass, propertyNames)
 }
 
 void AnObjectImpl_initWithIOSClass_withAnAttribArray_(AnObjectImpl *self, IOSClass *anObjClass, IOSObjectArray *propertyMappers) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
   self->attribMap_ = new_JavaUtilLinkedHashMap_init();
   [self init__WithIOSClass:anObjClass withAnAttribArray:propertyMappers];
 }
 
 AnObjectImpl *new_AnObjectImpl_initWithIOSClass_withAnAttribArray_(IOSClass *anObjClass, IOSObjectArray *propertyMappers) {
-  AnObjectImpl *self = [AnObjectImpl alloc];
-  AnObjectImpl_initWithIOSClass_withAnAttribArray_(self, anObjClass, propertyMappers);
-  return self;
+  J2OBJC_NEW_IMPL(AnObjectImpl, initWithIOSClass_withAnAttribArray_, anObjClass, propertyMappers)
+}
+
+AnObjectImpl *create_AnObjectImpl_initWithIOSClass_withAnAttribArray_(IOSClass *anObjClass, IOSObjectArray *propertyMappers) {
+  J2OBJC_CREATE_IMPL(AnObjectImpl, initWithIOSClass_withAnAttribArray_, anObjClass, propertyMappers)
 }
 
 void AnObjectImpl_clearMaps(AnObjectImpl *self) {
@@ -559,10 +540,17 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnObjectImpl)
 
 @implementation AnObjectImpl_SampleGetAdapter
 
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  AnObjectImpl_SampleGetAdapter_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
+
 - (id)convertWithAnAttrib:(id<AnAttrib>)attrib
                    withId:(id)value {
   if (value != nil && [value isKindOfClass:[JavaUtilDate class]]) {
-    JavaUtilDate *d = (JavaUtilDate *) check_class_cast(value, [JavaUtilDate class]);
+    JavaUtilDate *d = (JavaUtilDate *) cast_chk(value, [JavaUtilDate class]);
     return new_JavaLangLong_initWithLong_([d getTime]);
   }
   return value;
@@ -573,42 +561,44 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnObjectImpl)
                        withId:(id)value {
 }
 
-J2OBJC_IGNORE_DESIGNATED_BEGIN
-- (instancetype)init {
-  AnObjectImpl_SampleGetAdapter_init(self);
-  return self;
-}
-J2OBJC_IGNORE_DESIGNATED_END
-
 @end
 
 void AnObjectImpl_SampleGetAdapter_init(AnObjectImpl_SampleGetAdapter *self) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
 }
 
 AnObjectImpl_SampleGetAdapter *new_AnObjectImpl_SampleGetAdapter_init() {
-  AnObjectImpl_SampleGetAdapter *self = [AnObjectImpl_SampleGetAdapter alloc];
-  AnObjectImpl_SampleGetAdapter_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(AnObjectImpl_SampleGetAdapter, init)
+}
+
+AnObjectImpl_SampleGetAdapter *create_AnObjectImpl_SampleGetAdapter_init() {
+  J2OBJC_CREATE_IMPL(AnObjectImpl_SampleGetAdapter, init)
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnObjectImpl_SampleGetAdapter)
 
 @implementation AnObjectImpl_SampleSetAdapter
 
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  AnObjectImpl_SampleSetAdapter_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
+
 - (id)convertWithAnAttrib:(id<AnAttrib>)attrib
                    withId:(id)value {
   if (value == nil) {
     return nil;
   }
-  IOSClass *objClass = [nil_chk(value) getClass];
+  IOSClass *objClass = [value java_getClass];
   JavaLangReflectMethod *m = [((id<AnAttrib>) nil_chk(attrib)) getSetter];
   if (m == nil) {
     [self onWarningWithIOSClass:objClass withNSString:[attrib getAttribName] withId:value];
     return nil;
   }
   NSString *attribName = [attrib getAttribName];
-  IOSObjectArray *paramTypes = [((JavaLangReflectMethod *) nil_chk(m)) getParameterTypes];
+  IOSObjectArray *paramTypes = [m getParameterTypes];
   IOSClass *p = IOSObjectArray_Get(nil_chk(paramTypes), 0);
   if ([((IOSClass *) nil_chk(p)) isEqual:objClass]) {
     return value;
@@ -629,7 +619,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnObjectImpl_SampleGetAdapter)
           id newObject = [c newInstanceWithNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ value } count:1 type:NSObject_class_()]];
           return newObject;
         }
-        else if ([((NSString *) nil_chk([objClass getSimpleName])) equalsIgnoreCase:[((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) getSimpleName]]) {
+        else if ([((NSString *) nil_chk([objClass getSimpleName])) java_equalsIgnoreCase:[((IOSClass *) nil_chk(IOSObjectArray_Get(cParamTypes, 0))) getSimpleName]]) {
           id newObject = [c newInstanceWithNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ value } count:1 type:NSObject_class_()]];
           return newObject;
         }
@@ -652,23 +642,18 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnObjectImpl_SampleGetAdapter)
                        withId:(id)value {
 }
 
-J2OBJC_IGNORE_DESIGNATED_BEGIN
-- (instancetype)init {
-  AnObjectImpl_SampleSetAdapter_init(self);
-  return self;
-}
-J2OBJC_IGNORE_DESIGNATED_END
-
 @end
 
 void AnObjectImpl_SampleSetAdapter_init(AnObjectImpl_SampleSetAdapter *self) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
 }
 
 AnObjectImpl_SampleSetAdapter *new_AnObjectImpl_SampleSetAdapter_init() {
-  AnObjectImpl_SampleSetAdapter *self = [AnObjectImpl_SampleSetAdapter alloc];
-  AnObjectImpl_SampleSetAdapter_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(AnObjectImpl_SampleSetAdapter, init)
+}
+
+AnObjectImpl_SampleSetAdapter *create_AnObjectImpl_SampleSetAdapter_init() {
+  J2OBJC_CREATE_IMPL(AnObjectImpl_SampleSetAdapter, init)
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnObjectImpl_SampleSetAdapter)

@@ -7,6 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5936CD721F6DC7BA00D654E0 /* libjre_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD6E1F6DC70F00D654E0 /* libjre_core.a */; };
+		5936CD731F6DC7BA00D654E0 /* libjre_emul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD701F6DC74C00D654E0 /* libjre_emul.a */; };
+		5936CD881F6DC7BA00D654E0 /* libandroid_util.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD741F6DC7BA00D654E0 /* libandroid_util.a */; };
+		5936CD891F6DC7BA00D654E0 /* libguava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD751F6DC7BA00D654E0 /* libguava.a */; };
+		5936CD8B1F6DC7BA00D654E0 /* libjavax_inject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD771F6DC7BA00D654E0 /* libjavax_inject.a */; };
+		5936CD8C1F6DC7BA00D654E0 /* libjre_beans.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD781F6DC7BA00D654E0 /* libjre_beans.a */; };
+		5936CD8D1F6DC7BA00D654E0 /* libjre_channels.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD791F6DC7BA00D654E0 /* libjre_channels.a */; };
+		5936CD8E1F6DC7BA00D654E0 /* libjre_concurrent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD7A1F6DC7BA00D654E0 /* libjre_concurrent.a */; };
+		5936CD8F1F6DC7BA00D654E0 /* libjre_io.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD7B1F6DC7BA00D654E0 /* libjre_io.a */; };
+		5936CD901F6DC7BA00D654E0 /* libjre_net.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD7C1F6DC7BA00D654E0 /* libjre_net.a */; };
+		5936CD911F6DC7BA00D654E0 /* libjre_security.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD7D1F6DC7BA00D654E0 /* libjre_security.a */; };
+		5936CD921F6DC7BA00D654E0 /* libjre_sql.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD7E1F6DC7BA00D654E0 /* libjre_sql.a */; };
+		5936CD931F6DC7BA00D654E0 /* libjre_ssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD7F1F6DC7BA00D654E0 /* libjre_ssl.a */; };
+		5936CD941F6DC7BA00D654E0 /* libjre_util.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD801F6DC7BA00D654E0 /* libjre_util.a */; };
+		5936CD951F6DC7BA00D654E0 /* libjre_xml.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD811F6DC7BA00D654E0 /* libjre_xml.a */; };
+		5936CD961F6DC7BA00D654E0 /* libjre_zip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD821F6DC7BA00D654E0 /* libjre_zip.a */; };
+		5936CD971F6DC7BA00D654E0 /* libjsr305.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD831F6DC7BA00D654E0 /* libjsr305.a */; };
+		5936CD981F6DC7BA00D654E0 /* libjunit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD841F6DC7BA00D654E0 /* libjunit.a */; };
+		5936CD991F6DC7BA00D654E0 /* libmockito.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD851F6DC7BA00D654E0 /* libmockito.a */; };
+		5936CD9A1F6DC7BA00D654E0 /* libprotobuf_runtime.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD861F6DC7BA00D654E0 /* libprotobuf_runtime.a */; };
+		5936CD9B1F6DC7BA00D654E0 /* libxalan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5936CD871F6DC7BA00D654E0 /* libxalan.a */; };
 		8B028CA71BB1B20800AFD558 /* SQLighterDbImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */; };
 		8B028CA81BB1B20800AFD558 /* SQLighterRsImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */; };
 		8B0482531D813E6C00D5E4A8 /* an_objects.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B0482521D813E6C00D5E4A8 /* an_objects.json */; };
@@ -39,14 +60,6 @@
 		8B9848E31C2535A20098CF13 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9848E11C2535A20098CF13 /* Entity.m */; };
 		8B9E83DD1C043F4500F8CE66 /* SQLighterDb.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E83DA1C043F4500F8CE66 /* SQLighterDb.m */; };
 		8B9E83DE1C043F4500F8CE66 /* SQLighterRs.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E83DB1C043F4500F8CE66 /* SQLighterRs.m */; };
-		8BF799C41BF1A95C00CA99B7 /* libguava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BC1BF1A95C00CA99B7 /* libguava.a */; };
-		8BF799C51BF1A95C00CA99B7 /* libjavax_inject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BD1BF1A95C00CA99B7 /* libjavax_inject.a */; };
-		8BF799C61BF1A95C00CA99B7 /* libjre_emul_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BE1BF1A95C00CA99B7 /* libjre_emul_core.a */; };
-		8BF799C71BF1A95C00CA99B7 /* libjre_emul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799BF1BF1A95C00CA99B7 /* libjre_emul.a */; };
-		8BF799C81BF1A95C00CA99B7 /* libjsr305.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799C01BF1A95C00CA99B7 /* libjsr305.a */; };
-		8BF799C91BF1A95C00CA99B7 /* libjunit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799C11BF1A95C00CA99B7 /* libjunit.a */; };
-		8BF799CA1BF1A95C00CA99B7 /* libmockito.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799C21BF1A95C00CA99B7 /* libmockito.a */; };
-		8BF799CB1BF1A95C00CA99B7 /* libprotobuf_runtime.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799C31BF1A95C00CA99B7 /* libprotobuf_runtime.a */; };
 		8BF799CD1BF1A9DC00CA99B7 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799CC1BF1A9DC00CA99B7 /* libsqlite3.dylib */; };
 		8BF799CF1BF1AA5100CA99B7 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799CE1BF1AA5100CA99B7 /* libz.1.dylib */; };
 		8BF799D11BF1AAA600CA99B7 /* libicucore.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF799D01BF1AAA600CA99B7 /* libicucore.A.dylib */; };
@@ -65,6 +78,30 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5936CD6A1F6DC69F00D654E0 /* jre_emul.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = jre_emul.jar; path = "../../../j2objc-2.0.2/lib/jre_emul.jar"; sourceTree = "<group>"; };
+		5936CD6C1F6DC6C400D654E0 /* libjre_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_core.a; path = "../../../j2objc-2.0.2/lib/libjre_core.a"; sourceTree = "<group>"; };
+		5936CD6E1F6DC70F00D654E0 /* libjre_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_core.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_core.a"; sourceTree = "<group>"; };
+		5936CD701F6DC74C00D654E0 /* libjre_emul.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_emul.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_emul.a"; sourceTree = "<group>"; };
+		5936CD741F6DC7BA00D654E0 /* libandroid_util.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libandroid_util.a; path = "../../../j2objc-2.0.2/lib/macosx/libandroid_util.a"; sourceTree = "<group>"; };
+		5936CD751F6DC7BA00D654E0 /* libguava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libguava.a; path = "../../../j2objc-2.0.2/lib/macosx/libguava.a"; sourceTree = "<group>"; };
+		5936CD761F6DC7BA00D654E0 /* libj2objc_main.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libj2objc_main.a; path = "../../../j2objc-2.0.2/lib/macosx/libj2objc_main.a"; sourceTree = "<group>"; };
+		5936CD771F6DC7BA00D654E0 /* libjavax_inject.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjavax_inject.a; path = "../../../j2objc-2.0.2/lib/macosx/libjavax_inject.a"; sourceTree = "<group>"; };
+		5936CD781F6DC7BA00D654E0 /* libjre_beans.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_beans.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_beans.a"; sourceTree = "<group>"; };
+		5936CD791F6DC7BA00D654E0 /* libjre_channels.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_channels.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_channels.a"; sourceTree = "<group>"; };
+		5936CD7A1F6DC7BA00D654E0 /* libjre_concurrent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_concurrent.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_concurrent.a"; sourceTree = "<group>"; };
+		5936CD7B1F6DC7BA00D654E0 /* libjre_io.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_io.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_io.a"; sourceTree = "<group>"; };
+		5936CD7C1F6DC7BA00D654E0 /* libjre_net.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_net.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_net.a"; sourceTree = "<group>"; };
+		5936CD7D1F6DC7BA00D654E0 /* libjre_security.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_security.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_security.a"; sourceTree = "<group>"; };
+		5936CD7E1F6DC7BA00D654E0 /* libjre_sql.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_sql.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_sql.a"; sourceTree = "<group>"; };
+		5936CD7F1F6DC7BA00D654E0 /* libjre_ssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_ssl.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_ssl.a"; sourceTree = "<group>"; };
+		5936CD801F6DC7BA00D654E0 /* libjre_util.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_util.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_util.a"; sourceTree = "<group>"; };
+		5936CD811F6DC7BA00D654E0 /* libjre_xml.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_xml.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_xml.a"; sourceTree = "<group>"; };
+		5936CD821F6DC7BA00D654E0 /* libjre_zip.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjre_zip.a; path = "../../../j2objc-2.0.2/lib/macosx/libjre_zip.a"; sourceTree = "<group>"; };
+		5936CD831F6DC7BA00D654E0 /* libjsr305.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjsr305.a; path = "../../../j2objc-2.0.2/lib/macosx/libjsr305.a"; sourceTree = "<group>"; };
+		5936CD841F6DC7BA00D654E0 /* libjunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjunit.a; path = "../../../j2objc-2.0.2/lib/macosx/libjunit.a"; sourceTree = "<group>"; };
+		5936CD851F6DC7BA00D654E0 /* libmockito.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmockito.a; path = "../../../j2objc-2.0.2/lib/macosx/libmockito.a"; sourceTree = "<group>"; };
+		5936CD861F6DC7BA00D654E0 /* libprotobuf_runtime.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf_runtime.a; path = "../../../j2objc-2.0.2/lib/macosx/libprotobuf_runtime.a"; sourceTree = "<group>"; };
+		5936CD871F6DC7BA00D654E0 /* libxalan.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libxalan.a; path = "../../../j2objc-2.0.2/lib/macosx/libxalan.a"; sourceTree = "<group>"; };
 		8B028CA51BB1B20800AFD558 /* SQLighterDbImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterDbImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterDbImpl.m; sourceTree = "<group>"; };
 		8B028CA61BB1B20800AFD558 /* SQLighterRsImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLighterRsImpl.m; path = ../../../ios/j2objc/com/vals/a2ios/sqlighter/impl/SQLighterRsImpl.m; sourceTree = "<group>"; };
 		8B0482521D813E6C00D5E4A8 /* an_objects.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = an_objects.json; path = "../../andr-demo-prj/app/src/main/assets/an_objects.json"; sourceTree = "<group>"; };
@@ -159,17 +196,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5936CD881F6DC7BA00D654E0 /* libandroid_util.a in Frameworks */,
+				5936CD891F6DC7BA00D654E0 /* libguava.a in Frameworks */,
+				5936CD8B1F6DC7BA00D654E0 /* libjavax_inject.a in Frameworks */,
+				5936CD8C1F6DC7BA00D654E0 /* libjre_beans.a in Frameworks */,
+				5936CD8D1F6DC7BA00D654E0 /* libjre_channels.a in Frameworks */,
+				5936CD8E1F6DC7BA00D654E0 /* libjre_concurrent.a in Frameworks */,
+				5936CD8F1F6DC7BA00D654E0 /* libjre_io.a in Frameworks */,
+				5936CD901F6DC7BA00D654E0 /* libjre_net.a in Frameworks */,
+				5936CD911F6DC7BA00D654E0 /* libjre_security.a in Frameworks */,
+				5936CD921F6DC7BA00D654E0 /* libjre_sql.a in Frameworks */,
+				5936CD931F6DC7BA00D654E0 /* libjre_ssl.a in Frameworks */,
+				5936CD941F6DC7BA00D654E0 /* libjre_util.a in Frameworks */,
+				5936CD951F6DC7BA00D654E0 /* libjre_xml.a in Frameworks */,
+				5936CD961F6DC7BA00D654E0 /* libjre_zip.a in Frameworks */,
+				5936CD971F6DC7BA00D654E0 /* libjsr305.a in Frameworks */,
+				5936CD981F6DC7BA00D654E0 /* libjunit.a in Frameworks */,
+				5936CD991F6DC7BA00D654E0 /* libmockito.a in Frameworks */,
+				5936CD9A1F6DC7BA00D654E0 /* libprotobuf_runtime.a in Frameworks */,
+				5936CD9B1F6DC7BA00D654E0 /* libxalan.a in Frameworks */,
+				5936CD721F6DC7BA00D654E0 /* libjre_core.a in Frameworks */,
+				5936CD731F6DC7BA00D654E0 /* libjre_emul.a in Frameworks */,
 				8BF799D11BF1AAA600CA99B7 /* libicucore.A.dylib in Frameworks */,
 				8BF799CF1BF1AA5100CA99B7 /* libz.1.dylib in Frameworks */,
 				8BF799CD1BF1A9DC00CA99B7 /* libsqlite3.dylib in Frameworks */,
-				8BF799C41BF1A95C00CA99B7 /* libguava.a in Frameworks */,
-				8BF799C51BF1A95C00CA99B7 /* libjavax_inject.a in Frameworks */,
-				8BF799C61BF1A95C00CA99B7 /* libjre_emul_core.a in Frameworks */,
-				8BF799C71BF1A95C00CA99B7 /* libjre_emul.a in Frameworks */,
-				8BF799C81BF1A95C00CA99B7 /* libjsr305.a in Frameworks */,
-				8BF799C91BF1A95C00CA99B7 /* libjunit.a in Frameworks */,
-				8BF799CA1BF1A95C00CA99B7 /* libmockito.a in Frameworks */,
-				8BF799CB1BF1A95C00CA99B7 /* libprotobuf_runtime.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,6 +259,30 @@
 		F37D0D581B90180300E73A01 = {
 			isa = PBXGroup;
 			children = (
+				5936CD741F6DC7BA00D654E0 /* libandroid_util.a */,
+				5936CD751F6DC7BA00D654E0 /* libguava.a */,
+				5936CD761F6DC7BA00D654E0 /* libj2objc_main.a */,
+				5936CD771F6DC7BA00D654E0 /* libjavax_inject.a */,
+				5936CD781F6DC7BA00D654E0 /* libjre_beans.a */,
+				5936CD791F6DC7BA00D654E0 /* libjre_channels.a */,
+				5936CD7A1F6DC7BA00D654E0 /* libjre_concurrent.a */,
+				5936CD7B1F6DC7BA00D654E0 /* libjre_io.a */,
+				5936CD7C1F6DC7BA00D654E0 /* libjre_net.a */,
+				5936CD7D1F6DC7BA00D654E0 /* libjre_security.a */,
+				5936CD7E1F6DC7BA00D654E0 /* libjre_sql.a */,
+				5936CD7F1F6DC7BA00D654E0 /* libjre_ssl.a */,
+				5936CD801F6DC7BA00D654E0 /* libjre_util.a */,
+				5936CD811F6DC7BA00D654E0 /* libjre_xml.a */,
+				5936CD821F6DC7BA00D654E0 /* libjre_zip.a */,
+				5936CD831F6DC7BA00D654E0 /* libjsr305.a */,
+				5936CD841F6DC7BA00D654E0 /* libjunit.a */,
+				5936CD851F6DC7BA00D654E0 /* libmockito.a */,
+				5936CD861F6DC7BA00D654E0 /* libprotobuf_runtime.a */,
+				5936CD871F6DC7BA00D654E0 /* libxalan.a */,
+				5936CD701F6DC74C00D654E0 /* libjre_emul.a */,
+				5936CD6E1F6DC70F00D654E0 /* libjre_core.a */,
+				5936CD6C1F6DC6C400D654E0 /* libjre_core.a */,
+				5936CD6A1F6DC69F00D654E0 /* jre_emul.jar */,
 				F32A9EBE1B9ADA7B0092C868 /* libs */,
 				F32A9E5B1B9028AB0092C868 /* script */,
 				F37D0D631B90180300E73A01 /* ios-demo-prj */,
@@ -551,7 +625,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					../j2objc/include,
+					../../../j2objc/include,
 					../../ios/j2objc,
 					"ios-demo-prj",
 					../mobilighter/ios/j2objc,
@@ -561,6 +635,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../j2objc/lib,
+				);
+				OTHER_LDFLAGS = (
+					"-l",
+					iconv,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -574,7 +652,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					../j2objc/include,
+					../../../j2objc/include,
 					../../ios/j2objc,
 					"ios-demo-prj",
 					../mobilighter/ios/j2objc,
@@ -584,6 +662,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../j2objc/lib,
+				);
+				OTHER_LDFLAGS = (
+					"-l",
+					iconv,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

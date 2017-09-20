@@ -9,7 +9,6 @@
 #include "com/vals/a2ios/amfibian/impl/AnAttribImpl.h"
 #include "com/vals/a2ios/amfibian/intf/AnAdapter.h"
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
-#include "java/lang/Exception.h"
 #include "java/lang/reflect/Method.h"
 
 @interface AnAttribImpl () {
@@ -26,10 +25,6 @@
   JavaLangReflectMethod *getter_;
   JavaLangReflectMethod *setter_;
 }
-
-- (void)init__WithNSString:(NSString *)attribName
-              withNSString:(NSString *)columnName
-              withNSString:(NSString *)jsonName OBJC_METHOD_FAMILY_NONE;
 
 @end
 
@@ -61,12 +56,6 @@ J2OBJC_IGNORE_DESIGNATED_END
                     withNSString:(NSString *)jsonName {
   AnAttribImpl_initWithNSString_withNSString_withNSString_(self, attribName, columnName, jsonName);
   return self;
-}
-
-- (void)init__WithNSString:(NSString *)attribName
-              withNSString:(NSString *)columnName
-              withNSString:(NSString *)jsonName {
-  AnAttribImpl_init__WithNSString_withNSString_withNSString_(self, attribName, columnName, jsonName);
 }
 
 - (instancetype)initWithNSString:(NSString *)attribColumnJsonName {
@@ -183,7 +172,7 @@ J2OBJC_IGNORE_DESIGNATED_END
       JavaLangReflectMethod * const *e__ = b__ + a__->size_;
       while (b__ < e__) {
         JavaLangReflectMethod *m = *b__++;
-        if ([((NSString *) nil_chk([((JavaLangReflectMethod *) nil_chk(m)) getName])) equalsIgnoreCase:JreStrcat("$$", @"get", attribName_)]) {
+        if ([((NSString *) nil_chk([((JavaLangReflectMethod *) nil_chk(m)) getName])) java_equalsIgnoreCase:JreStrcat("$$", @"get", attribName_)]) {
           getter_ = m;
           return m;
         }
@@ -202,7 +191,7 @@ J2OBJC_IGNORE_DESIGNATED_END
       JavaLangReflectMethod * const *e__ = b__ + a__->size_;
       while (b__ < e__) {
         JavaLangReflectMethod *m = *b__++;
-        if ([((NSString *) nil_chk([((JavaLangReflectMethod *) nil_chk(m)) getName])) equalsIgnoreCase:JreStrcat("$$", @"set", attribName_)]) {
+        if ([((NSString *) nil_chk([((JavaLangReflectMethod *) nil_chk(m)) getName])) java_equalsIgnoreCase:JreStrcat("$$", @"set", attribName_)]) {
           setter_ = m;
           return m;
         }
@@ -228,41 +217,45 @@ J2OBJC_IGNORE_DESIGNATED_END
 @end
 
 void AnAttribImpl_init(AnAttribImpl *self) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
 }
 
 AnAttribImpl *new_AnAttribImpl_init() {
-  AnAttribImpl *self = [AnAttribImpl alloc];
-  AnAttribImpl_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(AnAttribImpl, init)
+}
+
+AnAttribImpl *create_AnAttribImpl_init() {
+  J2OBJC_CREATE_IMPL(AnAttribImpl, init)
 }
 
 void AnAttribImpl_initWithNSString_withNSString_withNSString_(AnAttribImpl *self, NSString *attribName, NSString *columnName, NSString *jsonName) {
-  (void) NSObject_init(self);
+  NSObject_init(self);
   AnAttribImpl_init__WithNSString_withNSString_withNSString_(self, attribName, columnName, jsonName);
 }
 
 AnAttribImpl *new_AnAttribImpl_initWithNSString_withNSString_withNSString_(NSString *attribName, NSString *columnName, NSString *jsonName) {
-  AnAttribImpl *self = [AnAttribImpl alloc];
-  AnAttribImpl_initWithNSString_withNSString_withNSString_(self, attribName, columnName, jsonName);
-  return self;
+  J2OBJC_NEW_IMPL(AnAttribImpl, initWithNSString_withNSString_withNSString_, attribName, columnName, jsonName)
+}
+
+AnAttribImpl *create_AnAttribImpl_initWithNSString_withNSString_withNSString_(NSString *attribName, NSString *columnName, NSString *jsonName) {
+  J2OBJC_CREATE_IMPL(AnAttribImpl, initWithNSString_withNSString_withNSString_, attribName, columnName, jsonName)
 }
 
 void AnAttribImpl_init__WithNSString_withNSString_withNSString_(AnAttribImpl *self, NSString *attribName, NSString *columnName, NSString *jsonName) {
   self->attribName_ = attribName;
-  if (columnName == nil || [@"" isEqual:[columnName trim]]) {
+  if (columnName == nil || [@"" isEqual:[columnName java_trim]]) {
     self->columnName_ = attribName;
   }
-  else if ([@"null" isEqual:[columnName trim]]) {
+  else if ([@"null" isEqual:[columnName java_trim]]) {
     self->columnName_ = nil;
   }
   else {
     self->columnName_ = columnName;
   }
-  if (jsonName == nil || [@"" isEqual:[jsonName trim]]) {
+  if (jsonName == nil || [@"" isEqual:[jsonName java_trim]]) {
     self->jsonName_ = attribName;
   }
-  else if ([@"null" isEqual:[jsonName trim]]) {
+  else if ([@"null" isEqual:[jsonName java_trim]]) {
     self->jsonName_ = nil;
   }
   else {
@@ -271,16 +264,18 @@ void AnAttribImpl_init__WithNSString_withNSString_withNSString_(AnAttribImpl *se
 }
 
 void AnAttribImpl_initWithNSString_(AnAttribImpl *self, NSString *attribColumnJsonName) {
-  (void) NSObject_init(self);
-  if ([((NSString *) nil_chk(attribColumnJsonName)) indexOfString:@","] != -1) {
-    NSString *an = nil, *cn = nil, *jn = nil;
-    IOSObjectArray *propColumn = [attribColumnJsonName split:@","];
-    an = [((NSString *) nil_chk(IOSObjectArray_Get(nil_chk(propColumn), 0))) trim];
+  NSObject_init(self);
+  if ([((NSString *) nil_chk(attribColumnJsonName)) java_indexOfString:@","] != -1) {
+    NSString *an = nil;
+    NSString *cn = nil;
+    NSString *jn = nil;
+    IOSObjectArray *propColumn = [attribColumnJsonName java_split:@","];
+    an = [((NSString *) nil_chk(IOSObjectArray_Get(nil_chk(propColumn), 0))) java_trim];
     if (propColumn->size_ > 1 && IOSObjectArray_Get(propColumn, 1) != nil) {
-      cn = [((NSString *) nil_chk(IOSObjectArray_Get(propColumn, 1))) trim];
+      cn = [((NSString *) nil_chk(IOSObjectArray_Get(propColumn, 1))) java_trim];
     }
     if (propColumn->size_ > 2 && IOSObjectArray_Get(propColumn, 2) != nil) {
-      jn = [((NSString *) nil_chk(IOSObjectArray_Get(propColumn, 2))) trim];
+      jn = [((NSString *) nil_chk(IOSObjectArray_Get(propColumn, 2))) java_trim];
     }
     AnAttribImpl_init__WithNSString_withNSString_withNSString_(self, an, cn, jn);
   }
@@ -290,9 +285,11 @@ void AnAttribImpl_initWithNSString_(AnAttribImpl *self, NSString *attribColumnJs
 }
 
 AnAttribImpl *new_AnAttribImpl_initWithNSString_(NSString *attribColumnJsonName) {
-  AnAttribImpl *self = [AnAttribImpl alloc];
-  AnAttribImpl_initWithNSString_(self, attribColumnJsonName);
-  return self;
+  J2OBJC_NEW_IMPL(AnAttribImpl, initWithNSString_, attribColumnJsonName)
+}
+
+AnAttribImpl *create_AnAttribImpl_initWithNSString_(NSString *attribColumnJsonName) {
+  J2OBJC_CREATE_IMPL(AnAttribImpl, initWithNSString_, attribColumnJsonName)
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(AnAttribImpl)

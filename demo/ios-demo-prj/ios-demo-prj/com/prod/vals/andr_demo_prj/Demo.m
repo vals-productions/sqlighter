@@ -48,11 +48,11 @@
 
 J2OBJC_FIELD_SETTER(Demo, anAppointmentObject_, id<AnObject>)
 
-@interface Demo_$1 : AnUpgradeImpl {
+@interface Demo_1 : AnUpgradeImpl {
  @public
   Demo *this$0_;
-  id<JavaUtilList> updateKeys_;
   id<AnObject> val$anAppointment_;
+  id<JavaUtilList> updateKeys_;
 }
 
 - (id<JavaUtilList>)getTasksByKeyWithNSString:(NSString *)key;
@@ -61,25 +61,19 @@ J2OBJC_FIELD_SETTER(Demo, anAppointmentObject_, id<AnObject>)
 
 - (void)setUpdateKeysWithJavaUtilList:(id<JavaUtilList>)updateKeys;
 
-- (instancetype)initWithDemo:(Demo *)outer$
-                withAnObject:(id<AnObject>)capture$0
-             withSQLighterDb:(id<SQLighterDb>)arg$0;
-
 @end
 
-J2OBJC_EMPTY_STATIC_INIT(Demo_$1)
+J2OBJC_EMPTY_STATIC_INIT(Demo_1)
 
-J2OBJC_FIELD_SETTER(Demo_$1, this$0_, Demo *)
-J2OBJC_FIELD_SETTER(Demo_$1, updateKeys_, id<JavaUtilList>)
-J2OBJC_FIELD_SETTER(Demo_$1, val$anAppointment_, id<AnObject>)
+J2OBJC_FIELD_SETTER(Demo_1, updateKeys_, id<JavaUtilList>)
 
-__attribute__((unused)) static void Demo_$1_initWithDemo_withAnObject_withSQLighterDb_(Demo_$1 *self, Demo *outer$, id<AnObject> capture$0, id<SQLighterDb> arg$0);
+__attribute__((unused)) static void Demo_1_initWithDemo_withAnObject_withSQLighterDb_(Demo_1 *self, Demo *outer$, id<AnObject> capture$0, id<SQLighterDb> sqLighterDb);
 
-__attribute__((unused)) static Demo_$1 *new_Demo_$1_initWithDemo_withAnObject_withSQLighterDb_(Demo *outer$, id<AnObject> capture$0, id<SQLighterDb> arg$0) NS_RETURNS_RETAINED;
+__attribute__((unused)) static Demo_1 *new_Demo_1_initWithDemo_withAnObject_withSQLighterDb_(Demo *outer$, id<AnObject> capture$0, id<SQLighterDb> sqLighterDb) NS_RETURNS_RETAINED;
 
-J2OBJC_TYPE_LITERAL_HEADER(Demo_$1)
+__attribute__((unused)) static Demo_1 *create_Demo_1_initWithDemo_withAnObject_withSQLighterDb_(Demo *outer$, id<AnObject> capture$0, id<SQLighterDb> sqLighterDb);
 
-@interface Demo_$2 : NSObject < MobilAction > {
+@interface Demo_2 : NSObject < MobilAction > {
  @public
   Demo *this$0_;
   id<Mobilighter> val$mobilighter_;
@@ -89,27 +83,17 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$1)
 
 - (void)onActionWithId:(id)param;
 
-- (instancetype)initWithDemo:(Demo *)outer$
-             withMobilighter:(id<Mobilighter>)capture$0
-                      withId:(id)capture$1
-                      withId:(id)capture$2;
-
 @end
 
-J2OBJC_EMPTY_STATIC_INIT(Demo_$2)
+J2OBJC_EMPTY_STATIC_INIT(Demo_2)
 
-J2OBJC_FIELD_SETTER(Demo_$2, this$0_, Demo *)
-J2OBJC_FIELD_SETTER(Demo_$2, val$mobilighter_, id<Mobilighter>)
-J2OBJC_FIELD_SETTER(Demo_$2, val$sqlighterStartButton_, id)
-J2OBJC_FIELD_SETTER(Demo_$2, val$amfibianStartButton_, id)
+__attribute__((unused)) static void Demo_2_initWithDemo_withMobilighter_withId_withId_(Demo_2 *self, Demo *outer$, id<Mobilighter> capture$0, id capture$1, id capture$2);
 
-__attribute__((unused)) static void Demo_$2_initWithDemo_withMobilighter_withId_withId_(Demo_$2 *self, Demo *outer$, id<Mobilighter> capture$0, id capture$1, id capture$2);
+__attribute__((unused)) static Demo_2 *new_Demo_2_initWithDemo_withMobilighter_withId_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1, id capture$2) NS_RETURNS_RETAINED;
 
-__attribute__((unused)) static Demo_$2 *new_Demo_$2_initWithDemo_withMobilighter_withId_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1, id capture$2) NS_RETURNS_RETAINED;
+__attribute__((unused)) static Demo_2 *create_Demo_2_initWithDemo_withMobilighter_withId_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1, id capture$2);
 
-J2OBJC_TYPE_LITERAL_HEADER(Demo_$2)
-
-@interface Demo_$3 : NSObject < MobilAction > {
+@interface Demo_3 : NSObject < MobilAction > {
  @public
   Demo *this$0_;
   id<Mobilighter> val$mobilighter_;
@@ -118,25 +102,24 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$2)
 
 - (void)onActionWithId:(id)param;
 
-- (instancetype)initWithDemo:(Demo *)outer$
-             withMobilighter:(id<Mobilighter>)capture$0
-                      withId:(id)capture$1;
-
 @end
 
-J2OBJC_EMPTY_STATIC_INIT(Demo_$3)
+J2OBJC_EMPTY_STATIC_INIT(Demo_3)
 
-J2OBJC_FIELD_SETTER(Demo_$3, this$0_, Demo *)
-J2OBJC_FIELD_SETTER(Demo_$3, val$mobilighter_, id<Mobilighter>)
-J2OBJC_FIELD_SETTER(Demo_$3, val$amfibianStartButton_, id)
+__attribute__((unused)) static void Demo_3_initWithDemo_withMobilighter_withId_(Demo_3 *self, Demo *outer$, id<Mobilighter> capture$0, id capture$1);
 
-__attribute__((unused)) static void Demo_$3_initWithDemo_withMobilighter_withId_(Demo_$3 *self, Demo *outer$, id<Mobilighter> capture$0, id capture$1);
+__attribute__((unused)) static Demo_3 *new_Demo_3_initWithDemo_withMobilighter_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1) NS_RETURNS_RETAINED;
 
-__attribute__((unused)) static Demo_$3 *new_Demo_$3_initWithDemo_withMobilighter_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1) NS_RETURNS_RETAINED;
-
-J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
+__attribute__((unused)) static Demo_3 *create_Demo_3_initWithDemo_withMobilighter_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1);
 
 @implementation Demo
+
+J2OBJC_IGNORE_DESIGNATED_BEGIN
+- (instancetype)init {
+  Demo_init(self);
+  return self;
+}
+J2OBJC_IGNORE_DESIGNATED_END
 
 - (void)sqlighterOperations {
   NSString *greetingStr = nil;
@@ -153,13 +136,13 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
     [((id<SQLighterDb>) nil_chk(db)) addParamWithNSString:userName];
     [db addParamWithNSString:userEmail];
     NSString *dataStr = blobString;
-    IOSByteArray *data = [dataStr getBytes];
+    IOSByteArray *data = [dataStr java_getBytes];
     [db addParamWithByteArray:data];
     [db addParamWithDouble:[userHeight doubleValue]];
     JavaLangLong *rowId = [db executeChangeWithNSString:@"insert into user( name, email, data, height) values (?, ?, ?, ?)"];
-    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$@", @"Inserted id: ", rowId)];
+    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:JreStrcat("$@", @"Inserted id: ", rowId)];
     [db addParamWithNSString:userEmail];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"check if the record was inserted"];
+    [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:@"check if the record was inserted"];
     rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user where email = ?"];
     [self startTestWithNSString:@"insert/select test"];
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
@@ -169,9 +152,9 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
     [db addParamNull];
     [db addParamWithNSString:userEmail];
     JavaLangLong *alteredRows = [db executeChangeWithNSString:@"update user set email = ? where email = ?"];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @"Updated row count: ", alteredRows)];
+    [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:JreStrcat("$@", @"Updated row count: ", alteredRows)];
     [self checkTestWithNSString:@"update row count" withBoolean:[((JavaLangLong *) nil_chk(alteredRows)) isEqual:JavaLangLong_valueOfWithLong_(1l)]];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"check if null was set"];
+    [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:@"check if null was set"];
     [db addParamWithLong:[insertedId longLongValue]];
     rs = [db executeSelectWithNSString:@"select email from user where id = ?"];
     [self startTestWithNSString:@"null handling"];
@@ -183,9 +166,9 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
     [db addParamWithNSString:userEmail];
     [db addParamWithNSString:userEmail];
     alteredRows = [db executeChangeWithNSString:@"update user set email = ? where email is null or email = ?"];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @"Updated row count: ", alteredRows)];
+    [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:JreStrcat("$@", @"Updated row count: ", alteredRows)];
     [self checkTestWithNSString:@"batch update" withBoolean:[((JavaLangLong *) nil_chk(alteredRows)) isEqual:JavaLangLong_valueOfWithLong_(2l)]];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after update state 2"];
+    [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:@"after update state 2"];
     rs = [db executeSelectWithNSString:@"select id, email, name, data, height from user"];
     jint counter = 0;
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
@@ -203,26 +186,26 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
     [rs close];
     [db addParamWithLong:2];
     alteredRows = [db executeChangeWithNSString:@"delete from user where id = ?"];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @"Deleted rows: ", alteredRows)];
+    [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:JreStrcat("$@", @"Deleted rows: ", alteredRows)];
     [self checkTestWithNSString:@"delete test" withBoolean:[((JavaLangLong *) nil_chk(alteredRows)) isEqual:JavaLangLong_valueOfWithLong_(1l)]];
     [self printUserTableWithNSString:@"after delete state" withSQLighterDb:db];
     alteredRows = [db executeChangeWithNSString:@"create table address(id integer primary key autoincrement unique, name text, user_id integer, update_date text)"];
     [db addParamWithNSString:@"123 main str, walnut creek, ca"];
     [db addParamWithLong:1];
     JavaUtilDate *dateNow = new_JavaUtilDate_init();
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$$", @"Date now: ", [dateNow description])];
+    [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:JreStrcat("$$", @"Date now: ", [dateNow description])];
     [db addParamWithJavaUtilDate:new_JavaUtilDate_init()];
     (void) [db executeChangeWithNSString:@"insert into address(name, user_id, update_date) values(?, ?, ?)"];
-    [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:@"after address creation/population"];
+    [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:@"after address creation/population"];
     rs = [db executeSelectWithNSString:@"select a.user_id, u.email, u.name, u.data, u.height, a.name, a.update_date from user u, address a where a.user_id = u.id"];
     while ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
       [self printWithSQLighterRs:rs];
-      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$$", @" address: ", [rs getStringWithInt:5])];
+      [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:JreStrcat("$$", @" address: ", [rs getStringWithInt:5])];
       JavaUtilDate *date = [rs getDateWithInt:6];
-      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @" update_date: ", date)];
+      [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:JreStrcat("$@", @" update_date: ", date)];
       dateNow = [db getDateWithoutMillisWithJavaUtilDate:dateNow];
       [self checkTestWithNSString:@"date handling test" withBoolean:[((JavaUtilDate *) nil_chk(date)) isEqual:dateNow]];
-      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:JreStrcat("$@", @" update_date: ", [rs getObjectWithInt:6])];
+      [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:JreStrcat("$@", @" update_date: ", [rs getObjectWithInt:6])];
     }
     [rs close];
     [self startTestWithNSString:@"Optional Date implementation test"];
@@ -255,7 +238,7 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
       [db commitTransaction];
     }
     @catch (JavaLangThrowable *e) {
-      [JreLoadStatic(JavaLangSystem, out_) printlnWithNSString:[((JavaLangThrowable *) nil_chk(e)) getMessage]];
+      [JreLoadStatic(JavaLangSystem, out) printlnWithNSString:[e getMessage]];
       [db rollbackTransaction];
       [self finishTestWithBoolean:true];
     }
@@ -264,13 +247,13 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
     rs = [db executeSelectWithNSString:@"select data from user where height = ?"];
     if ([((id<SQLighterRs>) nil_chk(rs)) hasNext]) {
       IOSByteArray *greet = [rs getBlobWithInt:0];
-      greetingStr = [NSString stringWithBytes:greet];
+      greetingStr = [NSString java_stringWithBytes:greet];
     }
     [rs close];
     [self checkTestWithNSString:@"Statement balance" withBoolean:[db getStatementBalance] == 0];
   }
   @catch (JavaLangException *e) {
-    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:[((JavaLangException *) nil_chk(e)) getMessage]];
+    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:[e getMessage]];
     [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:sqlighterHelloLabel_ withNSString:@"SQLighter DemoBase did not pass"];
     [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:sqlighterDetailsLabel_ withNSString:JreStrcat("$$", @"Exception: ", [e getMessage])];
     return;
@@ -331,9 +314,9 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
     [self printAppointmentsWithAnOrm:anOrm];
     [self checkTestWithNSString:@"partial update attrib level adapter" withBoolean:[((NSString *) nil_chk([((Appointment *) nil_chk(meetAmfibianAppointment)) getName])) isEqual:@"Meet AmfibiaN! + 1"]];
     [self checkTestWithNSString:@"partial update object level adapter" withBoolean:[((JavaLangInteger *) nil_chk([meetAmfibianAppointment getIsProcessed])) intValue] == 1];
-    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:JreStrcat("$$", @"Back to JSON string\nbecause we might want to send it\nback to the server like so: ", [anOrm asJsonStringWithId:meetAmfibianAppointment])];
+    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:JreStrcat("$$", @"Back to JSON string\nbecause we might want to send it\nback to the server like so: ", [anOrm asJsonStringWithId:meetAmfibianAppointment])];
     OrgJsonJSONObject *jsonObject = [anOrm asJSONObjectWithId:meetAmfibianAppointment];
-    NSString *name = (NSString *) check_class_cast([((OrgJsonJSONObject *) nil_chk(jsonObject)) getWithNSString:@"name"], [NSString class]);
+    NSString *name = (NSString *) cast_chk([((OrgJsonJSONObject *) nil_chk(jsonObject)) getWithNSString:@"name"], [NSString class]);
     [self checkTestWithNSString:@"native to JSON" withBoolean:[((NSString *) nil_chk(name)) isEqual:@"Meet AmfibiaN! + 1"]];
     [self amfibianAssociationTests];
     [self extraAmfibianTestsWithAnOrm:anOrm];
@@ -349,7 +332,7 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
   }
   @catch (JavaLangException *e) {
     [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:amfibianHelloLabel_ withNSString:@"AmfibiaN Demo did not pass"];
-    [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:amfibianDetailsLabel_ withNSString:[((JavaLangException *) nil_chk(e)) getMessage]];
+    [((id<Mobilighter>) nil_chk([((Bootstrap *) nil_chk(Bootstrap_getInstance())) getMobilighter])) setTextWithId:amfibianDetailsLabel_ withNSString:[e getMessage]];
     return;
   }
 }
@@ -358,7 +341,7 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
   @try {
     anAppointmentObject_ = anAppointment;
     id<SQLighterDb> db = [((Bootstrap *) nil_chk(Bootstrap_getInstance())) getSqLighterDb];
-    id<AnUpgrade> anUpgrade = new_Demo_$1_initWithDemo_withAnObject_withSQLighterDb_(self, anAppointment, db);
+    id<AnUpgrade> anUpgrade = new_Demo_1_initWithDemo_withAnObject_withSQLighterDb_(self, anAppointment, db);
     id<JavaUtilList> keys = new_JavaUtilLinkedList_init();
     jint upgradeCount;
     [keys addWithId:@"2015-12-19"];
@@ -388,10 +371,10 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
       [self finishTestWithBoolean:true];
     }
     @finally {
-      [((id<SQLighterRs>) nil_chk(rs)) close];
+      [rs close];
     }
     [keys addWithId:@"2016-01-26"];
-    [keys addWithId:AnUpgrade_DB_RECOVER_KEY_];
+    [keys addWithId:AnUpgrade_DB_RECOVER_KEY];
     upgradeCount = [anUpgrade applyUpdates];
     [self checkTestWithNSString:@"Failure during DB upgrade" withBoolean:upgradeCount == -1];
     [self startTestWithNSString:@"db recovery test"];
@@ -407,11 +390,11 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
     id<JavaUtilSet> appliedKeys = [anUpgrade getAppliedUpdates];
     [self checkTestWithNSString:@"Post upgrade test" withBoolean:upgradeCount == 1 && [((id<JavaUtilSet>) nil_chk(appliedKeys)) containsWithId:@"2016-02-17"]];
     [self checkTestWithNSString:@"Statement balance" withBoolean:[db getStatementBalance] == 0];
-    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out_))) printlnWithNSString:@"done with AnUpdate"];
+    [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:@"done with AnUpdate"];
   }
   @catch (JavaLangThrowable *t) {
     [self makeTestsFail];
-    [((JavaLangThrowable *) nil_chk(t)) printStackTrace];
+    [t printStackTrace];
   }
 }
 
@@ -438,9 +421,9 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
   [mobilighter setTextWithId:sqlighterStartButton withNSString:@"Begin SQLighter tests"];
   [mobilighter setTextWithId:amfibianStartButton withNSString:@"Begin AmfibiaN tests"];
   [mobilighter hideWithId:amfibianStartButton];
-  sqlighterStartAction_ = new_Demo_$2_initWithDemo_withMobilighter_withId_withId_(self, mobilighter, sqlighterStartButton, amfibianStartButton);
+  sqlighterStartAction_ = new_Demo_2_initWithDemo_withMobilighter_withId_withId_(self, mobilighter, sqlighterStartButton, amfibianStartButton);
   [mobilighter addActionListenerWithId:sqlighterStartButton withMobilAction:sqlighterStartAction_];
-  amfibianStartAction_ = new_Demo_$3_initWithDemo_withMobilighter_withId_(self, mobilighter, amfibianStartButton);
+  amfibianStartAction_ = new_Demo_3_initWithDemo_withMobilighter_withId_(self, mobilighter, amfibianStartButton);
   [mobilighter addActionListenerWithId:amfibianStartButton withMobilAction:amfibianStartAction_];
 }
 
@@ -494,12 +477,12 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
   [((id<AnOrm>) nil_chk(anOrm)) addInclAttribsWithNSStringArray:[IOSObjectArray newArrayWithObjects:(id[]){ @"id" } count:1 type:NSString_class_()]];
   [anOrm startSqlSelect];
   NSString *sql = [anOrm getQueryString];
-  [self checkTestWithNSString:@"restricted select clause test 1" withBoolean:[((NSString *) nil_chk(sql)) hasPrefix:@"select appointment0.id "]];
+  [self checkTestWithNSString:@"restricted select clause test 1" withBoolean:[((NSString *) nil_chk(sql)) java_hasPrefix:@"select appointment0.id "]];
   [anOrm resetSkipInclAttrNameList];
   [anOrm addSkipAttribsWithNSStringArray:[IOSObjectArray newArrayWithObjects:(id[]){ @"id", @"name", @"createDate", @"status", @"createUserId", @"createUser" } count:6 type:NSString_class_()]];
   [anOrm startSqlSelect];
   sql = [anOrm getQueryString];
-  [self checkTestWithNSString:@"restricted select clause test 2" withBoolean:[((NSString *) nil_chk(sql)) hasPrefix:@"select appointment0.is_processed "]];
+  [self checkTestWithNSString:@"restricted select clause test 2" withBoolean:[((NSString *) nil_chk(sql)) java_hasPrefix:@"select appointment0.is_processed "]];
   NSString *jsonArrayStr = @"[";
   jint nElem = 2;
   for (jint i = 0; i < nElem; i++) {
@@ -526,28 +509,23 @@ J2OBJC_TYPE_LITERAL_HEADER(Demo_$3)
   }
 }
 
-J2OBJC_IGNORE_DESIGNATED_BEGIN
-- (instancetype)init {
-  Demo_init(self);
-  return self;
-}
-J2OBJC_IGNORE_DESIGNATED_END
-
 @end
 
 void Demo_init(Demo *self) {
-  (void) DemoBase_init(self);
+  DemoBase_init(self);
 }
 
 Demo *new_Demo_init() {
-  Demo *self = [Demo alloc];
-  Demo_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(Demo, init)
+}
+
+Demo *create_Demo_init() {
+  J2OBJC_CREATE_IMPL(Demo, init)
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo)
 
-@implementation Demo_$1
+@implementation Demo_1
 
 - (id<JavaUtilList>)getTasksByKeyWithNSString:(NSString *)key {
   id<JavaUtilList> l = new_JavaUtilLinkedList_init();
@@ -566,7 +544,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo)
   else if ([@"2016-01-26" isEqual:key]) {
     [l addWithId:@"create tble db_drop_test (name text) "];
   }
-  else if ([((NSString *) nil_chk(AnUpgrade_DB_RECOVER_KEY_)) isEqual:key]) {
+  else if ([((NSString *) nil_chk(AnUpgrade_DB_RECOVER_KEY)) isEqual:key]) {
     [l addWithId:@"create table db_drop_test(name text) "];
     [l addWithId:@"create table db_upg_test(name text) "];
     [l addWithId:val$anAppointment_];
@@ -586,31 +564,24 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo)
   self->updateKeys_ = updateKeys;
 }
 
-- (instancetype)initWithDemo:(Demo *)outer$
-                withAnObject:(id<AnObject>)capture$0
-             withSQLighterDb:(id<SQLighterDb>)arg$0 {
-  Demo_$1_initWithDemo_withAnObject_withSQLighterDb_(self, outer$, capture$0, arg$0);
-  return self;
-}
-
 @end
 
-void Demo_$1_initWithDemo_withAnObject_withSQLighterDb_(Demo_$1 *self, Demo *outer$, id<AnObject> capture$0, id<SQLighterDb> arg$0) {
+void Demo_1_initWithDemo_withAnObject_withSQLighterDb_(Demo_1 *self, Demo *outer$, id<AnObject> capture$0, id<SQLighterDb> sqLighterDb) {
   self->this$0_ = outer$;
   self->val$anAppointment_ = capture$0;
-  (void) AnUpgradeImpl_initWithSQLighterDb_(self, arg$0);
+  AnUpgradeImpl_initWithSQLighterDb_(self, sqLighterDb);
   self->updateKeys_ = new_JavaUtilLinkedList_init();
 }
 
-Demo_$1 *new_Demo_$1_initWithDemo_withAnObject_withSQLighterDb_(Demo *outer$, id<AnObject> capture$0, id<SQLighterDb> arg$0) {
-  Demo_$1 *self = [Demo_$1 alloc];
-  Demo_$1_initWithDemo_withAnObject_withSQLighterDb_(self, outer$, capture$0, arg$0);
-  return self;
+Demo_1 *new_Demo_1_initWithDemo_withAnObject_withSQLighterDb_(Demo *outer$, id<AnObject> capture$0, id<SQLighterDb> sqLighterDb) {
+  J2OBJC_NEW_IMPL(Demo_1, initWithDemo_withAnObject_withSQLighterDb_, outer$, capture$0, sqLighterDb)
 }
 
-J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo_$1)
+Demo_1 *create_Demo_1_initWithDemo_withAnObject_withSQLighterDb_(Demo *outer$, id<AnObject> capture$0, id<SQLighterDb> sqLighterDb) {
+  J2OBJC_CREATE_IMPL(Demo_1, initWithDemo_withAnObject_withSQLighterDb_, outer$, capture$0, sqLighterDb)
+}
 
-@implementation Demo_$2
+@implementation Demo_2
 
 - (void)onActionWithId:(id)param {
   [this$0_ sqlighterOperations];
@@ -618,59 +589,44 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo_$1)
   [val$mobilighter_ showWithId:val$amfibianStartButton_];
 }
 
-- (instancetype)initWithDemo:(Demo *)outer$
-             withMobilighter:(id<Mobilighter>)capture$0
-                      withId:(id)capture$1
-                      withId:(id)capture$2 {
-  Demo_$2_initWithDemo_withMobilighter_withId_withId_(self, outer$, capture$0, capture$1, capture$2);
-  return self;
-}
-
 @end
 
-void Demo_$2_initWithDemo_withMobilighter_withId_withId_(Demo_$2 *self, Demo *outer$, id<Mobilighter> capture$0, id capture$1, id capture$2) {
+void Demo_2_initWithDemo_withMobilighter_withId_withId_(Demo_2 *self, Demo *outer$, id<Mobilighter> capture$0, id capture$1, id capture$2) {
   self->this$0_ = outer$;
   self->val$mobilighter_ = capture$0;
   self->val$sqlighterStartButton_ = capture$1;
   self->val$amfibianStartButton_ = capture$2;
-  (void) NSObject_init(self);
+  NSObject_init(self);
 }
 
-Demo_$2 *new_Demo_$2_initWithDemo_withMobilighter_withId_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1, id capture$2) {
-  Demo_$2 *self = [Demo_$2 alloc];
-  Demo_$2_initWithDemo_withMobilighter_withId_withId_(self, outer$, capture$0, capture$1, capture$2);
-  return self;
+Demo_2 *new_Demo_2_initWithDemo_withMobilighter_withId_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1, id capture$2) {
+  J2OBJC_NEW_IMPL(Demo_2, initWithDemo_withMobilighter_withId_withId_, outer$, capture$0, capture$1, capture$2)
 }
 
-J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo_$2)
+Demo_2 *create_Demo_2_initWithDemo_withMobilighter_withId_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1, id capture$2) {
+  J2OBJC_CREATE_IMPL(Demo_2, initWithDemo_withMobilighter_withId_withId_, outer$, capture$0, capture$1, capture$2)
+}
 
-@implementation Demo_$3
+@implementation Demo_3
 
 - (void)onActionWithId:(id)param {
   [this$0_ amfibianOperations];
   [((id<Mobilighter>) nil_chk(val$mobilighter_)) hideWithId:val$amfibianStartButton_];
 }
 
-- (instancetype)initWithDemo:(Demo *)outer$
-             withMobilighter:(id<Mobilighter>)capture$0
-                      withId:(id)capture$1 {
-  Demo_$3_initWithDemo_withMobilighter_withId_(self, outer$, capture$0, capture$1);
-  return self;
-}
-
 @end
 
-void Demo_$3_initWithDemo_withMobilighter_withId_(Demo_$3 *self, Demo *outer$, id<Mobilighter> capture$0, id capture$1) {
+void Demo_3_initWithDemo_withMobilighter_withId_(Demo_3 *self, Demo *outer$, id<Mobilighter> capture$0, id capture$1) {
   self->this$0_ = outer$;
   self->val$mobilighter_ = capture$0;
   self->val$amfibianStartButton_ = capture$1;
-  (void) NSObject_init(self);
+  NSObject_init(self);
 }
 
-Demo_$3 *new_Demo_$3_initWithDemo_withMobilighter_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1) {
-  Demo_$3 *self = [Demo_$3 alloc];
-  Demo_$3_initWithDemo_withMobilighter_withId_(self, outer$, capture$0, capture$1);
-  return self;
+Demo_3 *new_Demo_3_initWithDemo_withMobilighter_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1) {
+  J2OBJC_NEW_IMPL(Demo_3, initWithDemo_withMobilighter_withId_, outer$, capture$0, capture$1)
 }
 
-J2OBJC_CLASS_TYPE_LITERAL_SOURCE(Demo_$3)
+Demo_3 *create_Demo_3_initWithDemo_withMobilighter_withId_(Demo *outer$, id<Mobilighter> capture$0, id capture$1) {
+  J2OBJC_CREATE_IMPL(Demo_3, initWithDemo_withMobilighter_withId_, outer$, capture$0, capture$1)
+}

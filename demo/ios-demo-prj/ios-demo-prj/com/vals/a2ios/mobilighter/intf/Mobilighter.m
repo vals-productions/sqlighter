@@ -4,7 +4,6 @@
 //
 
 #include "J2ObjC_source.h"
-#include "com/vals/a2ios/mobilighter/intf/MobilAction.h"
 #include "com/vals/a2ios/mobilighter/intf/Mobilighter.h"
 
 @interface Mobilighter : NSObject
@@ -18,31 +17,55 @@
 @implementation Mobilighter
 
 + (const J2ObjcClassInfo *)__metadata {
-  static const J2ObjcMethodInfo methods[] = {
-    { "setContextWithId:", "setContext", "V", 0x401, NULL, NULL },
-    { "getContext", NULL, "Ljava.lang.Object;", 0x401, NULL, NULL },
-    { "showOkDialogWithNSString:withNSString:", "showOkDialog", "V", 0x401, NULL, NULL },
-    { "showOkDialogWithNSString:withNSString:withMobilAction:", "showOkDialog", "V", 0x401, NULL, NULL },
-    { "showConfirmDialogWithNSString:withNSString:withMobilAction:withMobilAction:", "showConfirmDialog", "V", 0x401, NULL, NULL },
-    { "setPlaceholderWithId:withNSString:", "setPlaceholder", "V", 0x401, NULL, NULL },
-    { "setTextWithId:withNSString:", "setText", "V", 0x401, NULL, NULL },
-    { "getTextWithId:", "getText", "Ljava.lang.String;", 0x401, NULL, NULL },
-    { "hideWithId:", "hide", "V", 0x401, NULL, NULL },
-    { "showWithId:", "show", "V", 0x401, NULL, NULL },
-    { "setEnabledWithId:withBoolean:", "setEnabled", "V", 0x401, NULL, NULL },
-    { "isOnWithId:", "isOn", "Z", 0x401, NULL, NULL },
-    { "setOnWithId:withBoolean:", "setOn", "V", 0x401, NULL, NULL },
-    { "addActionListenerWithId:withMobilAction:", "addActionListener", "V", 0x401, NULL, NULL },
-    { "dateToStringWithId:withNSString:", "dateToString", "Ljava.lang.String;", 0x401, NULL, NULL },
-    { "showWaitPopupWithNSString:withNSString:", "showWaitPopup", "V", 0x401, NULL, NULL },
-    { "hideWaitPopup", NULL, "V", 0x401, NULL, NULL },
-    { "setFontWithId:withId:withId:", "setFont", "V", 0x401, NULL, NULL },
-    { "setTextColorWithId:withFloat:withFloat:withFloat:withFloat:", "setTextColor", "V", 0x401, NULL, NULL },
-    { "runOnUiThreadWithMobilAction:", "runOnUiThread", "V", 0x401, NULL, NULL },
-    { "readFileWithNSString:", "readFile", "Ljava.lang.String;", 0x401, NULL, NULL },
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, "V", 0x401, 0, 1, -1, -1, -1, -1 },
+    { NULL, "LNSObject;", 0x401, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 2, 3, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 2, 4, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 5, 6, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 7, 8, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 9, 8, -1, -1, -1, -1 },
+    { NULL, "LNSString;", 0x401, 10, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 11, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 12, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 13, 14, -1, -1, -1, -1 },
+    { NULL, "Z", 0x401, 15, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 16, 14, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 17, 18, -1, -1, -1, -1 },
+    { NULL, "LNSString;", 0x401, 19, 8, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 20, 3, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 21, 22, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 23, 24, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 25, 26, -1, -1, -1, -1 },
+    { NULL, "LNSString;", 0x401, 27, 28, -1, -1, -1, -1 },
   };
-  static const char *inner_classes[] = {"Lcom.vals.a2ios.mobilighter.intf.Mobilighter$Navigator;"};
-  static const J2ObjcClassInfo _Mobilighter = { 2, "Mobilighter", "com.vals.a2ios.mobilighter.intf", NULL, 0x609, 21, methods, 0, NULL, 0, NULL, 1, inner_classes, NULL, NULL };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  methods[0].selector = @selector(setContextWithId:);
+  methods[1].selector = @selector(getContext);
+  methods[2].selector = @selector(showOkDialogWithNSString:withNSString:);
+  methods[3].selector = @selector(showOkDialogWithNSString:withNSString:withMobilAction:);
+  methods[4].selector = @selector(showConfirmDialogWithNSString:withNSString:withMobilAction:withMobilAction:);
+  methods[5].selector = @selector(setPlaceholderWithId:withNSString:);
+  methods[6].selector = @selector(setTextWithId:withNSString:);
+  methods[7].selector = @selector(getTextWithId:);
+  methods[8].selector = @selector(hideWithId:);
+  methods[9].selector = @selector(showWithId:);
+  methods[10].selector = @selector(setEnabledWithId:withBoolean:);
+  methods[11].selector = @selector(isOnWithId:);
+  methods[12].selector = @selector(setOnWithId:withBoolean:);
+  methods[13].selector = @selector(addActionListenerWithId:withMobilAction:);
+  methods[14].selector = @selector(dateToStringWithId:withNSString:);
+  methods[15].selector = @selector(showWaitPopupWithNSString:withNSString:);
+  methods[16].selector = @selector(hideWaitPopup);
+  methods[17].selector = @selector(setFontWithId:withId:withId:);
+  methods[18].selector = @selector(setTextColorWithId:withFloat:withFloat:withFloat:withFloat:);
+  methods[19].selector = @selector(runOnUiThreadWithMobilAction:);
+  methods[20].selector = @selector(readFileWithNSString:);
+  #pragma clang diagnostic pop
+  static const void *ptrTable[] = { "setContext", "LNSObject;", "showOkDialog", "LNSString;LNSString;", "LNSString;LNSString;LMobilAction;", "showConfirmDialog", "LNSString;LNSString;LMobilAction;LMobilAction;", "setPlaceholder", "LNSObject;LNSString;", "setText", "getText", "hide", "show", "setEnabled", "LNSObject;Z", "isOn", "setOn", "addActionListener", "LNSObject;LMobilAction;", "dateToString", "showWaitPopup", "setFont", "LNSObject;LNSObject;LNSObject;", "setTextColor", "LNSObject;FFFF", "runOnUiThread", "LMobilAction;", "readFile", "LNSString;", "LMobilighter_Navigator;" };
+  static const J2ObjcClassInfo _Mobilighter = { "Mobilighter", "com.vals.a2ios.mobilighter.intf", ptrTable, methods, NULL, 7, 0x609, 21, 0, -1, 29, -1, -1, -1 };
   return &_Mobilighter;
 }
 
@@ -53,19 +76,33 @@ J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(Mobilighter)
 @implementation Mobilighter_Navigator
 
 + (const J2ObjcClassInfo *)__metadata {
-  static const J2ObjcMethodInfo methods[] = {
-    { "navigateToScreenWithNSString:withId:", "navigateToScreen", "V", 0x401, NULL, NULL },
-    { "cleanParameters", NULL, "V", 0x401, NULL, NULL },
-    { "setStringWithNSString:withNSString:", "setString", "V", 0x401, NULL, NULL },
-    { "getStringWithNSString:", "getString", "Ljava.lang.String;", 0x401, NULL, NULL },
-    { "setObjectWithNSString:withId:", "setObject", "V", 0x401, NULL, NULL },
-    { "setNumberWithNSString:withNSNumber:", "setNumber", "V", 0x401, NULL, NULL },
-    { "getObjectWithNSString:", "getObject", "Ljava.lang.Object;", 0x401, NULL, NULL },
-    { "getNumberWithNSString:", "getNumber", "Ljava.lang.Number;", 0x401, NULL, NULL },
-    { "setObjectWithId:", "setObject", "V", 0x401, NULL, NULL },
-    { "getObject", NULL, "Ljava.lang.Object;", 0x401, NULL, NULL },
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, "V", 0x401, 0, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 2, 3, -1, -1, -1, -1 },
+    { NULL, "LNSString;", 0x401, 4, 5, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 6, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 7, 8, -1, -1, -1, -1 },
+    { NULL, "LNSObject;", 0x401, 9, 5, -1, -1, -1, -1 },
+    { NULL, "LNSNumber;", 0x401, 10, 5, -1, -1, -1, -1 },
+    { NULL, "V", 0x401, 6, 11, -1, -1, -1, -1 },
+    { NULL, "LNSObject;", 0x401, -1, -1, -1, -1, -1, -1 },
   };
-  static const J2ObjcClassInfo _Mobilighter_Navigator = { 2, "Navigator", "com.vals.a2ios.mobilighter.intf", "Mobilighter", 0x609, 10, methods, 0, NULL, 0, NULL, 0, NULL, NULL, NULL };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  methods[0].selector = @selector(navigateToScreenWithNSString:withId:);
+  methods[1].selector = @selector(cleanParameters);
+  methods[2].selector = @selector(setStringWithNSString:withNSString:);
+  methods[3].selector = @selector(getStringWithNSString:);
+  methods[4].selector = @selector(setObjectWithNSString:withId:);
+  methods[5].selector = @selector(setNumberWithNSString:withNSNumber:);
+  methods[6].selector = @selector(getObjectWithNSString:);
+  methods[7].selector = @selector(getNumberWithNSString:);
+  methods[8].selector = @selector(setObjectWithId:);
+  methods[9].selector = @selector(getObject);
+  #pragma clang diagnostic pop
+  static const void *ptrTable[] = { "navigateToScreen", "LNSString;LNSObject;", "setString", "LNSString;LNSString;", "getString", "LNSString;", "setObject", "setNumber", "LNSString;LNSNumber;", "getObject", "getNumber", "LNSObject;", "LMobilighter;" };
+  static const J2ObjcClassInfo _Mobilighter_Navigator = { "Navigator", "com.vals.a2ios.mobilighter.intf", ptrTable, methods, NULL, 7, 0x609, 10, 0, 12, -1, -1, -1, -1 };
   return &_Mobilighter_Navigator;
 }
 

@@ -3,10 +3,21 @@
 //  source: ../../../../android//com/vals/a2ios/amfibian/impl/AnIncubatorImpl.java
 //
 
-#ifndef _ComValsA2iosAmfibianImplAnIncubatorImpl_H_
-#define _ComValsA2iosAmfibianImplAnIncubatorImpl_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosAmfibianImplAnIncubatorImpl")
+#ifdef RESTRICT_ComValsA2iosAmfibianImplAnIncubatorImpl
+#define INCLUDE_ALL_ComValsA2iosAmfibianImplAnIncubatorImpl 0
+#else
+#define INCLUDE_ALL_ComValsA2iosAmfibianImplAnIncubatorImpl 1
+#endif
+#undef RESTRICT_ComValsA2iosAmfibianImplAnIncubatorImpl
+
+#if !defined (AnIncubatorImpl_) && (INCLUDE_ALL_ComValsA2iosAmfibianImplAnIncubatorImpl || defined(INCLUDE_AnIncubatorImpl))
+#define AnIncubatorImpl_
+
+#define RESTRICT_ComValsA2iosAmfibianIntfAnIncubator 1
+#define INCLUDE_AnIncubator 1
 #include "com/vals/a2ios/amfibian/intf/AnIncubator.h"
 
 @class IOSClass;
@@ -52,36 +63,56 @@
 
 J2OBJC_EMPTY_STATIC_INIT(AnIncubatorImpl)
 
-FOUNDATION_EXPORT NSString *AnIncubatorImpl_ADAPTERS_;
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, ADAPTERS_, NSString *)
+inline NSString *AnIncubatorImpl_get_ADAPTERS();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_ADAPTERS;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnIncubatorImpl, ADAPTERS, NSString *)
 
-FOUNDATION_EXPORT NSString *AnIncubatorImpl_ADAPTER_MAP_;
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, ADAPTER_MAP_, NSString *)
+inline NSString *AnIncubatorImpl_get_ADAPTER_MAP();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_ADAPTER_MAP;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnIncubatorImpl, ADAPTER_MAP, NSString *)
 
-FOUNDATION_EXPORT NSString *AnIncubatorImpl_CLASS_;
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, CLASS_, NSString *)
+inline NSString *AnIncubatorImpl_get_CLASS();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_CLASS;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnIncubatorImpl, CLASS, NSString *)
 
-FOUNDATION_EXPORT NSString *AnIncubatorImpl_ASSOCIATIONS_;
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, ASSOCIATIONS_, NSString *)
+inline NSString *AnIncubatorImpl_get_ASSOCIATIONS();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_ASSOCIATIONS;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnIncubatorImpl, ASSOCIATIONS, NSString *)
 
-FOUNDATION_EXPORT NSString *AnIncubatorImpl_ASSOCIATE_;
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, ASSOCIATE_, NSString *)
+inline NSString *AnIncubatorImpl_get_ASSOCIATE();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_ASSOCIATE;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnIncubatorImpl, ASSOCIATE, NSString *)
 
-FOUNDATION_EXPORT NSString *AnIncubatorImpl_OBJECT_;
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, OBJECT_, NSString *)
+inline NSString *AnIncubatorImpl_get_OBJECT();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_OBJECT;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnIncubatorImpl, OBJECT, NSString *)
 
-FOUNDATION_EXPORT NSString *AnIncubatorImpl_SRC_;
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, SRC_, NSString *)
+inline NSString *AnIncubatorImpl_get_SRC();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_SRC;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnIncubatorImpl, SRC, NSString *)
 
-FOUNDATION_EXPORT NSString *AnIncubatorImpl_DST_;
-J2OBJC_STATIC_FIELD_GETTER(AnIncubatorImpl, DST_, NSString *)
+inline NSString *AnIncubatorImpl_get_DST();
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT NSString *AnIncubatorImpl_DST;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(AnIncubatorImpl, DST, NSString *)
 
 FOUNDATION_EXPORT void AnIncubatorImpl_init(AnIncubatorImpl *self);
 
 FOUNDATION_EXPORT AnIncubatorImpl *new_AnIncubatorImpl_init() NS_RETURNS_RETAINED;
 
+FOUNDATION_EXPORT AnIncubatorImpl *create_AnIncubatorImpl_init();
+
 J2OBJC_TYPE_LITERAL_HEADER(AnIncubatorImpl)
 
 @compatibility_alias ComValsA2iosAmfibianImplAnIncubatorImpl AnIncubatorImpl;
 
-#endif // _ComValsA2iosAmfibianImplAnIncubatorImpl_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosAmfibianImplAnIncubatorImpl")

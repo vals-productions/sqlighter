@@ -13,7 +13,6 @@
 #include "com/vals/a2ios/amfibian/intf/AnObject.h"
 #include "com/vals/a2ios/amfibian/intf/AnSql.h"
 #include "java/lang/Double.h"
-#include "java/lang/Exception.h"
 #include "java/lang/Float.h"
 #include "java/lang/Integer.h"
 #include "java/lang/Long.h"
@@ -45,12 +44,6 @@
   NSString *alias_;
 }
 
-- (void)reset;
-
-- (NSString *)getAlias;
-
-- (NSString *)ensureFirstConditionWithNSString:(NSString *)condition;
-
 @end
 
 J2OBJC_FIELD_SETTER(AnSqlImpl, dbSetAdapter_, id<AnAdapter>)
@@ -65,13 +58,15 @@ J2OBJC_FIELD_SETTER(AnSqlImpl, inclAttrNameList_, id<JavaUtilSet>)
 J2OBJC_FIELD_SETTER(AnSqlImpl, columnClause_, NSString *)
 J2OBJC_FIELD_SETTER(AnSqlImpl, alias_, NSString *)
 
-static id<AnAdapter> AnSqlImpl_sqlCustomSetGlobalConverter_;
-J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, sqlCustomSetGlobalConverter_, id<AnAdapter>)
-J2OBJC_STATIC_FIELD_SETTER(AnSqlImpl, sqlCustomSetGlobalConverter_, id<AnAdapter>)
+inline id<AnAdapter> AnSqlImpl_get_sqlCustomSetGlobalConverter();
+inline id<AnAdapter> AnSqlImpl_set_sqlCustomSetGlobalConverter(id<AnAdapter> value);
+static id<AnAdapter> AnSqlImpl_sqlCustomSetGlobalConverter;
+J2OBJC_STATIC_FIELD_OBJ(AnSqlImpl, sqlCustomSetGlobalConverter, id<AnAdapter>)
 
-static id<AnAdapter> AnSqlImpl_sqlCustomGetGlobalConverter_;
-J2OBJC_STATIC_FIELD_GETTER(AnSqlImpl, sqlCustomGetGlobalConverter_, id<AnAdapter>)
-J2OBJC_STATIC_FIELD_SETTER(AnSqlImpl, sqlCustomGetGlobalConverter_, id<AnAdapter>)
+inline id<AnAdapter> AnSqlImpl_get_sqlCustomGetGlobalConverter();
+inline id<AnAdapter> AnSqlImpl_set_sqlCustomGetGlobalConverter(id<AnAdapter> value);
+static id<AnAdapter> AnSqlImpl_sqlCustomGetGlobalConverter;
+J2OBJC_STATIC_FIELD_OBJ(AnSqlImpl, sqlCustomGetGlobalConverter, id<AnAdapter>)
 
 __attribute__((unused)) static void AnSqlImpl_reset(AnSqlImpl *self);
 
@@ -154,13 +149,9 @@ J2OBJC_IGNORE_DESIGNATED_END
   self->type_ = type;
 }
 
-- (void)reset {
-  AnSqlImpl_reset(self);
-}
-
 - (jboolean)isSkipAttrWithNSString:(NSString *)propertyName {
   if ([((id<JavaUtilSet>) nil_chk(inclAttrNameList_)) size] > 0) {
-    if ([inclAttrNameList_ containsWithId:propertyName]) {
+    if ([((id<JavaUtilSet>) nil_chk(inclAttrNameList_)) containsWithId:propertyName]) {
       return false;
     }
     else {
@@ -198,21 +189,21 @@ J2OBJC_IGNORE_DESIGNATED_END
         if (value != nil) {
           (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:[attr getColumnName]];
           [((id<JavaUtilList>) nil_chk(parameters_)) addWithId:value];
-          (void) [insertParamClause_ appendWithNSString:@"? "];
+          (void) [((JavaLangStringBuilder *) nil_chk(insertParamClause_)) appendWithNSString:@"? "];
         }
         else {
           (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:[attr getColumnName]];
-          (void) [insertParamClause_ appendWithNSString:@"NULL "];
+          (void) [((JavaLangStringBuilder *) nil_chk(insertParamClause_)) appendWithNSString:@"NULL "];
         }
         [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
         (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:@","];
-        (void) [insertParamClause_ appendWithNSString:@","];
+        (void) [((JavaLangStringBuilder *) nil_chk(insertParamClause_)) appendWithNSString:@","];
       }
     }
   }
-  (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
-  (void) [insertParamClause_ replaceWithInt:[insertParamClause_ length] - 1 withInt:[insertParamClause_ length] withNSString:@" "];
-  columnClause_ = [queryStr_ description];
+  (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) replaceWithInt:[queryStr_ java_length] - 1 withInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) java_length] withNSString:@" "];
+  (void) [((JavaLangStringBuilder *) nil_chk(insertParamClause_)) replaceWithInt:[insertParamClause_ java_length] - 1 withInt:[((JavaLangStringBuilder *) nil_chk(insertParamClause_)) java_length] withNSString:@" "];
+  columnClause_ = [((JavaLangStringBuilder *) nil_chk(queryStr_)) description];
 }
 
 - (void)startSqlUpdateWithId:(id)objectToUpdate {
@@ -238,8 +229,8 @@ J2OBJC_IGNORE_DESIGNATED_END
       }
     }
   }
-  (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
-  columnClause_ = [queryStr_ description];
+  (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) replaceWithInt:[queryStr_ java_length] - 1 withInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) java_length] withNSString:@" "];
+  columnClause_ = [((JavaLangStringBuilder *) nil_chk(queryStr_)) description];
 }
 
 - (id<AnSql>)startSqlCreate {
@@ -253,12 +244,12 @@ J2OBJC_IGNORE_DESIGNATED_END
       NSString *colName = [attr getColumnName];
       (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:colName];
       NSString *columnDef = [self getSqlColumnDefinitionWithAnAttrib:attr];
-      (void) [queryStr_ appendWithNSString:JreStrcat("C$", ' ', columnDef)];
-      (void) [queryStr_ appendWithNSString:@","];
+      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:JreStrcat("C$", ' ', columnDef)];
+      (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:@","];
     }
   }
-  (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
-  columnClause_ = [queryStr_ description];
+  (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) replaceWithInt:[queryStr_ java_length] - 1 withInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) java_length] withNSString:@" "];
+  columnClause_ = [((JavaLangStringBuilder *) nil_chk(queryStr_)) description];
   return self;
 }
 
@@ -295,10 +286,6 @@ J2OBJC_IGNORE_DESIGNATED_END
   return @"TEXT";
 }
 
-- (NSString *)getAlias {
-  return AnSqlImpl_getAlias(self);
-}
-
 - (NSString *)getAliasedColumnWithNSString:(NSString *)columnName {
   return JreStrcat("$C$", alias_, '.', columnName);
 }
@@ -315,19 +302,15 @@ J2OBJC_IGNORE_DESIGNATED_END
       if ([((id<AnAttrib>) nil_chk(attr)) getColumnName] != nil) {
         NSString *colName = [attr getColumnName];
         (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:alias_];
-        (void) [queryStr_ appendWithChar:'.'];
-        (void) [queryStr_ appendWithNSString:colName];
+        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:'.'];
+        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:colName];
         [((id<JavaUtilList>) nil_chk(attribNameList_)) addWithId:attrName];
-        (void) [queryStr_ appendWithChar:','];
+        (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:','];
       }
     }
   }
-  (void) [queryStr_ replaceWithInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) length] - 1 withInt:[queryStr_ length] withNSString:@" "];
-  columnClause_ = [queryStr_ description];
-}
-
-- (NSString *)ensureFirstConditionWithNSString:(NSString *)condition {
-  return AnSqlImpl_ensureFirstConditionWithNSString_(self, condition);
+  (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) replaceWithInt:[queryStr_ java_length] - 1 withInt:[((JavaLangStringBuilder *) nil_chk(queryStr_)) java_length] withNSString:@" "];
+  columnClause_ = [((JavaLangStringBuilder *) nil_chk(queryStr_)) description];
 }
 
 - (void)addWhereWithNSString:(NSString *)condition
@@ -360,8 +343,8 @@ J2OBJC_IGNORE_DESIGNATED_END
   }
   queryStr_ = new_JavaLangStringBuilder_init();
   (void) [queryStr_ appendWithChar:' '];
-  (void) [queryStr_ appendWithNSString:sql];
-  (void) [queryStr_ appendWithChar:' '];
+  (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithNSString:sql];
+  (void) [((JavaLangStringBuilder *) nil_chk(queryStr_)) appendWithChar:' '];
   (void) [((JavaLangStringBuilder *) nil_chk(whereClause_)) appendWithJavaLangCharSequence:queryStr_];
 }
 
@@ -388,7 +371,7 @@ J2OBJC_IGNORE_DESIGNATED_END
       (void) [sb appendWithJavaLangCharSequence:whereClause_];
     }
     NSString *qString = [sb description];
-    qString = [((NSString *) nil_chk(qString)) replaceAll:@"#" withReplacement:AnSqlImpl_getAlias(self)];
+    qString = [((NSString *) nil_chk(qString)) java_replaceAll:@"#" withReplacement:AnSqlImpl_getAlias(self)];
     return qString;
   }
   else if (type_ == AnSqlImpl_TYPE_UPDATE) {
@@ -446,7 +429,7 @@ J2OBJC_IGNORE_DESIGNATED_END
 @end
 
 void AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnObject_(AnSqlImpl *self, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject) {
-  (void) AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(self, anObjClass, attribList, parentAnObject);
+  AnObjectImpl_initWithIOSClass_withAnAttribArray_withAnObject_(self, anObjClass, attribList, parentAnObject);
   self->attribNameList_ = new_JavaUtilLinkedList_init();
   self->parameters_ = new_JavaUtilArrayList_init();
   self->isWhere_ = false;
@@ -457,13 +440,15 @@ void AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnObject_(AnS
 }
 
 AnSqlImpl *new_AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnObject_(NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject) {
-  AnSqlImpl *self = [AnSqlImpl alloc];
-  AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnObject_(self, tableName, anObjClass, attribList, parentAnObject);
-  return self;
+  J2OBJC_NEW_IMPL(AnSqlImpl, initWithNSString_withIOSClass_withAnAttribArray_withAnObject_, tableName, anObjClass, attribList, parentAnObject)
+}
+
+AnSqlImpl *create_AnSqlImpl_initWithNSString_withIOSClass_withAnAttribArray_withAnObject_(NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribList, id<AnObject> parentAnObject) {
+  J2OBJC_CREATE_IMPL(AnSqlImpl, initWithNSString_withIOSClass_withAnAttribArray_withAnObject_, tableName, anObjClass, attribList, parentAnObject)
 }
 
 void AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(AnSqlImpl *self, NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject) {
-  (void) AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(self, anObjClass, attribColumnList, parentAnObject);
+  AnObjectImpl_initWithIOSClass_withNSStringArray_withAnObject_(self, anObjClass, attribColumnList, parentAnObject);
   self->attribNameList_ = new_JavaUtilLinkedList_init();
   self->parameters_ = new_JavaUtilArrayList_init();
   self->isWhere_ = false;
@@ -474,13 +459,15 @@ void AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(AnS
 }
 
 AnSqlImpl *new_AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject) {
-  AnSqlImpl *self = [AnSqlImpl alloc];
-  AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(self, tableName, anObjClass, attribColumnList, parentAnObject);
-  return self;
+  J2OBJC_NEW_IMPL(AnSqlImpl, initWithNSString_withIOSClass_withNSStringArray_withAnObject_, tableName, anObjClass, attribColumnList, parentAnObject)
+}
+
+AnSqlImpl *create_AnSqlImpl_initWithNSString_withIOSClass_withNSStringArray_withAnObject_(NSString *tableName, IOSClass *anObjClass, IOSObjectArray *attribColumnList, id<AnObject> parentAnObject) {
+  J2OBJC_CREATE_IMPL(AnSqlImpl, initWithNSString_withIOSClass_withNSStringArray_withAnObject_, tableName, anObjClass, attribColumnList, parentAnObject)
 }
 
 void AnSqlImpl_initWithNSString_withAnObject_(AnSqlImpl *self, NSString *tableName, id<AnObject> anAllDefinedObject) {
-  (void) AnObjectImpl_init(self);
+  AnObjectImpl_init(self);
   self->attribNameList_ = new_JavaUtilLinkedList_init();
   self->parameters_ = new_JavaUtilArrayList_init();
   self->isWhere_ = false;
@@ -495,13 +482,15 @@ void AnSqlImpl_initWithNSString_withAnObject_(AnSqlImpl *self, NSString *tableNa
 }
 
 AnSqlImpl *new_AnSqlImpl_initWithNSString_withAnObject_(NSString *tableName, id<AnObject> anAllDefinedObject) {
-  AnSqlImpl *self = [AnSqlImpl alloc];
-  AnSqlImpl_initWithNSString_withAnObject_(self, tableName, anAllDefinedObject);
-  return self;
+  J2OBJC_NEW_IMPL(AnSqlImpl, initWithNSString_withAnObject_, tableName, anAllDefinedObject)
+}
+
+AnSqlImpl *create_AnSqlImpl_initWithNSString_withAnObject_(NSString *tableName, id<AnObject> anAllDefinedObject) {
+  J2OBJC_CREATE_IMPL(AnSqlImpl, initWithNSString_withAnObject_, tableName, anAllDefinedObject)
 }
 
 void AnSqlImpl_init(AnSqlImpl *self) {
-  (void) AnObjectImpl_init(self);
+  AnObjectImpl_init(self);
   self->attribNameList_ = new_JavaUtilLinkedList_init();
   self->parameters_ = new_JavaUtilArrayList_init();
   self->isWhere_ = false;
@@ -511,9 +500,11 @@ void AnSqlImpl_init(AnSqlImpl *self) {
 }
 
 AnSqlImpl *new_AnSqlImpl_init() {
-  AnSqlImpl *self = [AnSqlImpl alloc];
-  AnSqlImpl_init(self);
-  return self;
+  J2OBJC_NEW_IMPL(AnSqlImpl, init)
+}
+
+AnSqlImpl *create_AnSqlImpl_init() {
+  J2OBJC_CREATE_IMPL(AnSqlImpl, init)
 }
 
 void AnSqlImpl_reset(AnSqlImpl *self) {
@@ -530,11 +521,11 @@ NSString *AnSqlImpl_getAlias(AnSqlImpl *self) {
 
 NSString *AnSqlImpl_ensureFirstConditionWithNSString_(AnSqlImpl *self, NSString *condition) {
   if (self->whereClause_ == nil) {
-    if ([((NSString *) nil_chk([((NSString *) nil_chk([((NSString *) nil_chk(condition)) trim])) lowercaseString])) hasPrefix:@"and "]) {
-      condition = [((NSString *) nil_chk([condition trim])) substring:4];
+    if ([((NSString *) nil_chk([((NSString *) nil_chk([((NSString *) nil_chk(condition)) java_trim])) lowercaseString])) java_hasPrefix:@"and "]) {
+      condition = [((NSString *) nil_chk([condition java_trim])) java_substring:4];
     }
-    if ([((NSString *) nil_chk([((NSString *) nil_chk([((NSString *) nil_chk(condition)) trim])) lowercaseString])) hasPrefix:@"or "]) {
-      condition = [((NSString *) nil_chk([condition trim])) substring:3];
+    if ([((NSString *) nil_chk([((NSString *) nil_chk([((NSString *) nil_chk(condition)) java_trim])) lowercaseString])) java_hasPrefix:@"or "]) {
+      condition = [((NSString *) nil_chk([condition java_trim])) java_substring:3];
     }
     self->whereClause_ = new_JavaLangStringBuilder_init();
   }

@@ -3,10 +3,18 @@
 //  source: ../../../../android//com/vals/a2ios/sqlighter/intf/SQLighterRs.java
 //
 
-#ifndef _ComValsA2iosSqlighterIntfSQLighterRs_H_
-#define _ComValsA2iosSqlighterIntfSQLighterRs_H_
-
 #include "J2ObjC_header.h"
+
+#pragma push_macro("INCLUDE_ALL_ComValsA2iosSqlighterIntfSQLighterRs")
+#ifdef RESTRICT_ComValsA2iosSqlighterIntfSQLighterRs
+#define INCLUDE_ALL_ComValsA2iosSqlighterIntfSQLighterRs 0
+#else
+#define INCLUDE_ALL_ComValsA2iosSqlighterIntfSQLighterRs 1
+#endif
+#undef RESTRICT_ComValsA2iosSqlighterIntfSQLighterRs
+
+#if !defined (SQLighterRs_) && (INCLUDE_ALL_ComValsA2iosSqlighterIntfSQLighterRs || defined(INCLUDE_SQLighterRs))
+#define SQLighterRs_
 
 @class IOSByteArray;
 @class JavaLangDouble;
@@ -14,7 +22,7 @@
 @class JavaLangLong;
 @class JavaUtilDate;
 
-@protocol SQLighterRs < NSObject, JavaObject >
+@protocol SQLighterRs < JavaObject >
 
 - (jboolean)hasNext;
 
@@ -50,4 +58,6 @@ J2OBJC_TYPE_LITERAL_HEADER(SQLighterRs)
 
 #define ComValsA2iosSqlighterIntfSQLighterRs SQLighterRs
 
-#endif // _ComValsA2iosSqlighterIntfSQLighterRs_H_
+#endif
+
+#pragma pop_macro("INCLUDE_ALL_ComValsA2iosSqlighterIntfSQLighterRs")
