@@ -90,7 +90,7 @@ J2OBJC_IGNORE_DESIGNATED_END
 }
 
 - (void)printWithAppointment:(Appointment *)appointment {
-  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:JreStrcat("$@$$$@$@", @"Appointment object. id: ", [((Appointment *) nil_chk(appointment)) getId], @", name: ", [appointment getName], @", isProcessed:", [appointment getIsProcessed], @", createDate:", [appointment getCreateDate])];
+  [((JavaIoPrintStream *) nil_chk(JreLoadStatic(JavaLangSystem, out))) printlnWithNSString:JreStrcat("$@$$$@$@$@", @"Appointment object. id: ", [((Appointment *) nil_chk(appointment)) getId], @", name: ", [appointment getName], @", isProcessed:", [appointment getIsProcessed], @", createDate:", [appointment getCreateDate], @", status: ", [appointment getStatus])];
 }
 
 - (void)printWithSQLighterRs:(id<SQLighterRs>)rs {
