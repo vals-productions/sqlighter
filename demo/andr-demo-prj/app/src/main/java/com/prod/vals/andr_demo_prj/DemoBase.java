@@ -8,6 +8,7 @@ import com.vals.a2ios.sqlighter.intf.SQLighterDb;
 import com.vals.a2ios.sqlighter.intf.SQLighterRs;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +26,7 @@ public abstract class DemoBase {
      */
     private int passedTestCount = 0;
     private List<String> testList = new LinkedList<>();
+    HashMap<String, String> test2status = new HashMap<String, String>();
 
     protected Object sqlighterHelloLabel, sqlighterDetailsLabel;
     protected Object amfibianHelloLabel, amfibianDetailsLabel;
@@ -32,23 +34,36 @@ public abstract class DemoBase {
 
     protected void resetTestCounters() {
         testList.clear();
+        test2status.clear();
         passedTestCount = 0;
     }
+    String currentTest="";
+    protected String currentTest(){ return currentTest; }
     protected void checkTest(String name, boolean isPassed) {
-        testList.add(name);
+        if( !test2status.containsKey(name) )
+            testList.add(name);
+        test2status.put( name, isPassed?"passed":"failed");
         if(isPassed) {
             passedTestCount++;
         }
+        updateTestStatus();
     }
 
+
     protected void startTest(String name) {
-        testList.add(name);
+        currentTest = name;
+        if( !test2status.containsKey(name) )
+            testList.add(name);
+        test2status.put(name, "...");
+        updateTestStatus();
     }
 
     protected void finishTest(boolean isPassed) {
         if(isPassed) {
             passedTestCount++;
         }
+        test2status.put( currentTest(), isPassed ? "passed" : "failed" );
+        updateTestStatus();
     }
 
     protected void makeTestsFail() {
@@ -59,6 +74,31 @@ public abstract class DemoBase {
         return testList.size() == passedTestCount;
     }
 
+    String statusChar( String k )
+    {   String v = ""+test2status.get(k);
+        switch(v)
+        {   case "passed": return "\u2611";
+            case "failed": return "\u2610";
+            case "null"  : return "\u2026";
+            case "..."   : return "\u2026";
+        }
+        return k;
+    }
+    protected void updateTestStatus(){
+        StringBuffer b = new StringBuffer(2000);
+
+        for( String k : testList ){
+            b.append( statusChar( k ) + " " + k +'\n');
+//            for( String d : test2status.keySet() )
+//                if( d.indexOf(k) == 0 )
+//                    b.append( statusChar( d )+" " +d +'\n');
+
+
+        }
+
+        Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, b.toString() );
+
+    }
 
     protected void printAppointments(AnOrm<Appointment> anOrm) throws Exception {
         System.out.println("Appointment records");
