@@ -301,19 +301,19 @@ public class Demo extends DemoBase {
              * if anything didn't work in the demo.
              */
             Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, "SQLighter DemoBase did not pass");
-            Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "Exception: " + e.getMessage());
+//            Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "Exception: " + e.getMessage());
             return;
         }
         if (!testSummaryCheck()) {
             Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, "SQLighter DemoBase did not pass");
-            Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "One or more tests failed");
+//            Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "One or more tests failed");
             return ;
         }
         /**
          * Return greet string to display on the screen
          */
         Bootstrap.getInstance().getMobilighter().setText(sqlighterHelloLabel, greetingStr);
-        Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "All tests passed.");
+//        Bootstrap.getInstance().getMobilighter().setText(sqlighterDetailsLabel, "All tests passed.");
         return;
     }
 
