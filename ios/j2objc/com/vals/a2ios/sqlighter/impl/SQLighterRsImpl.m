@@ -56,7 +56,11 @@
 }
 
 -(JavaLangLong*) getLongWithInt: (int) idx {
-    return [JavaLangLong valueOfWithLong: [[self getIntWithInt:idx] longValue]];
+    if ([self isNullWithInt:idx]) {
+        return nil;
+    }
+    sqlite3_int64 l = sqlite3_column_int64(stmt, idx++);
+    return [JavaLangLong valueOfWithLong:l];
 }
 
 -(JavaLangDouble*) getDoubleWithInt: (int) idx {
